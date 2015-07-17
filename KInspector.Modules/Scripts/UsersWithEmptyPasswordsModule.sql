@@ -1,0 +1,2 @@
+﻿-- COMMENT: We are interested in users without passwords excluding 'public' user, who are enabled and not external, because external users can not log in via FORMS authentication anyway
+SELECT TOP 50 UserName as 'User name' FROM CMS_User WHERE (UserPassword LIKE '' OR UserPassword IS NULL) AND UserEnabled = 1 AND UserIsExternal = 0 AND UserName NOT LIKE 'public'

@@ -1,0 +1,50 @@
+﻿using System;
+using KInspector.Core;
+
+namespace KInspector.Modules.Modules.OnlineMarketing
+{
+    public class OMNewslettersWithoutQueue : IModule
+    {
+        public ModuleMetadata GetModuleMetadata()
+        {
+            return new ModuleMetadata
+            {
+                Name = "Newsletters not using email queue (chance of losing emails)",
+                SupportedVersions = new[] { 
+                    new Version("7.0"),
+                    new Version("8.1"), 
+                    new Version("8.2") 
+                },
+                Comment = @"Checks whether there is any newsletter (email campaign) not using email queue)
+
+If newsletter is not sent via email queue, emails are generated into memory queue, which could be lost on server restart.
+Default app pool recycle is every 29 hours, so when sending a lot of emails, the probability is rather high.
+",
+                
+                Category = "Online marketing"
+            };
+        }
+
+        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        {
+            var newslettersWithDisabledQueue = dbService.ExecuteAndGetTableFromFile("OMNewslettersWithoutQueue.sql");
+            if (newslettersWithDisabledQueue.Rows.Count > 0)
+            {
+                return new ModuleResults
+                {
+                    Result = newslettersWithDisabledQueue,
+                    ResultComment = @"Enable email queue in all newsletters. (UPDATE Newsletter_Newsletter SET NewsletterUseEmailQueue = 1)",
+                    Status = Status.Error,
+                };
+            }
+            else
+            {
+                return new ModuleResults
+                {
+                    ResultComment = "All existing newsletters have email queue turned ON.",
+                    Status = Status.Good
+                };
+            }
+        }
+    }
+}

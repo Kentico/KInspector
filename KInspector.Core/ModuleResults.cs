@@ -1,0 +1,75 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+
+namespace KInspector.Core
+{
+    /// <summary>
+    /// Results of the module that are used in the <see cref="IModule.GetResults"/> method.
+    /// </summary>
+    public class ModuleResults
+    {
+        private dynamic mResult;
+
+        /// <summary>
+        /// Type of the results <see cref="ModuleResultsType"/>
+        /// </summary>
+        public ModuleResultsType ResultType
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Supports string, List(string), DataTable, DataSet, List(DataTable)
+        /// </summary>
+        public dynamic Result
+        {
+            get
+            {
+                return mResult;
+            }
+            set
+            {
+                mResult = value;
+                if (mResult is DataTable)
+                {
+                    ResultType = ModuleResultsType.Table;
+                }
+                else if (mResult is DataSet || mResult is List<DataTable>){
+                    ResultType = ModuleResultsType.ListOfTables;
+                }
+                else if (mResult is List<String>){
+                    ResultType = ModuleResultsType.List;
+                }
+                else if (mResult is String)
+                {
+                    ResultType = ModuleResultsType.String;
+                }
+                else
+                {
+                    throw new NotSupportedException("Given result's type is not supported!");                 
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Result status.
+        /// </summary>
+        public Status Status;
+
+
+        /// <summary>
+        /// Comments where should be displayed what should be fixed and how.
+        /// </summary>
+        public string ResultComment;
+
+
+        /// <summary>
+        /// Indicates that encoding of <paramref name="Result"/> can be safely omitted.
+        /// Supported only for String and List&lt;String&gt; <see cref="Result"/>.
+        /// </summary>
+        public bool Trusted;
+    }
+}

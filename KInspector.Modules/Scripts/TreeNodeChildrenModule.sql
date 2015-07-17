@@ -1,0 +1,1 @@
+﻿SELECT NodeAliasPath FROM CMS_Tree WHERE NodeID IN (SELECT NodeParentID FROM CMS_Tree GROUP BY NodeParentID HAVING COUNT(NodeParentID) > 1000)

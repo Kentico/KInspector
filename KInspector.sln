@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F3EF3619-F312-4B17-B5BE-5764A8010D38}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KInspector.Core", "KInspector.Core\KInspector.Core.csproj", "{83C55B9E-F597-4941-A41A-932154E256D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KInspector.Modules", "KInspector.Modules\KInspector.Modules.csproj", "{1D75B5FF-71B8-403F-8AED-84B1F32D6617}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KInspector.Tests", "KInspector.Tests\KInspector.Tests.csproj", "{0CD9708F-1740-4585-A9AE-B681C9F030E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{68B3CDB1-A97C-4733-A672-56F2EE39D121}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KInspector.Web", "KInspector.Web\KInspector.Web.csproj", "{94C43526-335E-43F1-A5D6-020FB0A98E85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83C55B9E-F597-4941-A41A-932154E256D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83C55B9E-F597-4941-A41A-932154E256D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83C55B9E-F597-4941-A41A-932154E256D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83C55B9E-F597-4941-A41A-932154E256D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D75B5FF-71B8-403F-8AED-84B1F32D6617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D75B5FF-71B8-403F-8AED-84B1F32D6617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D75B5FF-71B8-403F-8AED-84B1F32D6617}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D75B5FF-71B8-403F-8AED-84B1F32D6617}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0CD9708F-1740-4585-A9AE-B681C9F030E6} = {68B3CDB1-A97C-4733-A672-56F2EE39D121}
+	EndGlobalSection
+EndGlobal
