@@ -21,9 +21,10 @@ namespace KInspector.Core
             {
                 UserID = userName,
                 Password = password,
-                ["Server"] = serverName,
-                ["Database"] = databaseName
             };
+
+            sb["Server"] = serverName;
+            sb["Database"] = databaseName;
 
             mConnectionString = sb.ConnectionString;
         }
