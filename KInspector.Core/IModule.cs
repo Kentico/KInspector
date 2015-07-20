@@ -44,6 +44,6 @@
         /// }
         /// ]]>
         /// </example>
-        ModuleResults GetResults(InstanceInfo config, DatabaseService dbService);
+        ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService);
     }
 }
