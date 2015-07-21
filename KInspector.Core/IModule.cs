@@ -8,33 +8,32 @@
     public interface IModule
     {
         /// <summary>
-        /// Returns the metadata of the module
+        /// Returns the metadata of the module.
         /// </summary>
         /// <example>
-        /// <![CDATA[
+        /// <code>
         /// public ModuleMetadata GetModuleMetadata()
         /// {
-        ///    return new ModuleMetadata() 
-        ///    { 
-        ///        Name = "EventLog Information", 
-        ///        Versions = new List<string>() { "8.0", "8.1" },
-        ///        Comment = "Checks event log for information like 404 pages and logged exceptions.",
-        ///        ResultType = ModuleResultsType.Table
-        ///    };
+        ///     return new ModuleMetadata()
+        ///     {
+        ///         Name = "EventLog Information",
+        ///         SupportedVersions = new[] { new Version("6.0"), new Version("7.0") },
+        ///         Comment = "Checks event log for information like 404 pages and logged exceptions."
+        ///     };
         /// }
-        /// ]]>
+        /// </code>
         /// </example>
         ModuleMetadata GetModuleMetadata();
+
 
         /// <summary>
         /// Returns the whole result set of the module.
         /// </summary>
         /// <example>
-        /// <![CDATA[
+        /// <code> 
         /// public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
         /// {
-        ///    var dbService = new DatabaseService(config);
-        ///    var results = dbService.ExecuteAndGetPrintsFromFile("EventLogInfoModule.sql");
+        ///    var results = dbService.ExecuteAndGetDataSetFromFile("EventLogInfoModule.sql");
         ///
         ///    return new ModuleResults()
         ///    {
@@ -42,7 +41,7 @@
         ///        ResultComment = "Check event log for more details!"
         ///    };
         /// }
-        /// ]]>
+        /// </code> 
         /// </example>
         ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService);
     }
