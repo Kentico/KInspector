@@ -8,7 +8,8 @@ namespace KInspector.Web
     class Program
     {
         /// <summary>
-        /// This console application starts a WebAPI server and opens a web browser with AngularJS application to consume that WebAPI.
+        /// This console application starts a WebAPI server and opens a web browser 
+        /// with AngularJS application to consume that WebAPI.
         /// </summary>
         static void Main(string[] args)
         {

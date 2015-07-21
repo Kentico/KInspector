@@ -10,14 +10,6 @@ using KInspector.Core;
 
 namespace KInspector.Modules.Modules.Security
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <remarks>
-    /// Based on <c>SecurityAudit_WebPartAnalyzer.ps1</c>. The power shell script
-    /// mixes analysis and HTML output formatting, making it simple, but UI dependent.
-    /// This could be improved.
-    /// </remarks>
     public class WebPartAnalyzerModule : IModule
     {
         #region "Fields"

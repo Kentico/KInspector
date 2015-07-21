@@ -21,7 +21,8 @@ namespace KInspector.Core
         }
 
         /// <summary>
-        /// Supports string, List(string), DataTable, DataSet, List(DataTable)
+        /// Supports <see cref="string"/>, <see cref="List{string}"/>, <see cref="DataTable"/>, 
+        /// <see cref="DataSet"/>, <see cref="List{DataTable}"/>.
         /// </summary>
         public dynamic Result
         {
@@ -67,8 +68,8 @@ namespace KInspector.Core
 
 
         /// <summary>
-        /// Indicates that encoding of <paramref name="Result"/> can be safely omitted.
-        /// Supported only for String and List&lt;String&gt; <see cref="Result"/>.
+        /// Indicates that encoding of <see cref="Result"/> can be safely omitted.
+        /// Supported only for <see cref="string"/> and <see cref="List{string}"/> result.
         /// </summary>
         public bool Trusted;
     }

@@ -62,7 +62,8 @@ namespace KInspector.Core
 
 
         /// <summary>
-        /// Executes a SQL file in <paramref name="filePath"/> and returns the whole table. The file must be in './Scripts/' folder.
+        /// Executes a SQL file in <paramref name="filePath"/> and returns the whole table. 
+        /// The file must be in './Scripts/' folder.
         /// </summary>
         /// <remarks>
         /// You can put the result directly into <see cref="ModuleResults.Result"/>.
@@ -103,7 +104,8 @@ namespace KInspector.Core
 
                 if (dataSet.Tables.Count >= 2)
                 {
-                    // Check for dummy tables containing the name the table that follows (dummy table has exactly one column named "#KenticoNextTableName")
+                    // Check for dummy tables containing the name the table that follows 
+                    // (dummy table has exactly one column named "#KenticoNextTableName")
                     for (int i = dataSet.Tables.Count - 2; i >= 0; i--)
                     {
                         DataTable table = dataSet.Tables[i];
@@ -115,7 +117,8 @@ namespace KInspector.Core
                             // Remove dummy table
                             dataSet.Tables.Remove(table);
 
-                            // We have name for table [i+1], table [i] is dummy and is removed, so table [i-1] cannot contain the name of another table and can be safely skipped.
+                            // We have name for table [i+1], table [i] is dummy and is removed, so 
+                            // table [i-1] cannot contain the name of another table and can be safely skipped.
                             i--;
                         }
                     }
@@ -127,7 +130,8 @@ namespace KInspector.Core
 
 
         /// <summary>
-        /// Executes a SQL file in <paramref name="filePath"/> and returns the whole data set. The file must be in './Scripts/' folder.
+        /// Executes a SQL file in <paramref name="filePath"/> and returns the whole data set. 
+        /// The file must be in './Scripts/' folder.
         /// </summary>
         /// <remarks>
         /// You can put the result directly into <see cref="ModuleResults.Result"/>.
@@ -179,7 +183,7 @@ namespace KInspector.Core
 
 
         /// <summary>
-        /// Similar to <see cref="DatabaseService.ExecuteAndGetPrints"/>, but takes SQL script URL as a parameter.
+        /// Similar to <see cref="ExecuteAndGetPrints"/>, but takes SQL script URL as a parameter.
         /// Reads the input from './Scripts/' folder, the SQL script must therefore be there.
         /// </summary>
         /// <remarks>

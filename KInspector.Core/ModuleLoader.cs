@@ -7,7 +7,7 @@ namespace KInspector.Core
 {
     /// <summary>
     /// Loads all the modules from the assemblies that are in the same directory as an executing assembly.
-    /// Thanks to this loader, you can add your own .DLL with <see cref="IModule"/> implementations.
+    /// Thanks to this loader, you can add your own DLL with <see cref="IModule"/> implementations.
     /// </summary>
     public static class ModuleLoader
     {
@@ -16,7 +16,7 @@ namespace KInspector.Core
 
         /// <summary>
         /// Loads all the modules from the assemblies that are in the same directory as an executing assembly.
-        /// Thanks to this loader, you can add your own .DLL with <see cref="IModule"/> implementations.
+        /// Thanks to this loader, you can add your own DLL with <see cref="IModule"/> implementations.
         /// </summary>
         public static ICollection<IModule> Modules
         {
