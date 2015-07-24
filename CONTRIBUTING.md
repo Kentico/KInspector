@@ -53,4 +53,4 @@ We hate sloppy commit messages. No more ```Performance tuning``` or ```Changed a
 
 
 ## Questions & Answers
-Use [Stack Overflow](https://stackoverflow.com/) to ask questions. Make sure that your question contains [KInspector](https://stackoverflow.com/questions/tagged/kinspector) tag, otherwise we won't be able to find it. Please don't use GitHub Issues for questions. They're meant for tracking features and bugs.
+Use [Stack Overflow](https://stackoverflow.com/) to ask questions. Make sure that your question contains [Kentico](https://stackoverflow.com/questions/tagged/kentico) tag, otherwise we won't be able to find it. Please don't use GitHub Issues for questions. They're meant for tracking features and bugs.
