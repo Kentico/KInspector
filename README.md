@@ -1,5 +1,5 @@
 # KInspector
-[![Build status](https://ci.appveyor.com/api/projects/status/74fappk0bvhmuqtu?svg=true)](https://ci.appveyor.com/project/petrsvihlik/kinspector)
+[![Build status](https://ci.appveyor.com/api/projects/status/udykjx510v83w9y6?svg=true)](https://ci.appveyor.com/project/kentico/kinspector)
 
 KInspector is an application for analyzing **Kentico**. It was developed by the consulting department to automatize common tasks.
 
