@@ -41,7 +41,7 @@ Before you send us new pull request, make sure that you meet following requireme
 
 
 ### Testing
-Unfortunately, we don't have an environment for integration tests ready yet (we're [working on it](https://github.com/Kentico/KInspector/issues/13)). That means you must test your module manually. Make sure that your module runs on every supported Kentico CMS instances that you declared in the module metadata. Meanwhile, you can write some unit tests.
+Unfortunately, we don't have an environment for integration tests ready yet (we're [working on it](https://github.com/Kentico/KInspector/issues/13)). That means you must test your module manually. Make sure that your module runs on every supported Kentico instances that you declared in the module metadata. Meanwhile, you can write some unit tests.
 
 
 ### Learn how to write good commit messages
