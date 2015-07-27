@@ -8,6 +8,6 @@ The application contains three types of modules. The **setup** modules that some
 The KInspector is written as an independent .NET application from Kentico and could analyze **any version** of it. It supports work with the database, file system as well as with the API.
 
 ## Contributing
-Want improve the KInspector? Great! Read the [contributing guidelines]() and then [write your first module](https://github.com/Kentico/KInspector/wiki/Writing-a-custom-module).
+Want improve the KInspector? Great! Read the [contributing guidelines](https://github.com/Kentico/KInspector/blob/master/CONTRIBUTING.md) and then [write your first module](https://github.com/Kentico/KInspector/wiki/Writing-a-custom-module).
 
 If anything feels wrong or incomplete, please let us know. Create a new [issue](https://github.com/Kentico/KInspector/issues/new) or submit a [pull request](https://help.github.com/articles/using-pull-requests/).
