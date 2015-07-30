@@ -9,8 +9,8 @@ namespace KInspector.Modules.Modules.Content
         {
             return new ModuleMetadata
             {
-                Name = "WebParts (CMSRepeater, CMSListMenu, CMSDataList etc.) in page templates and transformations",
-                Comment = "Looks up page templates and transformations containing certain web parts",
+                Name = "Web parts in page templates and transformations",
+                Comment = "Looks up page templates and transformations containing certain web parts.",
                 SupportedVersions = new[] { 
                     new Version("8.0"), 
                     new Version("8.1"), 

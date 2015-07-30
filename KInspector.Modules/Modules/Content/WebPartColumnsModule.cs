@@ -9,7 +9,7 @@ namespace KInspector.Modules.Modules.Content
         {
             return new ModuleMetadata
             {
-                Name = "Unspecified 'columns' setting in WebParts",
+                Name = "Unspecified 'columns' setting in web parts",
                 SupportedVersions = new[] { 
                     new Version("6.0"),
                     new Version("7.0"),
@@ -17,7 +17,13 @@ namespace KInspector.Modules.Modules.Content
                     new Version("8.1"), 
                     new Version("8.2") 
                 },
-                Comment = @"Checks WebParts where 'Columns' setting is missing",
+                Comment = @"Displays list of web parts where 'columns' property is not specified.
+
+Web parts without specified 'columns' property must load all field from the database. 
+By specifying this property, you can significantly lower the data transmission from database to the server and improve the load times.
+
+For more information, see documentation:
+https://docs.kentico.com/display/K82/Loading+data+efficiently",
             };
         }
 

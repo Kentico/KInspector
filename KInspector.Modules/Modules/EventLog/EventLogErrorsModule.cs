@@ -17,7 +17,10 @@ namespace KInspector.Modules.Modules.EventLog
                     new Version("8.1"),
                     new Version("8.2")
                 },
-                Comment = @"Checks the event log for all errors.",
+                Comment = @"Displays all errors from the event log.
+
+In the ideal world, there should be no errors. If there are any, find a root cause and fix it to avoid this error happen again.
+Sometimes it's not possible to avoid all the errors, but that should be an exception.",
                 Category = "Event log"
             };
         }

@@ -15,7 +15,13 @@ namespace KInspector.Modules.Modules.Content
                     new Version("8.1"),
                     new Version("8.2") 
                 },
-                Comment = @"Shows report of all attachments ordered by their size.",
+                Comment = 
+@"Displays report of all attachments ordered by their size.
+
+Storing files in a content tree can negatively affect website performance. If you're not using workflow or multilingual content features to manipulate those attachments, you can move them to the media library.
+
+For more information, see the documentation:
+https://docs.kentico.com/display/K82/Defining+website+data+structure#Definingwebsitedatastructure-Storingdataefficiently",
                 Category = "Content"
             };
         }

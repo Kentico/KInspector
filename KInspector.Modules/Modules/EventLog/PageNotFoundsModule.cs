@@ -9,7 +9,7 @@ namespace KInspector.Modules.Modules.EventLog
         {
             return new ModuleMetadata
             { 
-                Name = "404s",
+                Name = "Not found errors (404)",
                 SupportedVersions = new[] { 
                     new Version("6.0"),
                     new Version("7.0"),
@@ -17,7 +17,11 @@ namespace KInspector.Modules.Modules.EventLog
                     new Version("8.1"), 
                     new Version("8.2") 
                 },
-                Comment = @"Checks the event log for 404 - page not founds",
+                Comment = @"Displays all the 404 errors from the event log.
+
+If there are any 404 errors, maybe there is a broken link somewhere on your pages. 
+Check the referrer and try to fix all the broken links. For the other links, try to fix a root cause.
+In general, you want to avoid this error because it's an unnecessary waste of resources.",
                 Category = "Event log"
             };
         }

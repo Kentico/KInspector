@@ -23,8 +23,6 @@ Checks the following:
     * OM_Contact > 1 000 000,
     * OM_ContactGroup > 50,
     * OM_Rule > 50",
-
-                
                 Category = "Online marketing"
             };
         }

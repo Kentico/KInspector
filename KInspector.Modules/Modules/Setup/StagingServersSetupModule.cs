@@ -10,9 +10,10 @@ namespace KInspector.Modules.Modules.Setup
             return new ModuleMetadata
             {
                 Name = "Disable enabled Staging servers",
-                Comment = "Disables Staging servers defined in the Staging application.\n"
-                            + "The servers are disabled by appending their URL with '.disabled', so that servers disabled by the audit can be identified.\n"
-                            + "Setting the Enabled state of all servers to false would result in UI not being accessible (which might not be desired).",
+                Comment = @"Disables Staging servers defined in the Staging application.
+
+The servers are disabled by appending their URL with '.disabled', so that servers disabled by the audit can be identified.
+Setting the Enabled state of all servers to false would result in UI not being accessible (which might not be desired).",
                 SupportedVersions = new[] { 
                     new Version("8.0"), 
                     new Version("8.1"), 
