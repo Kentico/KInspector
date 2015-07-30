@@ -71,6 +71,7 @@
     <Compile Include="Modules\Content\RobotsTxtModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTemplatesAndTransformationsModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
+    <Compile Include="Modules\General\MediaLibraryAzureLimitModule.cs" />
     <Compile Include="Modules\General\DatabaseConsistencyCheckModule.cs" />
     <Compile Include="Modules\General\BigTablesAzureModule.cs" />
     <Compile Include="Modules\Content\WebPartColumnsModule.cs" />
@@ -161,6 +162,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\MediaLibraryAzureLimitModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\TransformationAnalyzerModule-TransformationCodes.sql">
