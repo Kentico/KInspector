@@ -13,7 +13,7 @@ The application contains three types of modules:
 The best thing about KInspector is that it can analyze **any version** of Kentico. 
 
 
-## Get the tool
+## Get the application
 
 It's super easy. Download the [latest release](https://github.com/Kentico/KInspector/releases/latest) zip package, unpack it and run the ```Start.cmd```. It automatically opens a new browser window with the [target setup](http://i.imgur.com/4n5s56z.png) page. 
 > Make sure that you provide all the fields with the correct value. Some of the modules work with the database and some of them with a code. If you don't fill the values correctly, it will probably throw an error.
