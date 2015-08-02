@@ -17,7 +17,9 @@ namespace KInspector.Modules.Modules.Content
                     new Version("8.1"), 
                     new Version("8.2") 
                 },
-                Comment = @"Selects all TreeNodes that have more than 1000 children",
+                Comment = @"Displays TreeNodes having more than 1000 children.
+
+Our best practice is to store under each TreeNode maximum of 1000 children, otherwise it can negatively affect the performance.",
                 Category = "Content"
             };
         }
@@ -31,8 +33,8 @@ namespace KInspector.Modules.Modules.Content
                 return new ModuleResults
                 {
                     Result = results,
-                    ResultComment = "Structure the content in the content tree so that there is no element with 1000 or more children",
-                    Status = Status.Error,
+                    ResultComment = "Structure the content in the content tree so that there is no element with 1000 or more children.",
+                    Status = Status.Warning,
                 };
             }
 

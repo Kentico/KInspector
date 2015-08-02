@@ -15,10 +15,9 @@ namespace KInspector.Modules.Modules.OnlineMarketing
                     new Version("8.2") 
                 },
                 Comment = @"Contact groups that have macro condition set via plain macro are always just slower and should be rewritten into MacroRuleDesigner, so that they can be translated into SQL queries to decrease recalculation time.
-For more, see https://docs.kentico.com/display/K81/Improving+custom+macro+performance+in+scoring+and+contact+groups
+For more, see https://docs.kentico.com/display/K82/Improving+custom+macro+performance+in+scoring+and+contact+groups
 
-NOTE: This applies only on Kentico 8.1, where the improvements were introduced.
-",
+NOTE: This applies only on Kentico 8.1 and above, where the improvements were introduced.",
                 Category = "Online marketing"
             };
         }

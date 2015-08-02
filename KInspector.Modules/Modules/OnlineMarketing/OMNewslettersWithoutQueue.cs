@@ -15,12 +15,10 @@ namespace KInspector.Modules.Modules.OnlineMarketing
                     new Version("8.1"), 
                     new Version("8.2") 
                 },
-                Comment = @"Checks whether there is any newsletter (email campaign) not using email queue)
+                Comment = @"Displays the newsletters (email campaigns) that are not using email queue.
 
 If newsletter is not sent via email queue, emails are generated into memory queue, which could be lost on server restart.
-Default app pool recycle is every 29 hours, so when sending a lot of emails, the probability is rather high.
-",
-                
+Default app pool recycle is every 29 hours. If you're sending a lot of emails, the probability is rather high.",
                 Category = "Online marketing"
             };
         }

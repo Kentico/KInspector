@@ -17,7 +17,9 @@ namespace KInspector.Modules.Modules.EventLog
                     new Version("8.1"), 
                     new Version("8.2") 
                 },
-                Comment = @"Information on application restarts",
+                Comment = @"Displays information about application restarts.
+
+Frequent restarts could signify some troubles.",
                 Category = "Event log"
             };
         }
