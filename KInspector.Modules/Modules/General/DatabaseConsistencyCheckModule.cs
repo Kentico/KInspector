@@ -17,7 +17,7 @@ namespace KInspector.Modules.Modules.General
                     new Version("8.1"), 
                     new Version("8.2") 
                 },
-                Comment = @"Runs DBCC CHECKDB on current database which checks all consistency issues.",
+                Comment = @"Runs DBCC CHECKDB on current database which checks all consistency issues (https://msdn.microsoft.com/en-us/library/ms176064.aspx).",
                 Category = "Consistency issues"
             };
         }
@@ -25,26 +25,23 @@ namespace KInspector.Modules.Modules.General
 
         public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
         {
-            try
-            {
-                var results = dbService.ExecuteAndGetTableFromFile("DatabaseConsistencyCheckModule.sql");
+            var results = dbService.ExecuteAndGetTableFromFile("DatabaseConsistencyCheckModule.sql");
 
-                return new ModuleResults
-                {
-                    Result = results,
-                    Status =  Status.Error
-                };
-            }
-            //TODO: temporary fix for dbService api
-            // If no error is found, than no table is returned and dbService throws exception.
-            catch (IndexOutOfRangeException)
+            if (results.Rows.Count > 0)
             {
                 return new ModuleResults
                 {
-                    Status = Status.Good,
-                    ResultComment = "CHECKDB didn't found any errors."
+                    ResultComment = "CHECKDB found some errors!",
+                    Result = results,
+                    Status = Status.Error
                 };
             }
+
+            return new ModuleResults
+            {
+                Status = Status.Good,
+                ResultComment = "CHECKDB didn't found any errors."
+            };
         }
     }
 }
