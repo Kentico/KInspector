@@ -14,7 +14,7 @@ using System.Data;
 using System.IO;
 
 
-namespace CMSApp.CMSPages
+namespace KInspector.Modules.ProbeData.CMSPages
 {
     /// <summary>
     /// Prints auditing information about the instance.

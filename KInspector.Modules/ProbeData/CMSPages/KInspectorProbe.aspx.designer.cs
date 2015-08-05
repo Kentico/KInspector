@@ -7,9 +7,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CMSApp.CMSPages {
-    
-    
-    public partial class KInspectorProbe {
+namespace KInspector.Modules.ProbeData.CMSPages
+{
+    public partial class KInspectorProbe
+    {
     }
 }
