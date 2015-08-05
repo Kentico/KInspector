@@ -13,11 +13,11 @@ Target "Clean" (fun _ ->
 )
 
 Target "RestorePackages" (fun _ ->
-  slnFile
-   |> RestoreMSSolutionPackages (fun p ->
-       { p with
-           Sources = defaultPackageSource :: p.Sources
-       })
+    slnFile
+    |> RestoreMSSolutionPackages (fun p ->
+        { p with
+            Sources = defaultPackageSource :: p.Sources
+        })
 )
 
 Target "Compile" (fun _ ->
