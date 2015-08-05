@@ -57,7 +57,15 @@ namespace KInspector.Core
         /// </remarks>
         private DataTable ExecuteAndGetTable(string sql, params SqlParameter[] parameters)
         {
-            return ExecuteAndGetDataSet(sql, parameters).Tables[0];
+            DataSet result = ExecuteAndGetDataSet(sql, parameters);
+            if (result.Tables.Count > 0)
+            {
+                return result.Tables[0];
+            }
+            else
+            {
+                return new DataTable();
+            }
         }
 
 
