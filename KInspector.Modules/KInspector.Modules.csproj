@@ -163,6 +163,7 @@
   <ItemGroup>
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="Scripts\MediaLibraryAzureLimitModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
