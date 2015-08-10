@@ -69,6 +69,7 @@
     <Compile Include="Helpers\ProjectCodeFilesHelper.cs" />
     <Compile Include="Modules\Content\AttachmentsBySizeModule.cs" />
     <Compile Include="Modules\Content\RobotsTxtModule.cs" />
+    <Compile Include="Modules\Content\PageTypeAssignedToSiteModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTemplatesAndTransformationsModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\General\MediaLibraryAzureLimitModule.cs" />
@@ -164,6 +165,9 @@
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="Scripts\PageTypeAssignedToSiteModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\MediaLibraryAzureLimitModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
