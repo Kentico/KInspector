@@ -72,8 +72,9 @@ namespace KInspector.Modules.Modules.Content
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var webPartsWithColumns = dbService.ExecuteAndGetTableFromFile("SiteTemplatesModule-WebPartsWithColumns.sql");
 
             var templates = dbService.ExecuteAndGetTableFromFile("SiteTemplatesModule-Templates.sql");

@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InstanceConfig.cs" />
     <Compile Include="InstanceInfo.cs" />
     <Compile Include="IModule.cs" />
     <Compile Include="ModuleLoader.cs" />

@@ -24,9 +24,9 @@ namespace KInspector.Modules.Modules.Content
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
-            if (!TestUrl(instanceInfo.Url, "robots.txt"))
+            if (!TestUrl(instanceInfo.Uri, "robots.txt"))
             {
                 return new ModuleResults
                 {

@@ -27,10 +27,11 @@ Checks the following:
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
             List<string> responses = new List<string>();
 
+            var dbService = instanceInfo.DBService;
             var activityCount = dbService.ExecuteAndGetScalar<int>("SELECT COUNT(*) FROM OM_Activity");
             if (activityCount > 10000000)
             {

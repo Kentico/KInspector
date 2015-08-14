@@ -26,8 +26,9 @@ In general, you want to avoid this error because it's an unnecessary waste of re
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("PageNotFoundsModule.sql");
 
             if (results.Rows.Count > 0)

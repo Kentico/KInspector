@@ -31,8 +31,9 @@ namespace KInspector.Modules.Modules.General
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var urls = dbService.ExecuteAndGetTableFromFile("ScreenshotterModule.sql");
 
             // Start process in separate thread to make website responsive.
@@ -66,7 +67,7 @@ namespace KInspector.Modules.Modules.General
                     try
                     {
                         Guid nodeGuid = (Guid)urls.Rows[i]["NodeGUID"];
-                        Uri url = new Uri(instanceInfo.Url, "getdoc/" + nodeGuid);
+                        Uri url = new Uri(instanceInfo.Uri, "getdoc/" + nodeGuid);
 
                         Log("Screenshotting [{0}/{1}]: {2}", i, urls.Rows.Count, nodeGuid);
 
@@ -93,7 +94,7 @@ namespace KInspector.Modules.Modules.General
         private static string CreateTargetDirectory(InstanceInfo config)
         {
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string targetDirectory = desktopPath + "\\" + SanitizeFileName(config.Url.ToString()) + "\\";
+            string targetDirectory = desktopPath + "\\" + SanitizeFileName(config.Uri.ToString()) + "\\";
 
             Log("Creating target directory: {0}", targetDirectory);
             Directory.CreateDirectory(targetDirectory);

@@ -24,8 +24,9 @@ namespace KInspector.Modules.Modules.Security
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("SecuritySettingsModule.sql");
             List<DataRow> rowsToDelete = new List<DataRow>();
 

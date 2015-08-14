@@ -21,13 +21,14 @@ namespace KInspector.Modules.Modules.SocialMarketing
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
             DataTable expiredTokens = new DataTable("Expired account tokens");
             expiredTokens.Columns.Add("SocialNetwork");
             expiredTokens.Columns.Add("SiteName");
             expiredTokens.Columns.Add("AccountName");
 
+            var dbService = instanceInfo.DBService;
             if (instanceInfo.Version != new Version("8.0"))
             {
                 // LinkedIn integration is in 8.1 and newer

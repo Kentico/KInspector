@@ -19,17 +19,17 @@ namespace KInspector.Web.WebAPI.Controllers
 
         // GET api/modules/GetModulesMetadata
         [ActionName("GetModulesMetadata")]
-        public HttpResponseMessage GetModulesMetadata([FromUri]KenticoInstanceConfig config, [FromUri] string category = null)
+        public HttpResponseMessage GetModulesMetadata([FromUri]InstanceConfig config, [FromUri] string category = null)
         {
             try
             {
-                DatabaseService dbService = new DatabaseService(config.Server, config.Database, config.User, config.Password);
-                var kenticoVersion = GetKenticoVersion(dbService);
+                var instance = new InstanceInfo(config);
+                var version = instance.Version;
 
                 // Get all modules of given version
                 var modules = ModuleLoader.Modules
                     .Select(x => x.GetModuleMetadata())
-                    .Where(x => x.SupportedVersions.Contains(kenticoVersion));
+                    .Where(x => x.SupportedVersions.Contains(version));
 
                 // Filter modules by category - return either specified category, or the rest
                 if (String.IsNullOrEmpty(category))
@@ -44,6 +44,12 @@ namespace KInspector.Web.WebAPI.Controllers
                     modules = modules.Where(x => x.Category != null && x.Category.StartsWith(category, StringComparison.InvariantCultureIgnoreCase));
                 }
 
+                if(modules.Count() == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest,
+                        String.Format("There are no modules available for version {0}.", version));
+                }
+
                 return Request.CreateResponse(HttpStatusCode.OK, modules);
             }
             catch (Exception e)
@@ -55,18 +61,25 @@ namespace KInspector.Web.WebAPI.Controllers
 
         // GET api/modules/GetSetupModulesMetadata
         [ActionName("GetSetupModulesMetadata")]
-        public HttpResponseMessage GetSetupModulesMetadata([FromUri]KenticoInstanceConfig config)
+        public HttpResponseMessage GetSetupModulesMetadata([FromUri]InstanceConfig config)
         {
             try
             {
-                DatabaseService dbService = new DatabaseService(config.Server, config.Database, config.User, config.Password);
-                var kenticoVersion = GetKenticoVersion(dbService);
+                var instance = new InstanceInfo(config);
+                var version = instance.Version;
 
                 // Get all modules of given version which are in 'Setup' category
                 var modules = ModuleLoader.Modules
                     .Select(x => x.GetModuleMetadata())
-                    .Where(x => x.SupportedVersions.Contains(kenticoVersion))
+                    .Where(x => x.SupportedVersions.Contains(version))
                     .Where(x => x.Category != null && x.Category.StartsWith("Setup", StringComparison.InvariantCultureIgnoreCase));
+
+                if (modules.Count() == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest,
+                        String.Format("There are no modules available for version {0}.", version));
+                }
+
                 return Request.CreateResponse(HttpStatusCode.OK, modules);
             }
             catch (Exception e)
@@ -78,15 +91,12 @@ namespace KInspector.Web.WebAPI.Controllers
 
         // GET api/modules/GetModuleResult
         [ActionName("GetModuleResult")]
-        public HttpResponseMessage GetModuleResult(string moduleName, [FromUri]KenticoInstanceConfig config)
+        public HttpResponseMessage GetModuleResult(string moduleName, [FromUri]InstanceConfig config)
         {
             try
             {
-                DatabaseService dbService = new DatabaseService(config.Server, config.Database, config.User, config.Password);
-                var version = GetKenticoVersion(dbService);
-
-                InstanceInfo instanceInfo = new InstanceInfo(version, new Uri(config.Url), new DirectoryInfo(config.Path));
-                var result = ModuleLoader.GetModule(moduleName).GetResults(instanceInfo, dbService);
+                var instance = new InstanceInfo(config);
+                var result = ModuleLoader.GetModule(moduleName).GetResults(instance);
 
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
@@ -100,28 +110,18 @@ namespace KInspector.Web.WebAPI.Controllers
 
         // Get api/modules/GetKenticoVersion
         [ActionName("GetKenticoVersion")]
-        public HttpResponseMessage GetKenticoVersion([FromUri]KenticoInstanceConfig config)
+        public HttpResponseMessage GetKenticoVersion([FromUri]InstanceConfig config)
         {
             try
             {
-                DatabaseService dbService = new DatabaseService(config.Server, config.Database, config.User, config.Password);
-                var version = GetKenticoVersion(dbService);
+                var instance = new InstanceInfo(config);
+                var version = instance.Version;
                 return Request.CreateResponse(HttpStatusCode.OK, version);
             }
             catch (Exception e)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
             }
-        }
-
-
-        /// <summary>
-        /// Gets the version of Kentico.
-        /// </summary>
-        private static Version GetKenticoVersion(DatabaseService dbService)
-        {
-            string version = dbService.ExecuteAndGetScalar<string>("SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSDBVersion'");
-            return new Version(version);
         }
     }
 }

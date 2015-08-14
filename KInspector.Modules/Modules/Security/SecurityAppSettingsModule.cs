@@ -30,7 +30,7 @@ namespace KInspector.Modules.Modules.Security
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
             // Prepare result
             DataTable result = new DataTable();

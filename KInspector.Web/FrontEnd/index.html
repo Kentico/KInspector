@@ -47,21 +47,35 @@
                 <div class="row">
                     <div class="small-5">
                         <label>
-                            Database User
-                            <input class="form-control" required="required" ng-model="model.config.User" type="text" id="configUser" placeholder="Enter the username..." />
+                            <input type="radio" ng-model="model.config.IntegratedSecurity" value="true" checked="checked" >
+                            Use integrated Windows authentication
                         </label>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="small-5">
                         <label>
-                            Database Password
-                            <input class="form-control" required="required" ng-model="model.config.Password" type="password" id="configPassword" placeholder="Enter the password..." />
+                            <input type="radio" ng-model="model.config.IntegratedSecurity" value="false">
+                            Use SQL Server account
                         </label>
                     </div>
                 </div>
 
+                <div ng-show="model.config.IntegratedSecurity == 'false'">
+                    <div class="row">
+                        <div class="small-5">
+                            <label>
+                                Database User
+                                <input class="form-control" ng-required="!model.config.IntegratedSecurity" ng-model="model.config.User" type="text" id="configUser" placeholder="Enter the username..." />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="small-5">
+                            <label>
+                                Database Password
+                                <input class="form-control" ng-required="!model.config.IntegratedSecurity" ng-model="model.config.Password" type="password" id="configPassword" placeholder="Enter the password..." />
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="small-5">
@@ -114,7 +128,7 @@
                     </li>
                 </ul>
             </div>
-        </div>        
+        </div>
     </script>
     <!-- END OF TEMPLATE FOR THE KENTICO MAIN MENU PAGE -->
     <!-- TEMPLATE FOR THE PAGE WITH THE SETUP -->

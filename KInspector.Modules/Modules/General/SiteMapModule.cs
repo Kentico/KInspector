@@ -40,8 +40,9 @@ namespace KInspector.Modules.Modules.General
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var sitemaps = dbService.ExecuteAndGetDataSetFromFile("SiteMapModule.sql");
 
             // Postprocess sitemaps of all sites
