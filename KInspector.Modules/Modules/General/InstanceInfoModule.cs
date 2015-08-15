@@ -19,8 +19,9 @@ namespace KInspector.Modules.Modules.General
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetDataSetFromFile("InstanceInfo.sql");
 
             return new ModuleResults

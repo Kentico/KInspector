@@ -22,8 +22,9 @@ namespace KInspector.Modules.Modules.OnlineMarketing
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var contactNumber = dbService.ExecuteAndGetScalar<int>(@"SELECT COUNT(*) FROM OM_Contact");
 
             var results = dbService.ExecuteAndGetTableFromFile(@"OMInactiveContactsDeletion.sql");

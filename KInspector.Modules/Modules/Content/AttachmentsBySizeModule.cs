@@ -26,8 +26,9 @@ https://docs.kentico.com/display/K82/Defining+website+data+structure#Definingweb
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("AttachmentsBySizeModule.sql");
 
             return new ModuleResults

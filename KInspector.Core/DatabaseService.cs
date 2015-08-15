@@ -15,18 +15,33 @@ namespace KInspector.Core
         private const int SQL_COMMAND_TIMEOUT_SECONDS = 90;
 
 
-        public DatabaseService(string serverName, string databaseName, string userName, string password)
+        public DatabaseService(InstanceConfig config)
         {
-            SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder
+            mConnectionString = BuildConnectionString(config);
+        }
+
+
+        /// <summary>
+        /// Builds connection string based on instance configuration.
+        /// </summary>
+        private string BuildConnectionString(InstanceConfig config)
+        {
+            SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder();
+
+            if (config.IntegratedSecurity)
             {
-                UserID = userName,
-                Password = password,
-            };
+                sb.IntegratedSecurity = true;
+            }
+            else
+            {
+                sb.UserID = config.User;
+                sb.Password = config.Password;
+            }
 
-            sb["Server"] = serverName;
-            sb["Database"] = databaseName;
+            sb["Server"] = config.Server;
+            sb["Database"] = config.Database;
 
-            mConnectionString = sb.ConnectionString;
+            return sb.ConnectionString;
         }
 
 

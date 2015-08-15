@@ -22,8 +22,9 @@ The servers are disabled by setting their server address to invalid value, so th
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetDataSetFromFile("Setup/SmtpServerSetupModule.sql");
 
             return new ModuleResults

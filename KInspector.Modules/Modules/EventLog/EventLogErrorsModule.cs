@@ -25,8 +25,9 @@ Sometimes it's not possible to avoid all the errors, but that should be an excep
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("EventLogErrorsModule.sql");
 
             if (results.Rows.Count > 0)

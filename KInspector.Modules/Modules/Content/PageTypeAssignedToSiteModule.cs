@@ -23,8 +23,9 @@ namespace KInspector.Modules.Modules.Content
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("PageTypeAssignedToSiteModule.sql");
 
             if (results.Rows.Count > 0)

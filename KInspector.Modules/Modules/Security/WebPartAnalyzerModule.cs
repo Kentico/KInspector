@@ -65,11 +65,11 @@ namespace KInspector.Modules.Modules.Security
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
             List<string> report = new List<string>();
 
-            mDatabaseService = dbService;
+            mDatabaseService = instanceInfo.DBService;
 
             DataTable webPartsInTransformationsTable = GetPageTemplateWebParts(LikePageTemplateDisplayName);
             List<string> whereOrderResults = new List<string>();

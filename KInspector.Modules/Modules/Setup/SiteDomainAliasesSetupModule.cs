@@ -20,8 +20,9 @@ namespace KInspector.Modules.Modules.Setup
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetPrintsFromFile("Setup/SiteDomainAliasesSetupModule.sql");
 
             return new ModuleResults

@@ -64,11 +64,12 @@ Note: Although it may seem that touch icon is for Apple devices only, this is no
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var siteID = dbService.ExecuteAndGetScalar<int>(string.Format(@"SELECT s.SiteID FROM CMS_Site AS s LEFT JOIN CMS_SiteDomainAlias AS sa ON s.SiteID = sa.SiteID 
 WHERE ('{0}' LIKE '%' + s.SiteDomainName + '%'
-OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'", instanceInfo.Url));
+OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'", instanceInfo.Uri));
 
             var results = new ModuleResults();
             var resultList = new List<string>();
@@ -85,7 +86,7 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
             foreach (DataRow alias in aliases.Rows)
             {
                 var aliasPath = alias["AliasPath"].ToString().TrimStart('/');
-                var uri = new Uri(instanceInfo.Url, aliasPath + ".aspx");
+                var uri = new Uri(instanceInfo.Uri, aliasPath + ".aspx");
                 var html = String.Empty;
                 try
                 {

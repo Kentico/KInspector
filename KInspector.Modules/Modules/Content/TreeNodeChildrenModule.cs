@@ -24,8 +24,9 @@ Our best practice is to store under each TreeNode maximum of 1000 children, othe
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("TreeNodeChildrenModule.sql");
 
             if (results.Rows.Count > 0)

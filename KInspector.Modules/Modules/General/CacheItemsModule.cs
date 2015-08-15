@@ -23,13 +23,13 @@ namespace KInspector.Modules.Modules.General
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
             try
             {
                 ProbeHelper.InstallProbe(instanceInfo.Directory);
 
-                var uri = new Uri(instanceInfo.Url, "CMSPages/KInspectorProbe.aspx");
+                var uri = new Uri(instanceInfo.Uri, "CMSPages/KInspectorProbe.aspx");
                 HttpWebRequest request = WebRequest.CreateHttp(uri);
                 using (WebResponse response = request.GetResponse())
                 {

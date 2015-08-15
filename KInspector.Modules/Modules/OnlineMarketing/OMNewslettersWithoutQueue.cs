@@ -23,8 +23,9 @@ Default app pool recycle is every 29 hours. If you're sending a lot of emails, t
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             var newslettersWithDisabledQueue = dbService.ExecuteAndGetTableFromFile("OMNewslettersWithoutQueue.sql");
             if (newslettersWithDisabledQueue.Rows.Count > 0)
             {

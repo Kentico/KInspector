@@ -27,8 +27,9 @@ https://docs.kentico.com/display/K82/Loading+data+efficiently",
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo, DatabaseService dbService)
+        public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
+            var dbService = instanceInfo.DBService;
             if (instanceInfo.Version == new Version("6.0"))
             {
                 return new ModuleResults
@@ -36,6 +37,7 @@ https://docs.kentico.com/display/K82/Loading+data+efficiently",
                     Result = dbService.ExecuteAndGetPrintsFromFile("WebPartColumnsModule6.sql"),
                 };
             }
+
             return new ModuleResults
             {
                 Result = dbService.ExecuteAndGetPrintsFromFile("WebPartColumnsModule.sql"),
