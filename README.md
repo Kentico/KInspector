@@ -17,7 +17,7 @@ The best thing about KInspector is that it can analyze **any version** of Kentic
 
 ## Get the application
 
-It's super easy. Download the [latest release](https://github.com/Kentico/KInspector/releases/latest) zip package, unpack it and run the ```Start.cmd```. It automatically opens a new browser window with the [target setup](http://imgur.com/Z4bt0VE) page. 
+It's super easy. Download the [latest release](https://github.com/Kentico/KInspector/releases/latest) zip package, unpack it and run the ```Start.cmd```. It automatically opens a new browser window with the [target setup](http://i.imgur.com/Z4bt0VE.png) page. 
 > Make sure that you provide all fields with correct values. Some modules work with the database and some with the code. If you don't fill the values correctly, the application will probably throw an error.
 
 Once you pass the setup page, you're ready to start the analysis. On the [main menu](http://i.imgur.com/H7zBQOZ.png) page, select the ```Analysis``` category and run the modules. You will see a page similar to this one:
