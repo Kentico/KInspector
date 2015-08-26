@@ -74,7 +74,6 @@
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\General\MediaLibraryAzureLimitModule.cs" />
     <Compile Include="Modules\General\DatabaseConsistencyCheckModule.cs" />
-    <Compile Include="Modules\General\BigTablesAzureModule.cs" />
     <Compile Include="Modules\Content\WebPartColumnsModule.cs" />
     <Compile Include="Modules\EventLog\PageNotFoundsModule.cs" />
     <Compile Include="Modules\EventLog\ApplicationRestartsModule.cs" />
@@ -294,9 +293,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\!Readme.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\BigTablesModuleAzure.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\BigTablesModule.sql">
