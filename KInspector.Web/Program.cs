@@ -33,7 +33,7 @@ namespace KInspector.Web
         /// </summary>
         private static void StartFrontendInBrowser()
         {
-            Process.Start(".\\FrontEnd\\index.html");
+            Process.Start("http://localhost:9000/FrontEnd/index.html");
         }
 
         /// <summary>

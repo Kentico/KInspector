@@ -20,7 +20,7 @@ namespace KInspector.Web.WebAPI
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-
+	        appBuilder.UseStaticFiles("/FrontEnd");
             appBuilder.UseWebApi(config);
         }
     }
