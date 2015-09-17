@@ -44,7 +44,7 @@ namespace KInspector.Web.WebAPI.Controllers
                     modules = modules.Where(x => x.Category != null && x.Category.StartsWith(category, StringComparison.InvariantCultureIgnoreCase));
                 }
 
-                if(modules.Count() == 0)
+                if(!modules.Any())
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest,
                         String.Format("There are no modules available for version {0}.", version));
