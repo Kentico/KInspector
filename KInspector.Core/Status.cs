@@ -1,7 +1,7 @@
 namespace KInspector.Core
 {
     /// <summary>
-    /// Result's status flag
+    /// Result's status flag.
     /// </summary>
     public enum Status
     {
