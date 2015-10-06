@@ -1,1 +1,1 @@
-﻿SELECT UserName AS 'User name' FROM CMS_User WHERE UserPasswordFormat = 'plaintext'
+﻿SELECT UserName AS 'User name' FROM CMS_User WHERE UserPasswordFormat = ''
