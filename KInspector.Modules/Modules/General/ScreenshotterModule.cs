@@ -6,10 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using JSErrorCollector;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 using OpenQA.Selenium.Firefox;
 
-namespace KInspector.Modules.Modules.General
+namespace Kentico.KInspector.Modules
 {
     public class ScreenshotterModule : IModule
     {

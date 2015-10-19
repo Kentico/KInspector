@@ -4,9 +4,9 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.Content
+namespace Kentico.KInspector.Modules
 {
     public class SiteTemplatesModule : IModule
     {

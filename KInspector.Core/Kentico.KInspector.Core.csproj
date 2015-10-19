@@ -7,8 +7,8 @@
     <ProjectGuid>{83C55B9E-F597-4941-A41A-932154E256D4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KInspector.Core</RootNamespace>
-    <AssemblyName>KInspector.Core</AssemblyName>
+    <RootNamespace>Kentico.KInspector.Core</RootNamespace>
+    <AssemblyName>Kentico.KInspector.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>

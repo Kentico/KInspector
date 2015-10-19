@@ -8,9 +8,9 @@ using System.Net;
 using System.Net.Security;
 using System.Text;
 using System.Text.RegularExpressions;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.General
+namespace Kentico.KInspector.Modules
 {
     public class PagesAnalyzerModule : IModule
     {

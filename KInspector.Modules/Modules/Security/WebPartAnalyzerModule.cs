@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Xml;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.Security
+namespace Kentico.KInspector.Modules
 {
     public class WebPartAnalyzerModule : IModule
     {

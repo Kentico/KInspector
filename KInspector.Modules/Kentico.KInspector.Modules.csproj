@@ -7,8 +7,8 @@
     <ProjectGuid>{1D75B5FF-71B8-403F-8AED-84B1F32D6617}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KInspector.Modules</RootNamespace>
-    <AssemblyName>KInspector.Modules</AssemblyName>
+    <RootNamespace>Kentico.KInspector.Modules</RootNamespace>
+    <AssemblyName>Kentico.KInspector.Modules</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
@@ -156,15 +156,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KInspector.Core\KInspector.Core.csproj">
+    <ProjectReference Include="..\KInspector.Core\Kentico.KInspector.Core.csproj">
       <Project>{83c55b9e-f597-4941-a41a-932154e256d4}</Project>
-      <Name>KInspector.Core</Name>
+      <Name>Kentico.KInspector.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="Scripts\PageTypeAssignedToSiteModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -1,4 +1,5 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="KInspectorProbe.aspx.cs" Inherits="KInspector.Modules.ProbeData.CMSPages.KInspectorProbe" ViewStateMode="Disabled" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="KInspectorProbe.aspx.cs" 
+    Inherits="Kentico.KInspector.Modules.KInspectorProbe" ViewStateMode="Disabled" %>
 
 <!DOCTYPE html>
 

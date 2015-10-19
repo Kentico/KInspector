@@ -2,7 +2,7 @@
 using Microsoft.Owin.Cors;
 using Owin;
 
-namespace KInspector.Web.WebAPI
+namespace Kentico.KInspector.Web
 {
 	/// <summary>
 	/// Configures WebAPI (Self-host).

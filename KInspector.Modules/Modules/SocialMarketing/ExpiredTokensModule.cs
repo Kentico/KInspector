@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Data;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.SocialMarketing
+namespace Kentico.KInspector.Modules
 {
     public class ExpiredTokensModule : IModule
     {

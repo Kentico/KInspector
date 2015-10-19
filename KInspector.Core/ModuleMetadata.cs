@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KInspector.Core
+namespace Kentico.KInspector.Core
 {
     /// <summary>
     /// A struct that is to be returned for each module. Needs to be created only in <see cref="IModule.GetModuleMetadata"/>.

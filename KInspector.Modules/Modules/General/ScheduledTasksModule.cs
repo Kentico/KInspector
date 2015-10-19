@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.General
+namespace Kentico.KInspector.Modules
 {
     public class ScheduledTasksModule : IModule
     {

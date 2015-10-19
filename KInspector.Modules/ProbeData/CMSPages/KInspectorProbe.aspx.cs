@@ -14,7 +14,7 @@ using System.Data;
 using System.IO;
 
 
-namespace KInspector.Modules.ProbeData.CMSPages
+namespace Kentico.KInspector.Modules
 {
     /// <summary>
     /// Prints auditing information about the instance.

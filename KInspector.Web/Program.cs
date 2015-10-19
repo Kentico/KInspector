@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using KInspector.Web.WebAPI;
 using Microsoft.Owin.Hosting;
 
-namespace KInspector.Web
+namespace Kentico.KInspector.Web
 {
-	class Program
+    class Program
 	{
 		/// <summary>
 		/// Server's base address

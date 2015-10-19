@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 
-namespace KInspector.Core
+namespace Kentico.KInspector.Core
 {
     /// <summary>
     /// Basic service for communication with database.

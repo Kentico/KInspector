@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KInspector.Modules.ProbeData.CMSPages
+namespace Kentico.KInspector.Modules
 {
     public partial class KInspectorProbe
     {

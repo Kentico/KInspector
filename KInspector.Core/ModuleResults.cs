@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace KInspector.Core
+namespace Kentico.KInspector.Core
 {
     /// <summary>
     /// Results of the module that are used in the <see cref="IModule.GetResults"/> method.

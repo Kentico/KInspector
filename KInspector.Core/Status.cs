@@ -1,4 +1,4 @@
-namespace KInspector.Core
+namespace Kentico.KInspector.Core
 {
     /// <summary>
     /// Result's status flag.
