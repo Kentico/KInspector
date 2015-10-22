@@ -1,4 +1,4 @@
-﻿namespace KInspector.Core
+﻿namespace Kentico.KInspector.Core
 {
     /// <summary>
     /// Kentico instance configuration model gathering data from setup page.

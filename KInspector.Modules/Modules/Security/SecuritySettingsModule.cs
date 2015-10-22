@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.Security
+namespace Kentico.KInspector.Modules
 {
     public class SecuritySettingsModule : IModule
     {

@@ -1,4 +1,4 @@
-﻿namespace KInspector.Core
+﻿namespace Kentico.KInspector.Core
 {
     /// <summary>
     /// The interface to implement to add a functionality to this application. 

@@ -7,8 +7,8 @@
     <ProjectGuid>{94C43526-335E-43F1-A5D6-020FB0A98E85}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KInspector.Web</RootNamespace>
-    <AssemblyName>KInspector.Web</AssemblyName>
+    <RootNamespace>Kentico.KInspector.Web</RootNamespace>
+    <AssemblyName>Kentico.KInspector.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
@@ -164,13 +164,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\KInspector.Core\KInspector.Core.csproj">
+    <ProjectReference Include="..\KInspector.Core\Kentico.KInspector.Core.csproj">
       <Project>{83c55b9e-f597-4941-a41a-932154e256d4}</Project>
-      <Name>KInspector.Core</Name>
+      <Name>Kentico.KInspector.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KInspector.Modules\KInspector.Modules.csproj">
+    <ProjectReference Include="..\KInspector.Modules\Kentico.KInspector.Modules.csproj">
       <Project>{1d75b5ff-71b8-403f-8aed-84b1f32d6617}</Project>
-      <Name>KInspector.Modules</Name>
+      <Name>Kentico.KInspector.Modules</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

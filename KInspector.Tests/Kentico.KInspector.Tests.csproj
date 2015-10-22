@@ -6,8 +6,8 @@
     <ProjectGuid>{0CD9708F-1740-4585-A9AE-B681C9F030E6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KInspector.Tests</RootNamespace>
-    <AssemblyName>KInspector.Tests</AssemblyName>
+    <RootNamespace>Kentico.KInspector.Tests</RootNamespace>
+    <AssemblyName>Kentico.KInspector.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -67,13 +67,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KInspector.Core\KInspector.Core.csproj">
+    <ProjectReference Include="..\KInspector.Core\Kentico.KInspector.Core.csproj">
       <Project>{83c55b9e-f597-4941-a41a-932154e256d4}</Project>
-      <Name>KInspector.Core</Name>
+      <Name>Kentico.KInspector.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KInspector.Modules\KInspector.Modules.csproj">
+    <ProjectReference Include="..\KInspector.Modules\Kentico.KInspector.Modules.csproj">
       <Project>{1d75b5ff-71b8-403f-8aed-84b1f32d6617}</Project>
-      <Name>KInspector.Modules</Name>
+      <Name>Kentico.KInspector.Modules</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

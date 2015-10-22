@@ -4,9 +4,9 @@ using System.Data;
 using System.IO;
 using System.Web;
 using System.Web.Configuration;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.Security
+namespace Kentico.KInspector.Modules
 {
     public class SecurityAppSettingsModule : IModule
     {

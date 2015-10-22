@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace KInspector.Core
+﻿namespace Kentico.KInspector.Core
 {
     /// <summary>
     /// Indicates WHAT does the <see cref="IModule"/> should return in <see cref="ModuleResults"/>.

@@ -2,9 +2,9 @@
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.General
+namespace Kentico.KInspector.Modules
 {
     public class UIElementsDiff : IModule
     {

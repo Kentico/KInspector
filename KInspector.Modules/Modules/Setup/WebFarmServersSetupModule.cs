@@ -1,7 +1,7 @@
 ﻿using System;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.Setup
+namespace Kentico.KInspector.Modules
 {
     public class WebFarmServersSetupModule : IModule
     {

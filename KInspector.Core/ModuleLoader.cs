@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Ninject;
 using Ninject.Extensions.Conventions;
 
-namespace KInspector.Core
+namespace Kentico.KInspector.Core
 {
     /// <summary>
     /// Loads all the modules from the assemblies that are in the same directory as an executing assembly.

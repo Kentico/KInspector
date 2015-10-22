@@ -1,7 +1,7 @@
 ﻿using System;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.General
+namespace Kentico.KInspector.Modules
 {
     public class BigTablesModule : IModule
     {

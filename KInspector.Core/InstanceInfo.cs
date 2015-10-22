@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.IO;
 
-namespace KInspector.Core
+namespace Kentico.KInspector.Core
 {
     public class InstanceInfo
     {

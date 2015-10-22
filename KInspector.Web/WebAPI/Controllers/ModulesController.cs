@@ -3,11 +3,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Web.WebAPI.Controllers
+namespace Kentico.KInspector.Web
 {
-	public class ModulesController : ApiController
+    public class ModulesController : ApiController
 	{
 		/// <summary>
 		/// Categories, which have their own page in the UI. The rest

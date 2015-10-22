@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Net;
-using KInspector.Core;
-using KInspector.Modules.Helpers;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.General
+namespace Kentico.KInspector.Modules
 {
     public class CacheItemsModule : IModule
     {

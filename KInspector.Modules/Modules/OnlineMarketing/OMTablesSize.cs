@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.OnlineMarketing
+namespace Kentico.KInspector.Modules
 {
     public class OMTablesSize : IModule
     {

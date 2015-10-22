@@ -1,7 +1,7 @@
-﻿using KInspector.Modules.Modules.General;
+﻿using Kentico.KInspector.Modules;
 using NUnit.Framework;
 
-namespace KInspector.Tests
+namespace Kentico.KInspector.Tests
 {
     [TestFixture]
     public class UIElementsDiffTests

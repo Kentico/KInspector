@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace KInspector.Modules.Helpers
+namespace Kentico.KInspector.Modules
 {
     /// <summary>
     /// Provides methods for listing of project code files.

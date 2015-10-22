@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace KInspector.Modules.Helpers
+namespace Kentico.KInspector.Modules
 {
     /// <summary>
     /// Provides methods useful for Kentico instance probe installation.

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
-using KInspector.Core;
+using Kentico.KInspector.Core;
 
-namespace KInspector.Modules.Modules.Content
+namespace Kentico.KInspector.Modules
 {
     public class RobotsTxtModule: IModule
     {
