@@ -42,7 +42,7 @@ namespace Kentico.KInspector.Modules
                     new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"), 
-                    new Version("8.2") 
+                    new Version("8.2")
                 },
                 Comment = @"Checks response time, response status, HTML size, ViewState size, number of links, favicons and Apple touch icons on the page. 
 

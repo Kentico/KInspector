@@ -12,7 +12,8 @@ namespace Kentico.KInspector.Modules
                 Name = "Contact groups with manual macro",
                 SupportedVersions = new[] { 
                     new Version("8.1"), 
-                    new Version("8.2") 
+                    new Version("8.2"),
+                    new Version("9.0")
                 },
                 Comment = @"Contact groups that have macro condition set via plain macro are always just slower and should be rewritten into MacroRuleDesigner, so that they can be translated into SQL queries to decrease recalculation time.
 For more, see https://docs.kentico.com/display/K82/Improving+custom+macro+performance+in+scoring+and+contact+groups

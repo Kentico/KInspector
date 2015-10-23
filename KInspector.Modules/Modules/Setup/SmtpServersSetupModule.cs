@@ -16,7 +16,8 @@ The servers are disabled by setting their server address to invalid value, so th
                 SupportedVersions = new[] { 
                     new Version("8.0"), 
                     new Version("8.1"), 
-                    new Version("8.2") 
+                    new Version("8.2"),
+                    new Version("9.0")
                 },
                 Category = "Setup",
             };
