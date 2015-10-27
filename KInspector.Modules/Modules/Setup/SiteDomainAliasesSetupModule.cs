@@ -14,7 +14,8 @@ namespace Kentico.KInspector.Modules
                 SupportedVersions = new[] { 
                     new Version("8.0"), 
                     new Version("8.1"), 
-                    new Version("8.2") 
+                    new Version("8.2"),
+                    new Version("9.0")
                 },
                 Category = "Setup",
             };

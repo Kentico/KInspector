@@ -16,7 +16,7 @@ namespace Kentico.KInspector.Modules
                     new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"), 
-                    new Version("8.2") 
+                    new Version("8.2")
                 },
                 Comment = @"Checks that the robots.txt file is present. See http://www.robotstxt.org/robotstxt.html for more details",
                 

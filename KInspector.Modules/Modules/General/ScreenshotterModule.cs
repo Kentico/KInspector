@@ -24,7 +24,7 @@ namespace Kentico.KInspector.Modules
                     new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"), 
-                    new Version("8.2") 
+                    new Version("8.2")
                 },
                 Comment = @"Screenshotting started. It will be saved into your Desktop folder. You can see actual progress in a console window.",
             };

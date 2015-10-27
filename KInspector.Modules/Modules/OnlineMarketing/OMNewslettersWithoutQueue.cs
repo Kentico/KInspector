@@ -13,7 +13,7 @@ namespace Kentico.KInspector.Modules
                 SupportedVersions = new[] { 
                     new Version("7.0"),
                     new Version("8.1"), 
-                    new Version("8.2") 
+                    new Version("8.2")
                 },
                 Comment = @"Displays the newsletters (email campaigns) that are not using email queue.
 

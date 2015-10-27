@@ -18,7 +18,7 @@ namespace Kentico.KInspector.Modules
                     new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"), 
-                    new Version("8.2") 
+                    new Version("8.2")
                 },
                 Comment = "Compares UIElements table with Kentico's default instalation and displays all differences."
             };
