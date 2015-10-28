@@ -10,7 +10,17 @@ namespace Kentico.KInspector.Modules
             return new ModuleMetadata
             {
                 Name = "Web parts in page templates and transformations",
-                Comment = "Looks up page templates and transformations containing certain web parts.",
+                Comment = @"Displays a page templates and transformations containing any of the following web parts:
+- CMSRepeater
+- CMSBreadCrumbs
+- CMSListMenu
+- CMSDataList
+
+Having those web parts in transformation or page template has a significant performance hit as they load all the data from the database every time the transformation item is processed.
+
+(e.g.: If you have 50 items processed in a transformation, you will end up with 50 database calls instead of 1)
+
+You should use hierarchical transformation instead (see https://docs.kentico.com/display/K82/Using+hierarchical+transformations).",
                 SupportedVersions = new[] { 
                     new Version("6.0"),
                     new Version("7.0"),
