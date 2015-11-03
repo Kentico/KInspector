@@ -9,14 +9,14 @@ namespace Kentico.KInspector.Modules
         {
             return new ModuleMetadata
             {
-                Name = "Web parts in page templates and transformations",
-                Comment = @"Displays a page templates and transformations containing any of the following web parts:
+                Name = "Performance demanding web parts in page templates and transformations",
+                Comment = @"Displays page templates and transformations containing any of the following web parts:
 - CMSRepeater
 - CMSBreadCrumbs
 - CMSListMenu
 - CMSDataList
 
-Having those web parts in transformation or page template has a significant performance hit as they load all the data from the database every time the transformation item is processed.
+Having those web parts in a transformation or page template can cause a significant performance hit as they load all the data from the database every time the transformation item is processed.
 
 (e.g.: If you have 50 items processed in a transformation, you will end up with 50 database calls instead of 1)
 
