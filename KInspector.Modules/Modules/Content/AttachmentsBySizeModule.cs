@@ -11,9 +11,12 @@ namespace Kentico.KInspector.Modules
             {
                 Name = "Attachments by size",
                 SupportedVersions = new[] { 
+                    new Version("6.0"),
+                    new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"),
-                    new Version("8.2")
+                    new Version("8.2"),
+                    new Version("9.0")
                 },
                 Comment = 
 @"Displays report of all attachments ordered by their size.
