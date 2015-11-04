@@ -70,7 +70,7 @@
     <Compile Include="Modules\Content\AttachmentsBySizeModule.cs" />
     <Compile Include="Modules\Content\RobotsTxtModule.cs" />
     <Compile Include="Modules\Content\PageTypeAssignedToSiteModule.cs" />
-    <Compile Include="Modules\Content\WebPartsInTemplatesAndTransformationsModule.cs" />
+    <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\General\MediaLibraryAzureLimitModule.cs" />
     <Compile Include="Modules\General\DatabaseConsistencyCheckModule.cs" />
@@ -265,7 +265,7 @@
     <Content Include="Scripts\UIElementsDiffV8.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\WebPartsInTemplatesAndTransformationsModule.sql">
+    <Content Include="Scripts\WebPartsInTransformationsModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\WebPartColumnsModule6.sql">

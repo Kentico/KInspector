@@ -3,20 +3,20 @@ using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules
 {
-    public class WebPartsInTemplatesAndTransformationsModule : IModule
+    public class WebPartsInTransformationsModule : IModule
     {
         public ModuleMetadata GetModuleMetadata()
         {
             return new ModuleMetadata
             {
-                Name = "Web parts in page templates and transformations",
-                Comment = @"Displays a page templates and transformations containing any of the following web parts:
+                Name = "Web parts in transformations",
+                Comment = @"Displays a transformations containing any of the following web parts:
 - CMSRepeater
 - CMSBreadCrumbs
 - CMSListMenu
 - CMSDataList
 
-Having those web parts in transformation or page template has a significant performance hit as they load all the data from the database every time the transformation item is processed.
+Having those web parts in transformation has a significant performance hit as they load all the data from the database every time the transformation item is processed.
 
 (e.g.: If you have 50 items processed in a transformation, you will end up with 50 database calls instead of 1)
 
@@ -36,11 +36,12 @@ You should use hierarchical transformation instead (see https://docs.kentico.com
         public ModuleResults GetResults(InstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
-            var results = dbService.ExecuteAndGetDataSetFromFile("WebPartsInTemplatesAndTransformationsModule.sql");
+            var results = dbService.ExecuteAndGetTableFromFile("WebPartsInTransformationsModule.sql");
 
             return new ModuleResults
             {
-                Result = results
+                Result = results,
+                Status = results.Rows.Count > 0 ? Status.Error : Status.Good
             };
         }
     }
