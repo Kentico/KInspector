@@ -24,7 +24,7 @@ If there are any 404 errors, there is a broken link somewhere on your website. C
 
 You should avoid broken links on your website as it hurts SEO and generates unnecessary traffic.
 
-For the complete website analysis, you can use some external tool like www.deadlinkchecker.com.",
+For the complete website analysis, you can use an external tool like www.deadlinkchecker.com.",
                 Category = "Event log"
             };
         }
