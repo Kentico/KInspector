@@ -20,9 +20,11 @@ namespace Kentico.KInspector.Modules
                 },
                 Comment = @"Displays all the 404 errors from the event log.
 
-If there are any 404 errors, maybe there is a broken link somewhere on your pages. 
-Check the referrer and try to fix all the broken links. For the other links, try to fix a root cause.
-In general, you want to avoid this error because it's an unnecessary waste of resources.",
+If there are any 404 errors, there is a broken link somewhere on your website. Check the referrer URL and fix all the broken links.
+
+You should avoid broken links on your website as it hurts SEO and generates unnecessary traffic.
+
+For the complete website analysis, you can use an external tool like www.deadlinkchecker.com.",
                 Category = "Event log"
             };
         }
@@ -37,7 +39,7 @@ In general, you want to avoid this error because it's an unnecessary waste of re
                 return new ModuleResults
                 {
                     Result = results,
-                    ResultComment = "Page not founds found! Check the referrers, if the links to these non existing pages can be removed",
+                    ResultComment = "Page not founds found! Check the referrers, if the links to these non existing pages can be removed.",
                     Status = results.Rows.Count > 10 ? Status.Error : Status.Warning,
                 };
             }
