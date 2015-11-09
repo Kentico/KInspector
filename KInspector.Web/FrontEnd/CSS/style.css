@@ -162,6 +162,6 @@
     table-layout: fixed;
 }
 
-.knl-table table tr td{
+.knl-table table tr td, .knl-table table tr th{
     word-wrap: break-word;
 }
