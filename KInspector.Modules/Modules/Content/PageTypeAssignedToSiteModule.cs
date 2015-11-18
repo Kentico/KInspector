@@ -15,9 +15,12 @@ namespace Kentico.KInspector.Modules
                     new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"), 
-                    new Version("8.2")
+                    new Version("8.2"),
+                    new Version("9.0")
                 },
-                Comment = @"Displays page types used by a certain site without being assigned to this site.",
+                Comment = @"Displays page types used by a certain site without being assigned to this site.
+
+If the page type is not assigned to the site and is used by this site, you will encounter problems while using import/export feature.",
                 Category = "Content"
             };
         }
