@@ -80,7 +80,21 @@ namespace Kentico.KInspector.Core
 
             dbService = new Lazy<DatabaseService>(() => new DatabaseService(Config));
             version = new Lazy<Version>(() => GetKenticoVersion());
-            uri = new Lazy<Uri>(() => new Uri(Config.Url));
+
+            // Ensure backslash to the Config.Url to support VirtualPath URLs.
+            // Sometimes the website is running under virtual path and 
+            // the URL looks like this http://localhost/kentico8
+            // Some modules (RobotsTxtModule, CacheItemsModle, ...) try 
+            // to append the relative path to the base URL but
+            // without trailing slash, the relative path is replaced.
+            // E.g.: 
+            //      var uri = new Uri("http://localhost/kentico8");
+            //      new Uri(uri, "robots.txt"); -> http://localhost/robots.txt
+            // 
+            // With trailing slash, the relative path is appended as expected.
+            //      var uri = new Uri("http://localhost/kentico8/");
+            //      new Uri(uri, "robots.txt"); -> http://localhost/kentico8/robots.txt
+            uri = new Lazy<Uri>(() => new Uri(Config.Url.EndsWith("/") ? Config.Url : Config.Url + "/"));
             directory = new Lazy<DirectoryInfo>(() => new DirectoryInfo(Config.Path));
         }
 
