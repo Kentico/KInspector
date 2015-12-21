@@ -72,6 +72,7 @@
     <Compile Include="Modules\Content\PageTypeAssignedToSiteModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
+    <Compile Include="Modules\Content\DuplicatePageAliasesModule.cs" />
     <Compile Include="Modules\General\MediaLibraryAzureLimitModule.cs" />
     <Compile Include="Modules\General\DatabaseConsistencyCheckModule.cs" />
     <Compile Include="Modules\Content\WebPartColumnsModule.cs" />
@@ -163,6 +164,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\DuplicatePageAliasesModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\PageTypeAssignedToSiteModule.sql">
