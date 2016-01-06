@@ -1,0 +1,1 @@
+﻿SELECT KeyName,KeyValue FROM CMS_SettingsKey WHERE KeyName IN ('CMSUsePasswordPolicy','CMSPasswordFormat');
