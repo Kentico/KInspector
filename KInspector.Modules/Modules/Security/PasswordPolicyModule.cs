@@ -15,9 +15,9 @@ namespace Kentico.KInspector.Modules
             return new ModuleMetadata
             {
                 Name = "Password policy settings",
-                Comment = @"It is critical that passwords are stored securely in the database, the module checks that the default and recommended SHA2 option is configured. https://docs.kentico.com/display/K8/Password+encryption+in+database
+                Comment = @"It is critical that passwords are stored securely in the database, the module checks that the default and recommended SHA2 option is configured. https://docs.kentico.com/display/K9/Password+encryption+in+database
 
-This module also checks that there is a password policy enforced to ensure users use a password that meets a minimum set of requirements. https://docs.kentico.com/display/K8/Password+strength+policy+and+its+enforcement",
+This module also checks that there is a password policy enforced to ensure users use a password that meets a minimum set of requirements. https://docs.kentico.com/display/K9/Password+strength+policy+and+its+enforcement",
                 SupportedVersions = new[] {
                     new Version("7.0"),
                     new Version("8.0"),
@@ -36,12 +36,9 @@ This module also checks that there is a password policy enforced to ensure users
             var results = dbService.ExecuteAndGetTableFromFile("PasswordPolicy.sql");
 
             if (results.Rows.Count > 0)
-            {
-                DataRow[] passwordFormatRow;
-                DataRow[] passwordPolicyRow;
-
-                passwordFormatRow = results.Select("KeyName = 'CMSPasswordFormat'");
-                passwordPolicyRow = results.Select("KeyName = 'CMSUsePasswordPolicy'");
+            { 
+                DataRow[] passwordFormatRow = results.Select("KeyName = 'CMSPasswordFormat'");
+                DataRow[] passwordPolicyRow = results.Select("KeyName = 'CMSUsePasswordPolicy'");
 
                 if (passwordFormatRow[0][1].ToString() != "SHA2SALT")
                 {
