@@ -36,13 +36,13 @@ Checks the following:
             var activityCount = dbService.ExecuteAndGetScalar<int>("SELECT COUNT(*) FROM OM_Activity");
             if (activityCount > 10000000)
             {
-                responses.Add("There is over 10 000 000 (" + activityCount + " exactly) activities in the database. Consider using deleting old page visits or setting up the old contact's deletion");
+                responses.Add("There are over 10 000 000 (" + activityCount + " exactly) activities in the database. Consider using deleting old page visits or setting up the old contact's deletion");
             }
 
             var contactsCount = dbService.ExecuteAndGetScalar<int>("SELECT COUNT(*) FROM OM_Contact");
             if (contactsCount > 1000000)
             {
-                responses.Add("There is over 1 000 000 (" + contactsCount + " exactly) contacts in the database. Consider using old contact's deletion");
+                responses.Add("There are over 1 000 000 (" + contactsCount + " exactly) contacts in the database. Consider using old contact's deletion");
 
                 var anonymousCount = dbService.ExecuteAndGetScalar<int>("SELECT COUNT(*) FROM OM_Contact WHERE ContactLastName LIKE 'Anonymous%'");
                 var mergedCount = dbService.ExecuteAndGetScalar<int>("SELECT COUNT(*) FROM OM_Contact WHERE ContactMergedWithContactID NOT NULL");
@@ -53,13 +53,13 @@ Checks the following:
             var contactGroupCount = dbService.ExecuteAndGetScalar<int>("SELECT COUNT(*) FROM OM_ContactGroup");
             if (contactGroupCount > 50)
             {
-                responses.Add("There is over 100 contact groups (" + contactGroupCount + " exactly). This might affect performance, are all of those really neccessary?");
+                responses.Add("There are over 50 contact groups (" + contactGroupCount + " exactly). This might affect performance, are all of those really neccessary?");
             }
 
             var scoringRuleCount = dbService.ExecuteAndGetScalar<int>("SELECT COUNT(*) FROM OM_Rule");
             if (scoringRuleCount > 50)
             {
-                responses.Add("There is over 100 scoring rules (" + scoringRuleCount + " exactly). This might affect performance, are all of those really neccessary?");
+                responses.Add("There are over 50 scoring rules (" + scoringRuleCount + " exactly). This might affect performance, are all of those really neccessary?");
             }
 
             if (responses.Any())
