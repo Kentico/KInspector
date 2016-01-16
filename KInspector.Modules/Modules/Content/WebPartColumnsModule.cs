@@ -27,7 +27,7 @@ https://docs.kentico.com/display/K82/Loading+data+efficiently",
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             if (instanceInfo.Version == new Version("6.0"))

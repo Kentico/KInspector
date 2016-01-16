@@ -29,8 +29,7 @@ This module also checks that there is a password policy enforced to ensure users
             };
         }
 
-
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("PasswordPolicy.sql");
@@ -40,7 +39,7 @@ This module also checks that there is a password policy enforced to ensure users
                 DataRow[] passwordFormatRow = results.Select("KeyName = 'CMSPasswordFormat'");
                 DataRow[] passwordPolicyRows = results.Select("KeyName = 'CMSUsePasswordPolicy'");
 
-                if (passwordFormatRow[0][1].ToString() != "SHA2SALT")
+                if (passwordFormatRow[0][2].ToString() != "SHA2SALT")
                         {
                             return new ModuleResults
                             {
@@ -52,7 +51,7 @@ This module also checks that there is a password policy enforced to ensure users
 
                 foreach (var passwordPolicyRow in passwordPolicyRows)
                 {
-                    if (passwordPolicyRow[1].ToString() != "True")
+                    if (passwordPolicyRow[2].ToString() != "True")
                             {
                                 return new ModuleResults
                                 {

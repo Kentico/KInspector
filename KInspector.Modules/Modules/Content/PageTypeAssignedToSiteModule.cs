@@ -26,7 +26,7 @@ If the page type is not assigned to the site and is used by this site, you will 
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("PageTypeAssignedToSiteModule.sql");
