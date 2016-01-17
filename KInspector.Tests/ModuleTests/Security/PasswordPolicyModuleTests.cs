@@ -112,6 +112,29 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
         }
 
         [TestMethod]
+        public void Should_HaveStatusError_When_NoRecordsAreRetrieved()
+        {
+            // arrange...
+            // Mocks...
+            var mockDbs = Mock.Of<IDatabaseService>();
+            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeEmptyTable());
+            var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
+            mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
+
+            // Real Module under test...
+            PasswordPolicyModule mod = new PasswordPolicyModule();
+
+            // act...
+            var result = mod.GetResults(mockInstanceInfo.Object);
+
+            // assert...
+            Assert.IsTrue(result.ResultComment.Equals("Failed to check settings as expected."));
+            Assert.IsTrue(result.Status.Equals(Status.Error));
+            mockInstanceInfo.VerifyAll();
+            Mock.Get(mockDbs).VerifyAll();
+        }
+
+        [TestMethod]
         public void Should_HaveStatusWarning_When_PasswordPolicyIsFalseForAnySite()
         {
             // arrange...
