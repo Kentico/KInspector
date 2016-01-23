@@ -30,7 +30,7 @@ This module also checks that there is a password policy enforced to ensure users
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("PasswordPolicy.sql");

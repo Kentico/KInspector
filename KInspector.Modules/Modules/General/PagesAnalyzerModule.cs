@@ -64,7 +64,7 @@ Note: Although it may seem that touch icon is for Apple devices only, this is no
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var siteID = dbService.ExecuteAndGetScalar<int>(string.Format(@"SELECT s.SiteID FROM CMS_Site AS s LEFT JOIN CMS_SiteDomainAlias AS sa ON s.SiteID = sa.SiteID 

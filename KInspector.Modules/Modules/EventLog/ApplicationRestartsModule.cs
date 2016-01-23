@@ -25,7 +25,7 @@ Frequent restarts could signify some troubles.",
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("ApplicationRestartsModule.sql");

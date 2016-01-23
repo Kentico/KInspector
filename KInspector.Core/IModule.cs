@@ -44,6 +44,6 @@
         /// }
         /// </code> 
         /// </example>
-        ModuleResults GetResults(InstanceInfo instanceInfo);
+        ModuleResults GetResults(IInstanceInfo instanceInfo);
     }
 }

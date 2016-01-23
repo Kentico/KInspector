@@ -14,7 +14,7 @@ namespace Kentico.KInspector.Modules
     {
         #region "Fields"
 
-        private DatabaseService mDatabaseService;
+        private IDatabaseService mDatabaseService;
         private string mLikePageTemplateDisplayName = "%";
 
         #endregion
@@ -66,7 +66,7 @@ namespace Kentico.KInspector.Modules
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             List<string> report = new List<string>();
 

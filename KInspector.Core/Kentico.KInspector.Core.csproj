@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IDatabaseService.cs" />
+    <Compile Include="IInstanceInfo.cs" />
     <Compile Include="InstanceConfig.cs" />
     <Compile Include="InstanceInfo.cs" />
     <Compile Include="IModule.cs" />
