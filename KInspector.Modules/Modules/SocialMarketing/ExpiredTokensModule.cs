@@ -22,7 +22,7 @@ namespace Kentico.KInspector.Modules
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             DataTable expiredTokens = new DataTable("Expired account tokens");
             expiredTokens.Columns.Add("SocialNetwork");

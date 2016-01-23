@@ -23,7 +23,7 @@ The servers are disabled by setting their Enabled state to disabled and their di
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetDataSetFromFile("Setup/WebFarmServerSetupModule.sql");

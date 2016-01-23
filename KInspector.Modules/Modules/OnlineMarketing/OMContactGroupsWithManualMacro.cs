@@ -23,7 +23,7 @@ NOTE: This applies only on Kentico 8.1 and above, where the improvements were in
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var manualContactGroups = dbService.ExecuteAndGetTableFromFile("OMContactGroupsWithManualMacro.sql");

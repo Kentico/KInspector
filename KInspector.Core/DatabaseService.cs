@@ -9,7 +9,7 @@ namespace Kentico.KInspector.Core
     /// <summary>
     /// Basic service for communication with database.
     /// </summary>
-    public class DatabaseService
+    public class DatabaseService : IDatabaseService
     {
         private readonly string mConnectionString;
         private const int SQL_COMMAND_TIMEOUT_SECONDS = 90;

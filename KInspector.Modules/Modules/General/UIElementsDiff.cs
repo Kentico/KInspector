@@ -25,7 +25,7 @@ namespace Kentico.KInspector.Modules
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             DataTable sourceUIElements = dbService.ExecuteAndGetTableFromFile(String.Format("UIElementsDiffV{0}.sql", instanceInfo.Version.Major));

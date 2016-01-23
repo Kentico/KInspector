@@ -31,7 +31,7 @@
         /// </summary>
         /// <example>
         /// <code> 
-        /// public ModuleResults GetResults(InstanceInfo instanceInfo)
+        /// public ModuleResults GetResults(IInstanceInfo instanceInfo)
         /// {
         ///    var dbService = instanceInfo.DBService;
         ///    var results = dbService.ExecuteAndGetDataSetFromFile("EventLogInfoModule.sql");
@@ -44,6 +44,6 @@
         /// }
         /// </code> 
         /// </example>
-        ModuleResults GetResults(InstanceInfo instanceInfo);
+        ModuleResults GetResults(IInstanceInfo instanceInfo);
     }
 }
