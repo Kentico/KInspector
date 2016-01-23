@@ -36,38 +36,36 @@ This module also checks that there is a password policy enforced to ensure users
             var results = dbService.ExecuteAndGetTableFromFile("PasswordPolicy.sql");
 
             if (results.Rows.Count > 0)
-            {
+            { 
                 DataRow[] passwordFormatRow = results.Select("KeyName = 'CMSPasswordFormat'");
-                DataRow[] passwordPolicyRows = results.Select("KeyName = 'CMSUsePasswordPolicy'");
+                DataRow[] passwordPolicyRow = results.Select("KeyName = 'CMSUsePasswordPolicy'");
 
                 if (passwordFormatRow[0][1].ToString() != "SHA2SALT")
-                        {
-                            return new ModuleResults
-                            {
-                                Result = results,
-                                ResultComment = "The CMSPasswordFormat should be set to 'SHA2SALT'.",
-                                Status = Status.Error,
-                            };
-                        } 
-
-                foreach (var passwordPolicyRow in passwordPolicyRows)
                 {
-                    if (passwordPolicyRow[1].ToString() != "True")
-                            {
-                                return new ModuleResults
-                                {
-                                    Result = results,
-                                    ResultComment = "It is recommended that you have CMSUsePasswordPolicy set to 'True'.",
-                                    Status = Status.Warning,
-                                };
-                            } 
+                    return new ModuleResults
+                    {
+                        Result = results,
+                        ResultComment = "The CMSPasswordFormat should be set to 'SHA2SALT'.",
+                        Status = Status.Error,
+                    };
                 }
-
-                return new ModuleResults
+                else if (passwordPolicyRow[0][1].ToString() != "True")
                 {
-                    ResultComment = "Password settings look good.",
-                    Status = Status.Good
-                };
+                    return new ModuleResults
+                    {
+                        Result = results,
+                        ResultComment = "It is recommended that you have CMSUsePasswordPolicy set to 'True'.",
+                        Status = Status.Warning,
+                    };
+                }
+                else
+                {
+                    return new ModuleResults
+                    {
+                        ResultComment = "Password settings look good.",
+                        Status = Status.Good
+                    };
+                }
             }
 
             return new ModuleResults
