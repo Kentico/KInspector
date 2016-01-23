@@ -82,8 +82,8 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             var result = mod.GetResults(mockInstanceInfo.Object);
 
             // assert...
-            Assert.IsTrue(result.ResultComment.Equals("Password settings look good."));
-            Assert.IsTrue(result.Status.Equals(Status.Good));
+            StringAssert.Equals(result.ResultComment, "Password settings look good.");
+            Assert.AreEqual(Status.Good, result.Status);
             mockInstanceInfo.VerifyAll();
             Mock.Get(mockDbs).VerifyAll();
         }
@@ -105,8 +105,8 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             var result = mod.GetResults(mockInstanceInfo.Object);
 
             // assert...
-            Assert.IsTrue(result.ResultComment.Equals("The CMSPasswordFormat should be set to 'SHA2SALT'."));
-            Assert.IsTrue(result.Status.Equals(Status.Error));
+            StringAssert.Equals(result.ResultComment, "The CMSPasswordFormat should be set to 'SHA2SALT'.");
+            Assert.AreEqual(Status.Error, result.Status);
             mockInstanceInfo.VerifyAll();
             Mock.Get(mockDbs).VerifyAll();
         }
@@ -128,8 +128,8 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             var result = mod.GetResults(mockInstanceInfo.Object);
 
             // assert...
-            Assert.IsTrue(result.ResultComment.Equals("Failed to check settings as expected."));
-            Assert.IsTrue(result.Status.Equals(Status.Error));
+            StringAssert.Equals(result.ResultComment, "Failed to check settings as expected.");
+            Assert.AreEqual(Status.Error, result.Status);
             mockInstanceInfo.VerifyAll();
             Mock.Get(mockDbs).VerifyAll();
         }
@@ -140,7 +140,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             // arrange...
             // Mocks...
             var mockDbs = Mock.Of<IDatabaseService>();
-            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeDataTableWithBadPasswordFormat());
+            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeDataTableWithBadPasswordPolicy());
             var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
             mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
 
@@ -151,8 +151,8 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             var result = mod.GetResults(mockInstanceInfo.Object);
 
             // assert...
-            Assert.IsTrue(result.ResultComment.Equals("The CMSPasswordFormat should be set to 'SHA2SALT'."));
-            Assert.IsTrue(result.Status.Equals(Status.Error));
+            StringAssert.Equals(result.ResultComment, "It is recommended that you have CMSUsePasswordPolicy set to 'True'.");
+            Assert.AreEqual(Status.Warning, result.Status);
             mockInstanceInfo.VerifyAll();
             Mock.Get(mockDbs).VerifyAll();
         }
