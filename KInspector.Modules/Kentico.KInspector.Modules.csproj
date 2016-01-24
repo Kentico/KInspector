@@ -96,6 +96,7 @@
     <Compile Include="Modules\Security\PasswordPolicyModule.cs" />
     <Compile Include="Modules\Security\SecurityAppSettingsModule.cs" />
     <Compile Include="Modules\Security\SecuritySettingsModule.cs" />
+    <Compile Include="Modules\Security\SslInAdminstrationModule.cs" />
     <Compile Include="Modules\Security\TransformationAnalyzerModule.cs" />
     <Compile Include="Modules\Security\UsersWithPlaintextPasswordsModule.cs" />
     <Compile Include="Modules\Security\VulnerabilityAnalyzerModule.cs" />
@@ -174,6 +175,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\MediaLibraryAzureLimitModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\SslInAdministration.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\PasswordPolicy.sql">
