@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Kentico.KInspector.Core
 {
-    public class InstanceInfo
+    public class InstanceInfo : IInstanceInfo
     {
         private Lazy<DatabaseService> dbService;
         private Lazy<Version> version;
@@ -56,7 +56,7 @@ namespace Kentico.KInspector.Core
         /// <summary>
         /// Database service to communicate with the instance database.
         /// </summary>
-        public DatabaseService DBService
+        public IDatabaseService DBService
         {
             get
             {

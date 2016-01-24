@@ -28,7 +28,7 @@ Checks the following:
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             List<string> responses = new List<string>();
 

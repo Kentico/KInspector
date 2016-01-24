@@ -33,7 +33,7 @@ You should use hierarchical transformation instead (see https://docs.kentico.com
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("WebPartsInTransformationsModule.sql");
