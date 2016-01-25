@@ -71,7 +71,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             // arrange...
             // Mocks...
             var mockDbs = Mock.Of<IDatabaseService>();
-            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeDataTableOK());
+            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(true,3,0));
             var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
             mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
 
@@ -94,7 +94,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             // arrange...
             // Mocks...
             var mockDbs = Mock.Of<IDatabaseService>();
-            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeDataTableWithBadPasswordFormat());
+            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(false, 2,0));
             var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
             mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
 
@@ -140,7 +140,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             // arrange...
             // Mocks...
             var mockDbs = Mock.Of<IDatabaseService>();
-            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeDataTableWithBadPasswordPolicy());
+            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(true, 2,1));
             var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
             mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
 
@@ -157,61 +157,58 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             Mock.Get(mockDbs).VerifyAll();
         }
 
-        private DataTable MakeDataTableOK()
+        /// <summary>
+        /// Utility method to assist in the creation of 'mock' data for the Unit Tests
+        /// </summary>
+        /// <param name="hasGoodPasswordFormat">Determines if the mock data table will contain a correct (true) or faulty (false) record for the CMS Password Format </param>
+        /// <param name="goodPwdPolicyRowCount">Determines how many correct mock records will be created within the mock table.</param>
+        /// <param name="badPwdPolicyRowCount">Determines how many incorrect mock records wil be created within the mock table.</param>
+        /// <returns></returns>
+        private DataTable MakeData(bool hasGoodPasswordFormat = true, int goodPwdPolicyRowCount = 2, int badPwdPolicyRowCount = 0)
         {
             DataTable tbl = this.MakeEmptyTable();
             DataRow newRow = tbl.NewRow();
             // add a row for password format
+            newRow["SiteDisplayName"] = "N/A"; ;
             newRow["KeyName"] = "CMSPasswordFormat";
-            newRow["KeyValue"] = "SHA2SALT";
+            newRow["KeyValue"] = hasGoodPasswordFormat ? "SHA2SALT" : "BAD PWD FORMAT";
             tbl.Rows.Add(newRow);
-            // add a row for password policy
-            newRow = tbl.NewRow();
-            newRow["KeyName"] = "CMSUsePasswordPolicy";
-            newRow["KeyValue"] = "True";
-            tbl.Rows.Add(newRow);
-            // return the table
+            for (int i = 0; i < goodPwdPolicyRowCount; i++)
+            {
+                // add a row for password policy
+                newRow = tbl.NewRow();
+                newRow["SiteDisplayName"] = string.Format("Good Site Name {0}", i);
+                newRow["KeyName"] = "CMSUsePasswordPolicy";
+                newRow["KeyValue"] = "True";
+                tbl.Rows.Add(newRow);                
+            }
+            for (int j = 0; j < badPwdPolicyRowCount; j++)
+            {
+                // add a row for password policy
+                newRow = tbl.NewRow();
+                newRow["SiteDisplayName"] = string.Format("Bad Site Name {0}", j);
+                newRow["KeyName"] = "CMSUsePasswordPolicy";
+                newRow["KeyValue"] = "False";
+                tbl.Rows.Add(newRow);                
+            }            // return the table
             return tbl;
         }
 
-        private DataTable MakeDataTableWithBadPasswordFormat()
-        {
-            DataTable tbl = this.MakeEmptyTable();
-            DataRow newRow = tbl.NewRow();
-            // add a row for password format
-            newRow["KeyName"] = "CMSPasswordFormat";
-            newRow["KeyValue"] = "BAD FORMAT";
-            tbl.Rows.Add(newRow);
-            // add a row for password policy
-            newRow = tbl.NewRow();
-            newRow["KeyName"] = "CMSUsePasswordPolicy";
-            newRow["KeyValue"] = "True";
-            tbl.Rows.Add(newRow);
-            // return the table
-            return tbl;
-        }
-
-        private DataTable MakeDataTableWithBadPasswordPolicy()
-        {
-            DataTable tbl = this.MakeEmptyTable();
-            DataRow newRow = tbl.NewRow();
-            // add a row for password format
-            newRow["KeyName"] = "CMSPasswordFormat";
-            newRow["KeyValue"] = "SHA2SALT";
-            tbl.Rows.Add(newRow);
-            // add a row for password policy
-            newRow = tbl.NewRow();
-            newRow["KeyName"] = "CMSUsePasswordPolicy";
-            newRow["KeyValue"] = "False";
-            tbl.Rows.Add(newRow);
-            // return the table
-            return tbl;
-        }
-
+        /// <summary>
+        /// This is the 'mock' table that represents the data the PaswordPolicyModule expects as per the SQL defined 
+        /// in its corresponding script, Scripts > PasswordPolicy.sql
+        /// </summary>
+        /// <returns>An empty Data Table with the expected columns of the 'real' result set.</returns>
         private DataTable MakeEmptyTable()
         {
             DataTable tbl = new DataTable();
             DataColumn columnSpec = null;
+            columnSpec = new DataColumn
+            {
+                DataType = typeof(string),
+                ColumnName = "SiteDisplayName"
+            };
+            tbl.Columns.Add(columnSpec);
             columnSpec = new DataColumn
             {
                 DataType = typeof(string),
