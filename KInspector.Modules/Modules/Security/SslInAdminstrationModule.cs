@@ -1,7 +1,7 @@
 ﻿using System;
 using Kentico.KInspector.Core;
 
-namespace Kentico.KInspector.Modules.Modules.Security
+namespace Kentico.KInspector.Modules
 {
     public class SslInAdminstrationModule : IModule
     {
@@ -22,7 +22,7 @@ namespace Kentico.KInspector.Modules.Modules.Security
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("SslInAdministration.sql");
