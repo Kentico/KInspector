@@ -33,3 +33,5 @@ Want to improve the KInspector? Great! Read the [contributing guidelines](https:
 [![Check out KInspector on YouTube!](http://img.youtube.com/vi/ixGakcfITe8/0.jpg)](http://www.youtube.com/watch?v=ixGakcfITe8)
 
 If anything feels wrong or incomplete, please let us know. Create a new [issue](https://github.com/Kentico/KInspector/issues/new) or submit a [pull request](https://help.github.com/articles/using-pull-requests/).
+
+Test AppVeyor CI
