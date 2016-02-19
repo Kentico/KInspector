@@ -224,9 +224,6 @@
     <Content Include="Scripts\ScreenshotterModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\UIElementsDiffV5.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\InstanceInfo.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -253,12 +250,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\Setup\WebFarmServerSetupModule.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\UIElementsDiffV7.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\UIElementsDiffV8.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\WebPartsInTransformationsModule.sql">
