@@ -177,6 +177,9 @@
     <Content Include="Scripts\MediaLibraryAzureLimitModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\ScreenshotterModule-v9.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\SslInAdministration.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

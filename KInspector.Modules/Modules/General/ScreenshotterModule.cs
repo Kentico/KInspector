@@ -24,7 +24,8 @@ namespace Kentico.KInspector.Modules
                     new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"), 
-                    new Version("8.2")
+                    new Version("8.2"),
+                    new Version("9.0")
                 },
                 Comment = @"Screenshotting started. It will be saved into your Desktop folder. You can see actual progress in a console window.",
             };
@@ -34,7 +35,16 @@ namespace Kentico.KInspector.Modules
         public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
-            var urls = dbService.ExecuteAndGetTableFromFile("ScreenshotterModule.sql");
+
+            DataTable urls;
+            if (instanceInfo.Version.Major >= 9)
+            {
+                urls = dbService.ExecuteAndGetTableFromFile("ScreenshotterModule-v9.sql");
+            }
+            else
+            {
+                urls = dbService.ExecuteAndGetTableFromFile("ScreenshotterModule.sql");
+            }
 
             // Start process in separate thread to make website responsive.
             Thread t = new Thread(StartScreenshotting);
