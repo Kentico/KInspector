@@ -103,8 +103,9 @@ namespace Kentico.KInspector.Modules
 
         private static string CreateTargetDirectory(InstanceInfo config)
         {
+            const string KINSPECTOR_DESKTOP_FOLDER_NAME = "KInspector_Screenshotter_Output";
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string targetDirectory = desktopPath + "\\" + SanitizeFileName(config.Uri.ToString()) + "\\";
+            string targetDirectory = desktopPath + "\\" + KINSPECTOR_DESKTOP_FOLDER_NAME + "\\" + SanitizeFileName(config.Uri.ToString()) + "\\";
 
             Log("Creating target directory: {0}", targetDirectory);
             Directory.CreateDirectory(targetDirectory);
