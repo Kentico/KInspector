@@ -87,7 +87,6 @@
     <Compile Include="Modules\General\CMSFileModule.cs" />
     <Compile Include="Modules\General\ScheduledTasksModule.cs" />
     <Compile Include="Modules\General\DocumentsConsistencyIssuesModule.cs" />
-    <Compile Include="Modules\General\UIElementsDiff.cs" />
     <Compile Include="Modules\OnlineMarketing\OMContactGroupsWithManualMacro.cs" />
     <Compile Include="Modules\OnlineMarketing\OMInactiveContactsDeletion.cs" />
     <Compile Include="Modules\OnlineMarketing\OMNewslettersWithoutQueue.cs" />
@@ -131,21 +130,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\DefaultInstallationFiles\K8website.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\DefaultUIElements\70.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\DefaultUIElements\81.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\DefaultUIElements\82.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\DefaultUIElements\80.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\DefaultUIElements\55.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx.cs">
@@ -244,9 +228,6 @@
     <Content Include="Scripts\ScreenshotterModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\UIElementsDiffV5.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\InstanceInfo.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -273,12 +254,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\Setup\WebFarmServerSetupModule.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\UIElementsDiffV7.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\UIElementsDiffV8.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\WebPartsInTransformationsModule.sql">

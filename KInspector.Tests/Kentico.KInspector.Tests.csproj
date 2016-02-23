@@ -69,7 +69,6 @@
   <ItemGroup>
     <Compile Include="InstanceInfoTests.cs" />
     <Compile Include="Modules\Security\PasswordPolicyModuleTests.cs" />
-    <Compile Include="UIElementsDiffTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
