@@ -29,44 +29,19 @@ namespace Kentico.KInspector.Modules
 
         public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
-            var dbService = instanceInfo.DBService;
-            var results = dbService.ExecuteAndGetTableFromFile("FloodProtectionModule.sql");
-            Status resultstatus = Status.Good;
-
-            //Make sure there are records
-            if (results.Rows.Count > 0)
+            try
             {
-                //Loop through the records
-                foreach (DataRow drFloodProtection in results.Rows)
-                {
-                    //Determine which key is being examined
-                    switch (drFloodProtection["KeyName"].ToString())
-                    {
-                        case "CMSFloodProtectionEnabled": //Flood Protection
-                            if (drFloodProtection["KeyValue"].ToString().ToLower() != "true")
-                            {
-                                drFloodProtection["Notes"] = "It is recommended that you have CMSFloodProtectionEnabled set to True. You can find this setting here: Security & Membership > Protection > Flood protection'";
-                                resultstatus = Status.Warning;
-                            }
-                            break;
-                        case "CMSChatEnableFloodProtection": //Chat Flood Protection
-                            if (drFloodProtection["KeyValue"].ToString().ToLower() != "true")
-                            {
-                                drFloodProtection["Notes"] = "It is recommended that you have CMSChatEnableFloodProtection set to True. You can find this setting here: Community > Chat > Flood protection";
-                                resultstatus = Status.Warning;
-                            }
-                            break;
-                    }
-                }
+                var dbService = instanceInfo.DBService;
+                var results = dbService.ExecuteAndGetTableFromFile("FloodProtectionModule.sql");
 
-                //Check if the all of the settings are set correctly.
-                if (resultstatus != Status.Good)
+                //Make sure there are records
+                if (results.Rows.Count > 0)
                 {
                     //Return the issues
                     return new ModuleResults
                     {
                         Result = results,
-                        Status = resultstatus
+                        Status = Status.Warning
                     };
                 }
                 else
@@ -78,12 +53,14 @@ namespace Kentico.KInspector.Modules
                     };
                 }
             }
-
-            return new ModuleResults
+            catch (Exception ex)
             {
-                ResultComment = "Failed to check settings as expected.",
-                Status = Status.Error
-            };
+                return new ModuleResults
+                {
+                    ResultComment = "Failed to check settings as expected.<br />" + ex.Message,
+                    Status = Status.Error
+                };
+            }
 
         }
     }
