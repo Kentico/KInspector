@@ -1,0 +1,1 @@
+select count(AliasID) as AliasCount from CMS_DocumentAlias
