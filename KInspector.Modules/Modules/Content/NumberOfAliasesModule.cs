@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using Kentico.KInspector.Core;
 
-namespace Kentico.KInspector.Modules.Modules.Content
+namespace Kentico.KInspector.Modules
 {
     public class NumberOfAliasesModule : IModule
     {
@@ -22,7 +22,11 @@ namespace Kentico.KInspector.Modules.Modules.Content
                     new Version("8.1"),
                     new Version("8.2"),
                     new Version("9.0") },
-                Comment = "Returns number of all registered aliases and number of documents. Having too many aliases can decrease site's performance."
+                Comment = @"Returns number of aliases per node + total count of aliases and documents for direct comparison.
+
+Having too many aliases per node may suggest problem with wrong API usage, decreased performance and SEO problems. 
+
+Huge amount of alises also decrease site's performance. Only necessary aliases should be kept, the rest should be deleted.",
             };
         }
 
@@ -36,38 +40,11 @@ namespace Kentico.KInspector.Modules.Modules.Content
 
         private DataSet GetAndJoinDataTables(IInstanceInfo instanceInfo)
         {
-            var ds = new DataSet();
+            var result = instanceInfo.DBService.ExecuteAndGetDataSetFromFile("NumberOfAliasesModule.sql");
 
-            ds.Tables.Add(GetNumberOfAliases(instanceInfo).Copy());
-            ds.Tables.Add(GetNumberOfDocuments(instanceInfo).Copy());
-            ds.Tables.Add(GetAliasesPerNode(instanceInfo).Copy());
-
-            return ds;
-        }
-
-        private DataTable GetNumberOfDocuments(IInstanceInfo instanceInfo)
-        {
-            var result = instanceInfo.DBService.ExecuteAndGetTableFromFile("NumberOfAliasesDocumentsModule.sql");
-
-            result.TableName = "1. Number of documents";
-
-            return result;
-        }
-
-        private DataTable GetNumberOfAliases(IInstanceInfo instanceInfo)
-        {
-            var result = instanceInfo.DBService.ExecuteAndGetTableFromFile("NumberOfAliasesModule.sql");
-
-            result.TableName = "2. Number of aliases";
-
-            return result;
-        }
-
-        private DataTable GetAliasesPerNode(IInstanceInfo instanceInfo)
-        {
-            var result = instanceInfo.DBService.ExecuteAndGetTableFromFile("NumberOfAliasesPerNodeModule.sql");
-
-            result.TableName = "3. Aliases per node (ordered by number of aliases)";
+            result.Tables[0].TableName = "Number of documents";
+            result.Tables[1].TableName = "Number of aliases";
+            result.Tables[2].TableName = "Aliases per node";
 
             return result;
         }

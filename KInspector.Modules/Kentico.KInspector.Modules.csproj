@@ -157,13 +157,7 @@
     <Content Include="Scripts\WorkflowConsistencyGetDocuments.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\NumberOfAliasesPerNodeModule.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\NumberOfAliasesModule.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\NumberOfAliasesDocumentsModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\DuplicatePageAliasesModule.sql">

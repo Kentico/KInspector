@@ -1,1 +1,0 @@
-select count(DocumentID) as DocumentCount from CMS_Document

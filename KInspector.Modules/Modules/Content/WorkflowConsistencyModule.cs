@@ -8,7 +8,7 @@ using System.Xml;
 
 using Kentico.KInspector.Core;
 
-namespace Kentico.KInspector.Modules.Modules.Content
+namespace Kentico.KInspector.Modules
 {
     public class WorkflowConsistencyModule : IModule
     {
@@ -50,12 +50,11 @@ Implication of such inconsistency is that when you look at a document in Content
             InstanceInfo = instanceInfo;
 
             var result = GetInconsistenciesDataTable();
-            Status status = result.Rows.Count == 0 ? Status.Good : Status.Error;
 
             return new ModuleResults()
             {
                 Result = result,
-                Status = status
+                Status = result.Rows.Count == 0 ? Status.Good : Status.Error
             };
         }
 
@@ -71,16 +70,9 @@ Implication of such inconsistency is that when you look at a document in Content
             result.Columns.Add("DocumentID", typeof(String));
             result.Columns.Add("NotMatchingFields", typeof(String));
 
-            int index = 0;
-
             foreach (var resultItem in inconsistentDocuments)
             {
-                DataRow documentRow = result.NewRow();
-                documentRow["DocumentID"] = resultItem.DocumentID;
-                documentRow["NotMatchingFields"] = resultItem.NotMachingFieldsString;
-
-                result.Rows.InsertAt(documentRow, index);
-                index++;
+                result.Rows.Add(resultItem.DocumentID, resultItem.NotMachingFieldsString);
             }
 
             return result;
@@ -141,7 +133,7 @@ Implication of such inconsistency is that when you look at a document in Content
                 }
 
                 // Handle different types of values
-                if (publishedItem.Value.GetType() == typeof(DateTime))
+                if (publishedItem.Value is DateTime)
                 {
                     // Compare dates
                     DateTime publishedDate;
@@ -159,7 +151,7 @@ Implication of such inconsistency is that when you look at a document in Content
                     }
 
                 }
-                else if (publishedItem.Value.GetType() == typeof(Boolean))
+                else if (publishedItem.Value is Boolean)
                 {
                     bool publishedBool;
                     bool editedBool;
@@ -273,8 +265,7 @@ Implication of such inconsistency is that when you look at a document in Content
         private ClassItem GetClassItem(string className)
         {
             return ClassItems
-                .Where(m => m.ClassName.Equals(className, StringComparison.OrdinalIgnoreCase))
-                .FirstOrDefault();
+                .FirstOrDefault(m => m.ClassName.Equals(className, StringComparison.OrdinalIgnoreCase));
         }
 
         #endregion
@@ -290,16 +281,7 @@ Implication of such inconsistency is that when you look at a document in Content
             {
                 get
                 {
-                    string result = "";
-                    for (int i = 0; i < NotMatchingFields.Count(); i++)
-                    {
-                        result += NotMatchingFields[i];
-                        if (i != (NotMatchingFields.Count() - 1))
-                        {
-                            result += ";";
-                        }
-                    }
-                    return result;
+                    return String.Join(";", NotMatchingFields);
                 }
             }
 
