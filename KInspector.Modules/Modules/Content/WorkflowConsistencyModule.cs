@@ -69,10 +69,12 @@ Implication of such inconsistency is that when you look at a document in Content
             var result = new DataTable("Inconsistencies");
             result.Columns.Add("DocumentID", typeof(String));
             result.Columns.Add("NotMatchingFields", typeof(String));
+            result.Columns.Add("DocumentCulture", typeof(String));
+            result.Columns.Add("NodeAliasPath", typeof(String));
 
             foreach (var resultItem in inconsistentDocuments)
             {
-                result.Rows.Add(resultItem.DocumentID, resultItem.NotMachingFieldsString);
+                result.Rows.Add(resultItem.DocumentID, resultItem.NotMachingFieldsString, resultItem.DocumentCulture, resultItem.NodeAliasPath);
             }
 
             return result;
@@ -104,7 +106,7 @@ Implication of such inconsistency is that when you look at a document in Content
                 if (matchResult.Count != 0)
                 {
                     // Add inconsistent document to list
-                    inconsistentDocuments.Add(new ResultItem(document.DocumentID, matchResult));
+                    inconsistentDocuments.Add(new ResultItem(document.DocumentID, matchResult, document.DocumentCulture, document.NodeAliasPath));
                 }
             }
 
@@ -235,7 +237,9 @@ Implication of such inconsistency is that when you look at a document in Content
                     DocumentName = documentItem["DocumentName"].ToString(),
                     ClassName = documentItem["ClassName"].ToString(),
                     DocumentForeignKeyValue = Convert.ToInt32(documentItem["DocumentForeignKeyValue"]),
-                    NodeXML = documentItem["NodeXML"].ToString()
+                    NodeXML = documentItem["NodeXML"].ToString(),
+                    NodeAliasPath = documentItem["NodeAliasPath"].ToString(),
+                    DocumentCulture = documentItem["DocumentCulture"].ToString()
                 });
             }
 
@@ -276,6 +280,8 @@ Implication of such inconsistency is that when you look at a document in Content
         {
             public int DocumentID { get; private set; }
             public List<string> NotMatchingFields { get; private set; }
+            public string DocumentCulture { get; private set; }
+            public string NodeAliasPath { get; private set; }
 
             public string NotMachingFieldsString
             {
@@ -285,10 +291,12 @@ Implication of such inconsistency is that when you look at a document in Content
                 }
             }
 
-            public ResultItem(int documentID, List<String> notMatchingFields)
+            public ResultItem(int documentID, List<String> notMatchingFields, string documentCulture, string nodeAliasPath)
             {
                 DocumentID = documentID;
                 NotMatchingFields = notMatchingFields;
+                DocumentCulture = documentCulture;
+                NodeAliasPath = nodeAliasPath;
             }
         }
 
@@ -299,6 +307,8 @@ Implication of such inconsistency is that when you look at a document in Content
             public string ClassName { get; set; }
             public int DocumentForeignKeyValue { get; set; }
             public string NodeXML { get; set; }
+            public string DocumentCulture { get; set; }
+            public string NodeAliasPath { get; set; }
         }
 
         private class ClassItem
