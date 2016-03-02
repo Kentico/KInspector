@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules
@@ -13,7 +8,7 @@ namespace Kentico.KInspector.Modules
     {
         public ModuleMetadata GetModuleMetadata()
         {
-            return new ModuleMetadata()
+            return new ModuleMetadata
             {
                 Name = "Number of document aliases",
                 SupportedVersions = new[] { 
@@ -26,13 +21,13 @@ namespace Kentico.KInspector.Modules
 
 Having too many aliases per node may suggest problem with wrong API usage, decreased performance and SEO problems. 
 
-Huge amount of alises also decrease site's performance. Only necessary aliases should be kept, the rest should be deleted.",
+Huge amount of aliases also decrease site's performance. Only necessary aliases should be kept, the rest should be deleted.",
             };
         }
 
         public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
-            return new ModuleResults()
+            return new ModuleResults
             {
                 Result = GetAndJoinDataTables(instanceInfo),
             };

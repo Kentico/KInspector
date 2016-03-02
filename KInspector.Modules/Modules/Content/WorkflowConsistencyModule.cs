@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 using Kentico.KInspector.Core;
@@ -23,7 +21,7 @@ namespace Kentico.KInspector.Modules
 
         public ModuleMetadata GetModuleMetadata()
         {
-            return new ModuleMetadata()
+            return new ModuleMetadata
             {
                 Name = "Workflow consistency",
                 SupportedVersions = new[] { 
@@ -51,7 +49,7 @@ Implication of such inconsistency is that when you look at a document in Content
 
             var result = GetInconsistenciesDataTable();
 
-            return new ModuleResults()
+            return new ModuleResults
             {
                 Result = result,
                 Status = result.Rows.Count == 0 ? Status.Good : Status.Error
@@ -67,10 +65,10 @@ Implication of such inconsistency is that when you look at a document in Content
             var inconsistentDocuments = FindDocumentsWithInconsistencies();
 
             var result = new DataTable("Inconsistencies");
-            result.Columns.Add("DocumentID", typeof(String));
-            result.Columns.Add("NotMatchingFields", typeof(String));
-            result.Columns.Add("DocumentCulture", typeof(String));
-            result.Columns.Add("NodeAliasPath", typeof(String));
+            result.Columns.Add("DocumentID", typeof(string));
+            result.Columns.Add("NotMatchingFields", typeof(string));
+            result.Columns.Add("DocumentCulture", typeof(string));
+            result.Columns.Add("NodeAliasPath", typeof(string));
 
             foreach (var resultItem in inconsistentDocuments)
             {
@@ -113,9 +111,9 @@ Implication of such inconsistency is that when you look at a document in Content
             return inconsistentDocuments;
         }
 
-        private List<String> CompareDictionaries(Dictionary<String, object> publishedValues, Dictionary<String, String> editedValues)
+        private List<string> CompareDictionaries(Dictionary<string, object> publishedValues, Dictionary<string, string> editedValues)
         {
-            var notMatchingFields = new List<String>();
+            var notMatchingFields = new List<string>();
 
             // Check if values match JUST by checking values from PUBLISHED values which is containing just data from coupled table (no document specific data)
             foreach (var publishedItem in publishedValues)
@@ -125,11 +123,10 @@ Implication of such inconsistency is that when you look at a document in Content
                 if (!editedValues.ContainsKey(publishedItem.Key))
                 {
                     // Check if published value is also empty
-                    if (!String.IsNullOrEmpty(publishedItem.Value.ToString()))
+                    if (!string.IsNullOrEmpty(publishedItem.Value.ToString()))
                     {
                         // Published value is not empty, but Edited value is
                         notMatchingFields.Add(publishedItem.Key);
-                        continue;
                     }
                     continue;
                 }
@@ -144,29 +141,27 @@ Implication of such inconsistency is that when you look at a document in Content
                     DateTime.TryParse(publishedItem.Value.ToString(), out publishedDate);
                     DateTime.TryParse(editedValues[publishedItem.Key], out editedDate);
 
-                    bool datesMatch = publishedDate.CompareTo(editedDate) == 0 ? true : false;
+                    bool datesMatch = publishedDate.CompareTo(editedDate) == 0;
 
                     if (!datesMatch)
                     {
                         notMatchingFields.Add(publishedItem.Key);
-                        continue;
                     }
 
                 }
-                else if (publishedItem.Value is Boolean)
+                else if (publishedItem.Value is bool)
                 {
                     bool publishedBool;
                     bool editedBool;
 
-                    Boolean.TryParse(publishedItem.Value.ToString(), out publishedBool);
-                    Boolean.TryParse(editedValues[publishedItem.Key], out editedBool);
+                    bool.TryParse(publishedItem.Value.ToString(), out publishedBool);
+                    bool.TryParse(editedValues[publishedItem.Key], out editedBool);
 
-                    bool boolsMatch = publishedBool.CompareTo(editedBool) == 0 ? true : false;
+                    bool boolsMatch = publishedBool.CompareTo(editedBool) == 0;
 
                     if (!boolsMatch)
                     {
                         notMatchingFields.Add(publishedItem.Key);
-                        continue;
                     }
                 }
                 else
@@ -175,7 +170,6 @@ Implication of such inconsistency is that when you look at a document in Content
                     if (!editedValues.Contains(new KeyValuePair<string, string>(publishedItem.Key, publishedItem.Value.ToString())))
                     {
                         notMatchingFields.Add(publishedItem.Key);
-                        continue;
                     }
                 }
             }
@@ -183,9 +177,9 @@ Implication of such inconsistency is that when you look at a document in Content
             return notMatchingFields;
         }
 
-        private Dictionary<String, String> GetDictionaryWithValues(string versionHistoryXML)
+        private Dictionary<string, string> GetDictionaryWithValues(string versionHistoryXML)
         {
-            var dict = new Dictionary<String, String>();
+            var dict = new Dictionary<string, string>();
 
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(versionHistoryXML);
@@ -200,12 +194,12 @@ Implication of such inconsistency is that when you look at a document in Content
             return dict;
         }
 
-        private Dictionary<String, object> GetDictionaryWithValues(ClassItem classItem, int documentForeignKeyValue)
+        private Dictionary<string, object> GetDictionaryWithValues(ClassItem classItem, int documentForeignKeyValue)
         {
-            var dict = new Dictionary<String, object>();
+            var dict = new Dictionary<string, object>();
 
             // Get all columns from coupled table
-            var sql = String.Format("select * from {0} where {1} = '{2}'", classItem.TableName, classItem.PrimaryKeyName, documentForeignKeyValue);
+            var sql = string.Format("select * from {0} where {1} = '{2}'", classItem.TableName, classItem.PrimaryKeyName, documentForeignKeyValue);
 
             var result = InstanceInfo.DBService.ExecuteAndGetDataSet(sql);
 
@@ -231,7 +225,7 @@ Implication of such inconsistency is that when you look at a document in Content
 
             foreach (DataRow documentItem in result.Tables[0].Rows)
             {
-                list.Add(new DocumentItem()
+                list.Add(new DocumentItem
                 {
                     DocumentID = Convert.ToInt32(documentItem["DocumentID"]),
                     DocumentName = documentItem["DocumentName"].ToString(),
@@ -255,7 +249,7 @@ Implication of such inconsistency is that when you look at a document in Content
 
             foreach (DataRow classItem in result.Tables[0].Rows)
             {
-                list.Add(new ClassItem()
+                list.Add(new ClassItem
                 {
                     ClassName = classItem["ClassName"].ToString(),
                     TableName = classItem["ClassTableName"].ToString(),
@@ -287,11 +281,11 @@ Implication of such inconsistency is that when you look at a document in Content
             {
                 get
                 {
-                    return String.Join(";", NotMatchingFields);
+                    return string.Join(";", NotMatchingFields);
                 }
             }
 
-            public ResultItem(int documentID, List<String> notMatchingFields, string documentCulture, string nodeAliasPath)
+            public ResultItem(int documentID, List<string> notMatchingFields, string documentCulture, string nodeAliasPath)
             {
                 DocumentID = documentID;
                 NotMatchingFields = notMatchingFields;
@@ -331,7 +325,7 @@ Implication of such inconsistency is that when you look at a document in Content
 
                 XmlNode field = xml.SelectSingleNode("/form/field[@isPK='true']");
 
-                return field.Attributes["column"].Value.ToString();
+                return field.Attributes["column"].Value;
             }
         }
 

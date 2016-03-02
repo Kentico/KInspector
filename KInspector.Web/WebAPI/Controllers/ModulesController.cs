@@ -31,7 +31,7 @@ namespace Kentico.KInspector.Web
 					.Where(x => x.SupportedVersions.Contains(version));
 
 				// Filter modules by category - return either specified category, or the rest
-				if (String.IsNullOrEmpty(category))
+				if (string.IsNullOrEmpty(category))
 				{
 					foreach (var separateCategory in SeparateCategories)
 					{
@@ -46,7 +46,7 @@ namespace Kentico.KInspector.Web
 				if (!modules.Any())
 				{
 					return Request.CreateResponse(HttpStatusCode.BadRequest,
-						String.Format("There are no modules available for version {0}.", version));
+						string.Format("There are no modules available for version {0}.", version));
 				}
 
 				return Request.CreateResponse(HttpStatusCode.OK, modules);
@@ -73,10 +73,10 @@ namespace Kentico.KInspector.Web
 					.Where(x => x.SupportedVersions.Contains(version))
 					.Where(x => x.Category != null && x.Category.StartsWith("Setup", StringComparison.InvariantCultureIgnoreCase));
 
-				if (modules.Count() == 0)
+				if (!modules.Any())
 				{
 					return Request.CreateResponse(HttpStatusCode.BadRequest,
-						String.Format("There are no modules available for version {0}.", version));
+						string.Format("There are no modules available for version {0}.", version));
 				}
 
 				return Request.CreateResponse(HttpStatusCode.OK, modules);
@@ -102,7 +102,7 @@ namespace Kentico.KInspector.Web
 			catch (Exception e)
 			{
 				return Request.CreateResponse(HttpStatusCode.InternalServerError,
-					String.Format("Error in \"{0}\" module. Error message: {1}", moduleName, e.Message));
+					string.Format("Error in \"{0}\" module. Error message: {1}", moduleName, e.Message));
 			}
 		}
 

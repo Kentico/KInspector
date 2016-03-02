@@ -17,7 +17,7 @@ namespace Kentico.KInspector.Modules
                     new Version("8.1"), 
                     new Version("8.2")
                 },
-                Comment = @"Checks whethere there are unneccessary CMSFiles in the content tree",
+                Comment = @"Checks whethere there are unnecessary CMSFiles in the content tree",
             };
         }
 
