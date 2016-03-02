@@ -109,7 +109,7 @@ namespace Kentico.KInspector.Core
         /// <remarks>
         /// You can put the result directly into <see cref="ModuleResults.Result"/>.
         /// </remarks>
-        private DataSet ExecuteAndGetDataSet(string sql, params SqlParameter[] parameters)
+        public DataSet ExecuteAndGetDataSet(string sql, params SqlParameter[] parameters)
         {
             using (var connection = new SqlConnection(mConnectionString))
             {
