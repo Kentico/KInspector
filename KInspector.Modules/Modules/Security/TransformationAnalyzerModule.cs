@@ -24,7 +24,7 @@ namespace Kentico.KInspector.Modules
 
 
         /// <summary>
-        /// Array of regular expressions used for transformatio analysis.
+        /// Array of regular expressions used for transformation analysis.
         /// </summary>
         private static readonly Regex[] patterns = { queryRegex, requestRegex, cookieRegex, getQueryRegex, getQuery, currentUrlRegex, getStringRegex };
 
@@ -75,7 +75,7 @@ namespace Kentico.KInspector.Modules
             return new ModuleMetadata
             {
                 Name = "Transformation analyzer",
-                Comment = "Analyses possible XSS vulnerabilities in transformations.",
+                Comment = "Analyzes possible XSS vulnerabilities in transformations.",
                 SupportedVersions = new[] { 
                     new Version("7.0"),
                     new Version("8.0"), 
@@ -122,7 +122,7 @@ namespace Kentico.KInspector.Modules
 
                 string xssResult = null;
                 AnalyseXss(transformationId, transformationName, transformationCode, ref xssResult);
-                if (!String.IsNullOrEmpty(xssResult))
+                if (!string.IsNullOrEmpty(xssResult))
                 {
                     report.Add(xssResult);
                 }
@@ -207,7 +207,7 @@ namespace Kentico.KInspector.Modules
             foreach (XmlNode webPartPropertyNode in pageTemplateWebParts.SelectNodes("/page/webpartzone/webpart/property"))
             {
                 XmlAttribute nameAttribute = webPartPropertyNode.Attributes["name"];
-                if ((nameAttribute != null) && nameAttribute.Value.Contains("transformation") && !String.IsNullOrEmpty(webPartPropertyNode.InnerText))
+                if ((nameAttribute != null) && nameAttribute.Value.Contains("transformation") && !string.IsNullOrEmpty(webPartPropertyNode.InnerText))
                 {
                     res.Add(webPartPropertyNode.InnerText);
                 }
@@ -229,7 +229,7 @@ namespace Kentico.KInspector.Modules
                 return null;
             }
 
-            string listOfNames = "'" + String.Join("', '", transformationNames) + "'";
+            string listOfNames = "'" + string.Join("', '", transformationNames) + "'";
 
             return mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-TransformationCodes.sql",
                             new SqlParameter("ListOfNames", listOfNames));

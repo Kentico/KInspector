@@ -34,7 +34,7 @@ namespace Kentico.KInspector.Modules
             // Iterate through and check int/double settings 
             foreach (DataRow row in results.Rows)
             {
-                if (!String.IsNullOrEmpty(row["Key value"].ToString()))
+                if (!string.IsNullOrEmpty(row["Key value"].ToString()))
                 {
                     switch (row["Key name"].ToString()) 
                     {
@@ -62,7 +62,6 @@ namespace Kentico.KInspector.Modules
                                 rowsToDelete.Add(row); 
                             }
                             break;
-                        default: break;
                     }
                 }
             }
@@ -88,10 +87,10 @@ namespace Kentico.KInspector.Modules
         /// <param name="lower">Minimum value.</param>
         /// <param name="upper">Optional maximum value.</param>
         /// <returns>True if value falls into interval, false otherwise.</returns>
-        private bool GetValueAndCheckInterval(DataRow row, int lower, int upper = Int32.MaxValue)
+        private bool GetValueAndCheckInterval(DataRow row, int lower, int upper = int.MaxValue)
         {
             double value = 0;
-            if (Double.TryParse(row["Key value"].ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+            if (double.TryParse(row["Key value"].ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out value))
             {
                 return (value >= lower) && (value <= upper);
             }

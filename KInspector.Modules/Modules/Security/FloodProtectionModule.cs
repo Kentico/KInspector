@@ -1,10 +1,5 @@
 ﻿using Kentico.KInspector.Core;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kentico.KInspector.Modules
 {
@@ -34,10 +29,10 @@ namespace Kentico.KInspector.Modules
                 var dbService = instanceInfo.DBService;
                 var results = dbService.ExecuteAndGetTableFromFile("FloodProtectionModule.sql");
 
-                //Make sure there are records
+                // Make sure there are records
                 if (results.Rows.Count > 0)
                 {
-                    //Return the issues
+                    // Return the issues
                     return new ModuleResults
                     {
                         Result = results,

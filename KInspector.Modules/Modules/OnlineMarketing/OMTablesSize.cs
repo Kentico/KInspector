@@ -53,13 +53,13 @@ Checks the following:
             var contactGroupCount = dbService.ExecuteAndGetScalar<int>("SELECT COUNT(*) FROM OM_ContactGroup");
             if (contactGroupCount > 50)
             {
-                responses.Add("There are over 50 contact groups (" + contactGroupCount + " exactly). This might affect performance, are all of those really neccessary?");
+                responses.Add("There are over 50 contact groups (" + contactGroupCount + " exactly). This might affect performance, are all of those really necessary?");
             }
 
             var scoringRuleCount = dbService.ExecuteAndGetScalar<int>("SELECT COUNT(*) FROM OM_Rule");
             if (scoringRuleCount > 50)
             {
-                responses.Add("There are over 50 scoring rules (" + scoringRuleCount + " exactly). This might affect performance, are all of those really neccessary?");
+                responses.Add("There are over 50 scoring rules (" + scoringRuleCount + " exactly). This might affect performance, are all of those really necessary?");
             }
 
             if (responses.Any())

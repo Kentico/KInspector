@@ -68,7 +68,7 @@ namespace Kentico.KInspector.Modules
                     new Version("8.2"),
                     new Version("9.0")
                 },
-                Comment = @"Analyse all templates used on sites.",
+                Comment = @"Analyzes all templates used on sites.",
             };
         }
 
@@ -119,18 +119,18 @@ namespace Kentico.KInspector.Modules
                                 if ((int)dr["Columns"] == 1)
                                 {
                                     string colsVal = GetWebPartPropertyValue(wp, "columns");
-                                    row["Columns"] = String.IsNullOrEmpty(colsVal) ? "NOT SET" : colsVal;
+                                    row["Columns"] = string.IsNullOrEmpty(colsVal) ? "NOT SET" : colsVal;
                                 }
 
                                 if ((int)dr["TopN"] == 1)
                                 {
                                     string topVal = GetWebPartPropertyValue(wp, "SelectTopN");
-                                    if (String.IsNullOrEmpty(topVal))
+                                    if (string.IsNullOrEmpty(topVal))
                                     {
                                         topVal = GetWebPartPropertyValue(wp, "TopN");
                                     }
 
-                                    row["TopN"] = String.IsNullOrEmpty(topVal) ? "NOT SET" : topVal;
+                                    row["TopN"] = string.IsNullOrEmpty(topVal) ? "NOT SET" : topVal;
                                 }
                             }
 
@@ -143,7 +143,7 @@ namespace Kentico.KInspector.Modules
 
                 var documents = dbService.ExecuteAndGetTableFromFile("SiteTemplatesModule-Documents.sql", 
                     new SqlParameter("PageTemplateID", template["PageTemplateID"]));
-                documents.TableName = String.Format("{0} - Documents", templateName);
+                documents.TableName = string.Format("{0} - Documents", templateName);
                 results.Tables.Add(documents.Copy());
             }
 

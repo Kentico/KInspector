@@ -122,19 +122,19 @@ namespace Kentico.KInspector.Modules
         private static string SanitizeFileName(string fileName)
         {
             var invalids = Path.GetInvalidFileNameChars();
-            return String.Join("_", fileName.Split(invalids, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
+            return string.Join("_", fileName.Split(invalids, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
         }
 
 
         private static void Log(string message)
         {
-            Console.WriteLine("[{0}]: {1}", DateTime.Now.ToString(), message);
+            Console.WriteLine("[{0}]: {1}", DateTime.Now, message);
         }
 
 
         private static void Log(string message, params object[] args)
         {
-            Console.WriteLine("[{0}]: {1}", DateTime.Now.ToString(), String.Format(message, args));
+            Console.WriteLine("[{0}]: {1}", DateTime.Now, string.Format(message, args));
         }
 
 

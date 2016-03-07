@@ -8,14 +8,14 @@ namespace Kentico.KInspector.Modules
 {
     public class SiteMapModule : IModule
     {
-        private Dictionary<string, Type> ColumnsWithInheritance = new Dictionary<string, Type>
+        private readonly Dictionary<string, Type> ColumnsWithInheritance = new Dictionary<string, Type>
         {
                 {"IsSecured", typeof(string)},
                 {"SSL", typeof(string)},
                 {"OutputCache", typeof(int)},
                 {"CacheInFile", typeof(string)},
             };
-        private List<string> VisibleColumns = new List<string> { "Document", "ChildNodesCount", "Class", "Culture", "Aliases", "Wildcards", "WorkflowScopes", "Attachments", "ACLS", "SKU" };
+        private readonly List<string> VisibleColumns = new List<string> { "Document", "ChildNodesCount", "Class", "Culture", "Aliases", "Wildcards", "WorkflowScopes", "Attachments", "ACLS", "SKU" };
 
 
         public ModuleMetadata GetModuleMetadata()
