@@ -8,6 +8,7 @@ using System.Threading;
 using JSErrorCollector;
 using Kentico.KInspector.Core;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium;
 
 namespace Kentico.KInspector.Modules
 {
@@ -63,40 +64,48 @@ namespace Kentico.KInspector.Modules
             InstanceInfo instanceInfo = parameter[0] as InstanceInfo;
             DataTable urls = parameter[1] as DataTable;
 
-            Log("Starting firefox...");
-            FirefoxProfile ffProfile = new FirefoxProfile();
-            JavaScriptError.AddExtension(ffProfile);
+            try
+            { 
+                Log("Starting firefox...");
+                FirefoxProfile ffProfile = new FirefoxProfile();
+                JavaScriptError.AddExtension(ffProfile);
             
-            using (var browser = new FirefoxDriver(ffProfile))
-            {
-                string targetDirectory = CreateTargetDirectory(instanceInfo);
-                List<JavaScriptError> jsErrors = new List<JavaScriptError>();
-
-                for (int i = 0; i < urls.Rows.Count; i++)
+                using (var browser = new FirefoxDriver(ffProfile))
                 {
-                    try
+                    string targetDirectory = CreateTargetDirectory(instanceInfo);
+                    List<JavaScriptError> jsErrors = new List<JavaScriptError>();
+
+                    for (int i = 0; i < urls.Rows.Count; i++)
                     {
-                        Guid nodeGuid = (Guid)urls.Rows[i]["NodeGUID"];
-                        Uri url = new Uri(instanceInfo.Uri, "getdoc/" + nodeGuid);
+                        try
+                        {
+                            Guid nodeGuid = (Guid)urls.Rows[i]["NodeGUID"];
+                            Uri url = new Uri(instanceInfo.Uri, "getdoc/" + nodeGuid);
 
-                        Log("Screenshotting [{0}/{1}]: {2}", i, urls.Rows.Count, nodeGuid);
+                            Log("Screenshotting [{0}/{1}]: {2}", i, urls.Rows.Count, nodeGuid);
 
-                        browser.Navigate().GoToUrl(url);
-                        string fileName = GetFileName(targetDirectory, browser.Url);
-                        browser.GetScreenshot()
-                            .SaveAsFile(fileName, ImageFormat.Jpeg);
+                            browser.Navigate().GoToUrl(url);
+                            string fileName = GetFileName(targetDirectory, browser.Url);
+                            browser.GetScreenshot()
+                                .SaveAsFile(fileName, ImageFormat.Jpeg);
 
-                        jsErrors.AddRange(JavaScriptError.ReadErrors(browser));
+                            jsErrors.AddRange(JavaScriptError.ReadErrors(browser));
+                        }
+                        catch (Exception e)
+                        {
+                            Log("Exception: {0}", e.Message);
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        Log("Exception: {0}", e.Message);
-                    }
-                }
                 
-                SaveJavaScriptErrorsToFile(jsErrors, targetDirectory);
-                Log("Screenshotting finished.");
-                browser.Close();
+                    SaveJavaScriptErrorsToFile(jsErrors, targetDirectory);
+                    Log("Screenshotting finished.");
+                    browser.Close();
+                }
+            }
+            catch (WebDriverException ex)
+            {
+                // If the exception occurs, it's most probably because Firefox is not installed.
+                Console.WriteLine(ex.Message);
             }
         }
 
