@@ -54,7 +54,7 @@ namespace Kentico.KInspector.Modules
             return new ModuleMetadata
             {
                 Name = "WebPart analyzer",
-                Comment = "Analyses possible vulnerabilities in web parts.",
+                Comment = "Analyzes possible vulnerabilities in web parts.",
                 SupportedVersions = new[] { 
                     new Version("7.0"),
                     new Version("8.0"), 
@@ -149,12 +149,12 @@ namespace Kentico.KInspector.Modules
                 {
                     XmlAttribute nameAttribute = propertyNode.Attributes["name"];
                     string innerText = propertyNode.InnerText;
-                    if ((nameAttribute != null) && (nameAttribute.Value.Contains("where") || nameAttribute.Value.Contains("order")) && (!String.IsNullOrEmpty(innerText) && (!innerText.Contains("ToInt"))))
+                    if ((nameAttribute != null) && (nameAttribute.Value.Contains("where") || nameAttribute.Value.Contains("order")) && (!string.IsNullOrEmpty(innerText) && (!innerText.Contains("ToInt"))))
                     {
                         bool containsContextOrQueryMacro = innerText.Contains("{?") || innerText.Contains("{%");
                         if (containsContextOrQueryMacro)
                         {
-                            string report = String.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
+                            string report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
                                     webPartNode.Attributes["controlid"].Value,
                                     webPartNode.Attributes["type"].Value,
                                     nameAttribute.Value,
@@ -191,12 +191,12 @@ namespace Kentico.KInspector.Modules
                 {
                     XmlAttribute nameAttribute = propertyNode.Attributes["name"];
                     string innerText = propertyNode.InnerText;
-                    if ((nameAttribute != null) && (nameAttribute.Value.Contains("text") || nameAttribute.Value.Contains("content")) && (!String.IsNullOrEmpty(innerText) && !innerText.Contains("|(encode)")))
+                    if ((nameAttribute != null) && (nameAttribute.Value.Contains("text") || nameAttribute.Value.Contains("content")) && (!string.IsNullOrEmpty(innerText) && !innerText.Contains("|(encode)")))
                     {
                         bool containsContextOrQueryMacro = innerText.Contains("{?") || innerText.Contains("{%");
                         if (containsContextOrQueryMacro)
                         {
-                            string report = String.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
+                            string report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
                                     webPartNode.Attributes["controlid"].Value,
                                     webPartNode.Attributes["type"].Value,
                                     nameAttribute.Value,

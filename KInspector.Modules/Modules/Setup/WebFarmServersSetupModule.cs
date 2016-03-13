@@ -12,7 +12,7 @@ namespace Kentico.KInspector.Modules
                 Name = "Disable enabled Web farm servers",
                 Comment = @"Disables Web farm servers defined in the Web farm application.
 
-The servers are disabled by setting their Enabled state to disabled and their disaplay name is appended with '.disabled', so that servers disabled by the audit can be identified.",
+The servers are disabled by setting their Enabled state to disabled and their display name is appended with '.disabled', so that servers disabled by the audit can be identified.",
                 SupportedVersions = new[] { 
                     new Version("8.0"), 
                     new Version("8.1"), 

@@ -3,7 +3,7 @@ using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules
 {
-    public class SslInAdminstrationModule : IModule
+    public class SslInAdministrationModule : IModule
     {
         public ModuleMetadata GetModuleMetadata()
         {

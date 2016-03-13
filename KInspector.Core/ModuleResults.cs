@@ -40,10 +40,10 @@ namespace Kentico.KInspector.Core
                 else if (mResult is DataSet || mResult is List<DataTable>){
                     ResultType = ModuleResultsType.ListOfTables;
                 }
-                else if (mResult is List<String>){
+                else if (mResult is List<string>){
                     ResultType = ModuleResultsType.List;
                 }
-                else if (mResult is String)
+                else if (mResult is string)
                 {
                     ResultType = ModuleResultsType.String;
                 }
