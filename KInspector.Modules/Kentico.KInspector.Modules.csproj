@@ -158,6 +158,7 @@
     <Content Include="Scripts\FloodProtectionModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\WebPartColumnsModule9.sql" />
     <Content Include="Scripts\WorkflowConsistencyGetDocuments.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
