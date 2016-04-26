@@ -125,6 +125,8 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
                 // Evaluate Apple touch icon  and precomposed icon availability
                 alias["Apple Touch Icon"] = EvaluateAppleTouchIconAvailability(html, uri, touchIconAvailabilityCache);
                 alias["Apple Touch Icon Precomposed"] = EvaluateAppleTouchIconAvailability(html, uri, touchIconAvailabilityCache, true);
+
+                alias["Images without alt"] = GetImagesWithoutAlt(html);
                 
                 // Evaluate links count
                 alias["Link count"] = links.Count;
@@ -381,6 +383,33 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
             }
 
             return null;
+        }
+
+
+        private string GetImagesWithoutAlt(string html)
+        {
+            var imgRegexPattern = @"<img[^>].*?>";
+            var altRegexPattern = @"alt=""(?<altValue>[^""]+?)""";
+
+            var imgRegex = new Regex(imgRegexPattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            var altRegex = new Regex(altRegexPattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+            var withAlt = 0;
+            var total = 0;
+
+            foreach (Match match in imgRegex.Matches(html))
+            {
+                if (match.Success)
+                {
+                    if (altRegex.Match(match.Value).Success)
+                    {
+                        withAlt++;
+                    }
+                }
+                total++;
+            }
+
+            return string.Format("{0}/{1}", total-withAlt, total);
         }
 
         #endregion
