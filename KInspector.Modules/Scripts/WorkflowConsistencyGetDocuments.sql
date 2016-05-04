@@ -6,4 +6,4 @@
 )
 SELECT *
 FROM versions
-WHERE rn = 1 and WasPublishedFrom IS NOT NULL
+WHERE rn = 1 and WasPublishedFrom IS NOT NULL and DocumentForeignKeyValue IS NOT NULL
