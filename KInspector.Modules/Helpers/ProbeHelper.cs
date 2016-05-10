@@ -15,7 +15,7 @@ namespace Kentico.KInspector.Modules
     /// Make sure the content folder items have their <c>Build Action</c> set to "Content"
     /// and <c>Copy to Output Directory</c> set to "Copy Always" (because you want
     /// the target instance to compile those files, not this tool).
-    /// Othewise errors may be encountered when compiling this tool.
+    /// Otherwise errors may be encountered when compiling this tool.
     /// </para>
     /// <para>
     /// For ease of deployment to both web site and web application the probe file is
