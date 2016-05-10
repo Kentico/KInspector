@@ -28,7 +28,13 @@ namespace Kentico.KInspector.Modules
                     new Version("8.2"),
                     new Version("9.0")
                 },
-                Comment = @"Screenshotting started. It will be saved into your Desktop folder. You can see actual progress in a console window.",
+                Comment = @"It takes a screenshot of all published pages on the website. 
+- All screenshots are saved into your desktop folder
+- You can see actual progress in a console window
+- For larger websites, it can take some time to take all the screenshots
+- Currently, it works only with the Firefox browser
+
+NOTE: Current implementation counts with one site within your Kentico instance. Otherwise, it will report 404 error for pages, that are not assigned to the currently screenshotted site. If it's your case, you may ignore those errors.",
             };
         }
 
