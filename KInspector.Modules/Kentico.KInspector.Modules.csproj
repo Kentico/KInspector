@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\MacroValidator.cs" />
     <Compile Include="Helpers\ProbeHelper.cs" />
     <Compile Include="Helpers\ProjectCodeFilesHelper.cs" />
     <Compile Include="Modules\Content\AttachmentsBySizeModule.cs" />
@@ -159,7 +160,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\WebPartColumnsModule9.sql">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\WorkflowConsistencyGetDocuments.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
