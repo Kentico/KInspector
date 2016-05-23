@@ -83,11 +83,9 @@ namespace Kentico.KInspector.Modules
                 XmlDocument webPartsXmlDoc = new XmlDocument();
                 webPartsXmlDoc.LoadXml(webPart["PageTemplateWebParts"] as string);
 
-                whereOrderResults.AddRange(AnalyseWhereAndOrderByConditionsInPageTemplateWebParts(webPartsXmlDoc, pageTemplateDisplayName));
-                whereOrderCustomMacroResults.AddRange(AnalyseWhereAndOrderByConditionsInPageTemplateWebPartsCustomMacros(webPartsXmlDoc, pageTemplateDisplayName, instanceInfo.Version));
+                AnalyseWhereAndOrderByConditionsInPageTemplateWebParts(webPartsXmlDoc, pageTemplateDisplayName, instanceInfo.Version, ref whereOrderResults, ref whereOrderCustomMacroResults);
 
-                otherResults.AddRange(AnalysePageTemplateWebParts(webPartsXmlDoc, pageTemplateDisplayName));
-                otherCustomMacroResults.AddRange(AnalysePageTemplateWebPartsCustomMacros(webPartsXmlDoc, pageTemplateDisplayName, instanceInfo.Version));
+                AnalysePageTemplateWebParts(webPartsXmlDoc, pageTemplateDisplayName, instanceInfo.Version, ref otherResults, ref otherCustomMacroResults);
             }
 
             if (whereOrderResults.Count > 0)
@@ -139,6 +137,7 @@ namespace Kentico.KInspector.Modules
         }
 
 
+
         #endregion
 
 
@@ -163,10 +162,11 @@ namespace Kentico.KInspector.Modules
         /// </summary>
         /// <param name="pageTemplateWebParts">Page template web parts XML.</param>
         /// <returns>Enumeration of analysis results.</returns>
-        private IEnumerable<string> AnalyseWhereAndOrderByConditionsInPageTemplateWebParts(XmlDocument pageTemplateWebParts, string pageTemplateName)
+        private void AnalyseWhereAndOrderByConditionsInPageTemplateWebParts(XmlDocument pageTemplateWebParts, string pageTemplateName, Version instanceVersion, ref List<string> whereOrderResults, ref List<string> whereOrderCustomMacroResults)
         {
             List<string> res = new List<string>();
-            MacroValidator validator = new MacroValidator();
+            List<string> resDeprecated = new List<string>();
+
             foreach (XmlNode webPartNode in pageTemplateWebParts.SelectNodes("/page/webpartzone/webpart"))
             {
                 foreach (XmlNode propertyNode in webPartNode.SelectNodes("property"))
@@ -175,54 +175,27 @@ namespace Kentico.KInspector.Modules
                     string innerText = propertyNode.InnerText;
                     if ((nameAttribute != null) && (nameAttribute.Value.Contains("where") || nameAttribute.Value.Contains("order")) && (!string.IsNullOrEmpty(innerText) && (!innerText.Contains("ToInt"))))
                     {
-                        bool containsContextOrQueryMacro = validator.ContainsMacros(innerText);
-                        if (containsContextOrQueryMacro)
+                        bool containsMacros = MacroValidator.Current.ContainsMacros(innerText);
+                        if (containsMacros)
                         {
                             string report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
                                     webPartNode.Attributes["controlid"].Value,
                                     webPartNode.Attributes["type"].Value,
                                     nameAttribute.Value,
-                                    validator.HighlightMacros(HttpUtility.HtmlEncode(innerText)));
+                                    MacroValidator.Current.HighlightMacros(HttpUtility.HtmlEncode(innerText)));
 
                             res.Add(report);
-                        }
-                    }
-                }
-            }
 
-            if (res.Any())
-            {
-                res.Insert(0, "<strong>Page template name: </strong>" + pageTemplateName);
-            }
-
-            return res;
-        }
-
-
-        private IEnumerable<string> AnalyseWhereAndOrderByConditionsInPageTemplateWebPartsCustomMacros(XmlDocument pageTemplateWebParts, string pageTemplateName, Version version)
-        {
-            List<string> res = new List<string>();
-            MacroValidator validator = new MacroValidator();
-            if (validator.CheckForCustomMacros(version))
-            {
-                foreach (XmlNode webPartNode in pageTemplateWebParts.SelectNodes("/page/webpartzone/webpart"))
-                {
-                    foreach (XmlNode propertyNode in webPartNode.SelectNodes("property"))
-                    {
-                        XmlAttribute nameAttribute = propertyNode.Attributes["name"];
-                        string innerText = propertyNode.InnerText;
-                        if ((nameAttribute != null) && (nameAttribute.Value.Contains("where") || nameAttribute.Value.Contains("order")) && (!string.IsNullOrEmpty(innerText) && (!innerText.Contains("ToInt"))))
-                        {
-                            bool containsContextOrQueryMacro = validator.ContainsMacros(innerText, MacroValidator.MacroType.Custom);
-                            if (containsContextOrQueryMacro)
+                            if (MacroValidator.Current.CheckForCustomMacros(instanceVersion)
+                                && MacroValidator.Current.ContainsMacros(innerText, MacroValidator.MacroType.Custom))
                             {
-                                string report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
+                                report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
                                         webPartNode.Attributes["controlid"].Value,
                                         webPartNode.Attributes["type"].Value,
                                         nameAttribute.Value,
-                                        validator.HighlightMacros(HttpUtility.HtmlEncode(innerText), MacroValidator.MacroType.Custom));
+                                        MacroValidator.Current.HighlightMacros(HttpUtility.HtmlEncode(innerText), MacroValidator.MacroType.Custom));
 
-                                res.Add(report);
+                                resDeprecated.Add(report);
                             }
                         }
                     }
@@ -232,10 +205,14 @@ namespace Kentico.KInspector.Modules
             if (res.Any())
             {
                 res.Insert(0, "<strong>Page template name: </strong>" + pageTemplateName);
+                whereOrderResults.AddRange(res);
             }
 
-            return res;
-
+            if (resDeprecated.Any())
+            {
+                resDeprecated.Insert(0, "<strong>Page template name: </strong>" + pageTemplateName);
+                whereOrderCustomMacroResults.AddRange(resDeprecated);
+            }
         }
 
         /// <summary>
@@ -243,12 +220,15 @@ namespace Kentico.KInspector.Modules
         /// <c>where</c> and <c>order</c>, which have their value defined using a macro.
         /// </summary>
         /// <param name="pageTemplateWebParts">Page template web parts XML.</param>
+        /// <param name="pageTemplateName">Page template name.</param>
+        /// <param name="instanceVersion">Current Kentico instance version.</param>
+        /// <param name="otherResults">Potential XSS results.</param>
+        /// <param name="otherCustomMacroResults">Using deprecated Custom Macro type results.</param>
         /// <returns>Enumeration of analysis results.</returns>
-        private IEnumerable<string> AnalysePageTemplateWebParts(XmlDocument pageTemplateWebParts, string pageTemplateName)
+        private void AnalysePageTemplateWebParts(XmlDocument pageTemplateWebParts, string pageTemplateName, Version instanceVersion, ref List<string> otherResults, ref List<string> otherCustomMacroResults)
         {
             List<string> res = new List<string>();
-            MacroValidator validator = new MacroValidator();
-
+            List<string> resDeprecated = new List<string>();
             foreach (XmlNode webPartNode in pageTemplateWebParts.SelectNodes("/page/webpartzone/webpart"))
             {
                 foreach (XmlNode propertyNode in webPartNode.SelectNodes("property"))
@@ -257,66 +237,45 @@ namespace Kentico.KInspector.Modules
                     string innerText = propertyNode.InnerText;
                     if ((nameAttribute != null) && (nameAttribute.Value.Contains("text") || nameAttribute.Value.Contains("content")) && (!string.IsNullOrEmpty(innerText) && !innerText.Contains("|(encode)")))
                     {
-                        bool containsContextOrQueryMacro = validator.ContainsMacros(innerText);
-                        if (containsContextOrQueryMacro)
+                        bool containsMacros = MacroValidator.Current.ContainsMacros(innerText);
+                        if (containsMacros)
                         {
                             string report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
                                     webPartNode.Attributes["controlid"].Value,
                                     webPartNode.Attributes["type"].Value,
                                     nameAttribute.Value,
-                                    validator.HighlightMacros(HttpUtility.HtmlEncode(innerText)));
+                                    MacroValidator.Current.HighlightMacros(HttpUtility.HtmlEncode(innerText)));
 
                             res.Add(report);
-                        }
-                    }
-                }
-            }
 
-            if (res.Any())
-            {
-                res.Insert(0, "<strong>Page template name: </strong>" + pageTemplateName);
-            }
-
-            return res;
-        }
-
-
-        private IEnumerable<string> AnalysePageTemplateWebPartsCustomMacros(XmlDocument pageTemplateWebParts, string pageTemplateName, Version version)
-        {
-            List<string> res = new List<string>();
-            MacroValidator validator = new MacroValidator();
-            if (validator.CheckForCustomMacros(version))
-            {
-                foreach (XmlNode webPartNode in pageTemplateWebParts.SelectNodes("/page/webpartzone/webpart"))
-                {
-                    foreach (XmlNode propertyNode in webPartNode.SelectNodes("property"))
-                    {
-                        XmlAttribute nameAttribute = propertyNode.Attributes["name"];
-                        string innerText = propertyNode.InnerText;
-                        if ((nameAttribute != null) && (nameAttribute.Value.Contains("text") || nameAttribute.Value.Contains("content")) && (!string.IsNullOrEmpty(innerText) && !innerText.Contains("|(encode)")))
-                        {
-                            bool containsContextOrQueryMacro = validator.ContainsMacros(innerText, MacroValidator.MacroType.Custom);
-                            if (containsContextOrQueryMacro)
+                            if(MacroValidator.Current.CheckForCustomMacros(instanceVersion) 
+                                && MacroValidator.Current.ContainsMacros(innerText, MacroValidator.MacroType.Custom))
                             {
-                                string report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
+                                report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
                                         webPartNode.Attributes["controlid"].Value,
                                         webPartNode.Attributes["type"].Value,
                                         nameAttribute.Value,
-                                        validator.HighlightMacros(HttpUtility.HtmlEncode(innerText), MacroValidator.MacroType.Custom));
+                                        MacroValidator.Current.HighlightMacros(HttpUtility.HtmlEncode(innerText), MacroValidator.MacroType.Custom));
 
-                                res.Add(report);
+                                resDeprecated.Add(report);
                             }
                         }
                     }
                 }
             }
+
             if (res.Any())
             {
                 res.Insert(0, "<strong>Page template name: </strong>" + pageTemplateName);
+                otherResults.AddRange(res);
             }
-            return res;
-        }
 
+            if (resDeprecated.Any())
+            {
+                resDeprecated.Insert(0, "<strong>Page template name: </strong>" + pageTemplateName);
+                otherCustomMacroResults.AddRange(resDeprecated);
+            }
+        }
 
         #endregion
     }

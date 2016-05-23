@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Kentico.KInspector.Modules
 {
@@ -9,7 +10,16 @@ namespace Kentico.KInspector.Modules
     /// </summary>
     public class MacroValidator
     {
+        #region "Constants"
+        /// <summary>
+        /// Version where Custom Macros were deprecated
+        /// </summary>
         private static readonly Version CustomDeprecatedOn = new Version("8.0");
+
+        /// <summary>
+        /// Current singleton for MacroValidator
+        /// </summary>
+        public static readonly MacroValidator Current = new MacroValidator();
 
         /// <summary>
         /// Enumerator for macro types to validate
@@ -22,6 +32,23 @@ namespace Kentico.KInspector.Modules
             Custom = 4
         }
 
+        private static readonly Regex queryRegex = new Regex("QueryHelper\\.GetString");
+        private static readonly Regex requestRegex = new Regex("Request\\.QueryString");
+        private static readonly Regex cookieRegex = new Regex("CookieHelper\\.GetValue");
+        private static readonly Regex getQueryRegex = new Regex("URLHelper\\.GetQueryValue");
+        private static readonly Regex getQuery = new Regex("URLHelper\\.GetQuery");
+        private static readonly Regex currentUrlRegex = new Regex("currenturl");
+        private static readonly Regex getStringRegex = new Regex("ScriptHelper\\.GetScript");
+
+        /// <summary>
+        /// Array of regular expressions used for macro analysis.
+        /// </summary>
+        private static readonly Regex[] patterns = { queryRegex, requestRegex, cookieRegex, getQueryRegex, getQuery, currentUrlRegex, getStringRegex };
+
+        #endregion
+
+        #region "Public methods"
+
         /// <summary>
         /// Checks whether <paramref name="version"/> should be checked for deprecated custom macros.
         /// </summary>
@@ -31,6 +58,8 @@ namespace Kentico.KInspector.Modules
         {
             return (version >= CustomDeprecatedOn);
         }
+
+
         /// <summary>
         /// Checks whether <paramref name="text"/> contains macros.
         /// </summary>
@@ -40,6 +69,7 @@ namespace Kentico.KInspector.Modules
         {
             return ContainsMacros(text, (MacroType.Context | MacroType.Query | MacroType.Custom));
         }
+
 
         /// <summary>
         /// Checks whether <paramref name="text"/> contains macros of defined <paramref name="type"/>.
@@ -58,6 +88,18 @@ namespace Kentico.KInspector.Modules
             return false;
         }
 
+
+        /// <summary>
+        /// Checks <paramref name="code"/> for XSS vulnerabilities.
+        /// </summary>
+        /// <param name="code">Code with macros.</param>
+        /// <returns>True if text contains macros, false otherwise.</returns>
+        public bool ContainsPotentialXss(string code)
+        {
+            return patterns.Any(p => p.IsMatch(code));
+        }
+
+
         /// <summary>
         /// Highlights context, query and custom macros in <paramref name="code"/>
         /// using HTML syntax.
@@ -68,6 +110,7 @@ namespace Kentico.KInspector.Modules
         {
             return HighlightMacros(code, (MacroType.Context | MacroType.Query | MacroType.Custom));
         }
+
 
         /// <summary>
         /// Highlights macros of defined <paramref name="type"/> in <paramref name="code"/>
@@ -96,6 +139,9 @@ namespace Kentico.KInspector.Modules
             return code;
         }
 
+        #endregion
+
+        #region "Private methods"
 
         /// <summary>
         /// Gets macro expressions from <paramref name="code"/>.
@@ -128,5 +174,7 @@ namespace Kentico.KInspector.Modules
 
             return matches;
         }
+
+        #endregion
     }
 }
