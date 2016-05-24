@@ -12,6 +12,25 @@ namespace Kentico.KInspector.Modules
 {
     public class TransformationAnalyzerModule : IModule
     {
+        #region "Constants"
+
+        private static readonly Regex queryRegex = new Regex("QueryHelper\\.GetString");
+        private static readonly Regex requestRegex = new Regex("Request\\.QueryString");
+        private static readonly Regex cookieRegex = new Regex("CookieHelper\\.GetValue");
+        private static readonly Regex getQueryRegex = new Regex("URLHelper\\.GetQueryValue");
+        private static readonly Regex getQuery = new Regex("URLHelper\\.GetQuery");
+        private static readonly Regex currentUrlRegex = new Regex("currenturl");
+        private static readonly Regex getStringRegex = new Regex("ScriptHelper\\.GetScript");
+
+
+        /// <summary>
+        /// Array of regular expressions used for transformation analysis.
+        /// </summary>
+        private static readonly Regex[] patterns = { queryRegex, requestRegex, cookieRegex, getQueryRegex, getQuery, currentUrlRegex, getStringRegex };
+
+        #endregion
+
+
         #region "Fields"
 
         private IDatabaseService mDatabaseService;
@@ -57,10 +76,10 @@ namespace Kentico.KInspector.Modules
             {
                 Name = "Transformation analyzer",
                 Comment = "Analyzes possible XSS vulnerabilities in transformations.",
-                SupportedVersions = new[] { 
+                SupportedVersions = new[] {
                     new Version("7.0"),
-                    new Version("8.0"), 
-                    new Version("8.1"), 
+                    new Version("8.0"),
+                    new Version("8.1"),
                     new Version("8.2"),
                     new Version("9.0")
                 },
@@ -97,7 +116,7 @@ namespace Kentico.KInspector.Modules
             DataTable transformationCodesTable = GetTransformationCodes(transformationNames);
             foreach (DataRow transformation in transformationCodesTable.Rows)
             {
-                int transformationId = (int) transformation["TransformationID"];
+                int transformationId = (int)transformation["TransformationID"];
                 string transformationName = transformation["TransformationName"] as string;
                 string transformationCode = transformation["TransformationCode"] as string;
 
@@ -140,7 +159,7 @@ namespace Kentico.KInspector.Modules
         private void AnalyseXss(int transformationId, string transformationName, string transformationCode, ref string result)
         {
             // Check if transformation code contains the malicious input
-            bool potentialXssFound = MacroValidator.Current.ContainsPotentialXss(transformationCode);
+            bool potentialXssFound = patterns.Any(p => p.IsMatch(transformationCode));
 
             // If potential XSS has been found, set appropriate result
             if (potentialXssFound)
@@ -171,7 +190,7 @@ namespace Kentico.KInspector.Modules
         /// <returns>DataTable containing page template web parts in its 'PageTemplateWebParts' column.</returns>
         private DataTable GetPageTemplateWebParts(string likePageTemplateDisplayName)
         {
-            return mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-PageTemplateWebParts.sql", 
+            return mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-PageTemplateWebParts.sql",
                                 new SqlParameter("PageTemplateDisplayName", likePageTemplateDisplayName));
         }
 

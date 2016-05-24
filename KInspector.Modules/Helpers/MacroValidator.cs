@@ -36,20 +36,6 @@ namespace Kentico.KInspector.Modules
             Custom = 4
         }
 
-        private static readonly Regex queryRegex = new Regex("QueryHelper\\.GetString");
-        private static readonly Regex requestRegex = new Regex("Request\\.QueryString");
-        private static readonly Regex cookieRegex = new Regex("CookieHelper\\.GetValue");
-        private static readonly Regex getQueryRegex = new Regex("URLHelper\\.GetQueryValue");
-        private static readonly Regex getQuery = new Regex("URLHelper\\.GetQuery");
-        private static readonly Regex currentUrlRegex = new Regex("currenturl");
-        private static readonly Regex getStringRegex = new Regex("ScriptHelper\\.GetScript");
-
-
-        /// <summary>
-        /// Array of regular expressions used for macro analysis.
-        /// </summary>
-        private static readonly Regex[] patterns = { queryRegex, requestRegex, cookieRegex, getQueryRegex, getQuery, currentUrlRegex, getStringRegex };
-
         #endregion
 
 
@@ -94,18 +80,7 @@ namespace Kentico.KInspector.Modules
             return false;
         }
 
-
-        /// <summary>
-        /// Checks <paramref name="code"/> for XSS vulnerabilities.
-        /// </summary>
-        /// <param name="code">Code with macros.</param>
-        /// <returns>True if text contains macros, false otherwise.</returns>
-        public bool ContainsPotentialXss(string code)
-        {
-            return patterns.Any(p => p.IsMatch(code));
-        }
-
-
+        
         /// <summary>
         /// Highlights context, query and custom macros in <paramref name="code"/>
         /// using HTML syntax.
