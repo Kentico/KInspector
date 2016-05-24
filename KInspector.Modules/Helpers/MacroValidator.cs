@@ -10,16 +10,19 @@ namespace Kentico.KInspector.Modules
     /// </summary>
     public class MacroValidator
     {
+
         #region "Constants"
         /// <summary>
         /// Version where Custom Macros were deprecated
         /// </summary>
         private static readonly Version CustomDeprecatedOn = new Version("8.0");
 
+
         /// <summary>
         /// Current singleton for MacroValidator
         /// </summary>
         public static readonly MacroValidator Current = new MacroValidator();
+
 
         /// <summary>
         /// Enumerator for macro types to validate
@@ -27,6 +30,7 @@ namespace Kentico.KInspector.Modules
         [Flags]
         public enum MacroType
         {
+            All = Context | Query | Custom,
             Context = 1,
             Query = 2,
             Custom = 4
@@ -40,12 +44,14 @@ namespace Kentico.KInspector.Modules
         private static readonly Regex currentUrlRegex = new Regex("currenturl");
         private static readonly Regex getStringRegex = new Regex("ScriptHelper\\.GetScript");
 
+
         /// <summary>
         /// Array of regular expressions used for macro analysis.
         /// </summary>
         private static readonly Regex[] patterns = { queryRegex, requestRegex, cookieRegex, getQueryRegex, getQuery, currentUrlRegex, getStringRegex };
 
         #endregion
+
 
         #region "Public methods"
 
@@ -67,7 +73,7 @@ namespace Kentico.KInspector.Modules
         /// <returns>True if text contains macros, false otherwise.</returns>
         public bool ContainsMacros(string text)
         {
-            return ContainsMacros(text, (MacroType.Context | MacroType.Query | MacroType.Custom));
+            return ContainsMacros(text, MacroType.All);
         }
 
 
@@ -108,7 +114,7 @@ namespace Kentico.KInspector.Modules
         /// <returns>Code with HTML highlighted macros.</returns>
         public string HighlightMacros(string code)
         {
-            return HighlightMacros(code, (MacroType.Context | MacroType.Query | MacroType.Custom));
+            return HighlightMacros(code, MacroType.All);
         }
 
 
@@ -140,6 +146,7 @@ namespace Kentico.KInspector.Modules
         }
 
         #endregion
+
 
         #region "Private methods"
 
