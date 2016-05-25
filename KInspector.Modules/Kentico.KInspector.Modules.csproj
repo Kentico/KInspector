@@ -75,6 +75,7 @@
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\Content\DuplicatePageAliasesModule.cs" />
+    <Compile Include="Modules\General\PageTypeColumnsConflictModule.cs" />
     <Compile Include="Modules\General\MediaLibraryAzureLimitModule.cs" />
     <Compile Include="Modules\General\DatabaseConsistencyCheckModule.cs" />
     <Compile Include="Modules\Content\WebPartColumnsModule.cs" />
@@ -158,8 +159,11 @@
     <Content Include="Scripts\FloodProtectionModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\PageTypeColumnsConflict.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\WebPartColumnsModule9.sql">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\WorkflowConsistencyGetDocuments.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

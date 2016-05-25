@@ -1,0 +1,13 @@
+﻿SELECT COLUMN_NAME, TABLE_NAME, DATA_TYPE, IS_NULLABLE, TABLE_CATALOG
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME IN
+	(select ClassTableName from cms_class
+	where ClassIsDocumentType = 1)
+ AND COLUMN_NAME IN (
+	SELECT COLUMN_NAME
+	FROM INFORMATION_SCHEMA.COLUMNS
+	WHERE TABLE_NAME IN 
+		(select ClassTableName from cms_class
+		where ClassIsDocumentType = 1)
+	GROUP BY COLUMN_NAME
+	HAVING count(*) > 1)
