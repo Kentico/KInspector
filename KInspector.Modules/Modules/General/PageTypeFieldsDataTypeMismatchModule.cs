@@ -3,7 +3,7 @@ using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules
 {
-    public class PageTypeColumnsConflictModule : IModule
+    public class PageTypeFieldsDataTypeMismatchModule : IModule
     {
         public ModuleMetadata GetModuleMetadata()
         {
@@ -11,6 +11,8 @@ namespace Kentico.KInspector.Modules
             { 
                 Name = "Page type fields data type mismatch",
                 SupportedVersions = new[] {
+                    new Version("6.0"),
+                    new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"), 
                     new Version("8.2"),
@@ -31,7 +33,7 @@ For more information, see https://devnet.kentico.com/articles/conversion-failed-
         public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
-            var results = dbService.ExecuteAndGetTableFromFile("PageTypeColumnsConflict.sql");
+            var results = dbService.ExecuteAndGetTableFromFile("PageTypeFieldsDataTypeMismatchModule.sql");
 
             return new ModuleResults
             {
