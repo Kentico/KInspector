@@ -130,7 +130,7 @@
         /**
          * The left menu with disconnect button.
          */
-        .directive('knlModulesSidebar', ['knlTargetConfigService', 'knlNavigationService', function (configService, navigationService) {
+        .directive('knlModulesSidebar', ['knlTargetConfigService', 'knlNavigationService', 'knlModuleService', function (configService, navigationService, moduleService) {
             return {
                 restrict: 'E',
                 scope: {
@@ -146,6 +146,10 @@
                     
                     $scope.disconnect = function () {
                         configService.disconnect();
+                    };
+
+                    $scope.exportReport = function () {
+                        moduleService.exportReportService();
                     };
 
                     $scope.mainMenu = function () {

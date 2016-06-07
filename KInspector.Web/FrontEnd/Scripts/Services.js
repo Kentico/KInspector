@@ -98,6 +98,44 @@
                 },
 
                 /**
+                 * Runs selected modules and returns data as pdf
+                 */
+                exportReportService: function () {
+                    var moduleNamesList = [
+                        "Application restarts",
+                        "Attachments by size",
+                        "Cache items",
+                        "Contact groups with manual macro",
+                        "Database consistency check",
+                        "Documents consistency issues",
+                        "Duplicate Page Aliases",
+                        "Event log errors",
+                        "Expired tokens",
+                        "Important scheduled tasks",
+                        "Important settings",
+                        "Inactive contact deletion settings",
+                        "Kentico instance information",
+                        "Maximum 100 files per folder in Azure Blob storage",
+                        "Not found errors (404)",
+                        "Number of children of TreeNode",
+                        "Number of document aliases",
+                        "Page type fields data type mismatch",
+                        "Page type is assigned to a site",
+                        "Performance demanding web parts in transformations",
+                        "Site templates",
+                        "Size of the online marketing tables",
+                        "Top 25 tables by size",
+                        "Unspecified 'columns' setting in web parts",
+                        "Workflow consistency"
+                    ];
+
+                    var paramsWithModuleNames = angular.extend({ moduleNames: moduleNamesList }, configService.getConfig());
+                    var url = "http://localhost:9000/api/modules/GetModulesResults?" + $.param(paramsWithModuleNames);
+
+                    window.open(url, '_blank');
+                },
+
+                /**
                  * Gets all the setup module metadata from the server. Uses local storage for caching.
                  * Setup modules are used for modifying the analysed instance in order to prevent it from staging, sending emails or synchronizing across web farm.
                  */

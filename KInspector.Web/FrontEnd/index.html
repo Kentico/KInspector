@@ -183,7 +183,7 @@
     </script>
     <!-- END OF TEMPLATE FOR THE SIDEBAR ON THE MAIN MENU PAGE -->
     <!-- TEMPLATE FOR THE SIDEBAR ON THE RESULTS PAGE -->
-    <script type="text/ng-template" id="partials/modules-sidebar.html">
+<script type="text/ng-template" id="partials/modules-sidebar.html">
         <div class="sidebar">
             <div class="panel">
                 <ul class="sidebar-overview">
@@ -196,6 +196,9 @@
                 <ul class="sidebar-button-list">
                     <li>
                         <button class="button tiny sidebar-button" ng-click="mainMenu()">Main menu</button>
+                    </li>
+                    <li>
+                        <button class="button tiny sidebar-button" ng-click="exportReport()">Export</button>
                     </li>
                     <li>
                         <button class="button alert tiny sidebar-button" ng-click="disconnect()">Disconnect</button>
