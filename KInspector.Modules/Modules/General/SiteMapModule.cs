@@ -14,8 +14,10 @@ namespace Kentico.KInspector.Modules
                 {"SSL", typeof(string)},
                 {"OutputCache", typeof(int)},
                 {"CacheInFile", typeof(string)},
+                {"SEODescription", typeof(string)},
+                {"SEOKeyWords", typeof(string)}
             };
-        private readonly List<string> VisibleColumns = new List<string> { "Document", "ChildNodesCount", "Class", "Culture", "Aliases", "Wildcards", "WorkflowScopes", "Attachments", "ACLS", "SKU" };
+        private readonly List<string> VisibleColumns = new List<string> { "Document", "ChildNodesCount", "Class", "Culture", "Aliases", "Wildcards", "WorkflowScopes", "Attachments", "ACLS", "SKU", "SEODescription", "SEOKeyWords" };
 
 
         public ModuleMetadata GetModuleMetadata()
@@ -101,7 +103,8 @@ namespace Kentico.KInspector.Modules
             do
             {
                 var rowValue = row[columnName];
-                if (rowValue.GetType() == columnType)
+                
+                if (rowValue.GetType() == columnType && ((columnName != "SEODescription" && columnName != "SEOKeyWords") || rowValue.ToString() != "EMPTY"))
                 {
                     // Effective value is stored in row directly
                     return rowValue;

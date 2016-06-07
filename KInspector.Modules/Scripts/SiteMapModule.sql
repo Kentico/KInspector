@@ -35,7 +35,17 @@ BEGIN
 	  END AS [CacheInFile]
 	  ,[SKUEnabled] AS SKU
 	  ,[NodeID]
-      ,[NodeParentID]    
+      ,[NodeParentID]
+	  ,CASE
+			WHEN [DocumentPageDescription] is null THEN 'EMPTY'
+			WHEN [DocumentPageDescription] = '' THEN 'EMPTY'
+			ELSE 'SET'
+		END AS SEODescription
+	  ,CASE
+			WHEN [DocumentPageKeyWords] is null THEN 'EMPTY'
+			WHEN [DocumentPageKeyWords] = '' THEN 'EMPTY'
+			ELSE 'SET'
+		END AS SEOKeyWords
 	FROM 
 		-- Documents with aliases
 		(SELECT 
@@ -64,13 +74,15 @@ BEGIN
 		  ,[NodeClassID]
 		  ,[DocumentID]
 		  ,[NodeACLID]
+		  ,[DocumentPageDescription]
+		  ,[DocumentPageKeyWords]
 		FROM [View_CMS_Tree_Joined]   
 	
 			-- Document aliases
 			LEFT JOIN [CMS_DocumentAlias] 
 				ON NodeID = AliasNodeID
 		WHERE NodeSiteID = @SiteID 
-		GROUP BY NodeID, NodeLevel, DocumentName, ClassName, DocumentCulture, IsSecuredNode, RequiresSSL, NodeCacheMinutes, NodeAllowCacheInFileSystem, SKUEnabled, NodeParentID, NodeAliasPath, DocumentWildcardRule, NodeClassID, DocumentID, NodeACLID) AS SM 
+		GROUP BY NodeID, NodeLevel, DocumentName, ClassName, DocumentCulture, IsSecuredNode, RequiresSSL, NodeCacheMinutes, NodeAllowCacheInFileSystem, SKUEnabled, NodeParentID, NodeAliasPath, DocumentWildcardRule, NodeClassID, DocumentID, NodeACLID, DocumentPageDescription, DocumentPageKeyWords) AS SM 
 	
 	-- Document attachments
 	LEFT JOIN (SELECT [AttachmentDocumentID], COUNT(AttachmentID) AS DocumentAttachmentCount
@@ -98,7 +110,7 @@ BEGIN
 			(ScopeStartingPath <> '/%' OR NodeAliasPath <> '/') AND
 			-- Do not select scope with excluded children unless it is the node itself
 			(ScopeExcludeChildren <> 1 OR ScopeExcludeChildren IS NULL OR ScopeStartingPath = NodeAliasPath))
-	GROUP BY NodeLevel, DocumentName, ChildNodesCount, [ClassName], [DocumentCulture], Aliases, Wildcards,[IsSecuredNode],[RequiresSSL],[NodeCacheMinutes] ,[NodeAllowCacheInFileSystem],[SKUEnabled],[NodeID],[NodeParentID],[NodeAliasPath],[NodeClassID],[DocumentID], [DocumentAttachmentCount], [ACLS]
+	GROUP BY NodeLevel, DocumentName, ChildNodesCount, [ClassName], [DocumentCulture], Aliases, Wildcards,[IsSecuredNode],[RequiresSSL],[NodeCacheMinutes] ,[NodeAllowCacheInFileSystem],[SKUEnabled],[NodeID],[NodeParentID],[NodeAliasPath],[NodeClassID],[DocumentID], [DocumentAttachmentCount], [ACLS], [DocumentPageDescription], [DocumentPageKeyWords]
 	ORDER BY DocumentCulture, NodeAliasPath;
   
   SELECT @SiteID = MIN(SiteID) FROM [CMS_Site] where SiteID > @SiteID
