@@ -16,9 +16,9 @@ namespace Kentico.KInspector.Modules
             return new ModuleMetadata
             {
                 Name = "Event Log size",
-                Comment = @"Kentico recommend that the event log size is set around 5000-10,000 entries.
+                Comment = @"Kentico recommends that the event log size is set around 5000-10,000 entries.
 
-https://devnet.kentico.com/articles/maintenance-in-kentico?feed=Kentico",
+https://devnet.kentico.com/articles/maintenance-in-kentico",
                 SupportedVersions = new[] {
                     new Version("6.0"),
                     new Version("7.0"),
@@ -37,24 +37,41 @@ https://devnet.kentico.com/articles/maintenance-in-kentico?feed=Kentico",
             List<string> responses = new List<string>();
 
             var dbService = instanceInfo.DBService;
-            var eventLogSize = dbService.ExecuteAndGetScalar<int>("SELECT KeyValue FROM CMS_SettingsKey where KeyName = 'CMSLogSize';");
+            var results = dbService.ExecuteAndGetTableFromFile("EventLogSizeModule.sql");
 
-            if (eventLogSize < 5000 || eventLogSize > 10000)
+            if (results.Rows.Count > 0)
             {
-                return new ModuleResults
-                {
-                    Result = responses,
-                    ResultComment = "Kentico recommend the event log is set between 5000 and 10,000.",
-                    Status = Status.Warning,
-                };
-            }
+                foreach (DataRow resultRow in results.Rows)
+                {                    
+                    if(!EventLogIsRecommendedSize(resultRow))
+                    {
+                        return new ModuleResults
+                        {
+                            Result = results,
+                            ResultComment = "The event log settings are set outside the recommended range.",
+                            Status = Status.Warning,
+                        };
+                    }
+                }
 
+            }
+               
             return new ModuleResults
             {
-                ResultComment = "The event log settings are as per recommendations, the event log size is configured as: " + eventLogSize.ToString(),
+                ResultComment = "The event log settings are as per recommendations.",
                 Status = Status.Good
             };
 
+        }
+
+        private bool EventLogIsRecommendedSize(DataRow settingRow)
+        {
+            var size = Convert.ToInt32(settingRow["KeyValue"]);
+
+            if (size < 5000 || size > 10000)
+                return false;
+
+            return true;
         }
     }
 }
