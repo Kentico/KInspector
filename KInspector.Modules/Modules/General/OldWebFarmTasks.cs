@@ -42,7 +42,7 @@ https://docs.kentico.com/display/K9/Troubleshooting+web+farms",
                 return new ModuleResults
                 {
                     Result = responses,
-                    ResultComment = "There are tasks that are over 24 hours old in the CMS_WebFarmTask table. Please check the health of the web far",
+                    ResultComment = "There are tasks that are over 24 hours old in the CMS_WebFarmTask table. Please check the health of the web farm.",
                     Status = Status.Error,
                 };
                 

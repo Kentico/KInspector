@@ -172,6 +172,9 @@
     <Content Include="Scripts\DuplicatePageAliasesModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\EventLogSizeModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\PageTypeAssignedToSiteModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
