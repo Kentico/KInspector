@@ -29,7 +29,7 @@ https://docs.kentico.com/display/K9/Troubleshooting+web+farms",
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             List<string> responses = new List<string>();
 
