@@ -31,7 +31,7 @@ namespace Kentico.KInspector.Modules
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             // Prepare result
             DataTable result = new DataTable();
@@ -113,7 +113,7 @@ namespace Kentico.KInspector.Modules
                 // Do nothing, value is not set.
             }
 
-            if (!(Boolean.TryParse(sessionFixation, out sessionFixationEnabled) && sessionFixationEnabled))
+            if (!(bool.TryParse(sessionFixation, out sessionFixationEnabled) && sessionFixationEnabled))
             {
                 result.Rows.Add("Session fixation (<add key=\"CMSRenewSessionAuthChange\" ...)", sessionFixation, RECOMMENDED_VALUE_TRUE);
             }
@@ -183,7 +183,7 @@ namespace Kentico.KInspector.Modules
         {
             if (!Directory.Exists(path))
             {
-                validationErrorMessage = String.Format("The given path '{0}' to Kentico instance is not valid. Maybe it is not accessible by the tool.", path);
+                validationErrorMessage = string.Format("The given path '{0}' to Kentico instance is not valid. Maybe it is not accessible by the tool.", path);
 
                 return false;
             }

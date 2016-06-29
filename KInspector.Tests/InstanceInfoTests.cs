@@ -1,5 +1,4 @@
 ﻿using Kentico.KInspector.Core;
-using Kentico.KInspector.Modules;
 using NUnit.Framework;
 
 namespace Kentico.KInspector.Tests
@@ -13,7 +12,7 @@ namespace Kentico.KInspector.Tests
         [TestCase("http://relative.url/backslash/", "http://relative.url/backslash/")]
         public void EnsureTrailingSlash(string url, string expected)
         {
-            var instanceConfig = new InstanceConfig()
+            var instanceConfig = new InstanceConfig
             {
                 Url = url
             };

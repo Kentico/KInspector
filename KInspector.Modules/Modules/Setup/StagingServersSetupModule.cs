@@ -24,7 +24,7 @@ Setting the Enabled state of all servers to false would result in UI not being a
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetDataSetFromFile("Setup/StagingServerSetupModule.sql");

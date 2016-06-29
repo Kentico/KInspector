@@ -25,7 +25,7 @@ namespace Kentico.KInspector.Modules
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             DataSet results = dbService.ExecuteAndGetDataSetFromFile("DuplicatePageAliasesModule.sql");

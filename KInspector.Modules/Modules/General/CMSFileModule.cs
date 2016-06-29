@@ -17,11 +17,11 @@ namespace Kentico.KInspector.Modules
                     new Version("8.1"), 
                     new Version("8.2")
                 },
-                Comment = @"Checks whethere there are unneccessary CMSFiles in the content tree",
+                Comment = @"Checks whethere there are unnecessary CMSFiles in the content tree",
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetPrintsFromFile("CMSFileModule.sql");

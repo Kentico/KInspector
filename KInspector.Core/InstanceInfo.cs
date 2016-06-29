@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Kentico.KInspector.Core
 {
-    public class InstanceInfo
+    public class InstanceInfo : IInstanceInfo
     {
         private Lazy<DatabaseService> dbService;
         private Lazy<Version> version;
@@ -36,7 +36,7 @@ namespace Kentico.KInspector.Core
 
 
         /// <summary>
-        /// Version of the intance based on the database setting key.
+        /// Version of the instance based on the database setting key.
         /// </summary>
         public Version Version
         {
@@ -56,7 +56,7 @@ namespace Kentico.KInspector.Core
         /// <summary>
         /// Database service to communicate with the instance database.
         /// </summary>
-        public DatabaseService DBService
+        public IDatabaseService DBService
         {
             get
             {
@@ -79,7 +79,7 @@ namespace Kentico.KInspector.Core
             Config = config;
 
             dbService = new Lazy<DatabaseService>(() => new DatabaseService(Config));
-            version = new Lazy<Version>(() => GetKenticoVersion());
+            version = new Lazy<Version>(GetKenticoVersion);
 
             // Ensure backslash to the Config.Url to support VirtualPath URLs.
             // Sometimes the website is running under virtual path and 

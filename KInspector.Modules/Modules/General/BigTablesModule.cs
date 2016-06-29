@@ -23,7 +23,7 @@ namespace Kentico.KInspector.Modules
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
 
@@ -33,7 +33,7 @@ namespace Kentico.KInspector.Modules
             return new ModuleResults
             {
                 Result = results,
-                ResultComment = String.Format("The overall database size is {0} MB", databaseSizeInMB)
+                ResultComment = string.Format("The overall database size is {0} MB", databaseSizeInMB)
             };
         }
     }

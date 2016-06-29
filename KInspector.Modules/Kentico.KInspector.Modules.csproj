@@ -55,25 +55,29 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebDriver, Version=2.45.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Selenium.WebDriver.2.45.0\lib\net40\WebDriver.dll</HintPath>
+    <Reference Include="WebDriver, Version=2.52.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Selenium.WebDriver.2.52.0\lib\net40\WebDriver.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="WebDriver.Support, Version=2.45.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Selenium.Support.2.45.0\lib\net40\WebDriver.Support.dll</HintPath>
+    <Reference Include="WebDriver.Support, Version=2.52.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Selenium.Support.2.52.0\lib\net40\WebDriver.Support.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\MacroValidator.cs" />
     <Compile Include="Helpers\ProbeHelper.cs" />
     <Compile Include="Helpers\ProjectCodeFilesHelper.cs" />
     <Compile Include="Modules\Content\AttachmentsBySizeModule.cs" />
+    <Compile Include="Modules\Content\NumberOfAliasesModule.cs" />
     <Compile Include="Modules\Content\RobotsTxtModule.cs" />
     <Compile Include="Modules\Content\PageTypeAssignedToSiteModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
+    <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\Content\DuplicatePageAliasesModule.cs" />
     <Compile Include="Modules\EventLog\EventLogSizeModule.cs" />
+    <Compile Include="Modules\General\PageTypeFieldsDataTypeMismatchModule.cs" />
     <Compile Include="Modules\General\MediaLibraryAzureLimitModule.cs" />
     <Compile Include="Modules\General\DatabaseConsistencyCheckModule.cs" />
     <Compile Include="Modules\Content\WebPartColumnsModule.cs" />
@@ -89,15 +93,16 @@
     <Compile Include="Modules\General\CMSFileModule.cs" />
     <Compile Include="Modules\General\ScheduledTasksModule.cs" />
     <Compile Include="Modules\General\DocumentsConsistencyIssuesModule.cs" />
-    <Compile Include="Modules\General\UIElementsDiff.cs" />
     <Compile Include="Modules\OnlineMarketing\OMContactGroupsWithManualMacro.cs" />
     <Compile Include="Modules\OnlineMarketing\OMInactiveContactsDeletion.cs" />
     <Compile Include="Modules\OnlineMarketing\OMNewslettersWithoutQueue.cs" />
     <Compile Include="Modules\OnlineMarketing\OMTablesSize.cs" />
     <Compile Include="Modules\Security\DataStructures\VulnerabilityAnalysisResults.cs" />
+    <Compile Include="Modules\Security\FloodProtectionModule.cs" />
     <Compile Include="Modules\Security\PasswordPolicyModule.cs" />
     <Compile Include="Modules\Security\SecurityAppSettingsModule.cs" />
     <Compile Include="Modules\Security\SecuritySettingsModule.cs" />
+    <Compile Include="Modules\Security\SslInAdministrationModule.cs" />
     <Compile Include="Modules\Security\TransformationAnalyzerModule.cs" />
     <Compile Include="Modules\Security\UsersWithPlaintextPasswordsModule.cs" />
     <Compile Include="Modules\Security\VulnerabilityAnalyzerModule.cs" />
@@ -133,21 +138,6 @@
     <Content Include="Data\DefaultInstallationFiles\K8website.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\DefaultUIElements\70.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\DefaultUIElements\81.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\DefaultUIElements\82.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\DefaultUIElements\80.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\DefaultUIElements\55.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx.cs">
       <DependentUpon>KInspectorProbe.aspx</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -169,6 +159,21 @@
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\FloodProtectionModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\PageTypeFieldsDataTypeMismatchModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\WebPartColumnsModule9.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\WorkflowConsistencyGetDocuments.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\NumberOfAliasesModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\DuplicatePageAliasesModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -179,6 +184,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\MediaLibraryAzureLimitModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\ScreenshotterModule-v9.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\SslInAdministration.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\PasswordPolicy.sql">
@@ -241,9 +252,6 @@
     <Content Include="Scripts\ScreenshotterModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\UIElementsDiffV5.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\InstanceInfo.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -270,12 +278,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\Setup\WebFarmServerSetupModule.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\UIElementsDiffV7.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\UIElementsDiffV8.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\WebPartsInTransformationsModule.sql">

@@ -24,7 +24,7 @@ namespace Kentico.KInspector.Modules
 
 
         /// <summary>
-        /// Array of regular expressions used for transformatio analysis.
+        /// Array of regular expressions used for transformation analysis.
         /// </summary>
         private static readonly Regex[] patterns = { queryRegex, requestRegex, cookieRegex, getQueryRegex, getQuery, currentUrlRegex, getStringRegex };
 
@@ -33,7 +33,7 @@ namespace Kentico.KInspector.Modules
 
         #region "Fields"
 
-        private DatabaseService mDatabaseService;
+        private IDatabaseService mDatabaseService;
         private string mInstancePath;
         HashSet<string> mTransformationFullNames;
         private string mLikePageTemplateDisplayName = "%";
@@ -75,11 +75,11 @@ namespace Kentico.KInspector.Modules
             return new ModuleMetadata
             {
                 Name = "Transformation analyzer",
-                Comment = "Analyses possible XSS vulnerabilities in transformations.",
-                SupportedVersions = new[] { 
+                Comment = "Analyzes possible XSS vulnerabilities in transformations.",
+                SupportedVersions = new[] {
                     new Version("7.0"),
-                    new Version("8.0"), 
-                    new Version("8.1"), 
+                    new Version("8.0"),
+                    new Version("8.1"),
                     new Version("8.2"),
                     new Version("9.0")
                 },
@@ -87,9 +87,12 @@ namespace Kentico.KInspector.Modules
             };
         }
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             List<string> report = new List<string>();
+
+            List<string> xssReport = new List<string>();
+            List<string> customMacrosReport = new List<string>();
 
             mDatabaseService = instanceInfo.DBService;
             mInstancePath = instanceInfo.Directory.FullName;
@@ -114,18 +117,43 @@ namespace Kentico.KInspector.Modules
             }
 
             DataTable transformationCodesTable = GetTransformationCodes(transformationNames);
+            bool checkForCustomMacros = MacroValidator.Current.CheckForCustomMacros(instanceInfo.Version);
             foreach (DataRow transformation in transformationCodesTable.Rows)
             {
-                int transformationId = (int) transformation["TransformationID"];
+                int transformationId = (int)transformation["TransformationID"];
                 string transformationName = transformation["TransformationName"] as string;
                 string transformationCode = transformation["TransformationCode"] as string;
 
                 string xssResult = null;
                 AnalyseXss(transformationId, transformationName, transformationCode, ref xssResult);
-                if (!String.IsNullOrEmpty(xssResult))
+                if (!string.IsNullOrEmpty(xssResult))
                 {
-                    report.Add(xssResult);
+                    xssReport.Add(xssResult);
                 }
+
+                if (checkForCustomMacros)
+                {
+                    string customMacroResult = null;
+                    AnalyseCustomMacros(transformationId, transformationName, transformationCode, ref customMacroResult);
+                    if (!string.IsNullOrEmpty(customMacroResult))
+                    {
+                        customMacrosReport.Add(customMacroResult);
+                    }
+                }
+            }
+
+            if (xssReport.Count > 0)
+            {
+                report.Add("------------------------ Transformations - XSS Analysis report -----------------");
+                report.AddRange(xssReport);
+                report.Add("<br /><br />");
+            }
+
+            if (customMacrosReport.Count > 0)
+            {
+                report.Add("------------------------ Transformations - Using deprecated Custom Macros -----------------");
+                report.AddRange(customMacrosReport);
+                report.Add("<br /><br />");
             }
 
             if (report.Count == 0)
@@ -164,20 +192,27 @@ namespace Kentico.KInspector.Modules
             // If potential XSS has been found, set appropriate result
             if (potentialXssFound)
             {
-                IEnumerable<string> fullNames = GetTransformationFullNamesForName(transformationName, mTransformationFullNames);
-                StringBuilder res = new StringBuilder();
-                res.Append(transformationName).Append(" ");
-                foreach (string fullName in fullNames)
-                {
-                    res.Append("<a href=\"").Append(mInstancePath)
-                        .Append("/CMSModules/DocumentTypes/Pages/Development/DocumentType_Edit_Transformation_Edit.aspx?objectid=")
-                        .Append(transformationId)
-                        .Append("\" target=\"_blank\">")
-                        .Append(fullName)
-                        .Append("</a> ");
-                }
+                result = GetTransformationReportLink(transformationId, transformationName, transformationCode);
+            }
+        }
 
-                result = res.ToString();
+
+        /// <summary>
+        /// Analyse transformation for deprecated custom macros.
+        /// </summary>
+        /// <param name="transformationId">ID of the transformation.</param>
+        /// <param name="transformationName">Name of the transformation.</param>
+        /// <param name="transformationCode">Code of the transformation.</param>
+        /// <param name="result">Result of deprecated custom macro analysis (not modified if none found).</param>
+        private void AnalyseCustomMacros(int transformationId, string transformationName, string transformationCode, ref string result)
+        {
+            // Check if transformation code contains deprecated custom macros
+            bool customMacrosFound = MacroValidator.Current.ContainsMacros(transformationCode, MacroValidator.MacroType.Custom);
+
+            // If custom macros have been found, set appropriate result
+            if (customMacrosFound)
+            {
+                result = GetTransformationReportLink(transformationId, transformationName, transformationCode);
             }
         }
 
@@ -190,7 +225,7 @@ namespace Kentico.KInspector.Modules
         /// <returns>DataTable containing page template web parts in its 'PageTemplateWebParts' column.</returns>
         private DataTable GetPageTemplateWebParts(string likePageTemplateDisplayName)
         {
-            return mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-PageTemplateWebParts.sql", 
+            return mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-PageTemplateWebParts.sql",
                                 new SqlParameter("PageTemplateDisplayName", likePageTemplateDisplayName));
         }
 
@@ -207,7 +242,7 @@ namespace Kentico.KInspector.Modules
             foreach (XmlNode webPartPropertyNode in pageTemplateWebParts.SelectNodes("/page/webpartzone/webpart/property"))
             {
                 XmlAttribute nameAttribute = webPartPropertyNode.Attributes["name"];
-                if ((nameAttribute != null) && nameAttribute.Value.Contains("transformation") && !String.IsNullOrEmpty(webPartPropertyNode.InnerText))
+                if ((nameAttribute != null) && nameAttribute.Value.Contains("transformation") && !string.IsNullOrEmpty(webPartPropertyNode.InnerText))
                 {
                     res.Add(webPartPropertyNode.InnerText);
                 }
@@ -229,7 +264,7 @@ namespace Kentico.KInspector.Modules
                 return null;
             }
 
-            string listOfNames = "'" + String.Join("', '", transformationNames) + "'";
+            string listOfNames = "'" + string.Join("', '", transformationNames) + "'";
 
             return mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-TransformationCodes.sql",
                             new SqlParameter("ListOfNames", listOfNames));
@@ -247,6 +282,31 @@ namespace Kentico.KInspector.Modules
         private IEnumerable<string> GetTransformationFullNamesForName(string transformationName, IEnumerable<string> transformationFullNames)
         {
             return transformationFullNames.Where(it => it.EndsWith("." + transformationName));
+        }
+
+
+        /// <summary>
+        /// Gets the transformation report links.
+        /// </summary>
+        /// <param name="transformationId">ID of the transformation.</param>
+        /// <param name="transformationName">Name of the transformation.</param>
+        /// <param name="transformationCode">Code of the transformation.</param>
+        /// <returns>Report with possible links for given transformation.</returns>
+        private string GetTransformationReportLink(int transformationId, string transformationName, string transformationCode)
+        {
+            IEnumerable<string> fullNames = GetTransformationFullNamesForName(transformationName, mTransformationFullNames);
+            StringBuilder res = new StringBuilder();
+            res.Append(transformationName).Append(" ");
+            foreach (string fullName in fullNames)
+            {
+                res.Append("<a href=\"").Append(mInstancePath)
+                    .Append("/CMSModules/DocumentTypes/Pages/Development/DocumentType_Edit_Transformation_Edit.aspx?objectid=")
+                    .Append(transformationId)
+                    .Append("\" target=\"_blank\">")
+                    .Append(fullName)
+                    .Append("</a> ");
+            }
+            return res.ToString();
         }
 
         #endregion
