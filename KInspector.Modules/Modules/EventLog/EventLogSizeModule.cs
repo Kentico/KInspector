@@ -32,7 +32,7 @@ https://devnet.kentico.com/articles/maintenance-in-kentico",
         }
 
 
-        public ModuleResults GetResults(InstanceInfo instanceInfo)
+        public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             List<string> responses = new List<string>();
 
