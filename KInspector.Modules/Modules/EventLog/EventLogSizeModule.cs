@@ -67,10 +67,7 @@ https://devnet.kentico.com/articles/maintenance-in-kentico",
         {
             var size = Convert.ToInt32(settingRow["KeyValue"]);
 
-            if (size < 5000 || size > 10000)
-                return false;
-
-            return true;
+            return size >= 5000 && size <= 10000;   
         }
     }
 }
