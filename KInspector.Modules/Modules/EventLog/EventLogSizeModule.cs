@@ -34,7 +34,6 @@ https://devnet.kentico.com/articles/maintenance-in-kentico",
 
         public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
-            List<string> responses = new List<string>();
 
             var dbService = instanceInfo.DBService;
             var results = dbService.ExecuteAndGetTableFromFile("EventLogSizeModule.sql");
