@@ -388,28 +388,15 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
 
         private string GetImagesWithoutAlt(string html)
         {
-            var imgRegexPattern = @"<img[^>].*?>";
-            var altRegexPattern = @"alt=""(?<altValue>[^""]+?)""";
+            var regexPattern = @"<img(?![^>]*\balt=)[^>]*?>";
+            var regex = new Regex(regexPattern, RegexOptions.IgnoreCase);            
 
-            var imgRegex = new Regex(imgRegexPattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            var altRegex = new Regex(altRegexPattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            var withAlt = 0;
-            var total = 0;
-
-            foreach (Match match in imgRegex.Matches(html))
+            if (regex.IsMatch(html))
             {
-                if (match.Success)
-                {
-                    if (altRegex.Match(match.Value).Success)
-                    {
-                        withAlt++;
-                    }
-                }
-                total++;
+                return "YES";
             }
 
-            return string.Format("{0}/{1}", total-withAlt, total);
+            return "NO";
         }
 
         #endregion
