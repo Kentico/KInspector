@@ -152,29 +152,18 @@ namespace Kentico.KInspector.Modules
             XWPFTable resultSummary = document.CreateTable();
             resultSummary.GetRow(0).FillRow("Module", "Result", "Comment");
 
-            //resultSummary.CreateRow().FillRow("one", "too", "tree");
+            // Process "macros"
+            Dictionary<string, string> macros = new Dictionary<string, string>
+                {
+                    {"SiteName", Convert.ToString(instanceInfo.Uri)},
+                    {"SiteVersion", Convert.ToString(instanceInfo.Version)},
+                    {"SiteDirectory", Convert.ToString(instanceInfo.Directory)}
+                };
 
-            //var par = document.CreateParagraph("The quick brown fox");
-            //XWPFRun run = par.CreateRun();
-            //run.IsBold = true;
-            //run.SetText("The quick brown fox");
-            //run.IsBold = true;
-            //run.FontFamily = "Courier";
-            //run.SetUnderline(UnderlinePatterns.DotDotDash);
-            //run.SetTextPosition(100);
-
-            //// Process "macros"
-            //Dictionary<string, string> macros = new Dictionary<string, string>
-            //    {
-            //        {"SiteName", Convert.ToString(instanceInfo.Uri)},
-            //        {"SiteVersion", Convert.ToString(instanceInfo.Version)},
-            //        {"SiteDirectory", Convert.ToString(instanceInfo.Directory)}
-            //    };
-
-            //foreach (var macro in macros)
-            //{
-            //    doc.ReplaceText($"{{% {macro.Key} %}}", macro.Value);
-            //}
+            foreach (var macro in macros)
+            {
+                doc.ReplaceText($"{{% {macro.Key} %}}", macro.Value);
+            }
 
             foreach (string moduleName in moduleNames)
             {
