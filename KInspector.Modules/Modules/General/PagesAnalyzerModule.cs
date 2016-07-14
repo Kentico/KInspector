@@ -85,6 +85,11 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
 
             foreach (DataRow alias in aliases.Rows)
             {
+                if (alias["Redirected"].ToString() == "YES")
+                {
+                    continue;
+                }
+
                 var aliasPath = alias["AliasPath"].ToString().TrimStart('/');
                 var uri = new Uri(instanceInfo.Uri, aliasPath + ".aspx");
                 var html = string.Empty;
@@ -229,7 +234,7 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
         /// <returns>Status of all favicons contained in the <paramref name="html"/>.</returns>
         private string EvaluateAppleTouchIconAvailability(string html, Uri baseUri, Dictionary<string, string> touchIconAvailabilityCache, bool evaluatePrecomposed = false)
         {
-            var appleTouchIconHrefs = GetAppleTouchIconHrefs(html);
+            var appleTouchIconHrefs = evaluatePrecomposed ? GetAppleTouchIconPrecomposedHrefs(html) : GetAppleTouchIconHrefs(html);
 
             StringBuilder res = new StringBuilder();
             if (appleTouchIconHrefs.Count == 0)
