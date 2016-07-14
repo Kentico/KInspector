@@ -146,8 +146,8 @@ namespace Kentico.KInspector.Web
                 throw new ArgumentException(nameof(config));
             }
 
-            try
-            {
+            //try
+            //{
                 MemoryStream memoryStream = ExportHelper.GetExportStream(moduleNames, instanceInfo, type) as MemoryStream;
                 if (memoryStream == null)
                 {
@@ -166,11 +166,11 @@ namespace Kentico.KInspector.Web
                 memoryStream.Flush();
 
                 return response;
+            //}
+            //catch (Exception e)
+            //{
+            //    return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error in processing modules. Error message: {e.Message}");
+            //}
         }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error in processing modules. Error message: {e.Message}");
-            }
-}
 	}
 }

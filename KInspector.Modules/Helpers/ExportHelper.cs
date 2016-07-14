@@ -140,7 +140,7 @@ namespace Kentico.KInspector.Modules
             try
             {
                 // Open docx template
-                document = new XWPFDocument(new FileInfo(@"Templates\KInspectorReportTemplate.docx").OpenRead());
+                document = new XWPFDocument(new FileInfo(@"Data\Templates\KInspectorReportTemplate.docx").OpenRead());
             }
             catch
             {
@@ -162,7 +162,7 @@ namespace Kentico.KInspector.Modules
 
             foreach (var macro in macros)
             {
-                doc.ReplaceText($"{{% {macro.Key} %}}", macro.Value);
+                document.ReplaceText($"{{% {macro.Key} %}}", macro.Value);
             }
 
             foreach (string moduleName in moduleNames)
