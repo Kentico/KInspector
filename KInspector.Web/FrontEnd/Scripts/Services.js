@@ -132,7 +132,7 @@
                     // Fast test
                     //moduleNamesList = [ "Event log errors", "Unspecified 'columns' setting in web parts" ];
 
-                    var exportType = "xlsx";
+                    var exportType = "docx";
 
                     var paramsWithModuleNames = angular.extend({ moduleNames: moduleNamesList }, configService.getConfig(), { exportType: exportType });
                     var url = "http://localhost:9000/api/modules/GetModulesResults?" + $.param(paramsWithModuleNames);

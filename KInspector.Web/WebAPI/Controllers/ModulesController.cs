@@ -167,11 +167,11 @@ namespace Kentico.KInspector.Web
                 memoryStream.Flush();
 
                 return response;
-            }
+        }
             catch (Exception e)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error in processing modules. Error message: {e.Message}");
             }
-        }
+}
 	}
 }
