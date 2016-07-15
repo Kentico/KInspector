@@ -81,7 +81,7 @@ namespace Kentico.KInspector.Modules
                         else if (column.Key == SEO_DESCRIPTION || column.Key == SEO_KEYWORDS)
                         {
                             // SEO columns have two possible values -> EMPTY or SET
-                            row[column.Key] = GetParentSeoDefinition(sitemap, row, column.Key, column.Value);
+                            row[column.Key] = GetParentSeoDefinition(sitemap, row, column.Key);
                         }
                         else
                         {
@@ -126,7 +126,7 @@ namespace Kentico.KInspector.Modules
             return DBNull.Value;
         }
 
-        private object GetParentSeoDefinition(DataTable table, DataRow row, string columnName, Type columnType)
+        private object GetParentSeoDefinition(DataTable table, DataRow row, string columnName)
         {
             do
             {
