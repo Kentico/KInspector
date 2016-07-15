@@ -72,7 +72,6 @@ WHERE ('{0}' LIKE '%' + s.SiteDomainName + '%'
 OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'", instanceInfo.Uri));
 
             var results = new ModuleResults();
-            var resultList = new List<string>();
             var aliases = dbService.ExecuteAndGetTableFromFile("PagesAnalyzerModule.sql",
                 new SqlParameter("SiteId", siteID.ToString()));
             var allLinks = new Dictionary<string, List<string>>();
