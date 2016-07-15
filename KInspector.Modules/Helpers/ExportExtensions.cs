@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Xml.Linq;
 
 using NPOI.SS.UserModel;
 using NPOI.XWPF.UserModel;
@@ -11,6 +12,43 @@ namespace Kentico.KInspector.Modules
 {
     public static class ExportExtensions
     {
+        #region Xml extensions
+
+        public static XElement AddModuleSummary(this XElement parent, string moduleName, string moduleResult, string moduleComment)
+        {
+            if (parent == null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+            
+            parent.Add(new XElement("ModuleResultSumary",
+                new XElement("Module", moduleName),
+                new XElement("Result", moduleResult),
+                new XElement("Comment", moduleComment)
+            ));
+
+
+            return parent;
+        }
+
+        public static XElement AddModuleResult(this XElement parent, string moduleName, XElement moduleResult, string moduleComment)
+        {
+            if (parent == null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+
+            parent.Add(new XElement("ModuleResult",
+                new XElement("Module", moduleName),
+                new XElement("Comment", moduleComment),
+                moduleResult
+            ));
+
+            return parent;
+        }
+
+        #endregion
+
         #region Xlsx extensions
 
         #region Create next empty
