@@ -74,7 +74,7 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
             var results = new ModuleResults();
             var resultList = new List<string>();
             var aliases = dbService.ExecuteAndGetTableFromFile("PagesAnalyzerModule.sql",
-                new SqlParameter("SiteId", siteID));
+                new SqlParameter("SiteId", siteID.ToString()));
             var allLinks = new Dictionary<string, List<string>>();
 
             Dictionary<string, string> faviconAvailabilityCache = new Dictionary<string, string>();
@@ -85,12 +85,31 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
 
             foreach (DataRow alias in aliases.Rows)
             {
-                if (alias["Redirected"].ToString() == "YES")
+                var redirected = alias["Redirected"].ToString();
+                switch (redirected)
+                {
+                    // If version 8 and higher is used and page is redirected to first child
+                    case "1":
+                        continue;
+
+                    // If version 7 and lower is used, database column does not exist
+                    case "DOESNOTEXIST":
+                        alias["Redirected"] = "N/A";
+                        break;
+
+                    default:
+                        alias["Redirected"] = "NO";
+                        break;
+                }
+
+                var aliasPath = alias["AliasPath"].ToString().TrimStart('/');
+
+                // In case of MVC page skip
+                if (aliasPath.StartsWith("ROUTE"))
                 {
                     continue;
                 }
 
-                var aliasPath = alias["AliasPath"].ToString().TrimStart('/');
                 var uri = new Uri(instanceInfo.Uri, aliasPath + ".aspx");
                 var html = string.Empty;
                 try
@@ -394,11 +413,12 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
         private string GetImagesWithoutAlt(string html)
         {
             var regexPattern = @"<img(?![^>]*\balt=)[^>]*?>";
-            var regex = new Regex(regexPattern, RegexOptions.IgnoreCase);            
+            var regex = new Regex(regexPattern, RegexOptions.IgnoreCase);
 
-            if (regex.IsMatch(html))
+            var matches = regex.Matches(html).Count;
+            if (matches > 0)
             {
-                return "YES";
+                return matches.ToString();
             }
 
             return "NO";
