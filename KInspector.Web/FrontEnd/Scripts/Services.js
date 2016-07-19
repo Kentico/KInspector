@@ -50,7 +50,7 @@
          * Handles loading and getting informations about modules. 
          * Caches everything and resets it only on disconnect from Kentico.
          */
-        .factory('knlModuleService', ['$http', '$q', '$rootScope', 'knlTargetConfigService', function ($http, $q, $rootScope, configService) {
+        .factory('knlModuleService', ['$http', '$q', '$rootScope', 'knlTargetConfigService', 'knlErrorService', function ($http, $q, $rootScope, configService, errorService) {
 
             // Reset the cached results on disconnect
             $rootScope.$on('knlDisconnected', function () {
@@ -100,8 +100,13 @@
                 /**
                  * Runs selected modules and returns data as pdf
                  */
-                exportReportService: function () {
-                    var moduleNamesList = [
+                exportReportService: function (exportType, moduleNames) {
+                    if (exportType == undefined) {
+                        errorService.triggerError("No export type selected");
+                        return;
+                    }
+
+                    moduleNames = [
                         "Application restarts",
                         "Attachments by size",
                         "Cache items",
@@ -130,11 +135,9 @@
                     ];
 
                     // Fast test
-                    //moduleNamesList = [ "Event log errors", "Unspecified 'columns' setting in web parts" ];
+                    moduleNames = ["Event log errors", "Unspecified 'columns' setting in web parts", "Maximum 100 files per folder in Azure Blob storage"];
 
-                    var exportType = "docx";
-
-                    var paramsWithModuleNames = angular.extend({ moduleNames: moduleNamesList }, configService.getConfig(), { exportType: exportType });
+                    var paramsWithModuleNames = angular.extend({ moduleNames: moduleNames }, configService.getConfig(), { exportType: exportType });
                     var url = "http://localhost:9000/api/modules/GetModulesResults?" + $.param(paramsWithModuleNames);
 
                     window.open(url, '_blank');

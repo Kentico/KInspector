@@ -135,27 +135,31 @@ namespace Kentico.KInspector.Web
             ExportHelper.ExportType type;
             if (!Enum.TryParse(exportType, true, out type))
             {
-                // Unknown export type
-                throw new ArgumentException(nameof(exportType));
+                throw new ArgumentNullException(nameof(exportType));
             }
 
             var instanceInfo = new InstanceInfo(config);
             if (instanceInfo == null)
             {
                 // TODO: Verify this
-                throw new ArgumentException(nameof(config));
+                throw new ArgumentNullException(nameof(config));
             }
 
-            //try
-            //{
-                MemoryStream memoryStream = ExportHelper.GetExportStream(moduleNames, instanceInfo, type) as MemoryStream;
+            if (moduleNames == null)
+            {
+                throw new ArgumentNullException(nameof(moduleNames));
+            }
+
+            try
+            {
+                var memoryStream = ExportHelper.GetExportStream(moduleNames, instanceInfo, type) as MemoryStream;
                 if (memoryStream == null)
                 {
                     throw new Exception("Empty export file");
                 }
 
                 // Send stream
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+                var response = Request.CreateResponse(HttpStatusCode.OK);
                 response.Content = new ByteArrayContent(memoryStream.ToArray());
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue(ExportHelper.GetMimeType(type));
                 response.Content.Headers.ContentLength = memoryStream.Length;
@@ -166,11 +170,11 @@ namespace Kentico.KInspector.Web
                 memoryStream.Flush();
 
                 return response;
-            //}
-            //catch (Exception e)
-            //{
-            //    return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error in processing modules. Error message: {e.Message}");
-            //}
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error in processing modules. Error message: {e.Message}");
+            }
         }
 	}
 }

@@ -143,13 +143,13 @@
                     var config = configService.getConfig();
                     $scope.model.serverName = config.Server;
                     $scope.model.databaseName = config.Database;
-                    
+
                     $scope.disconnect = function () {
                         configService.disconnect();
                     };
 
-                    $scope.exportReport = function () {
-                        moduleService.exportReportService();
+                    $scope.exportReport = function (exportType, moduleNames) {
+                        moduleService.exportReportService(exportType, moduleNames);
                     };
 
                     $scope.mainMenu = function () {
