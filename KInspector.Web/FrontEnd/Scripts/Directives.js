@@ -7,7 +7,7 @@
          * A directive that is containing the module. This is basically the black/red/orange/green/blue bar with a name
          * and a button to expand.
          */
-        .directive('knlModuleContainer', function () {
+        .directive('knlModuleContainer', ['knlModuleService', function (moduleService) {
             return {
                 restrict: 'E',
                 transclude: true,
@@ -17,6 +17,11 @@
                     $scope.model = $scope.model || {};
 
                     $scope.resultsVisible = false;
+
+                    $scope.selectorsVisible = function () {
+                        return moduleService.selectorsVisible();
+                    }
+
                     $scope.toggleResultsVisibility = function (e) {
                         if ($scope.model.moduleLoaded) {
                             $scope.resultsVisible = !$scope.resultsVisible;
@@ -33,7 +38,7 @@
                     });
                 }
             }
-        })
+        }])
         /**
          * This directive is the content of the module. Meaning it is wrapped in the knlModuleContainer directive. When you collapse
          * the red/green/orange/blue module, you will see this.
@@ -143,6 +148,14 @@
                     var config = configService.getConfig();
                     $scope.model.serverName = config.Server;
                     $scope.model.databaseName = config.Database;
+
+                    $scope.selectorsVisible = function () {
+                        return moduleService.selectorsVisible();
+                    }
+
+                    $scope.selectorsToggle = function () {
+                        return moduleService.selectorsToggle();
+                    };
 
                     $scope.disconnect = function () {
                         configService.disconnect();

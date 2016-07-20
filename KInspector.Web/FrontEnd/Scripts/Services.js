@@ -60,7 +60,23 @@
                 localStorage.setItem('knlModuleMetadataSecurity', null);
             });
 
+            // Export related elements visibility
+            var mSelectorsVisible = false;
+
             return {
+                /**
+                 * Gets selector elements visibility
+                 */
+                selectorsVisible: function() {
+                    return mSelectorsVisible;
+                },             
+
+                /**
+                 * Toggles selector elements visibility
+                 */
+                selectorsToggle: function () {
+                    mSelectorsVisible = !mSelectorsVisible;
+                },
                 /**
                  * Gets all the modules from local storage.
                  */
@@ -98,13 +114,16 @@
                 },
 
                 /**
-                 * Runs selected modules and returns data as pdf
+                 * Runs selected modules and returns module results as a file
                  */
                 exportReportService: function (exportType, moduleNames) {
                     if (exportType == undefined) {
                         errorService.triggerError("No export type selected");
                         return;
                     }
+                    
+                    alert("Module selection not implemented. All modules except screenshotter selected.");
+                    //return;
 
                     moduleNames = [
                         "Application restarts",
@@ -135,7 +154,7 @@
                     ];
 
                     // Fast test
-                    moduleNames = ["Event log errors", "Unspecified 'columns' setting in web parts", "Maximum 100 files per folder in Azure Blob storage"];
+                    //moduleNames = ["Event log errors", "Unspecified 'columns' setting in web parts", "Maximum 100 files per folder in Azure Blob storage"];
 
                     var paramsWithModuleNames = angular.extend({ moduleNames: moduleNames }, configService.getConfig(), { exportType: exportType });
                     var url = "http://localhost:9000/api/modules/GetModulesResults?" + $.param(paramsWithModuleNames);
