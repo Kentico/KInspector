@@ -50,7 +50,7 @@
          * Handles loading and getting informations about modules. 
          * Caches everything and resets it only on disconnect from Kentico.
          */
-        .factory('knlModuleService', ['$http', '$q', '$rootScope', 'knlTargetConfigService', 'knlErrorService', function ($http, $q, $rootScope, configService, errorService) {
+        .factory('knlModuleService', ['$http', '$q', '$rootScope', 'knlTargetConfigService', 'knlErrorService', function ($http, $q, $rootScope, configService) {
 
             // Reset the cached results on disconnect
             $rootScope.$on('knlDisconnected', function () {
@@ -60,23 +60,7 @@
                 localStorage.setItem('knlModuleMetadataSecurity', null);
             });
 
-            // Export related elements visibility
-            var mSelectorsVisible = false;
-
             return {
-                /**
-                 * Gets selector elements visibility
-                 */
-                selectorsVisible: function() {
-                    return mSelectorsVisible;
-                },             
-
-                /**
-                 * Toggles selector elements visibility
-                 */
-                selectorsToggle: function () {
-                    mSelectorsVisible = !mSelectorsVisible;
-                },
                 /**
                  * Gets all the modules from local storage.
                  */
@@ -111,55 +95,6 @@
                     }
 
                     return deferred.promise;
-                },
-
-                /**
-                 * Runs selected modules and returns module results as a file
-                 */
-                exportReportService: function (exportType, moduleNames) {
-                    if (exportType == undefined) {
-                        errorService.triggerError("No export type selected");
-                        return;
-                    }
-                    
-                    alert("Module selection not implemented. All modules except screenshotter selected.");
-                    //return;
-
-                    moduleNames = [
-                        "Application restarts",
-                        "Attachments by size",
-                        "Cache items",
-                        "Contact groups with manual macro",
-                        "Database consistency check",
-                        "Documents consistency issues",
-                        "Duplicate Page Aliases",
-                        "Event log errors",
-                        "Expired tokens",
-                        "Important scheduled tasks",
-                        "Important settings",
-                        "Inactive contact deletion settings",
-                        "Kentico instance information",
-                        "Maximum 100 files per folder in Azure Blob storage",
-                        "Not found errors (404)",
-                        "Number of children of TreeNode",
-                        "Number of document aliases",
-                        "Page type fields data type mismatch",
-                        "Page type is assigned to a site",
-                        "Performance demanding web parts in transformations",
-                        "Site templates",
-                        "Size of the online marketing tables",
-                        "Top 25 tables by size",
-                        "Unspecified 'columns' setting in web parts",
-                        "Workflow consistency"
-                    ];
-
-                    // Fast test
-                    //moduleNames = ["Event log errors", "Unspecified 'columns' setting in web parts", "Maximum 100 files per folder in Azure Blob storage"];
-
-                    var paramsWithModuleNames = angular.extend({ moduleNames: moduleNames }, configService.getConfig(), { exportType: exportType });
-                    var url = "http://localhost:9000/api/modules/GetModulesResults?" + $.param(paramsWithModuleNames);
-
-                    window.open(url, '_blank');
                 },
 
                 /**
@@ -224,6 +159,31 @@
                             .error(deferred.error);
                     }
                     return deferred.promise;
+                }
+            }
+        }])
+
+        /**
+         * Handles export setup and report execution
+         */
+        .factory('kiExportService', ['knlTargetConfigService', 'knlModuleService', 'knlErrorService', function (configService, moduleService, errorService) {
+            return {
+                selectedModules: [],
+                selectorsVisible: false,
+               
+                /**
+                 * Runs selected modules and returns module results as a file
+                 */
+                exportReport: function (exportType) {
+                    if (exportType == undefined) {
+                        errorService.triggerError("No export type selected");
+                        return;
+                    }
+
+                    var paramsWithModuleNames = angular.extend({ moduleNames: this.selectedModules.sort() }, configService.getConfig(), { exportType: exportType });
+                    var url = "http://localhost:9000/api/modules/GetModulesResults?" + $.param(paramsWithModuleNames);
+
+                    window.open(url, '_blank');
                 }
             }
         }]);

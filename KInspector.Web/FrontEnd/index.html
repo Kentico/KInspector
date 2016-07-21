@@ -200,11 +200,12 @@
                     <li>
                         <div class="export-menu">
                             <button class="button tiny sidebar-button" ng-click="selectorsToggle()">Export</button>
+                            <!-- TODO: make formant selection data-driven -->
                             <div class="export-menu-radiobuttons" ng-show="selectorsVisible()">
                                 <input type="radio" name="exportType" ng-model="exportType" value="xlsx" checked />Xlsx<br />
                                 <input type="radio" name="exportType" ng-model="exportType" value="docx" />Docx<br />
                                 <input type="radio" name="exportType" ng-model="exportType" value="xml" />Xml<br />
-                                <button class="button tiny sidebar-button" ng-click="exportReport(exportType, selectModules)">Export selected modules</button>
+                                <button class="button tiny sidebar-button" ng-click="exportReport(exportType)">Export selected modules</button>
                             </div>
                         </div>
                     </li>
@@ -232,7 +233,7 @@
                         <li ng-show="model.moduleLoading"><div style="padding-top: 0.5rem;"><knl-loader /></div></li>
                         <li ng-show="model.moduleLoaded"><a class="reload-link" href="javascript:void(0);" ng-click="loadModule(true, true)">↺</a></li>
                         <li ng-show="model.moduleLoaded"><div style="padding-left: 1rem; padding-top: 1rem; padding-right: 1rem;"><div ng-class="{'arrow-down': !resultsVisible, 'arrow-up': resultsVisible}"></div></div></li>
-                        <li ng-show="selectorsVisible()" name="selectModule" ng-model="selectModule" ng-value="moduleMetaData.Name" ng-click="$event.stopPropagation();">
+                        <li ng-show="selectorsVisible()" name="selectModule" ng-model="selectModule" ng-value="moduleMetaData.Name" ng-click="toggleModuleSelection(moduleMetaData.Name); $event.stopPropagation();">
                             <div style="padding-left: 1rem; padding-right: 1rem;"><input type="checkbox" style="width: 1rem;" checked /></div>
                         </li>
                     </ul>

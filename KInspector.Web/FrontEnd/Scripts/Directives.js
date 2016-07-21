@@ -7,7 +7,7 @@
          * A directive that is containing the module. This is basically the black/red/orange/green/blue bar with a name
          * and a button to expand.
          */
-        .directive('knlModuleContainer', ['knlModuleService', function (moduleService) {
+        .directive('knlModuleContainer', ['kiExportService', function (exportService) {
             return {
                 restrict: 'E',
                 transclude: true,
@@ -19,7 +19,17 @@
                     $scope.resultsVisible = false;
 
                     $scope.selectorsVisible = function () {
-                        return moduleService.selectorsVisible();
+                        return exportService.selectorsVisible;
+                    }
+
+                    $scope.toggleModuleSelection = function(moduleName) {
+                        var index = exportService.selectedModules.indexOf(moduleName);
+                        if (index > 0) {
+                            exportService.selectedModules.splice(index, 1);
+                        } else {
+                            exportService.selectedModules.push(moduleName);
+                        }
+
                     }
 
                     $scope.toggleResultsVisibility = function (e) {
@@ -135,7 +145,7 @@
         /**
          * The left menu with disconnect button.
          */
-        .directive('knlModulesSidebar', ['knlTargetConfigService', 'knlNavigationService', 'knlModuleService', function (configService, navigationService, moduleService) {
+        .directive('knlModulesSidebar', ['knlTargetConfigService', 'knlNavigationService', 'kiExportService', function (configService, navigationService, exportService) {
             return {
                 restrict: 'E',
                 scope: {
@@ -148,21 +158,24 @@
                     var config = configService.getConfig();
                     $scope.model.serverName = config.Server;
                     $scope.model.databaseName = config.Database;
+                    
+                    // TODO: Make available export formats data driven
+                    $scope.exportType = "xlsx";
 
-                    $scope.selectorsVisible = function () {
-                        return moduleService.selectorsVisible();
-                    }
+                    $scope.selectorsVisible = function() {
+                        return exportService.selectorsVisible;
+                    };
 
                     $scope.selectorsToggle = function () {
-                        return moduleService.selectorsToggle();
+                        exportService.selectorsVisible = !exportService.selectorsVisible;
                     };
 
                     $scope.disconnect = function () {
                         configService.disconnect();
                     };
 
-                    $scope.exportReport = function (exportType, moduleNames) {
-                        moduleService.exportReportService(exportType, moduleNames);
+                    $scope.exportReport = function (exportType) {
+                        exportService.exportReport(exportType);
                     };
 
                     $scope.mainMenu = function () {
