@@ -199,7 +199,7 @@ Implication of such inconsistency is that when you look at a document in Content
             var dict = new Dictionary<string, object>();
 
             // Get all columns from coupled table
-            var sql = string.Format("select * from {0} where {1} = '{2}'", classItem.TableName, classItem.PrimaryKeyName, documentForeignKeyValue);
+            var sql = $"select * from {classItem.TableName} where {classItem.PrimaryKeyName} = '{documentForeignKeyValue}'";
 
             var result = InstanceInfo.DBService.ExecuteAndGetDataSet(sql);
 

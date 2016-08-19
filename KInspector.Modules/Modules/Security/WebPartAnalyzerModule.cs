@@ -184,11 +184,8 @@ namespace Kentico.KInspector.Modules
                         bool containsMacros = MacroValidator.Current.ContainsMacros(innerText, macroTypes);
                         if (containsMacros)
                         {
-                            string report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
-                                    webPartNode.Attributes["controlid"].Value,
-                                    webPartNode.Attributes["type"].Value,
-                                    nameAttribute.Value,
-                                    MacroValidator.Current.HighlightMacros(HttpUtility.HtmlEncode(innerText), macroTypes));
+                            string report =
+                                $"Web part: {webPartNode.Attributes["controlid"].Value}/{webPartNode.Attributes["type"].Value}, property: {nameAttribute.Value} <br /> <strong>{MacroValidator.Current.HighlightMacros(HttpUtility.HtmlEncode(innerText), macroTypes)}</strong>.<br />";
 
                             res.Add(report);
                         }

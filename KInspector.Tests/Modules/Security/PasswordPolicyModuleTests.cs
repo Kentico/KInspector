@@ -177,7 +177,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             {
                 // add a row for password policy
                 newRow = tbl.NewRow();
-                newRow["SiteDisplayName"] = string.Format("Good Site Name {0}", i);
+                newRow["SiteDisplayName"] = $"Good Site Name {i}";
                 newRow["KeyName"] = "CMSUsePasswordPolicy";
                 newRow["KeyValue"] = "True";
                 tbl.Rows.Add(newRow);                
@@ -186,7 +186,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             {
                 // add a row for password policy
                 newRow = tbl.NewRow();
-                newRow["SiteDisplayName"] = string.Format("Bad Site Name {0}", j);
+                newRow["SiteDisplayName"] = $"Bad Site Name {j}";
                 newRow["KeyName"] = "CMSUsePasswordPolicy";
                 newRow["KeyValue"] = "False";
                 tbl.Rows.Add(newRow);                
