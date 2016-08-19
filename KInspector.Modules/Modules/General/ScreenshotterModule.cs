@@ -154,13 +154,13 @@ NOTE: Current implementation will only take screenshots of the site you've enter
 
         private static void Log(string message)
         {
-            Console.WriteLine("[{0}]: {1}", DateTime.Now, message);
+            Console.WriteLine($"[{DateTime.Now}]: {message}");
         }
 
 
         private static void Log(string message, params object[] args)
         {
-            Console.WriteLine("[{0}]: {1}", DateTime.Now, string.Format(message, args));
+            Console.WriteLine($"[{DateTime.Now}]: {string.Format(message, args)}");
         }
 
 
