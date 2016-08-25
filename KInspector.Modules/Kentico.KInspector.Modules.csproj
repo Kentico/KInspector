@@ -166,6 +166,9 @@
     <Content Include="Scripts\PageTypeFieldsDataTypeMismatchModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\Setup\GlobalAdminSetupModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\WebPartColumnsModule9.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
