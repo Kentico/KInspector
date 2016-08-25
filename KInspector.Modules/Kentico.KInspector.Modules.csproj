@@ -111,6 +111,7 @@
     <Compile Include="Modules\General\SettingsModule.cs" />
     <Compile Include="Modules\General\BigTablesModule.cs" />
     <Compile Include="Modules\Security\WebPartAnalyzerModule.cs" />
+    <Compile Include="Modules\Setup\GlobalAdminSetupModule.cs" />
     <Compile Include="Modules\Setup\LicenseSetupModule.cs">
       <SubType>Code</SubType>
     </Compile>
