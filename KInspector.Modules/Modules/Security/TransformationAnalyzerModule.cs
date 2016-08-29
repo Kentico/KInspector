@@ -36,8 +36,6 @@ namespace Kentico.KInspector.Modules
         private IDatabaseService mDatabaseService;
         private string mInstancePath;
         HashSet<string> mTransformationFullNames;
-        private string mLikePageTemplateDisplayName = "%";
-
         #endregion
 
 
@@ -53,18 +51,7 @@ namespace Kentico.KInspector.Modules
         /// This should be improved to be able to set the value of this property
         /// based on what the user wants.
         /// </remarks>
-        public string LikePageTemplateDisplayName
-        {
-            get
-            {
-                return mLikePageTemplateDisplayName;
-            }
-            set
-            {
-                mLikePageTemplateDisplayName = value;
-            }
-        }
-
+        public string LikePageTemplateDisplayName { get; set; } = "%";
         #endregion
 
 
