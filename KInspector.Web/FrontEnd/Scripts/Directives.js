@@ -26,6 +26,11 @@
                         }
                     }
 
+                    $scope.commentsVisible = false;
+                    $scope.toggleCommentsVisibility = function (e) {
+                    	$scope.commentsVisible = !$scope.commentsVisible;
+                    }
+
                     $scope.$watchCollection('model.results', function (newResults) {
                         if (newResults) {
                             $scope.model.resultClass = 'result-status-' + newResults.Status;
@@ -97,7 +102,7 @@
                                     }
                                 })
                                 .finally(function () {
-                                    $scope.model.moduleLoading = false;
+                                	$scope.model.moduleLoading = false;
                                 });
 		                }
 		            };
