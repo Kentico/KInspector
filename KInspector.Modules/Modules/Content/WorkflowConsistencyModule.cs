@@ -199,7 +199,7 @@ Implication of such inconsistency is that when you look at a document in Content
             var dict = new Dictionary<string, object>();
 
             // Get all columns from coupled table
-            var sql = string.Format("select * from {0} where {1} = '{2}'", classItem.TableName, classItem.PrimaryKeyName, documentForeignKeyValue);
+            var sql = $"select * from {classItem.TableName} where {classItem.PrimaryKeyName} = '{documentForeignKeyValue}'";
 
             var result = InstanceInfo.DBService.ExecuteAndGetDataSet(sql);
 
@@ -277,13 +277,7 @@ Implication of such inconsistency is that when you look at a document in Content
             public string DocumentCulture { get; private set; }
             public string NodeAliasPath { get; private set; }
 
-            public string NotMachingFieldsString
-            {
-                get
-                {
-                    return string.Join(";", NotMatchingFields);
-                }
-            }
+            public string NotMachingFieldsString => string.Join(";", NotMatchingFields);
 
             public ResultItem(int documentID, List<string> notMatchingFields, string documentCulture, string nodeAliasPath)
             {
@@ -310,13 +304,7 @@ Implication of such inconsistency is that when you look at a document in Content
             public string ClassName { get; set; }
             public string TableName { get; set; }
             public string ClassFormDefinition { get; set; }
-            public string PrimaryKeyName
-            {
-                get
-                {
-                    return GetPrimaryKeyName();
-                }
-            }
+            public string PrimaryKeyName => GetPrimaryKeyName();
 
             private string GetPrimaryKeyName()
             {
