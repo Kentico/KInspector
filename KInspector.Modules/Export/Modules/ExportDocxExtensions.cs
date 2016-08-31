@@ -111,46 +111,5 @@ namespace Kentico.KInspector.Modules
 
             return table;
         }
-
-        #region ReplaceText
-
-        public static XWPFDocument ReplaceText(this XWPFDocument document, string oldValue, string newValue)
-        {
-            document.Paragraphs
-                .Concat(document.FooterList.SelectMany(footer => footer.Paragraphs))
-                .Concat(document.HeaderList.SelectMany(header => header.Paragraphs))
-                .Where(paragraph => paragraph.Text.Contains(oldValue))
-                .ToList()
-                .ForEach(paragraph => paragraph.ReplaceText(oldValue, newValue));
-
-            document.Tables
-                .Concat(document.FooterList.SelectMany(footer => footer.Tables))
-                .Concat(document.HeaderList.SelectMany(header => header.Tables))
-                .Where(table => table.Text.Contains(oldValue))
-                .ToList()
-                .ForEach(table => table.ReplaceText(oldValue, newValue));
-
-            return document;
-        }
-
-        public static XWPFTable ReplaceText(this XWPFTable table, string oldValue, string newValue)
-        {
-            table.Rows.ForEach(row => row.ReplaceText(oldValue, newValue));
-
-            return table;
-        }
-
-        public static XWPFTableRow ReplaceText(this XWPFTableRow row, string oldValue, string newValue)
-        {
-            row.GetTableCells()
-                .SelectMany(cell => cell.Paragraphs)
-                .Where(paragraph => paragraph.Text.Contains(oldValue))
-                .ToList()
-                .ForEach(paragraph => paragraph.ReplaceText(oldValue, newValue));
-
-            return row;
-        }
-
-        #endregion
     }
 }

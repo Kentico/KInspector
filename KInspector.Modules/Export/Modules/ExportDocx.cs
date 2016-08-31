@@ -35,19 +35,6 @@ namespace Kentico.KInspector.Modules.Export.Modules
             XWPFTable resultSummary = document.CreateTable();
             resultSummary.GetRow(0).FillRow("Module", "Result", "Comment");
 
-            // Process "macros"
-            Dictionary<string, string> macros = new Dictionary<string, string>
-                {
-                    {"SiteName", Convert.ToString(instanceInfo.Uri)},
-                    {"SiteVersion", Convert.ToString(instanceInfo.Version)},
-                    {"SiteDirectory", Convert.ToString(instanceInfo.Directory)}
-                };
-
-            foreach (var macro in macros)
-            {
-                document.ReplaceText($"{{% {macro.Key} %}}", macro.Value);
-            }
-
             foreach (string moduleName in moduleNames)
             {
                 var result = ModuleLoader.GetModule(moduleName).GetResults(instanceInfo);
