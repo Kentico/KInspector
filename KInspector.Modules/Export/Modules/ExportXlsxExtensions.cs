@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-
+using System.Web.UI.WebControls;
 using NPOI.SS.UserModel;
 
 namespace Kentico.KInspector.Modules
@@ -25,8 +25,6 @@ namespace Kentico.KInspector.Modules
 
             // LastCellNum returns -1 if there are no cells
             short newCellIndex = (row.LastCellNum != -1) ? row.LastCellNum : (short)0;
-
-            // TODO: Find and enforce max width limit
 
             return row.CreateCell(newCellIndex);
         }
