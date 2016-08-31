@@ -1,0 +1,114 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Kentico.KInspector.Core;
+
+using System.Xml.Linq;
+
+namespace Kentico.KInspector.Modules.Export.Modules
+{
+    public class ExportXml : IExportModule
+    {
+        public ExportModuleMetaData ModuleMetaData => new ExportModuleMetaData("ExportXml", "Xml", "xml","text/xml");
+
+        public Stream GetExportStream(IEnumerable<string> moduleNames, IInstanceInfo instanceInfo)
+        {
+            if (instanceInfo == null)
+            {
+                throw new ArgumentNullException(nameof(instanceInfo));
+            }
+
+            // Create xml
+            XElement rootElement = new XElement("KInspectorExport");
+            XDocument document = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), rootElement);
+
+            // Create element to store results of text modules
+            XElement resultSummary = new XElement("ResultSummary");
+            rootElement.Add(resultSummary);
+
+            // Create element to store results of other than text modules
+            XElement moduleResults = new XElement("ModuleResults");
+            rootElement.Add(moduleResults);
+
+            foreach (string moduleName in moduleNames)
+            {
+                var result = ModuleLoader.GetModule(moduleName).GetResults(instanceInfo);
+
+                switch (result.ResultType)
+                {
+                    case ModuleResultsType.String:
+                        resultSummary.AddModuleSummary(moduleName, result.Result as string, result.ResultComment);
+                        break;
+
+                    case ModuleResultsType.List:
+                        if (!(result.Result is IEnumerable<string>))
+                        {
+                            resultSummary.AddModuleSummary(moduleName, "Internal error: Invalid List", result.ResultComment);
+                            break;
+                        }
+
+                        XElement listXml = new XElement("Result",
+                            ((IEnumerable<string>)result.Result)
+                            .Select(resultEntry => new XElement("ResultEntry", resultEntry))
+                            .ToArray()
+                        );
+
+                        moduleResults.AddModuleResult(moduleName, listXml, result.ResultComment);
+                        resultSummary.AddModuleSummary(moduleName, "See module element", result.ResultComment);
+                        break;
+
+                    case ModuleResultsType.Table:
+                        if (!(result.Result is DataTable))
+                        {
+                            resultSummary.AddModuleSummary(moduleName, "Internal error: Invalid DataTable", result.ResultComment);
+                            break;
+                        }
+
+                        using (MemoryStream xmlStream = new MemoryStream())
+                        {
+                            DataTable table = (DataTable)result.Result;
+                            table.TableName = moduleName;
+                            table.WriteXml(xmlStream);
+                            xmlStream.Seek(0, SeekOrigin.Begin);
+                            var resultElement = XElement.Parse(new StreamReader(xmlStream).ReadToEnd());
+                            resultElement.Name = "Result";
+
+                            moduleResults.AddModuleResult(moduleName, resultElement, result.ResultComment);
+                        }
+
+                        resultSummary.AddModuleSummary(moduleName, "See module element", result.ResultComment);
+                        break;
+
+                    case ModuleResultsType.ListOfTables:
+                        if (!(result.Result is DataSet))
+                        {
+                            resultSummary.AddModuleSummary(moduleName, "Internal error: Invalid DataSet", result.ResultComment);
+                            break;
+                        }
+
+                        var ds = (DataSet)result.Result;
+                        ds.DataSetName = "Result";
+
+                        moduleResults.AddModuleResult(moduleName, XElement.Parse(ds.GetXml()), result.ResultComment);
+                        resultSummary.AddModuleSummary(moduleName, "See module element", result.ResultComment);
+                        break;
+
+                    default:
+                        resultSummary.AddModuleSummary(moduleName, "Internal error: Unknown module", result.ResultComment);
+                        break;
+                }
+            }
+
+            MemoryStream stream = new MemoryStream();
+            document.Save(stream);
+
+            // IWorkbook.Write closes the stream. This is the only way to "re-open" it.
+            return new MemoryStream(stream.ToArray());
+        }
+    }
+}

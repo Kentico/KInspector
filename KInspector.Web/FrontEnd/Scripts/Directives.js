@@ -158,9 +158,11 @@
                     var config = configService.getConfig();
                     $scope.model.serverName = config.Server;
                     $scope.model.databaseName = config.Database;
-                    
-                    // TODO: Make available export formats data driven
-                    $scope.exportType = "xlsx";
+
+                    exportService.getExportTypes().then(function (exportTypes) {
+                        $scope.model.exportTypes = exportTypes;
+                        $scope.model.exportType = exportTypes[0];
+                    });
 
                     $scope.selectorsVisible = function() {
                         return exportService.selectorsVisible;
@@ -174,8 +176,8 @@
                         configService.disconnect();
                     };
 
-                    $scope.exportReport = function (exportType) {
-                        exportService.exportReport(exportType);
+                    $scope.exportReport = function () {
+                        exportService.exportReport($scope.model.exportType);
                     };
 
                     $scope.mainMenu = function () {

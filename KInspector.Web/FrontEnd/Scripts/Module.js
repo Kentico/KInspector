@@ -79,10 +79,11 @@
                 .then(function (data) {
                     if (data) {
                         // Reset module export selection
+                        kiExportService.selectorsVisible = false;
                         kiExportService.selectedModules = [];
 
                         angular.forEach(data, function (elem) {
-                            // Preselect all modules for export (for user convinience)
+                            // Preselect all modules in category for export (for user convinience)
                             kiExportService.selectedModules.push(elem.Name);
 
                             // This needs to be here for orderBy filter to work, since it works only with arrays
@@ -105,10 +106,11 @@
                 .then(function (data) {
                     if (data) {
                         // Reset module export selection
+                        kiExportService.selectorsVisible = false;
                         kiExportService.selectedModules = [];
 
                         angular.forEach(data, function (elem) {
-                            // Preselect all modules for export (for user convinience)
+                            // Preselect all modules in category for export (for user convinience)
                             kiExportService.selectedModules.push(elem.Name);
 
                             // This needs to be here for orderBy filter to work, since it works only with arrays

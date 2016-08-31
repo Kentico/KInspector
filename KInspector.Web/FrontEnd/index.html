@@ -200,12 +200,12 @@
                     <li>
                         <div class="export-menu">
                             <button class="button tiny sidebar-button" ng-click="selectorsToggle()">Export</button>
-                            <!-- TODO: make formant selection data-driven -->
+                            <!-- TODO: Use export module metadata code name and display name -->
                             <div class="export-menu-radiobuttons" ng-show="selectorsVisible()">
-                                <input type="radio" name="exportType" ng-model="exportType" value="xlsx" checked />Xlsx<br />
-                                <input type="radio" name="exportType" ng-model="exportType" value="docx" />Docx<br />
-                                <input type="radio" name="exportType" ng-model="exportType" value="xml" />Xml<br />
-                                <button class="button tiny sidebar-button" ng-click="exportReport(exportType)">Export selected modules</button>
+                                <select name="repeatSelect" id="repeatSelect" ng-init="model.exportType = model.exportTypes[0]" ng-model="model.exportType">
+                                    <option ng-repeat="option in model.exportTypes" value="{{option}}">{{option}}</option>
+                                </select>
+                                <button class="button tiny sidebar-button" ng-click="exportReport()">Export selected modules</button>
                             </div>
                         </div>
                     </li>
