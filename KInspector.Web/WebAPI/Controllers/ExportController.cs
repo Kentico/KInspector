@@ -17,17 +17,30 @@ namespace Kentico.KInspector.Web
 	{
         #region Export
 
-        // GET api/export/GetExportTypes
-        [ActionName("GetExportTypes")]
-        public HttpResponseMessage GetExportTypes()
+        // GET api/export/GetExportModulesMetadata
+        [ActionName("GetExportModulesMetadata")]
+        public HttpResponseMessage GetExportModulesMetadata()
         {
-            var types = ExportModuleLoader.Modules.Select(module => module.ModuleMetaData.ModuleCodeName).ToList();
-            return Request.CreateResponse(HttpStatusCode.OK, types);
-        }
+            try
+            {
+                // Get all modules of given version
+                var modules = ExportModuleLoader.Modules.Select(m => m.ModuleMetaData).ToList();
+                if (!modules.Any())
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "There are no export modules available.");
+                }
 
+                return Request.CreateResponse(HttpStatusCode.OK, modules);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
+        }
+        
         // GET api/export/GetModuleExport
         [ActionName("GetModuleExport")]
-        public HttpResponseMessage GetModuleExport([FromUri]IEnumerable<string> moduleNames, [FromUri]InstanceConfig config, [FromUri]string exportType)
+        public HttpResponseMessage GetModuleExport([FromUri]IEnumerable<string> moduleNames, [FromUri]InstanceConfig config, [FromUri]string exportModuleCodeName)
         {
             if (config == null)
             {
@@ -45,10 +58,10 @@ namespace Kentico.KInspector.Web
                 throw new ArgumentNullException(nameof(moduleNames));
             }
 
-            var module = ExportModuleLoader.Modules.FirstOrDefault(m => m.ModuleMetaData.ModuleCodeName == exportType);
+            var module = ExportModuleLoader.Modules.FirstOrDefault(m => m.ModuleMetaData.ModuleCodeName == exportModuleCodeName);
             if (module == null)
             {
-                throw new ArgumentException(nameof(exportType));
+                throw new ArgumentException(nameof(exportModuleCodeName));
             }
 
             try

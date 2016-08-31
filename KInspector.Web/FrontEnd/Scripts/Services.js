@@ -168,7 +168,7 @@
          */
         .factory('kiExportService', ['$http', '$q', 'knlTargetConfigService', 'knlModuleService', 'knlErrorService', function ($http, $q, configService, moduleService, errorService) {
             // Init cache
-            localStorage.setItem('kiExportServiceExportTypes', null);
+            localStorage.setItem('kiExportModulesMetaData', null);
 
             return {
                 selectedModules: [],
@@ -177,18 +177,18 @@
                 /**
                  * Return available eport types
                  */
-                getExportTypes: function() {
+                getExportModulesMetaData: function () {
                     var deferred = $q.defer();
-                    var cachedExportTypes = JSON.parse(localStorage.getItem('kiExportServiceExportTypes'));
+                    var cachedExportModulesMetaData = JSON.parse(localStorage.getItem('kiExportModulesMetaData'));
 
-                    if (cachedExportTypes) {
+                    if (cachedExportModulesMetaData) {
                         // Return cached results
-                        deferred.resolve(cachedExportTypes);
+                        deferred.resolve(cachedExportModulesMetaData);
                     } else {
-                        $http.get("http://localhost:9000/api/export/GetExportTypes", { cache: true })
-                            .success(function (exportTypes) {
-                                localStorage.setItem('kiExportServiceExportTypes', JSON.stringify(exportTypes));
-                                deferred.resolve(exportTypes);
+                        $http.get("http://localhost:9000/api/export/GetExportModulesMetadata", { cache: true })
+                            .success(function (exportModulesMetaData) {
+                                localStorage.setItem('kiExportModulesMetaData', JSON.stringify(exportModulesMetaData));
+                                deferred.resolve(exportModulesMetaData);
                             })
                             .error(deferred.error);
                     }
@@ -198,13 +198,13 @@
                 /**
                  * Runs selected modules and returns module results as a file
                  */
-                exportReport: function(exportType) {
-                    if (exportType == undefined) {
-                        errorService.triggerError("No export type selected");
+                exportReport: function (exportModuleCodeName) {
+                    if (exportModuleCodeName == undefined) {
+                        errorService.triggerError("No export module selected");
                         return;
                     }
 
-                    var paramsWithModuleNames = angular.extend({ moduleNames: this.selectedModules.sort() }, configService.getConfig(), { exportType: exportType });
+                    var paramsWithModuleNames = angular.extend({ moduleNames: this.selectedModules.sort() }, configService.getConfig(), { exportModuleCodeName: exportModuleCodeName });
                     var url = "http://localhost:9000/api/export/GetModuleExport?" + $.param(paramsWithModuleNames);
 
                     window.open(url, '_blank');

@@ -14,7 +14,7 @@ namespace Kentico.KInspector.Modules.Export.Modules
 {
     public class ExportXml : IExportModule
     {
-        public ExportModuleMetaData ModuleMetaData => new ExportModuleMetaData("ExportXml", "Xml", "xml","text/xml");
+        public ExportModuleMetaData ModuleMetaData => new ExportModuleMetaData("Xml", "ExportXml", "xml","text/xml");
 
         public Stream GetExportStream(IEnumerable<string> moduleNames, IInstanceInfo instanceInfo)
         {

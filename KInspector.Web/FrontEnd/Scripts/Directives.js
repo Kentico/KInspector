@@ -159,9 +159,9 @@
                     $scope.model.serverName = config.Server;
                     $scope.model.databaseName = config.Database;
 
-                    exportService.getExportTypes().then(function (exportTypes) {
-                        $scope.model.exportTypes = exportTypes;
-                        $scope.model.exportType = exportTypes[0];
+                    exportService.getExportModulesMetaData().then(function (exportModulesMetaData) {
+                        $scope.model.exportModulesMetaData = exportModulesMetaData;
+                        $scope.model.exportModuleSelection = exportModulesMetaData[0];
                     });
 
                     $scope.selectorsVisible = function() {
@@ -177,7 +177,7 @@
                     };
 
                     $scope.exportReport = function () {
-                        exportService.exportReport($scope.model.exportType);
+                        exportService.exportReport($scope.model.exportModuleSelection.ModuleCodeName);
                     };
 
                     $scope.mainMenu = function () {

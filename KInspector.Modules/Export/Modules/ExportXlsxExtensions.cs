@@ -16,7 +16,7 @@ namespace Kentico.KInspector.Modules
         /// </summary>
         /// <param name="row">Row where to add the cell.</param>
         /// <returns>Newly created cell.</returns>
-        public static NPOI.SS.UserModel.ICell CreateCell(this IRow row)
+        public static ICell CreateCell(this IRow row)
         {
             if (row == null)
             {
