@@ -37,7 +37,7 @@ namespace Kentico.KInspector.Modules.Export
         {
             var kernel = new StandardKernel();
             kernel.Bind(c => c
-                    .FromAssembliesMatching("*")
+                    .FromAssembliesInPath("./")
                         .SelectAllClasses()
                         .InheritedFrom<IExportModule>()
                         .BindAllInterfaces());
@@ -47,7 +47,7 @@ namespace Kentico.KInspector.Modules.Export
                 string name = module.ModuleMetaData.ModuleCodeName;
                 if (mModules.ContainsKey(name))
                 {
-                    throw new ArgumentException("Module with code name '{0}' already exists!", name);
+                    throw new ArgumentException("Export module with code name '{0}' already exists!", name);
                 }
 
                 mModules.Add(name, module);

@@ -50,7 +50,7 @@
          * Handles loading and getting informations about modules. 
          * Caches everything and resets it only on disconnect from Kentico.
          */
-        .factory('knlModuleService', ['$http', '$q', '$rootScope', 'knlTargetConfigService', 'knlErrorService', function ($http, $q, $rootScope, configService) {
+        .factory('knlModuleService', ['$http', '$q', '$rootScope', 'knlTargetConfigService', function ($http, $q, $rootScope, configService) {
 
             // Reset the cached results on disconnect
             $rootScope.$on('knlDisconnected', function () {
