@@ -45,8 +45,7 @@ namespace Kentico.KInspector.Web
 
 				if (!modules.Any())
 				{
-					return Request.CreateResponse(HttpStatusCode.BadRequest,
-						string.Format("There are no modules available for version {0}.", version));
+					return Request.CreateResponse(HttpStatusCode.BadRequest, $"There are no modules available for version {version}.");
 				}
 
 				return Request.CreateResponse(HttpStatusCode.OK, modules);
@@ -75,8 +74,7 @@ namespace Kentico.KInspector.Web
 
 				if (!modules.Any())
 				{
-					return Request.CreateResponse(HttpStatusCode.BadRequest,
-						string.Format("There are no modules available for version {0}.", version));
+					return Request.CreateResponse(HttpStatusCode.BadRequest, $"There are no modules available for version {version}.");
 				}
 
 				return Request.CreateResponse(HttpStatusCode.OK, modules);
@@ -101,8 +99,7 @@ namespace Kentico.KInspector.Web
 			}
 			catch (Exception e)
 			{
-				return Request.CreateResponse(HttpStatusCode.InternalServerError,
-					string.Format("Error in \"{0}\" module. Error message: {1}", moduleName, e.Message));
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error in \"{moduleName}\" module. Error message: {e.Message}");
 			}
 		}
 

@@ -183,7 +183,7 @@ namespace Kentico.KInspector.Modules
         {
             if (!Directory.Exists(path))
             {
-                validationErrorMessage = string.Format("The given path '{0}' to Kentico instance is not valid. Maybe it is not accessible by the tool.", path);
+                validationErrorMessage = $"The given path '{path}' to Kentico instance is not valid. Maybe it is not accessible by the tool.";
 
                 return false;
             }

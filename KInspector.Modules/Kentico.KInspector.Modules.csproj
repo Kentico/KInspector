@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Kentico.KInspector.Modules</RootNamespace>
     <AssemblyName>Kentico.KInspector.Modules</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -21,6 +21,7 @@
     </SccProvider>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -113,6 +114,7 @@
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\Content\DuplicatePageAliasesModule.cs" />
+    <Compile Include="Modules\EventLog\EventLogSizeModule.cs" />
     <Compile Include="Modules\General\PageTypeFieldsDataTypeMismatchModule.cs" />
     <Compile Include="Modules\General\MediaLibraryAzureLimitModule.cs" />
     <Compile Include="Modules\General\DatabaseConsistencyCheckModule.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Modules\EventLog\ApplicationRestartsModule.cs" />
     <Compile Include="Modules\General\CacheItemsModule.cs" />
     <Compile Include="Modules\General\InstanceInfoModule.cs" />
+    <Compile Include="Modules\General\OldWebFarmTasks.cs" />
     <Compile Include="Modules\General\PagesAnalyzerModule.cs" />
     <Compile Include="Modules\Content\SiteTemplatesModule.cs" />
     <Compile Include="Modules\General\ScreenshotterModule.cs" />
@@ -210,6 +213,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\DuplicatePageAliasesModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\EventLogSizeModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\PageTypeAssignedToSiteModule.sql">
