@@ -217,8 +217,8 @@
 
                 <section class="top-bar-section">
                     <ul class="right">
-						<li ng-show="!commentsVisible" class="active" ng-click="toggleCommentsVisibility()"><a href="javascript:void(0);">Show Comments</a></li>
-						<li ng-show="commentsVisible" class="active" ng-click="toggleCommentsVisibility()"><a href="javascript:void(0);">Hide Comments</a></li>
+						<li ng-show="!commentsVisible && !model.moduleLoaded && !model.moduleLoading" class="active" ng-click="toggleCommentsVisibility()"><a href="javascript:void(0);">Show Comments</a></li>
+						<li ng-show="commentsVisible && !model.moduleLoaded && !model.moduleLoading" class="active" ng-click="toggleCommentsVisibility()"><a href="javascript:void(0);">Hide Comments</a></li>
 						<li ng-show="!model.moduleLoaded && !model.moduleLoading" class="active" ng-click="loadModule(false, true)"><a href="javascript:void(0);">Load the module</a></li>
                         <li ng-show="model.moduleLoading"><div style="padding-top: 0.5rem;"><knl-loader /></div></li>
                         <li ng-show="model.moduleLoaded"><a class="reload-link" href="javascript:void(0);" ng-click="loadModule(true, true)">↺</a></li>
@@ -226,10 +226,11 @@
                     </ul>
                 </section>
             </nav>
-			<div class="panel" ng-show="commentsVisible">
+			<div class="panel" ng-show="commentsVisible && !model.moduleLoaded && !model.moduleLoading">
 				<div class="panel"><pre class="module-comment-breakable">{{moduleMetaData.Comment}}</pre></div>
 			</div>
-            <div class="panel" ng-show="resultsVisible">              
+            <div class="panel" ng-show="resultsVisible">
+				<div class="panel"><pre class="module-comment-breakable">{{moduleMetaData.Comment}}</pre></div>              
                 <div ng-transclude></div>
                 <div class="results-footer" ng-show="model.results.ResultComment">{{model.results.ResultComment}}</div>
             </div>
