@@ -68,7 +68,6 @@ namespace Kentico.KInspector.Modules.Export.Modules
             // XWPFDocument.Write closes the stream. NpoiMemoryStream is used to prevent it.
             NpoiMemoryStream stream = new NpoiMemoryStream(false);
             document.Write(stream);
-            stream.Flush();
             stream.Seek(0, SeekOrigin.Begin);
             stream.AllowClose = true;
 
