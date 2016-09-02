@@ -215,29 +215,28 @@
     </script>
     <!-- END OF TEMPLATE FOR THE SIDEBAR ON THE RESULTS PAGE -->
     <!-- TEMPLATE FOR THE CONTAINER OF THE MODULE - THE COLORED PANEL WITH AN ARROW POINTING DOWN/UP -->
-    <script type="text/ng-template" id="partials/module-item-container.html">
+<script type="text/ng-template" id="partials/module-item-container.html">
         <div class="module-container">
-            <nav ng-click="toggleResultsVisibility()" ng-class="{pointer: model.moduleLoaded}" class="{{model.resultClass}} top-bar" data-topbar role="navigation">
-                <ul class="title-area">
-                    <li class="name">
-                        <h1><span class="results-module-name">[{{moduleMetaData.Category || 'General'}}] {{moduleMetaData.Name}}</span></h1>
-                    </li>
-                </ul>
+			<nav ng-class="{pointer: model.moduleLoaded}" ng-click="toggleResultsVisibility()" class="{{model.resultClass}} top-bar" data-topbar role="navigation">
+				<ul class="title-area">
+					<li class="name">
+						<h1><span class="results-module-name">[{{moduleMetaData.Category || 'General'}}] {{moduleMetaData.Name}}</span></h1>
+					</li>
+				</ul>
 
                 <section class="top-bar-section">
                     <ul class="right">
+                        <li ng-show="!commentsVisible && !model.moduleLoaded && !model.moduleLoading" class="active" ng-click="toggleCommentsVisibility()"><a href="javascript:void(0);">Show Comments</a></li>
+                        <li ng-show="commentsVisible && !model.moduleLoaded && !model.moduleLoading" class="active" ng-click="toggleCommentsVisibility()"><a href="javascript:void(0);">Hide Comments</a></li>
                         <li ng-show="!model.moduleLoaded && !model.moduleLoading" class="active" ng-click="loadModule(false, true)"><a href="javascript:void(0);">Load the module</a></li>
                         <li ng-show="model.moduleLoading"><div style="padding-top: 0.5rem;"><knl-loader /></div></li>
                         <li ng-show="model.moduleLoaded"><a class="reload-link" href="javascript:void(0);" ng-click="loadModule(true, true)">↺</a></li>
                         <li ng-show="model.moduleLoaded"><div style="padding-left: 1rem; padding-top: 1rem; padding-right: 1rem;"><div ng-class="{'arrow-down': !resultsVisible, 'arrow-up': resultsVisible}"></div></div></li>
-                        <li ng-show="selectorsVisible()" name="selectModule" ng-model="selectModule" ng-value="moduleMetaData.Name" ng-click="toggleModuleSelection(moduleMetaData.Name); $event.stopPropagation();">
-                            <div style="padding-left: 1rem; padding-right: 1rem;"><input type="checkbox" style="width: 1rem;" /></div>
-                        </li>
                     </ul>
                 </section>
             </nav>
             <div class="panel" ng-show="resultsVisible">
-                <div class="panel"><pre class="module-comment-breakable">{{moduleMetaData.Comment}}</pre></div>
+				<div class="panel"><pre class="module-comment-breakable">{{moduleMetaData.Comment}}</pre></div>              
                 <div ng-transclude></div>
                 <div class="results-footer" ng-show="model.results.ResultComment">{{model.results.ResultComment}}</div>
             </div>
