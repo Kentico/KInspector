@@ -143,7 +143,7 @@ namespace Kentico.KInspector.Modules
 
                 var documents = dbService.ExecuteAndGetTableFromFile("SiteTemplatesModule-Documents.sql", 
                     new SqlParameter("PageTemplateID", template["PageTemplateID"]));
-                documents.TableName = string.Format("{0} - Documents", templateName);
+                documents.TableName = $"{templateName} - Documents";
                 results.Tables.Add(documents.Copy());
             }
 
