@@ -103,6 +103,7 @@
     <Compile Include="Export\Modules\ExportXlsxExtensions.cs" />
     <Compile Include="Export\Modules\ExportXml.cs" />
     <Compile Include="Export\Modules\ExportXmlExtensions.cs" />
+    <Compile Include="Export\NpoiMemoryStream.cs" />
     <Compile Include="Helpers\MacroValidator.cs" />
     <Compile Include="Helpers\ProbeHelper.cs" />
     <Compile Include="Helpers\ProjectCodeFilesHelper.cs" />
