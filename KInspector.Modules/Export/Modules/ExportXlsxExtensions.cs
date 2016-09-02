@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Web.UI.WebControls;
+
 using NPOI.SS.UserModel;
 
-namespace Kentico.KInspector.Modules
+namespace Kentico.KInspector.Modules.Export.Modules
 {
+    /// <summary>
+    /// Extensions for NPOI xlsx manipulations. Used primarily in <see cref="ExportXlsx"/>.
+    /// </summary>
     public static class ExportXlsxExtensions
     {
         #region Create next empty

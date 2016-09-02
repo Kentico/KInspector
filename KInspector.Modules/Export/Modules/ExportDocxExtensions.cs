@@ -5,10 +5,19 @@ using System.Linq;
 
 using NPOI.XWPF.UserModel;
 
-namespace Kentico.KInspector.Modules
+namespace Kentico.KInspector.Modules.Export.Modules
 {
+    /// <summary>
+    /// Extensions for NPOI docx manipulations. Used primarily in <see cref="ExportDocx"/>.
+    /// </summary>
     public static class ExportDocxExtensions
     {
+        /// <summary>
+        /// Create new text run in paragraph by merging provided strings.
+        /// </summary>
+        /// <param name="paragraph">Paragraph to write into.</param>
+        /// <param name="data">Data to concatenate and write into the run.</param>
+        /// <returns>Newly created text run inside the paragraph.</returns>
         public static XWPFRun CreateRun(this XWPFParagraph paragraph, params string[] data)
         {
             if (paragraph == null)
@@ -22,6 +31,12 @@ namespace Kentico.KInspector.Modules
             return run;
         }
 
+        /// <summary>
+        /// Create new text run in paragraph by merging provided strings.
+        /// </summary>
+        /// <param name="document">Document to create the paragraph in.</param>
+        /// <param name="data">Data to create as runs.</param>
+        /// <returns>Newly created paragraph.</returns>
         public static XWPFParagraph CreateParagraph(this XWPFDocument document, params string[] data)
         {
             if (document == null)
@@ -39,17 +54,35 @@ namespace Kentico.KInspector.Modules
             return par;
         }
 
-        public static XWPFTableRow FillRow(this XWPFTableRow row, params string[] data)
+        /// <summary>
+        /// Fill table row with data
+        /// </summary>
+        /// <param name="row">Row to write into.</param>
+        /// <param name="cellData">Cell data to write into the row.</param>
+        /// <returns>The row which has been written into.</returns>
+        public static XWPFTableRow FillRow(this XWPFTableRow row, params string[] cellData)
         {
-            return row.FillRow(data as IEnumerable<string>);
+            return row.FillRow(cellData as IEnumerable<string>);
         }
 
-        public static XWPFTableRow FillRow(this XWPFTableRow row, params object[] data)
+        /// <summary>
+        /// Fill table row with data
+        /// </summary>
+        /// <param name="row">Row to write into.</param>
+        /// <param name="cellData">Cell data to write into the row.</param>
+        /// <returns>The row which has been written into.</returns>
+        public static XWPFTableRow FillRow(this XWPFTableRow row, params object[] cellData)
         {
-            return row.FillRow(data as IEnumerable<object>);
+            return row.FillRow(cellData as IEnumerable<object>);
         }
 
-        public static XWPFTableRow FillRow<T>(this XWPFTableRow row, IEnumerable<T> data)
+        /// <summary>
+        /// Fill table row with data
+        /// </summary>
+        /// <param name="row">Row to write into.</param>
+        /// <param name="cellData">Cell data to write into the row.</param>
+        /// <returns>The row which the data has been written into.</returns>
+        public static XWPFTableRow FillRow<T>(this XWPFTableRow row, IEnumerable<T> cellData)
         {
             if (row == null)
             {
@@ -57,7 +90,7 @@ namespace Kentico.KInspector.Modules
             }
 
             int ii = 0;
-            foreach (var val in data)
+            foreach (var val in cellData)
             {
                 var cell = row.GetCell(ii) ?? row.AddNewTableCell();
                 cell.SetText(Convert.ToString(val));
@@ -68,6 +101,12 @@ namespace Kentico.KInspector.Modules
             return row;
         }
 
+        /// <summary>
+        /// Fill table rows with data.
+        /// </summary>
+        /// <param name="table">Table to fill.</param>
+        /// <param name="data">Data to write.</param>
+        /// <returns>The table which the data has been written into.</returns>
         public static XWPFTable FillRows(this XWPFTable table, DataTable data)
         {
             if (data == null)
@@ -91,6 +130,12 @@ namespace Kentico.KInspector.Modules
             return table;
         }
 
+        /// <summary>
+        /// Fill table rows with data.
+        /// </summary>
+        /// <param name="table">Table to fill.</param>
+        /// <param name="data">Data to write.</param>
+        /// <returns>The table which the data has been written into.</returns>
         public static XWPFTable FillTable<T>(this XWPFTable table, IEnumerable<T> data)
         {
             if (table == null)

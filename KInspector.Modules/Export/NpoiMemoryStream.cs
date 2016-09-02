@@ -3,10 +3,14 @@
 namespace Kentico.KInspector.Modules.Export
 {
     /// <summary>
-    /// Memory stream with Close lock
+    /// Memory stream with Close lock. Used to bypass NPOI closing stream after Write.
     /// </summary>
     public class NpoiMemoryStream : MemoryStream
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="allowClose">Allow Close for stream. Property <see cref="AllowClose"/>.</param>
         public NpoiMemoryStream(bool allowClose = true)
         {
             AllowClose = allowClose;
@@ -17,6 +21,9 @@ namespace Kentico.KInspector.Modules.Export
         /// </summary>
         public bool AllowClose { get; set; }
 
+        /// <summary>
+        /// Overload of close method taking into account property <see cref="AllowClose"/>.
+        /// </summary>
         public override void Close()
         {
             if (AllowClose)

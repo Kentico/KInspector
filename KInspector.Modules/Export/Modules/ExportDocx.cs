@@ -12,10 +12,24 @@ using NPOI.XWPF.UserModel;
 
 namespace Kentico.KInspector.Modules.Export.Modules
 {
+    /// <summary>
+    /// Class for export into MS Word document using docx format.
+    /// Will append results to a template, if it exists in:
+    /// \Data\Templates\KInspectorReportTemplate.docx
+    /// </summary>
     public class ExportDocx : IExportModule
     {
+        /// <summary>
+        /// Metadata of the module.
+        /// </summary>
         public ExportModuleMetaData ModuleMetaData => new ExportModuleMetaData("Word", "ExportDocx", "docx", "application/docx");
 
+        /// <summary>
+        /// Returns stream result of the export process.
+        /// </summary>
+        /// <param name="moduleNames">Modules to export.</param>
+        /// <param name="instanceInfo">Instance for which to execute modules.</param>
+        /// <returns>Result stream</returns>
         public Stream GetExportStream(IEnumerable<string> moduleNames, IInstanceInfo instanceInfo)
         {
             // Create docx
@@ -31,10 +45,13 @@ namespace Kentico.KInspector.Modules.Export.Modules
                 document = new XWPFDocument();
             }
 
+
+            // Create sumary paragraph containing results of text modules, and sumary of all other modules.
             document.CreateParagraph("Result summary");
             XWPFTable resultSummary = document.CreateTable();
             resultSummary.GetRow(0).FillRow("Module", "Result", "Comment");
 
+            // Run every module and write its result.
             foreach (string moduleName in moduleNames)
             {
                 var result = ModuleLoader.GetModule(moduleName).GetResults(instanceInfo);
@@ -86,6 +103,5 @@ namespace Kentico.KInspector.Modules.Export.Modules
             
             return stream;
         }
-
     }
 }

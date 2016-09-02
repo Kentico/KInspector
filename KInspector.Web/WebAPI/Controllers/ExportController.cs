@@ -13,10 +13,11 @@ using Kentico.KInspector.Modules.Export;
 
 namespace Kentico.KInspector.Web
 {
+    /// <summary>
+    /// Controller handling export functionality.
+    /// </summary>
     public class ExportController : ApiController
 	{
-        #region Export
-
         // GET api/export/GetExportModulesMetadata
         [ActionName("GetExportModulesMetadata")]
         public HttpResponseMessage GetExportModulesMetadata()
@@ -88,7 +89,5 @@ namespace Kentico.KInspector.Web
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error in processing modules. Error message: {e.Message}");
             }
         }
-
-        #endregion
     }
 }

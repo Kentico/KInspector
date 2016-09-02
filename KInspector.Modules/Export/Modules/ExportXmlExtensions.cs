@@ -1,10 +1,21 @@
 using System;
 using System.Xml.Linq;
 
-namespace Kentico.KInspector.Modules
+namespace Kentico.KInspector.Modules.Export.Modules
 {
+    /// <summary>
+    /// Extensions for xml manipulations. Used primarily in <see cref="ExportXml"/>.
+    /// </summary>
     public static class ExportXmlExtensions
     {
+        /// <summary>
+        /// Create xml element containing module summary.
+        /// </summary>
+        /// <param name="parent">Result sumary element.</param>
+        /// <param name="moduleName">Name of the module.</param>
+        /// <param name="moduleResult">Module result in string format.</param>
+        /// <param name="moduleComment">Module comment.</param>
+        /// <returns>Created module result sumary xml element.</returns>
         public static XElement AddModuleSummary(this XElement parent, string moduleName, string moduleResult, string moduleComment)
         {
             if (parent == null)
@@ -21,6 +32,14 @@ namespace Kentico.KInspector.Modules
             return parent;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parent">Results element.</param>
+        /// <param name="moduleName">Name of the module.</param>
+        /// <param name="moduleResult">Module result element.</param>
+        /// <param name="moduleComment">Module comment.</param>
+        /// <returns>Created module result xml element.</returns>
         public static XElement AddModuleResult(this XElement parent, string moduleName, XElement moduleResult, string moduleComment)
         {
             if (parent == null)

@@ -13,19 +13,32 @@ using NPOI.XSSF.UserModel;
 
 namespace Kentico.KInspector.Modules.Export.Modules
 {
+    /// <summary>
+    /// Class for export into MS Excel document using xlsx format.
+    /// </summary>
     public class ExportXlsx : IExportModule
     {
+        /// <summary>
+        /// Metadata of the module.
+        /// </summary>
         public ExportModuleMetaData ModuleMetaData => new ExportModuleMetaData("Excel", "ExportXlsx", "xlsx", "application/xlsx");
 
+        /// <summary>
+        /// Returns stream result of the export process.
+        /// </summary>
+        /// <param name="moduleNames">Modules to export.</param>
+        /// <param name="instanceInfo">Instance for which to execute modules.</param>
+        /// <returns>Result stream</returns>
         public Stream GetExportStream(IEnumerable<string> moduleNames, IInstanceInfo instanceInfo)
         {
             // Create xlsx
             IWorkbook document = new XSSFWorkbook();
 
-            // Create sheet to store results of text modules
+            // Create sheet to store results of text modules, and sumary of all other modules.
             ISheet resultSummary = document.CreateSheet("Result summary");
             resultSummary.CreateRow("Module", "Result", "Comment");
 
+            // Run every module and write its result.
             foreach (string moduleName in moduleNames)
             {
                 var result = ModuleLoader.GetModule(moduleName).GetResults(instanceInfo);

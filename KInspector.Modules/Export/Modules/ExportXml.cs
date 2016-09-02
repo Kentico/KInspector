@@ -12,8 +12,12 @@ using System.Xml.Linq;
 
 namespace Kentico.KInspector.Modules.Export.Modules
 {
+
     public class ExportXml : IExportModule
     {
+        /// <summary>
+        /// Metadata of the module.
+        /// </summary>
         public ExportModuleMetaData ModuleMetaData => new ExportModuleMetaData("Xml", "ExportXml", "xml","text/xml");
 
         public Stream GetExportStream(IEnumerable<string> moduleNames, IInstanceInfo instanceInfo)
@@ -23,11 +27,12 @@ namespace Kentico.KInspector.Modules.Export.Modules
                 throw new ArgumentNullException(nameof(instanceInfo));
             }
 
-            // Create xml
+            // Create xml root
             XElement rootElement = new XElement("KInspectorExport");
             XDocument document = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), rootElement);
 
-            // Create element to store results of text modules
+
+            // Create element to store results of text modules, and sumary of all other modules.
             XElement resultSummary = new XElement("ResultSummary");
             rootElement.Add(resultSummary);
 
@@ -35,6 +40,7 @@ namespace Kentico.KInspector.Modules.Export.Modules
             XElement moduleResults = new XElement("ModuleResults");
             rootElement.Add(moduleResults);
 
+            // Run every module and write its result.
             foreach (string moduleName in moduleNames)
             {
                 var result = ModuleLoader.GetModule(moduleName).GetResults(instanceInfo);

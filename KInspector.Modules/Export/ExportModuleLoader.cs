@@ -10,6 +10,9 @@ using Ninject.Extensions.Conventions;
 
 namespace Kentico.KInspector.Modules.Export
 {
+    /// <summary>
+    /// Class ensuring automatic load of export modules.
+    /// </summary>
     public class ExportModuleLoader
     {
         private static readonly IDictionary<string, IExportModule> mModules = new Dictionary<string, IExportModule>(StringComparer.InvariantCultureIgnoreCase);
@@ -54,15 +57,19 @@ namespace Kentico.KInspector.Modules.Export
             }
         }
 
-
-        public static IExportModule GetModule(string moduleName)
+        /// <summary>
+        /// Return export module of given code name.
+        /// </summary>
+        /// <param name="moduleCodeName">Code name of the module, as defined in <see cref="ExportModuleMetaData.ModuleCodeName"/></param>
+        /// <returns></returns>
+        public static IExportModule GetModule(string moduleCodeName)
         {
             if (mModules.Count == 0)
             {
                 LoadModules();
             }
 
-            return mModules[moduleName];
+            return mModules[moduleCodeName];
         }
     }
 }
