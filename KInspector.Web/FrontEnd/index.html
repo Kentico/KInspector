@@ -232,9 +232,15 @@
                         <li ng-show="model.moduleLoading"><div style="padding-top: 0.5rem;"><knl-loader /></div></li>
                         <li ng-show="model.moduleLoaded"><a class="reload-link" href="javascript:void(0);" ng-click="loadModule(true, true)">↺</a></li>
                         <li ng-show="model.moduleLoaded"><div style="padding-left: 1rem; padding-top: 1rem; padding-right: 1rem;"><div ng-class="{'arrow-down': !resultsVisible, 'arrow-up': resultsVisible}"></div></div></li>
+                        <li ng-show="selectorsVisible()" name="selectModule" ng-model="selectModule" ng-value="moduleMetaData.Name" ng-click="toggleModuleSelection(moduleMetaData.Name); $event.stopPropagation();">
+                            <div style="padding-left: 1rem; padding-right: 1rem;"><input type="checkbox" style="width: 1rem;" /></div>
+                        </li>
                     </ul>
                 </section>
             </nav>
+            <div class="panel" ng-show="commentsVisible && !model.moduleLoaded && !model.moduleLoading">
+                <div class="panel"><pre class="module-comment-breakable">{{moduleMetaData.Comment}}</pre></div>
+            </div>
             <div class="panel" ng-show="resultsVisible">
 				<div class="panel"><pre class="module-comment-breakable">{{moduleMetaData.Comment}}</pre></div>              
                 <div ng-transclude></div>
