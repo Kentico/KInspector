@@ -222,7 +222,7 @@
 						<li ng-show="!model.moduleLoaded && !model.moduleLoading" class="active" ng-click="loadModule(false, true)"><a href="javascript:void(0);">Load the module</a></li>
 						<li ng-show="model.moduleLoading"><div style="padding-top: 0.5rem;"><knl-loader /></div></li>
 						<li ng-show="model.moduleLoaded"><a class="reload-link" href="javascript:void(0);" ng-click="loadModule(true, true)">↺</a></li>
-						<li ng-show="model.moduleLoaded" ng-click="toggleResultsVisibility()"><div style="padding-left: 1rem; padding-top: 1rem; padding-right: 1rem;"><div ng-class="{'arrow-down': !resultsVisible, 'arrow-up': resultsVisible}"></div></div></li>
+						<li ng-show="model.moduleLoaded"><div style="padding-left: 1rem; padding-top: 1rem; padding-right: 1rem;"><div ng-class="{'arrow-down': !resultsVisible, 'arrow-up': resultsVisible}"></div></div></li>
 					</ul>
 				</section>
 			</nav>
