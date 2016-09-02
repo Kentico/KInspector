@@ -66,28 +66,22 @@ namespace Kentico.KInspector.Web
 
             try
             {
-                using (var memoryStream = module.GetExportStream(moduleNames, instanceInfo) as MemoryStream)
+                var stream = module.GetExportStream(moduleNames, instanceInfo);
+                if (stream == null)
                 {
-                    if (memoryStream == null)
-                    {
-                        throw new Exception("Empty export file");
-                    }
-
-                    // Send stream
-                    var response = Request.CreateResponse(HttpStatusCode.OK);
-                    response.Content = new ByteArrayContent(memoryStream.ToArray());
-                    response.Content.Headers.ContentType = new MediaTypeHeaderValue(module.ModuleMetaData.ModuleFileMimeType);
-                    response.Content.Headers.ContentLength = memoryStream.Length;
-                    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                    response.Content.Headers.ContentDisposition.FileName =
-                        $"KInspectorExport_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.{module.ModuleMetaData.ModuleFileExtension}";
-                    response.Headers.ConnectionClose = true;
-
-                    memoryStream.Flush();
-
-                    return response;
+                    throw new Exception("Empty export file");
                 }
 
+                // Send stream
+                var response = Request.CreateResponse(HttpStatusCode.OK);
+                response.Content = new StreamContent(stream);
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(module.ModuleMetaData.ModuleFileMimeType);
+                response.Content.Headers.ContentLength = stream.Length;
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                response.Content.Headers.ContentDisposition.FileName = $"KInspectorExport_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.{module.ModuleMetaData.ModuleFileExtension}";
+                response.Headers.ConnectionClose = true;
+
+                return response;
             }
             catch (Exception e)
             {
