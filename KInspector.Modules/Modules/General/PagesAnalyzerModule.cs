@@ -228,11 +228,11 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
                     bool faviconAvailable = ProbeUri(faviconUri);
                     if (faviconAvailable)
                     {
-                        faviconAvailabilityCache[faviconUri.AbsoluteUri] = (defaultFavicon) ? "OK (Default)\n" : string.Format("OK ('{0}')\n", faviconHref);
+                        faviconAvailabilityCache[faviconUri.AbsoluteUri] = (defaultFavicon) ? "OK (Default)\n" : $"OK ('{faviconHref}')\n";
                     }
                     else
                     {
-                        faviconAvailabilityCache[faviconUri.AbsoluteUri] = (defaultFavicon) ? "NOT SPECIFIED\n" : string.Format("MISSING ('{0}')\n", faviconHref);
+                        faviconAvailabilityCache[faviconUri.AbsoluteUri] = (defaultFavicon) ? "NOT SPECIFIED\n" : $"MISSING ('{faviconHref}')\n";
                     }
                     res.Append(faviconAvailabilityCache[faviconUri.AbsoluteUri]);
                 }
@@ -273,11 +273,11 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
                         bool faviconAvailable = ProbeUri(iconUri);
                         if (faviconAvailable)
                         {
-                            touchIconAvailabilityCache[iconUri.AbsoluteUri] = string.Format("OK ('{0}')\n", iconHref);
+                            touchIconAvailabilityCache[iconUri.AbsoluteUri] = $"OK ('{iconHref}')\n";
                         }
                         else
                         {
-                            touchIconAvailabilityCache[iconUri.AbsoluteUri] = string.Format("MISSING ('{0}')\n", iconHref);
+                            touchIconAvailabilityCache[iconUri.AbsoluteUri] = $"MISSING ('{iconHref}')\n";
                         }
                         res.Append(touchIconAvailabilityCache[iconUri.AbsoluteUri]);
                     }
@@ -330,8 +330,7 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
                 return result;
             }
 
-            throw new InvalidOperationException(string.Format("[PagesAnalyzerModule.GetUri]: The base URI '{0}' and href '{1}' do not produce a valid URI.",
-                baseUri, href));
+            throw new InvalidOperationException($"[PagesAnalyzerModule.GetUri]: The base URI '{baseUri}' and href '{href}' do not produce a valid URI.");
         }
 
 

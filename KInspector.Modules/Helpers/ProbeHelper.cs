@@ -35,14 +35,7 @@ namespace Kentico.KInspector.Modules
         /// <summary>
         /// Gets enumeration of probe files as an enumeration of relative paths.
         /// </summary>
-        private static IEnumerable<string> ProbeFilesRelativePath
-        {
-            get
-            {
-                return Directory.EnumerateFiles(PROBE_DATA_FOLDER_PATH, "*", SearchOption.AllDirectories);
-            }
-        }
-
+        private static IEnumerable<string> ProbeFilesRelativePath => Directory.EnumerateFiles(PROBE_DATA_FOLDER_PATH, "*", SearchOption.AllDirectories);
 
         /// <summary>
         /// Installs the probe for Kentico instance residing in <paramref name="pathToKenticoFiles"/>

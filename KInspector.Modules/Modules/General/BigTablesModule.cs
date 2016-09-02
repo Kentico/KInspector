@@ -33,8 +33,7 @@ namespace Kentico.KInspector.Modules
             return new ModuleResults
             {
                 Result = results,
-                ResultComment = string.Format("The overall database size is {0} MB", databaseSizeInMB)
-            };
+                ResultComment = $"The overall database size is {databaseSizeInMB} MB"};
         }
     }
 }
