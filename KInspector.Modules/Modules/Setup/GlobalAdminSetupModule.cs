@@ -12,7 +12,11 @@ namespace Kentico.KInspector.Modules
                 Name = "Reset Global administrator",
                 Comment = @"Enables and clears password of administrator user account if any.",
                 SupportedVersions = new[] {
-                    new Version("9.0"),
+                    new Version("7.0"),
+                    new Version("8.0"),
+                    new Version("8.1"),
+                    new Version("8.2"),
+                    new Version("9.0")
                 },
                 Category = "Setup",
             };
