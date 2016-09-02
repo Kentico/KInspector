@@ -15,8 +15,6 @@ namespace Kentico.KInspector.Modules
         #region "Fields"
 
         private IDatabaseService mDatabaseService;
-        private string mLikePageTemplateDisplayName = "%";
-
         #endregion
 
 
@@ -32,18 +30,7 @@ namespace Kentico.KInspector.Modules
         /// This should be improved to be able to set the value of this property
         /// based on what the user wants.
         /// </remarks>
-        public string LikePageTemplateDisplayName
-        {
-            get
-            {
-                return mLikePageTemplateDisplayName;
-            }
-            set
-            {
-                mLikePageTemplateDisplayName = value;
-            }
-        }
-
+        public string LikePageTemplateDisplayName { get; set; } = "%";
         #endregion
 
 
@@ -184,11 +171,8 @@ namespace Kentico.KInspector.Modules
                         bool containsMacros = MacroValidator.Current.ContainsMacros(innerText, macroTypes);
                         if (containsMacros)
                         {
-                            string report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
-                                    webPartNode.Attributes["controlid"].Value,
-                                    webPartNode.Attributes["type"].Value,
-                                    nameAttribute.Value,
-                                    MacroValidator.Current.HighlightMacros(HttpUtility.HtmlEncode(innerText), macroTypes));
+                            string report =
+                                $"Web part: {webPartNode.Attributes["controlid"].Value}/{webPartNode.Attributes["type"].Value}, property: {nameAttribute.Value} <br /> <strong>{MacroValidator.Current.HighlightMacros(HttpUtility.HtmlEncode(innerText), macroTypes)}</strong>.<br />";
 
                             res.Add(report);
                         }
