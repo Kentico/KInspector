@@ -161,5 +161,54 @@
                     return deferred.promise;
                 }
             }
+        }])
+
+        /**
+         * Handles export setup and report execution
+         */
+        .factory('kiExportService', ['$http', '$q', 'knlTargetConfigService', 'knlModuleService', 'knlErrorService', function ($http, $q, configService, moduleService, errorService) {
+            // Init cache
+            localStorage.setItem('kiExportModulesMetaData', null);
+
+            return {
+                selectedModules: [],
+                selectorsVisible: false,
+
+                /**
+                 * Return available eport types
+                 */
+                getExportModulesMetaData: function () {
+                    var deferred = $q.defer();
+                    var cachedExportModulesMetaData = JSON.parse(localStorage.getItem('kiExportModulesMetaData'));
+
+                    if (cachedExportModulesMetaData) {
+                        // Return cached results
+                        deferred.resolve(cachedExportModulesMetaData);
+                    } else {
+                        $http.get("http://localhost:9000/api/export/GetExportModulesMetadata", { cache: true })
+                            .success(function (exportModulesMetaData) {
+                                localStorage.setItem('kiExportModulesMetaData', JSON.stringify(exportModulesMetaData));
+                                deferred.resolve(exportModulesMetaData);
+                            })
+                            .error(deferred.error);
+                    }
+                    return deferred.promise;
+                },
+
+                /**
+                 * Runs selected modules and returns module results as a file
+                 */
+                exportReport: function (exportModuleCodeName) {
+                    if (exportModuleCodeName == undefined) {
+                        errorService.triggerError("No export module selected");
+                        return;
+                    }
+
+                    var paramsWithModuleNames = angular.extend({ moduleNames: this.selectedModules.sort() }, configService.getConfig(), { exportModuleCodeName: exportModuleCodeName });
+                    var url = "http://localhost:9000/api/export/GetModuleExport?" + $.param(paramsWithModuleNames);
+
+                    window.open(url, '_blank');
+                }
+            }
         }]);
 }(window.localStorage));

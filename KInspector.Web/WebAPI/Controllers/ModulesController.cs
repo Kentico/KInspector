@@ -119,5 +119,5 @@ namespace Kentico.KInspector.Web
 				return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
 			}
 		}
-	}
+    }
 }
