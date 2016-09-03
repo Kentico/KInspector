@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Kentico.KInspector.Core;
 
 using System.Xml.Linq;
 
 namespace Kentico.KInspector.Modules.Export.Modules
 {
-
     public class ExportXml : IExportModule
     {
         /// <summary>

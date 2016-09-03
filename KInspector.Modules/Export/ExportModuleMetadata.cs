@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kentico.KInspector.Modules.Export
+﻿namespace Kentico.KInspector.Modules.Export
 {
     /// <summary>
     /// A struct containing export module metadata. Used as property of <see cref="IExportModule"/>.
@@ -12,7 +6,7 @@ namespace Kentico.KInspector.Modules.Export
     public class ExportModuleMetaData
     {
         /// <summary>
-        /// 
+        /// Metadata for an export module.
         /// </summary>
         /// <param name="moduleDisplayName">User-friendly name of the module. Property <see cref="ModuleDisplayName"/>.</param>
         /// <param name="moduleCodeName">Unique name of the module. Property <see cref="ModuleCodeName"/>.</param>
