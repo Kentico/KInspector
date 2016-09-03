@@ -113,6 +113,7 @@
     <Compile Include="Modules\General\SettingsModule.cs" />
     <Compile Include="Modules\General\BigTablesModule.cs" />
     <Compile Include="Modules\Security\WebPartAnalyzerModule.cs" />
+    <Compile Include="Modules\Setup\GlobalAdminSetupModule.cs" />
     <Compile Include="Modules\Setup\LicenseSetupModule.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -165,6 +166,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\PageTypeFieldsDataTypeMismatchModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\Setup\GlobalAdminSetupModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\WebPartColumnsModule9.sql">
