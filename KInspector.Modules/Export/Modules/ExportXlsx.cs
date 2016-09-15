@@ -30,58 +30,58 @@ namespace Kentico.KInspector.Modules.Export.Modules
 			// Create xlsx
 			IWorkbook document = new XSSFWorkbook();
 
-            // Create sheet to store results of text modules, and sumary of all other modules.
-            ISheet resultSummary = document.CreateSheet("Result summary");
-            resultSummary.CreateRow("Module", "Result", "Comment", "Description");
+			// Create sheet to store results of text modules, and sumary of all other modules.
+			ISheet resultSummary = document.CreateSheet("Result summary");
+			resultSummary.CreateRow("Module", "Result", "Comment", "Description");
 
-            // Run every module and write its result.
-            foreach (string moduleName in moduleNames.Distinct())
-            {
-                var module = ModuleLoader.GetModule(moduleName);
-                var result = module.GetResults(instanceInfo);
-                var meta = module.GetModuleMetadata();
+			// Run every module and write its result.
+			foreach (string moduleName in moduleNames.Distinct())
+			{
+				var module = ModuleLoader.GetModule(moduleName);
+				var result = module.GetResults(instanceInfo);
+				var meta = module.GetModuleMetadata();
 
-                switch (result.ResultType)
-                {
-                    case ModuleResultsType.String:
-                        resultSummary.CreateRow(moduleName, result.Result as string, result.ResultComment, meta.Comment);
-                        break;
-                    case ModuleResultsType.List:
-                        document.CreateSheet(moduleName).CreateRows(result.Result as IEnumerable<string>);
-                        resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment, meta.Comment);
-                        break;
-                    case ModuleResultsType.Table:
-                        document.CreateSheet(moduleName).CreateRows(result.Result as DataTable);
-                        resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment, meta.Comment);
-                        break;
-                    case ModuleResultsType.ListOfTables:
-                        DataSet data = result.Result as DataSet;
-                        if (data == null)
-                        {
-                            resultSummary.CreateRow(moduleName, "Internal error: Invalid DataSet", result.ResultComment, meta.Comment);
-                            break;
-                        }
+				switch (result.ResultType)
+				{
+					case ModuleResultsType.String:
+						resultSummary.CreateRow(moduleName, result.Result as string, result.ResultComment, meta.Comment);
+						break;
+					case ModuleResultsType.List:
+						document.CreateSheet(moduleName).CreateRows(result.Result as IEnumerable<string>);
+						resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment, meta.Comment);
+						break;
+					case ModuleResultsType.Table:
+						document.CreateSheet(moduleName).CreateRows(result.Result as DataTable);
+						resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment, meta.Comment);
+						break;
+					case ModuleResultsType.ListOfTables:
+						DataSet data = result.Result as DataSet;
+						if (data == null)
+						{
+							resultSummary.CreateRow(moduleName, "Internal error: Invalid DataSet", result.ResultComment, meta.Comment);
+							break;
+						}
 
-                        ISheet currentSheet = document.CreateSheet(moduleName);
-                        foreach (DataTable tab in data.Tables)
-                        {
-                            // Create header
-                            currentSheet.CreateRow(tab.TableName);
+						ISheet currentSheet = document.CreateSheet(moduleName);
+						foreach (DataTable tab in data.Tables)
+						{
+							// Create header
+							currentSheet.CreateRow(tab.TableName);
 
-                            // Write data
-                            currentSheet.CreateRows(tab);
-                            
-                            // Create divider
-                            currentSheet.CreateRow();
-                        }
+							// Write data
+							currentSheet.CreateRows(tab);
 
-                        resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment, meta.Comment);
-                        break;
-                    default:
-                        resultSummary.CreateRow(moduleName, "Internal error: Unknown module", result.ResultComment, meta.Comment);
-                        continue;
-                }
-            }
+							// Create divider
+							currentSheet.CreateRow();
+						}
+
+						resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment, meta.Comment);
+						break;
+					default:
+						resultSummary.CreateRow(moduleName, "Internal error: Unknown module", result.ResultComment, meta.Comment);
+						continue;
+				}
+			}
 
 			// XWPFDocument.Write closes the stream. NpoiMemoryStream is used to prevent it.
 			NpoiMemoryStream stream = new NpoiMemoryStream(false);

@@ -68,13 +68,13 @@ namespace Kentico.KInspector.Web
 				throw new ArgumentException(nameof(exportModuleCodeName));
 			}
 
-            try
-            {
-                var stream = module.GetExportStream(moduleNames.Distinct(), instanceInfo);
-                if (stream == null)
-                {
-                    throw new Exception("Empty export file");
-                }
+			try
+			{
+				var stream = module.GetExportStream(moduleNames.Distinct(), instanceInfo);
+				if (stream == null)
+				{
+					throw new Exception("Empty export file");
+				}
 
 				// Send stream
 				var response = Request.CreateResponse(HttpStatusCode.OK);
