@@ -52,7 +52,7 @@ namespace Kentico.KInspector.Modules.Export.Modules
             resultSummary.GetRow(0).FillRow("Module", "Result", "Comment", "Description");
 
             // Run every module and write its result.
-            foreach (string moduleName in moduleNames)
+            foreach (string moduleName in moduleNames.Distinct())
             {
                 var module = ModuleLoader.GetModule(moduleName);
                 var result = module.GetResults(instanceInfo);

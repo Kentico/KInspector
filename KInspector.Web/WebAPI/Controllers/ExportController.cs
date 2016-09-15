@@ -67,7 +67,7 @@ namespace Kentico.KInspector.Web
 
             try
             {
-                var stream = module.GetExportStream(moduleNames, instanceInfo);
+                var stream = module.GetExportStream(moduleNames.Distinct(), instanceInfo);
                 if (stream == null)
                 {
                     throw new Exception("Empty export file");
