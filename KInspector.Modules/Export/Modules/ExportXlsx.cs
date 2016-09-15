@@ -69,7 +69,13 @@ namespace Kentico.KInspector.Modules.Export.Modules
                         ISheet currentSheet = document.CreateSheet(moduleName);
                         foreach (DataTable tab in data.Tables)
                         {
-                            currentSheet.CreateRow(tab);
+                            // Create header
+                            currentSheet.CreateRow(tab.TableName);
+                            // Write data
+                            currentSheet.CreateRows(tab);
+                            
+                            // Create divider
+                            currentSheet.CreateRow();
                         }
 
                         resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment, meta.Comment);
