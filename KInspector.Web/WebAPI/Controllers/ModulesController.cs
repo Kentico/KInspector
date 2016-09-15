@@ -16,7 +16,9 @@ namespace Kentico.KInspector.Web
 		public static string[] SeparateCategories = { "Security", "Setup" };
 
 
-		// GET api/modules/GetModulesMetadata
+		/// <summary>
+		/// GET api/modules/GetModulesMetadata
+		/// </summary>
 		[ActionName("GetModulesMetadata")]
 		public HttpResponseMessage GetModulesMetadata([FromUri]InstanceConfig config, [FromUri] string category = null)
 		{
@@ -57,7 +59,9 @@ namespace Kentico.KInspector.Web
 		}
 
 
-		// GET api/modules/GetSetupModulesMetadata
+		/// <summary>
+		/// GET api/modules/GetSetupModulesMetadata
+		/// </summary>
 		[ActionName("GetSetupModulesMetadata")]
 		public HttpResponseMessage GetSetupModulesMetadata([FromUri]InstanceConfig config)
 		{
@@ -86,7 +90,9 @@ namespace Kentico.KInspector.Web
 		}
 
 
-		// GET api/modules/GetModuleResult
+		/// <summary>
+		/// GET api/modules/GetModuleResult
+		/// </summary>
 		[ActionName("GetModuleResult")]
 		public HttpResponseMessage GetModuleResult(string moduleName, [FromUri]InstanceConfig config)
 		{
@@ -104,7 +110,9 @@ namespace Kentico.KInspector.Web
 		}
 
 
-		// Get api/modules/GetKenticoVersion
+		/// <summary>
+		/// Get api/modules/GetKenticoVersion
+		/// </summary>
 		[ActionName("GetKenticoVersion")]
 		public HttpResponseMessage GetKenticoVersion([FromUri]InstanceConfig config)
 		{
