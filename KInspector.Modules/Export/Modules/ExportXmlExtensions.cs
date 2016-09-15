@@ -34,29 +34,28 @@ namespace Kentico.KInspector.Modules.Export.Modules
             return parent;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parent">Results element.</param>
-        /// <param name="moduleName">Name of the module.</param>
-        /// <param name="moduleResult">Module result element.</param>
-        /// <param name="moduleComment">Module comment.</param>
-        /// <returns>Created module result xml element.</returns>
-        public static XElement AddModuleResult(this XElement parent, string moduleName, XElement moduleResult, string moduleComment)
-        {
-            if (parent == null)
-            {
-                throw new ArgumentNullException(nameof(parent));
-            }
+		/// <summary>
+		/// Adds an XML element with results of an executed module to a parent XML element.
+		/// </summary>
+		/// <param name="parent">Results element.</param>
+		/// <param name="moduleName">Name of the module.</param>
+		/// <param name="moduleResult">Module result element.</param>
+		/// <param name="moduleComment">Module comment.</param>
+		/// <returns>Created module result xml element.</returns>
+		public static XElement AddModuleResult(this XElement parent, string moduleName, XElement moduleResult, string moduleComment)
+		{
+			if (parent == null)
+			{
+				throw new ArgumentNullException(nameof(parent));
+			}
 
-            parent.Add(new XElement("ModuleResult",
-                new XElement("Module", moduleName),
-                new XElement("Comment", moduleComment),
-                moduleResult
-            ));
+			parent.Add(new XElement("ModuleResult",
+				new XElement("Module", moduleName),
+				new XElement("Comment", moduleComment),
+				moduleResult
+			));
 
-            return parent;
-        }
-
-    }
+			return parent;
+		}
+	}
 }

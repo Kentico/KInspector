@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Kentico.KInspector.Core;
 
@@ -13,26 +9,26 @@ using NPOI.XSSF.UserModel;
 
 namespace Kentico.KInspector.Modules.Export.Modules
 {
-    /// <summary>
-    /// Class for export into MS Excel document using xlsx format.
-    /// </summary>
-    public class ExportXlsx : IExportModule
-    {
-        /// <summary>
-        /// Metadata of the module.
-        /// </summary>
-        public ExportModuleMetaData ModuleMetaData => new ExportModuleMetaData("Excel", "ExportXlsx", "xlsx", "application/xlsx");
+	/// <summary>
+	/// Class for export into MS Excel document using xlsx format.
+	/// </summary>
+	public class ExportXlsx : IExportModule
+	{
+		/// <summary>
+		/// Metadata of the module.
+		/// </summary>
+		public ExportModuleMetaData ModuleMetaData => new ExportModuleMetaData("Excel", "ExportXlsx", "xlsx", "application/xlsx");
 
-        /// <summary>
-        /// Returns stream result of the export process.
-        /// </summary>
-        /// <param name="moduleNames">Modules to export.</param>
-        /// <param name="instanceInfo">Instance for which to execute modules.</param>
-        /// <returns>Result stream</returns>
-        public Stream GetExportStream(IEnumerable<string> moduleNames, IInstanceInfo instanceInfo)
-        {
-            // Create xlsx
-            IWorkbook document = new XSSFWorkbook();
+		/// <summary>
+		/// Returns stream result of the export process.
+		/// </summary>
+		/// <param name="moduleNames">Modules to export.</param>
+		/// <param name="instanceInfo">Instance for which to execute modules.</param>
+		/// <returns>Result stream</returns>
+		public Stream GetExportStream(IEnumerable<string> moduleNames, IInstanceInfo instanceInfo)
+		{
+			// Create xlsx
+			IWorkbook document = new XSSFWorkbook();
 
             // Create sheet to store results of text modules, and sumary of all other modules.
             ISheet resultSummary = document.CreateSheet("Result summary");
@@ -86,13 +82,13 @@ namespace Kentico.KInspector.Modules.Export.Modules
                 }
             }
 
-            // XWPFDocument.Write closes the stream. NpoiMemoryStream is used to prevent it.
-            NpoiMemoryStream stream = new NpoiMemoryStream(false);
-            document.Write(stream);
-            stream.Seek(0, SeekOrigin.Begin);
-            stream.AllowClose = true;
+			// XWPFDocument.Write closes the stream. NpoiMemoryStream is used to prevent it.
+			NpoiMemoryStream stream = new NpoiMemoryStream(false);
+			document.Write(stream);
+			stream.Seek(0, SeekOrigin.Begin);
+			stream.AllowClose = true;
 
-            return stream;
-        }
-    }
+			return stream;
+		}
+	}
 }

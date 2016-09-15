@@ -1,49 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Kentico.KInspector.Core;
 
 using NPOI.XWPF.UserModel;
 
 namespace Kentico.KInspector.Modules.Export.Modules
 {
-    /// <summary>
-    /// Class for export into MS Word document using docx format.
-    /// Will append results to a template, if it exists in:
-    /// \Data\Templates\KInspectorReportTemplate.docx
-    /// </summary>
-    public class ExportDocx : IExportModule
-    {
-        /// <summary>
-        /// Metadata of the module.
-        /// </summary>
-        public ExportModuleMetaData ModuleMetaData => new ExportModuleMetaData("Word", "ExportDocx", "docx", "application/docx");
+	/// <summary>
+	/// Class for export into MS Word document using docx format.
+	/// Will append results to a template, if it exists in:
+	/// \Data\Templates\KInspectorReportTemplate.docx
+	/// </summary>
+	public class ExportDocx : IExportModule
+	{
+		/// <summary>
+		/// Metadata of the module.
+		/// </summary>
+		public ExportModuleMetaData ModuleMetaData => new ExportModuleMetaData("Word", "ExportDocx", "docx", "application/docx");
 
-        /// <summary>
-        /// Returns stream result of the export process.
-        /// </summary>
-        /// <param name="moduleNames">Modules to export.</param>
-        /// <param name="instanceInfo">Instance for which to execute modules.</param>
-        /// <returns>Result stream</returns>
-        public Stream GetExportStream(IEnumerable<string> moduleNames, IInstanceInfo instanceInfo)
-        {
-            // Create docx
-            XWPFDocument document = null;
-            try
-            {
-                // Open docx template
-                document = new XWPFDocument(new FileInfo(@"Data\Templates\KInspectorReportTemplate.docx").OpenRead());
-            }
-            catch
-            {
-                // Create blank
-                document = new XWPFDocument();
-            }
+		/// <summary>
+		/// Returns stream result of the export process.
+		/// </summary>
+		/// <param name="moduleNames">Modules to export.</param>
+		/// <param name="instanceInfo">Instance for which to execute modules.</param>
+		/// <returns>Result stream</returns>
+		public Stream GetExportStream(IEnumerable<string> moduleNames, IInstanceInfo instanceInfo)
+		{
+			// Create docx
+			XWPFDocument document = null;
+			try
+			{
+				// Open docx template
+				document = new XWPFDocument(new FileInfo(@"Data\Templates\KInspectorReportTemplate.docx").OpenRead());
+			}
+			catch
+			{
+				// Create blank
+				document = new XWPFDocument();
+			}
 
 
             // Create sumary paragraph containing results of text modules, and sumary of all other modules.
@@ -85,10 +80,10 @@ namespace Kentico.KInspector.Modules.Export.Modules
                             break;
                         }
 
-                        foreach (DataTable tab in data.Tables)
-                        {
-                            document.CreateTable().FillRows(tab);
-                        }
+						foreach (DataTable tab in data.Tables)
+						{
+							document.CreateTable().FillRows(tab);
+						}
 
                         resultSummary.CreateRow().FillRow(moduleName, "See details bellow", result.ResultComment, meta.Comment);
                         break;
@@ -98,13 +93,13 @@ namespace Kentico.KInspector.Modules.Export.Modules
                 }
             }
 
-            // XWPFDocument.Write closes the stream. NpoiMemoryStream is used to prevent it.
-            NpoiMemoryStream stream = new NpoiMemoryStream(false);
-            document.Write(stream);
-            stream.Seek(0, SeekOrigin.Begin);
-            stream.AllowClose = true;
-            
-            return stream;
-        }
-    }
+			// XWPFDocument.Write closes the stream. NpoiMemoryStream is used to prevent it.
+			NpoiMemoryStream stream = new NpoiMemoryStream(false);
+			document.Write(stream);
+			stream.Seek(0, SeekOrigin.Begin);
+			stream.AllowClose = true;
+
+			return stream;
+		}
+	}
 }
