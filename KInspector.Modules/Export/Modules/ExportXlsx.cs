@@ -36,31 +36,33 @@ namespace Kentico.KInspector.Modules.Export.Modules
 
             // Create sheet to store results of text modules, and sumary of all other modules.
             ISheet resultSummary = document.CreateSheet("Result summary");
-            resultSummary.CreateRow("Module", "Result", "Comment");
+            resultSummary.CreateRow("Module", "Result", "Comment", "Description");
 
             // Run every module and write its result.
             foreach (string moduleName in moduleNames)
             {
-                var result = ModuleLoader.GetModule(moduleName).GetResults(instanceInfo);
+                var module = ModuleLoader.GetModule(moduleName);
+                var result = module.GetResults(instanceInfo);
+                var meta = module.GetModuleMetadata();
 
                 switch (result.ResultType)
                 {
                     case ModuleResultsType.String:
-                        resultSummary.CreateRow(moduleName, result.Result as string, result.ResultComment);
+                        resultSummary.CreateRow(moduleName, result.Result as string, result.ResultComment, meta.Comment);
                         break;
                     case ModuleResultsType.List:
                         document.CreateSheet(moduleName).CreateRows(result.Result as IEnumerable<string>);
-                        resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment);
+                        resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment, meta.Comment);
                         break;
                     case ModuleResultsType.Table:
                         document.CreateSheet(moduleName).CreateRows(result.Result as DataTable);
-                        resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment);
+                        resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment, meta.Comment);
                         break;
                     case ModuleResultsType.ListOfTables:
                         DataSet data = result.Result as DataSet;
                         if (data == null)
                         {
-                            resultSummary.CreateRow(moduleName, "Internal error: Invalid DataSet", result.ResultComment);
+                            resultSummary.CreateRow(moduleName, "Internal error: Invalid DataSet", result.ResultComment, meta.Comment);
                             break;
                         }
 
@@ -70,10 +72,10 @@ namespace Kentico.KInspector.Modules.Export.Modules
                             currentSheet.CreateRow(tab);
                         }
 
-                        resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment);
+                        resultSummary.CreateRow(moduleName, "See details in tab", result.ResultComment, meta.Comment);
                         break;
                     default:
-                        resultSummary.CreateRow(moduleName, "Internal error: Unknown module", result.ResultComment);
+                        resultSummary.CreateRow(moduleName, "Internal error: Unknown module", result.ResultComment, meta.Comment);
                         continue;
                 }
             }

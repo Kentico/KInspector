@@ -14,9 +14,10 @@ namespace Kentico.KInspector.Modules.Export.Modules
         /// <param name="parent">Result sumary element.</param>
         /// <param name="moduleName">Name of the module.</param>
         /// <param name="moduleResult">Module result in string format.</param>
-        /// <param name="moduleComment">Module comment.</param>
+        /// <param name="resultComment">Result comment.</param>
+        /// <param name="moduleComment">Module description.</param>
         /// <returns>Created module result sumary xml element.</returns>
-        public static XElement AddModuleSummary(this XElement parent, string moduleName, string moduleResult, string moduleComment)
+        public static XElement AddModuleSummary(this XElement parent, string moduleName, string moduleResult, string resultComment, string moduleComment)
         {
             if (parent == null)
             {
@@ -26,7 +27,8 @@ namespace Kentico.KInspector.Modules.Export.Modules
             parent.Add(new XElement("ModuleResultSumary",
                 new XElement("Module", moduleName),
                 new XElement("Result", moduleResult),
-                new XElement("Comment", moduleComment)
+                new XElement("Comment", resultComment),
+                new XElement("Description", moduleComment)
             ));
             
             return parent;
