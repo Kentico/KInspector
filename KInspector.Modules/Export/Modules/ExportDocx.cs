@@ -83,7 +83,11 @@ namespace Kentico.KInspector.Modules.Export.Modules
 
 						foreach (DataTable tab in data.Tables)
 						{
-							document.CreateTable().FillRows(tab);
+                            // Create header
+                            document.CreateParagraph(tab.TableName);
+
+                            // Write data
+                            document.CreateTable().FillRows(tab);
 						}
 
                         resultSummary.CreateRow().FillRow(moduleName, "See details bellow", result.ResultComment, meta.Comment);

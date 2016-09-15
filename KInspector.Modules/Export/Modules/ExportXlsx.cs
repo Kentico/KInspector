@@ -67,6 +67,7 @@ namespace Kentico.KInspector.Modules.Export.Modules
                         {
                             // Create header
                             currentSheet.CreateRow(tab.TableName);
+
                             // Write data
                             currentSheet.CreateRows(tab);
                             
