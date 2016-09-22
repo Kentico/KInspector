@@ -37,20 +37,22 @@ namespace Kentico.KInspector.Modules.Export.Modules
             rootElement.Add(moduleResults);
 
             // Run every module and write its result.
-            foreach (string moduleName in moduleNames)
+            foreach (string moduleName in moduleNames.Distinct())
             {
-                var result = ModuleLoader.GetModule(moduleName).GetResults(instanceInfo);
+                var module = ModuleLoader.GetModule(moduleName);
+                var result = module.GetResults(instanceInfo);
+                var meta = module.GetModuleMetadata();
 
                 switch (result.ResultType)
                 {
                     case ModuleResultsType.String:
-                        resultSummary.AddModuleSummary(moduleName, result.Result as string, result.ResultComment);
+                        resultSummary.AddModuleSummary(moduleName, result.Result as string, result.ResultComment, meta.Comment);
                         break;
 
                     case ModuleResultsType.List:
                         if (!(result.Result is IEnumerable<string>))
                         {
-                            resultSummary.AddModuleSummary(moduleName, "Internal error: Invalid List", result.ResultComment);
+                            resultSummary.AddModuleSummary(moduleName, "Internal error: Invalid List", result.ResultComment, meta.Comment);
                             break;
                         }
 
@@ -61,13 +63,13 @@ namespace Kentico.KInspector.Modules.Export.Modules
                         );
 
                         moduleResults.AddModuleResult(moduleName, listXml, result.ResultComment);
-                        resultSummary.AddModuleSummary(moduleName, "See module element", result.ResultComment);
+                        resultSummary.AddModuleSummary(moduleName, "See module element", result.ResultComment, meta.Comment);
                         break;
 
                     case ModuleResultsType.Table:
                         if (!(result.Result is DataTable))
                         {
-                            resultSummary.AddModuleSummary(moduleName, "Internal error: Invalid DataTable", result.ResultComment);
+                            resultSummary.AddModuleSummary(moduleName, "Internal error: Invalid DataTable", result.ResultComment, meta.Comment);
                             break;
                         }
 
@@ -83,13 +85,13 @@ namespace Kentico.KInspector.Modules.Export.Modules
                             moduleResults.AddModuleResult(moduleName, resultElement, result.ResultComment);
                         }
 
-                        resultSummary.AddModuleSummary(moduleName, "See module element", result.ResultComment);
+                        resultSummary.AddModuleSummary(moduleName, "See module element", result.ResultComment, module.GetModuleMetadata().Comment);
                         break;
 
                     case ModuleResultsType.ListOfTables:
                         if (!(result.Result is DataSet))
                         {
-                            resultSummary.AddModuleSummary(moduleName, "Internal error: Invalid DataSet", result.ResultComment);
+                            resultSummary.AddModuleSummary(moduleName, "Internal error: Invalid DataSet", result.ResultComment, module.GetModuleMetadata().Comment);
                             break;
                         }
 
@@ -97,11 +99,11 @@ namespace Kentico.KInspector.Modules.Export.Modules
                         ds.DataSetName = "Result";
 
                         moduleResults.AddModuleResult(moduleName, XElement.Parse(ds.GetXml()), result.ResultComment);
-                        resultSummary.AddModuleSummary(moduleName, "See module element", result.ResultComment);
+                        resultSummary.AddModuleSummary(moduleName, "See module element", result.ResultComment, meta.Comment);
                         break;
 
                     default:
-                        resultSummary.AddModuleSummary(moduleName, "Internal error: Unknown module", result.ResultComment);
+                        resultSummary.AddModuleSummary(moduleName, "Internal error: Unknown module", result.ResultComment, meta.Comment);
                         break;
                 }
             }
