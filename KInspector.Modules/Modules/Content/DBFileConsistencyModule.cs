@@ -24,8 +24,8 @@ namespace Kentico.KInspector.Modules
 				Comment =
 @"Compares the list of Attachments and Media Library items against the database, to find:
 1) Media Library records not associated with any file in the filesystem.
-2) Form Attachments files not associated with any Form record in Kentico
-3) Form Attachments records not associated with any file in the filesystem.
+2) Form Attachments records not associated with any file in the filesystem.
+3) TODO: Form Attachments files not associated with any Form record in Kentico
 
 Note: Page attachments and metafiles can be administered in System->Files: https://docs.kentico.com/display/K9/Administering+files+globally",
 				Category = "Content"
@@ -57,6 +57,10 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			  ,[FileDescription] */
 
 			allData.Tables[3].TableName = "BizFormAttachmentRecords";
+			/* [AttachmentGUID]
+			 * ,[SiteID]
+			 * ,[TableName]
+			 */
 
 			//Next, let's go through the three cases:
 
@@ -68,12 +72,27 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			/* Media Library:
 			 * //MediaLibraryBaseFolder/SiteName?/folder/image.filetype
 			 */
+
 			foreach(DataRow row in allData.Tables["MediaLibraryRecords"].Rows)
 			{
 				var siteID = Convert.ToInt32(row["FileSiteID"]);
 				var rowURL = UriExtensions.Combine(siteSettings[siteID].baseMediaFolder, row["LibraryFolder"].ToString(), row["FilePath"].ToString());
-				if(!UriExtensions.Exists(rowURL))
+				if(!UriExtensions.Exists(rowURL, instanceInfo))
 					ResultSet.Tables["MediaLibraryMissingRecords"].Rows.Add(row.ItemArray);
+			}
+
+			ResultSet.Tables.Add(allData.Tables["BizFormAttachmentRecords"].Clone());
+			ResultSet.Tables[1].TableName = "BizFormAttachmentMissingRecords";
+
+			/* bizform Attachments:
+			 * //UploadedFormFiles/SiteName?/unknownguid.filetype/filename.filetype)
+			 */
+			foreach(DataRow row in allData.Tables["BizFormAttachmentRecords"].Rows)
+			{
+				var siteID = Convert.ToInt32(row["SiteID"]);
+				var rowURL = UriExtensions.Combine(siteSettings[siteID].baseFormAttachmentsFolder, row["AttachmentGUID"].ToString());
+				if(!UriExtensions.Exists(rowURL, instanceInfo))
+					ResultSet.Tables["BizFormAttachmentMissingRecords"].Rows.Add(row.ItemArray);
 			}
 
 			return new ModuleResults
@@ -159,14 +178,21 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			/// </summary>
 			/// <param name="baseUri">The virtual, server, or physical path</param>
 			/// <returns></returns>
-			public static bool Exists(string baseUri)
+			public static bool Exists(string baseUri, IInstanceInfo info)
 			{
 				if(baseUri == null)
 				{
 					throw new ArgumentNullException($"baseUri of '{baseUri}' is null");
 				}
 
-				throw new NotImplementedException();
+				if(baseUri.StartsWith("~/"))
+				{
+					//If we're using a relative path, it's relative to the "CMS" folder, not the Kentico base folder.
+					var absPath = Path.Combine(info.Directory.FullName, "CMS", baseUri.Substring(2));
+					return File.Exists(absPath);
+				}
+				else
+					return File.Exists(baseUri);
 			}
 
 			/// <summary>
