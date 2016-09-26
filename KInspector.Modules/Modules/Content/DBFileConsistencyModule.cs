@@ -26,7 +26,7 @@ namespace Kentico.KInspector.Modules
 @"Compares the list of Attachments and Media Library items against the database, to find:
 1) Media Library records not associated with any file in the filesystem.
 2) Form Attachments records not associated with any file in the filesystem.
-3) TODO: Form Attachments files not associated with any Form record in Kentico
+3) Form Attachments files not associated with any Form record in Kentico
 
 Note: Page attachments and metafiles can be administered in System->Files: https://docs.kentico.com/display/K9/Administering+files+globally",
 				Category = "Content"
