@@ -68,31 +68,65 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			var ResultSet = new DataSet();
 			ResultSet.Tables.Add(allData.Tables["MediaLibraryRecords"].Clone());
 			ResultSet.Tables[0].TableName = "MediaLibraryMissingRecords";
+			ResultSet.Tables[0].Columns.Add("AttachmentURL");
 
 			/* Media Library:
 			 * //MediaLibraryBaseFolder/SiteName?/folder/image.filetype
-			 */
+			*/
 
 			foreach(DataRow row in allData.Tables["MediaLibraryRecords"].Rows)
 			{
 				var siteID = Convert.ToInt32(row["FileSiteID"]);
 				var rowURL = UriExtensions.Combine(siteSettings[siteID].baseMediaFolder, row["LibraryFolder"].ToString(), row["FilePath"].ToString());
 				if(!UriExtensions.Exists(rowURL, instanceInfo))
-					ResultSet.Tables["MediaLibraryMissingRecords"].Rows.Add(row.ItemArray);
+				{
+					/*[FileName]
+					  ,[FileSiteID]
+					  ,[SiteName]
+					  ,[LibraryFolder]
+					  ,[FilePath]
+					  ,[FileTitle]
+					  ,[FileDescription]
+					  ,[AttachmentURL] 
+					  */
+
+					var tempArray = new List<object>(row.ItemArray);
+					tempArray.Add(rowURL);
+					ResultSet.Tables["MediaLibraryMissingRecords"].Rows.Add(tempArray.ToArray());
+				}
+					
 			}
 
 			ResultSet.Tables.Add(allData.Tables["BizFormAttachmentRecords"].Clone());
 			ResultSet.Tables[1].TableName = "BizFormAttachmentMissingRecords";
+			ResultSet.Tables[1].Columns.Add("FileName");
+			ResultSet.Tables[1].Columns.Add("AttachmentURL");
+
 
 			/* bizform Attachments:
-			 * //UploadedFormFiles/SiteName?/unknownguid.filetype/filename.filetype)
+			 * //UploadedFormFiles/SiteName?/unknownguid.filetype)
+			 * AttachmentGuid is unknownguid.filetype/filename.filetype
 			 */
 			foreach(DataRow row in allData.Tables["BizFormAttachmentRecords"].Rows)
 			{
 				var siteID = Convert.ToInt32(row["SiteID"]);
-				var rowURL = UriExtensions.Combine(siteSettings[siteID].baseFormAttachmentsFolder, row["AttachmentGUID"].ToString());
+				var guidSplit = row["AttachmentGUID"].ToString().Split(new char[] { '/' }, 2);
+				if(guidSplit.Length != 2) { throw new ApplicationException($"AttachmentGUID of '{row["AttachmentGUID"].ToString()}' expected a '/' but did not find one."); }
+				var rowURL = UriExtensions.Combine(siteSettings[siteID].baseFormAttachmentsFolder, guidSplit[0]);
 				if(!UriExtensions.Exists(rowURL, instanceInfo))
-					ResultSet.Tables["BizFormAttachmentMissingRecords"].Rows.Add(row.ItemArray);
+				{
+					/* [AttachmentGUID]
+					 * ,[SiteID]
+					 * ,[TableName]
+					 * ,[FileName]
+					 * ,[AttachmentURL] 
+					 */
+					var tempArray = new List<object>(row.ItemArray);
+					tempArray[0] = guidSplit[0];
+					tempArray.Add(guidSplit[1]);
+					tempArray.Add(rowURL);
+					ResultSet.Tables["BizFormAttachmentMissingRecords"].Rows.Add(tempArray.ToArray());
+				}
 			}
 
 			return new ModuleResults
