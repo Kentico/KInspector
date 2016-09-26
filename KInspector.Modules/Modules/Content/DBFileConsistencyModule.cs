@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Text.RegularExpressions;
 using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules
@@ -67,7 +68,7 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			var siteSettings = new AllSiteSettings(allData);
 			var ResultSet = new DataSet();
 			ResultSet.Tables.Add(allData.Tables["MediaLibraryRecords"].Clone());
-			ResultSet.Tables[0].TableName = "MediaLibraryMissingRecords";
+			ResultSet.Tables[0].TableName = "MediaLibraryMissingFiles";
 			ResultSet.Tables[0].Columns.Add("AttachmentURL");
 
 			/* Media Library:
@@ -92,16 +93,32 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 
 					var tempArray = new List<object>(row.ItemArray);
 					tempArray.Add(rowURL);
-					ResultSet.Tables["MediaLibraryMissingRecords"].Rows.Add(tempArray.ToArray());
+					ResultSet.Tables["MediaLibraryMissingFiles"].Rows.Add(tempArray.ToArray());
 				}
 					
 			}
 
 			ResultSet.Tables.Add(allData.Tables["BizFormAttachmentRecords"].Clone());
-			ResultSet.Tables[1].TableName = "BizFormAttachmentMissingRecords";
+			ResultSet.Tables[1].TableName = "BizFormAttachmentMissingFiles";
 			ResultSet.Tables[1].Columns.Add("FileName");
 			ResultSet.Tables[1].Columns.Add("AttachmentURL");
 
+			ResultSet.Tables.Add(new DataTable());
+			ResultSet.Tables[2].TableName = "BizFormAttachmentMissingRecords";
+			ResultSet.Tables[2].Columns.Add("SiteID");
+			ResultSet.Tables[2].Columns.Add("AttachmentGUID");
+
+			Dictionary<int, Dictionary<string, bool>> fileItems = new Dictionary<int, Dictionary<string, bool>>();
+
+			foreach(DataRow siteRow in allData.Tables["KenticoSites"].Rows)
+			{
+				var siteID = Convert.ToInt32(siteRow["SiteID"]);
+				fileItems.Add(siteID, new Dictionary<string, bool>());
+				foreach(var fileObj in UriExtensions.GetFiles(siteSettings[siteID].baseFormAttachmentsFolder, true, instanceInfo))
+				{
+					fileItems[siteID].Add(fileObj.Name, false);
+				}
+			}
 
 			/* bizform Attachments:
 			 * //UploadedFormFiles/SiteName?/unknownguid.filetype)
@@ -125,9 +142,32 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 					tempArray[0] = guidSplit[0];
 					tempArray.Add(guidSplit[1]);
 					tempArray.Add(rowURL);
-					ResultSet.Tables["BizFormAttachmentMissingRecords"].Rows.Add(tempArray.ToArray());
+					ResultSet.Tables["BizFormAttachmentMissingFiles"].Rows.Add(tempArray.ToArray());
+				}
+
+				if(fileItems[siteID].ContainsKey(guidSplit[0]))
+				{
+					fileItems[siteID][guidSplit[0]] = true;
 				}
 			}
+
+			foreach(var siteItem in fileItems)
+			{
+				foreach(var record in siteItem.Value)
+				{
+					if(record.Value == false)
+					{
+						var tempArray = new List<object>();
+						tempArray.Add(siteItem.Key);
+						tempArray.Add(record.Key);
+						ResultSet.Tables["BizFormAttachmentMissingRecords"].Rows.Add(tempArray.ToArray());
+					}
+				}
+			}
+			
+			ResultSet.Tables[0].TableName = "1) Media Library, Missing Files";
+			ResultSet.Tables[1].TableName = "2) BizForm Attachments, Missing Files";
+			ResultSet.Tables[2].TableName = "3) BizForm Attachments, Missing Records";
 
 			return new ModuleResults
 			{
@@ -195,6 +235,21 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 				{
 					baseFormAttachmentsFolder = UriExtensions.Combine(baseFormAttachmentFolderString, (baseFormAttachmentsUseSiteBool ? $"{siteName}" : ""));
 				}
+
+				if(!Regex.IsMatch(baseMediaFolder, "^[a-zA-Z]:/.*")
+				&& !Regex.IsMatch(baseMediaFolder, "^~/.*")
+				&& !Regex.IsMatch(baseMediaFolder, "^\\\\.*"))
+				{
+					throw new ArgumentException($"This method supports Kentico's three suggested file formats: '\\servername\', 'c:/', and '~/'. Your Media library setting of '{baseMediaFolder}' does not match these.");
+				}
+
+				if(!Regex.IsMatch(baseFormAttachmentsFolder, "^[a-zA-Z]:/.*")
+				&& !Regex.IsMatch(baseFormAttachmentsFolder, "^~/.*")
+				&& !Regex.IsMatch(baseFormAttachmentsFolder, "^\\\\.*"))
+				{
+					throw new ArgumentException($"This method supports Kentico's three suggested file formats: '\\servername\', 'c:/', and '~/'. Your Form Attachment setting of '{baseFormAttachmentsFolder}' does not match these.");
+				}
+
 			}
 
 			public string baseMediaFolder;
@@ -208,7 +263,7 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 		private class UriExtensions
 		{
 			/// <summary>
-			/// This method does not work currently, but should return whether the file path passed in exists.
+			/// This method should return whether the file path passed in exists.
 			/// </summary>
 			/// <param name="baseUri">The virtual, server, or physical path</param>
 			/// <returns></returns>
@@ -216,17 +271,39 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			{
 				if(baseUri == null)
 				{
-					throw new ArgumentNullException($"baseUri of '{baseUri}' is null");
+					throw new ArgumentNullException($"baseUri value is null");
 				}
 
 				if(baseUri.StartsWith("~/"))
 				{
 					//If we're using a relative path, it's relative to the "CMS" folder, not the Kentico base folder.
-					var absPath = Path.Combine(info.Directory.FullName, "CMS", baseUri.Substring(2));
+					var absPath = Combine(info.Directory.FullName, "CMS", baseUri.Substring(2));
 					return File.Exists(absPath);
 				}
 				else
 					return File.Exists(baseUri);
+			}
+
+			/// <summary>
+			/// This method should return whether the file path passed in exists.
+			/// </summary>
+			/// <param name="baseUri">The virtual, server, or physical path</param>
+			/// <returns></returns>
+			public static FileInfo[] GetFiles(string baseUri, bool recursive, IInstanceInfo info)
+			{
+				if(baseUri == null)
+				{
+					throw new ArgumentNullException($"baseUri value is null");
+				}
+
+				if(baseUri.StartsWith("~/"))
+				{
+					//If we're using a relative path, it's relative to the "CMS" folder, not the Kentico base folder.
+					var absPath = Combine(info.Directory.FullName, "CMS", baseUri.Substring(2));
+					return new DirectoryInfo(absPath).GetFiles("*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+				}
+				else
+					return new DirectoryInfo(baseUri).GetFiles("*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 			}
 
 			/// <summary>
@@ -239,7 +316,7 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			{
 				if(baseUri == null)
 				{
-					throw new ArgumentNullException($"baseUri of '{baseUri}' is null");
+					throw new ArgumentNullException($"baseUri value is null");
 				}
 
 				if(addUris.Length == 0)
@@ -260,10 +337,12 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 				}
 				else
 				{
+					bool usesForwardSlash = Regex.IsMatch(baseUri, "^[a-zA-Z]:/.*");
 					var allUris = new string[addUris.Length + 1];
 					allUris[0] = baseUri;
 					addUris.CopyTo(allUris, 1);
-					return Path.Combine(allUris);
+					var combinedPath = Path.Combine(allUris);
+					return !usesForwardSlash ? combinedPath : combinedPath.Replace('\\', '/');
 				}
 			}
 		}
