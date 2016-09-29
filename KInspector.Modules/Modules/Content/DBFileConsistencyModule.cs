@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 using Kentico.KInspector.Core;
@@ -39,13 +40,12 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			var siteSettings = new AllSiteSettings(allData);
 			var resultSet = new DataSet();
 
-
 			ProcessMediaLibraryRecords(instanceInfo, allData, siteSettings, resultSet);
-			Dictionary<int, Dictionary<string, bool>> fileItems = GetFormAttachmentFiles(instanceInfo, allData, siteSettings);
+			Dictionary<int, Dictionary<string, bool>> formAttachmentRecords = GetFormAttachmentFiles(instanceInfo, allData, siteSettings);
 
-			ProcessMissingFormAttachmentFiles(instanceInfo, allData, siteSettings, resultSet, fileItems);
+			ProcessMissingFormAttachmentFiles(instanceInfo, allData, siteSettings, resultSet, formAttachmentRecords);
 
-			ProcessMissingFormAttachmentRecords(resultSet, fileItems);
+			ProcessMissingFormAttachmentRecords(resultSet, formAttachmentRecords);
 
 			ApplyUserFriendlyTableNames(resultSet);
 
@@ -151,7 +151,7 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			return fileItems;
 		}
 		
-		private static void ProcessMissingFormAttachmentFiles(IInstanceInfo instanceInfo, DataSet allData, AllSiteSettings siteSettings, DataSet resultSet, Dictionary<int, Dictionary<string, bool>> fileItems)
+		private static void ProcessMissingFormAttachmentFiles(IInstanceInfo instanceInfo, DataSet allData, AllSiteSettings siteSettings, DataSet resultSet, Dictionary<int, Dictionary<string, bool>> formAttachmentRecords)
 		{
 			AddMissingFormAttachmentFilesTable(allData, resultSet);
 
@@ -175,9 +175,10 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 					resultSet.Tables["BizFormAttachmentMissingFiles"].Rows.Add(tempArray.ToArray());
 				}
 
-				if(fileItems[siteID].ContainsKey(guidSplit[0]))
+				//As long as we're looping over the Attachment records anyways, take note of which records were found.
+				if(formAttachmentRecords[siteID].ContainsKey(guidSplit[0]))
 				{
-					fileItems[siteID][guidSplit[0]] = true;
+					formAttachmentRecords[siteID][guidSplit[0]] = true;
 				}
 			}
 		}
@@ -196,7 +197,7 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			resultSet.Tables[1].Columns.Add("AttachmentURL");
 		}
 
-		private static void ProcessMissingFormAttachmentRecords(DataSet resultSet, Dictionary<int, Dictionary<string, bool>> fileItems)
+		private static void ProcessMissingFormAttachmentRecords(DataSet resultSet, Dictionary<int, Dictionary<string, bool>> formAttachmentRecords)
 		{
 			AddMissingFormAttachmentRecordsTable(resultSet);
 
@@ -204,7 +205,7 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 			 * //UploadedFormFiles/SiteName?/unknownguid.filetype)
 			 * AttachmentGuid is unknownguid.filetype/filename.filetype
 			 */
-			foreach(var siteItem in fileItems)
+			foreach(var siteItem in formAttachmentRecords)
 			{
 				foreach(var record in siteItem.Value)
 				{
