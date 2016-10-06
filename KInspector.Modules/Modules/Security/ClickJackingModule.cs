@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Linq;
 using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules
@@ -29,7 +30,18 @@ namespace Kentico.KInspector.Modules
         {
             ModuleResults result;
 
-            string entry = ConfigurationManager.AppSettings["CMSXFrameOptionsExclude"];
+            Version kenticoVersion = instanceInfo.Version;
+            string pathToWebConfig = instanceInfo.Directory.ToString();
+
+            if(( kenticoVersion >= new Version("8.0") ) && !( instanceInfo.Directory.ToString().EndsWith("\\CMS\\") || instanceInfo.Directory.ToString().EndsWith("\\CMS") ))
+            {
+                pathToWebConfig += "\\CMS";
+            }
+
+            ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap { ExeConfigFilename = pathToWebConfig + "\\web.config" };
+            Configuration configuration = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+
+            string entry = configuration.AppSettings.Settings["CMSXFrameOptionsExclude"].Value;
             bool hasEntry = !string.IsNullOrEmpty(entry);
 
             if(hasEntry)

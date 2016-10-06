@@ -138,6 +138,7 @@
     <Compile Include="Modules\OnlineMarketing\OMInactiveContactsDeletion.cs" />
     <Compile Include="Modules\OnlineMarketing\OMNewslettersWithoutQueue.cs" />
     <Compile Include="Modules\OnlineMarketing\OMTablesSize.cs" />
+    <Compile Include="Modules\Security\ClickJackingModule.cs" />
     <Compile Include="Modules\Security\DataStructures\VulnerabilityAnalysisResults.cs" />
     <Compile Include="Modules\Security\FloodProtectionModule.cs" />
     <Compile Include="Modules\Security\PasswordPolicyModule.cs" />
