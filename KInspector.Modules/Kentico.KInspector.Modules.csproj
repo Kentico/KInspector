@@ -110,6 +110,7 @@
     <Compile Include="Helpers\ProbeHelper.cs" />
     <Compile Include="Helpers\ProjectCodeFilesHelper.cs" />
     <Compile Include="Modules\Content\AttachmentsBySizeModule.cs" />
+    <Compile Include="Modules\Content\DBFileConsistencyModule.cs" />
     <Compile Include="Modules\Content\NumberOfAliasesModule.cs" />
     <Compile Include="Modules\Content\RobotsTxtModule.cs" />
     <Compile Include="Modules\Content\PageTypeAssignedToSiteModule.cs" />
@@ -203,6 +204,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\FloodProtectionModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\GetLibraryAndAttachmentFiles.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\PageTypeFieldsDataTypeMismatchModule.sql">
