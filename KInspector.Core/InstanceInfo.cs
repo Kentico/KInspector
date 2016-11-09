@@ -14,38 +14,17 @@ namespace Kentico.KInspector.Core
         /// <summary>
         /// URI of the application instance
         /// </summary>
-        public Uri Uri
-        {
-            get
-            {
-                return uri.Value;
-            }
-        }
-
+        public Uri Uri => uri.Value;
 
         /// <summary>
         /// Directory of the application instance
         /// </summary>
-        public DirectoryInfo Directory
-        {
-            get
-            {
-                return directory.Value;
-            }
-        }
-
+        public DirectoryInfo Directory => directory.Value;
 
         /// <summary>
-        /// Version of the intance based on the database setting key.
+        /// Version of the instance based on the database setting key.
         /// </summary>
-        public Version Version
-        {
-            get
-            {
-                return version.Value;
-            }
-        }
-
+        public Version Version => version.Value;
 
         /// <summary>
         /// Configuration with instance information.
@@ -56,14 +35,7 @@ namespace Kentico.KInspector.Core
         /// <summary>
         /// Database service to communicate with the instance database.
         /// </summary>
-        public IDatabaseService DBService
-        {
-            get
-            {
-                return dbService.Value;
-            }
-        }
-
+        public IDatabaseService DBService => dbService.Value;
 
         /// <summary>
         /// Creates instance information based on configuration.
@@ -79,7 +51,7 @@ namespace Kentico.KInspector.Core
             Config = config;
 
             dbService = new Lazy<DatabaseService>(() => new DatabaseService(Config));
-            version = new Lazy<Version>(() => GetKenticoVersion());
+            version = new Lazy<Version>(GetKenticoVersion);
 
             // Ensure backslash to the Config.Url to support VirtualPath URLs.
             // Sometimes the website is running under virtual path and 

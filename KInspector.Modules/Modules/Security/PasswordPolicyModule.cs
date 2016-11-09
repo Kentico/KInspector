@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Configuration;
 using System.Data;
-using System.IO;
-using System.Web;
 using System.Linq;
-using System.Web.Configuration;
 using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules

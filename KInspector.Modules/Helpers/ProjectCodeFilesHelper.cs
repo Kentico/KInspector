@@ -93,7 +93,7 @@ namespace Kentico.KInspector.Modules
             catch (FileNotFoundException ex)
             {
                 // Thrown when metafile for given version is not available
-                throw new ArgumentException(String.Format("Default project code files listing for version {0} is not supported.", version.ToString(2)), ex);
+                throw new ArgumentException($"Default project code files listing for version {version.ToString(2)} is not supported.", ex);
             }
         }
 
@@ -126,7 +126,7 @@ namespace Kentico.KInspector.Modules
         /// <returns></returns>
         private string GetMetaFilePath(Version version, bool isWebSiteProject)
         {
-            string metaFileName = String.Format("K{0}{1}web{2}.txt", version.Major, version.Minor > 0 ? version.Minor.ToString() : String.Empty, isWebSiteProject ? "site" : "app");
+            string metaFileName = $"K{version.Major}{(version.Minor > 0 ? version.Minor.ToString() : string.Empty)}web{(isWebSiteProject ? "site" : "app")}.txt";
             
             return Path.Combine(DEFAULT_INSTALLATION_FILES_DIR_PATH, metaFileName);
         }

@@ -72,7 +72,7 @@
          * Controller for displaying page with instance setup, is visible after the user selects instance setup in the main menu.
          * Its route is set in the module config - is bound to '/setup-instance' route
          */
-        .controller('knlSetupInstanceController', function ($scope, $location, $http, knlTargetConfigService, knlModuleService) {
+        .controller('knlSetupInstanceController', function ($scope, $location, $http, knlTargetConfigService, knlModuleService, kiExportService) {
             $scope.model = $scope.model || {};
             $scope.model.modules = $scope.model.modules || [];
             knlModuleService.getAllSetupMetadata()
@@ -80,6 +80,10 @@
                     if (data) {
                         // This needs to be here for orderBy filter to work, since it works only with arrays
                         angular.forEach(data, function (elem) { $scope.model.modules.push(elem); });
+
+                        // Reset module export selection
+                        kiExportService.selectorsVisible = false;
+                        kiExportService.selectedModules = [];
                     }
                 })
                 .catch(function () {
@@ -90,7 +94,7 @@
          * Controller for displaying page with results, is visible after the user selects analysis in the main menu. 
          * Its route is set in the module config - is bound to '/results' route
          */
-        .controller('knlResultsController', function ($scope, $location, $http, $routeParams, knlTargetConfigService, knlModuleService) {
+        .controller('knlResultsController', function ($scope, $location, $http, $routeParams, knlTargetConfigService, knlModuleService, kiExportService) {
             $scope.model = $scope.model || {};
             $scope.model.modules = $scope.model.modules || [];
             knlModuleService.getAllMetadata($routeParams.category)
@@ -98,6 +102,10 @@
                     if (data) {
                         // This needs to be here for orderBy filter to work, since it works only with arrays
                         angular.forEach(data, function (elem) { $scope.model.modules.push(elem); });
+
+                        // Reset module export selection
+                        kiExportService.selectorsVisible = false;
+                        kiExportService.selectedModules = [];
                     }
                 })
                 .catch(function () {

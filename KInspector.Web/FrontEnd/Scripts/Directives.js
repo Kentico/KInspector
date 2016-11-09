@@ -7,7 +7,7 @@
          * A directive that is containing the module. This is basically the black/red/orange/green/blue bar with a name
          * and a button to expand.
          */
-        .directive('knlModuleContainer', function () {
+        .directive('knlModuleContainer', ['kiExportService', function (exportService) {
             return {
                 restrict: 'E',
                 transclude: true,
@@ -17,6 +17,21 @@
                     $scope.model = $scope.model || {};
 
                     $scope.resultsVisible = false;
+
+                    $scope.selectorsVisible = function () {
+                        return exportService.selectorsVisible;
+                    }
+
+                    $scope.toggleModuleSelection = function(moduleName) {
+                        var index = exportService.selectedModules.indexOf(moduleName);
+                        if (index > 0) {
+                            exportService.selectedModules.splice(index, 1);
+                        } else {
+                            exportService.selectedModules.push(moduleName);
+                        }
+
+                    }
+
                     $scope.toggleResultsVisibility = function (e) {
                         if ($scope.model.moduleLoaded) {
                             $scope.resultsVisible = !$scope.resultsVisible;
@@ -26,6 +41,11 @@
                         }
                     }
 
+                    $scope.commentsVisible = false;
+                    $scope.toggleCommentsVisibility = function (e) {
+                    	$scope.commentsVisible = !$scope.commentsVisible;
+                    }
+
                     $scope.$watchCollection('model.results', function (newResults) {
                         if (newResults) {
                             $scope.model.resultClass = 'result-status-' + newResults.Status;
@@ -33,7 +53,7 @@
                     });
                 }
             }
-        })
+        }])
         /**
          * This directive is the content of the module. Meaning it is wrapped in the knlModuleContainer directive. When you collapse
          * the red/green/orange/blue module, you will see this.
@@ -97,7 +117,7 @@
                                     }
                                 })
                                 .finally(function () {
-                                    $scope.model.moduleLoading = false;
+                                	$scope.model.moduleLoading = false;
                                 });
 		                }
 		            };
@@ -130,7 +150,7 @@
         /**
          * The left menu with disconnect button.
          */
-        .directive('knlModulesSidebar', ['knlTargetConfigService', 'knlNavigationService', function (configService, navigationService) {
+        .directive('knlModulesSidebar', ['knlTargetConfigService', 'knlNavigationService', 'kiExportService', function (configService, navigationService, exportService) {
             return {
                 restrict: 'E',
                 scope: {
@@ -143,9 +163,26 @@
                     var config = configService.getConfig();
                     $scope.model.serverName = config.Server;
                     $scope.model.databaseName = config.Database;
-                    
+
+                    exportService.getExportModulesMetaData().then(function (exportModulesMetaData) {
+                        $scope.model.exportModulesMetaData = exportModulesMetaData;
+                        $scope.model.exportModuleSelection = exportModulesMetaData[0];
+                    });
+
+                    $scope.selectorsVisible = function() {
+                        return exportService.selectorsVisible;
+                    };
+
+                    $scope.selectorsToggle = function () {
+                        exportService.selectorsVisible = !exportService.selectorsVisible;
+                    };
+
                     $scope.disconnect = function () {
                         configService.disconnect();
+                    };
+
+                    $scope.exportReport = function () {
+                        exportService.exportReport($scope.model.exportModuleSelection.ModuleCodeName);
                     };
 
                     $scope.mainMenu = function () {

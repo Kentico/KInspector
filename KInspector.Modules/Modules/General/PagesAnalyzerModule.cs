@@ -48,12 +48,12 @@ namespace Kentico.KInspector.Modules
 
 Needs to have preset Url in the setup screen.
 
-The favicon is checked as follows: The markup is analysed for presence of <link> element specifying either 'icon' or 'shortcut icon' in its rel attribute.
+The favicon is checked as follows: The markup is analyzed for presence of <link> element specifying either 'icon' or 'shortcut icon' in its rel attribute.
 If multiple elements specifying favicon are found, all their hrefs are checked.
 When no explicit favicon is provided, the 'favicon.ico' in domain root is checked.
 
-The Apple touch icons are checked as follows: The markup is analysed for presence of <link> elements specifiying either 'apple-touch-icon' or 'apple-touch-icon-precomposed' in their rel attribute.
-If multiple elements specifying touch icons are found, alee their hrefs are checked.
+The Apple touch icons are checked as follows: The markup is analyzed for presence of <link> elements specifying either 'apple-touch-icon' or 'apple-touch-icon-precomposed' in their rel attribute.
+If multiple elements specifying touch icons are found, all their hrefs are checked.
 When no explicit touch icon is provided, no implicit icon is assumed, since there are many icon names to be tried (depending on device resolution, precomposed/standard icon version).
 For details on how the devices try to retrieve the implicit touch icon see
 https://mathiasbynens.be/notes/touch-icons#no-html
@@ -72,9 +72,8 @@ WHERE ('{0}' LIKE '%' + s.SiteDomainName + '%'
 OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'", instanceInfo.Uri));
 
             var results = new ModuleResults();
-            var resultList = new List<string>();
             var aliases = dbService.ExecuteAndGetTableFromFile("PagesAnalyzerModule.sql",
-                new SqlParameter("SiteId", siteID));
+                new SqlParameter("SiteId", siteID.ToString()));
             var allLinks = new Dictionary<string, List<string>>();
 
             Dictionary<string, string> faviconAvailabilityCache = new Dictionary<string, string>();
@@ -85,9 +84,33 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
 
             foreach (DataRow alias in aliases.Rows)
             {
+                var redirected = alias["Redirected"].ToString();
+                switch (redirected)
+                {
+                    // If version 8 and higher is used and page is redirected to first child
+                    case "1":
+                        continue;
+
+                    // If version 7 and lower is used, database column does not exist
+                    case "DOESNOTEXIST":
+                        alias["Redirected"] = "N/A";
+                        break;
+
+                    default:
+                        alias["Redirected"] = "NO";
+                        break;
+                }
+
                 var aliasPath = alias["AliasPath"].ToString().TrimStart('/');
+
+                // In case of MVC page skip
+                if (aliasPath.StartsWith("ROUTE"))
+                {
+                    continue;
+                }
+
                 var uri = new Uri(instanceInfo.Uri, aliasPath + ".aspx");
-                var html = String.Empty;
+                var html = string.Empty;
                 try
                 {
                     HttpWebRequest request = WebRequest.CreateHttp(uri);
@@ -125,6 +148,8 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
                 // Evaluate Apple touch icon  and precomposed icon availability
                 alias["Apple Touch Icon"] = EvaluateAppleTouchIconAvailability(html, uri, touchIconAvailabilityCache);
                 alias["Apple Touch Icon Precomposed"] = EvaluateAppleTouchIconAvailability(html, uri, touchIconAvailabilityCache, true);
+
+                alias["Images without alt"] = GetImagesWithoutAlt(html);
                 
                 // Evaluate links count
                 alias["Link count"] = links.Count;
@@ -203,11 +228,11 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
                     bool faviconAvailable = ProbeUri(faviconUri);
                     if (faviconAvailable)
                     {
-                        faviconAvailabilityCache[faviconUri.AbsoluteUri] = (defaultFavicon) ? "OK (Default)\n" : String.Format("OK ('{0}')\n", faviconHref);
+                        faviconAvailabilityCache[faviconUri.AbsoluteUri] = (defaultFavicon) ? "OK (Default)\n" : $"OK ('{faviconHref}')\n";
                     }
                     else
                     {
-                        faviconAvailabilityCache[faviconUri.AbsoluteUri] = (defaultFavicon) ? "NOT SPECIFIED\n" : String.Format("MISSING ('{0}')\n", faviconHref);
+                        faviconAvailabilityCache[faviconUri.AbsoluteUri] = (defaultFavicon) ? "NOT SPECIFIED\n" : $"MISSING ('{faviconHref}')\n";
                     }
                     res.Append(faviconAvailabilityCache[faviconUri.AbsoluteUri]);
                 }
@@ -227,7 +252,7 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
         /// <returns>Status of all favicons contained in the <paramref name="html"/>.</returns>
         private string EvaluateAppleTouchIconAvailability(string html, Uri baseUri, Dictionary<string, string> touchIconAvailabilityCache, bool evaluatePrecomposed = false)
         {
-            var appleTouchIconHrefs = GetAppleTouchIconHrefs(html);
+            var appleTouchIconHrefs = evaluatePrecomposed ? GetAppleTouchIconPrecomposedHrefs(html) : GetAppleTouchIconHrefs(html);
 
             StringBuilder res = new StringBuilder();
             if (appleTouchIconHrefs.Count == 0)
@@ -248,11 +273,11 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
                         bool faviconAvailable = ProbeUri(iconUri);
                         if (faviconAvailable)
                         {
-                            touchIconAvailabilityCache[iconUri.AbsoluteUri] = String.Format("OK ('{0}')\n", iconHref);
+                            touchIconAvailabilityCache[iconUri.AbsoluteUri] = $"OK ('{iconHref}')\n";
                         }
                         else
                         {
-                            touchIconAvailabilityCache[iconUri.AbsoluteUri] = String.Format("MISSING ('{0}')\n", iconHref);
+                            touchIconAvailabilityCache[iconUri.AbsoluteUri] = $"MISSING ('{iconHref}')\n";
                         }
                         res.Append(touchIconAvailabilityCache[iconUri.AbsoluteUri]);
                     }
@@ -305,8 +330,7 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
                 return result;
             }
 
-            throw new InvalidOperationException(String.Format("[PagesAnalyzerModule.GetUri]: The base URI '{0}' and href '{1}' do not produce a valid URI.",
-                baseUri, href));
+            throw new InvalidOperationException($"[PagesAnalyzerModule.GetUri]: The base URI '{baseUri}' and href '{href}' do not produce a valid URI.");
         }
 
 
@@ -354,7 +378,7 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
         private ISet<string> GetLinkElementHrefs(string html, string linkRelValueRegex)
         {
             HashSet<string> result = new HashSet<string>();
-            var linkElementRegex = new Regex(String.Format(FAVICON_LINK_ELEMENT_REGEX_PATTERN, linkRelValueRegex));
+            var linkElementRegex = new Regex(string.Format(FAVICON_LINK_ELEMENT_REGEX_PATTERN, linkRelValueRegex));
             foreach (Match match in linkElementRegex.Matches(html))
             {
                 string linkElement = match.Groups["linkElement"].Value;
@@ -381,6 +405,21 @@ OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'"
             }
 
             return null;
+        }
+
+
+        private string GetImagesWithoutAlt(string html)
+        {
+            var regexPattern = @"<img(?![^>]*\balt=)[^>]*?>";
+            var regex = new Regex(regexPattern, RegexOptions.IgnoreCase);
+
+            var matches = regex.Matches(html).Count;
+            if (matches > 0)
+            {
+                return matches.ToString();
+            }
+
+            return "NO";
         }
 
         #endregion

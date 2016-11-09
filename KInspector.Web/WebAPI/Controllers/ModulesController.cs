@@ -16,7 +16,9 @@ namespace Kentico.KInspector.Web
 		public static string[] SeparateCategories = { "Security", "Setup" };
 
 
-		// GET api/modules/GetModulesMetadata
+		/// <summary>
+		/// GET api/modules/GetModulesMetadata
+		/// </summary>
 		[ActionName("GetModulesMetadata")]
 		public HttpResponseMessage GetModulesMetadata([FromUri]InstanceConfig config, [FromUri] string category = null)
 		{
@@ -31,7 +33,7 @@ namespace Kentico.KInspector.Web
 					.Where(x => x.SupportedVersions.Contains(version));
 
 				// Filter modules by category - return either specified category, or the rest
-				if (String.IsNullOrEmpty(category))
+				if (string.IsNullOrEmpty(category))
 				{
 					foreach (var separateCategory in SeparateCategories)
 					{
@@ -45,8 +47,7 @@ namespace Kentico.KInspector.Web
 
 				if (!modules.Any())
 				{
-					return Request.CreateResponse(HttpStatusCode.BadRequest,
-						String.Format("There are no modules available for version {0}.", version));
+					return Request.CreateResponse(HttpStatusCode.BadRequest, $"There are no modules available for version {version}.");
 				}
 
 				return Request.CreateResponse(HttpStatusCode.OK, modules);
@@ -58,7 +59,9 @@ namespace Kentico.KInspector.Web
 		}
 
 
-		// GET api/modules/GetSetupModulesMetadata
+		/// <summary>
+		/// GET api/modules/GetSetupModulesMetadata
+		/// </summary>
 		[ActionName("GetSetupModulesMetadata")]
 		public HttpResponseMessage GetSetupModulesMetadata([FromUri]InstanceConfig config)
 		{
@@ -73,10 +76,9 @@ namespace Kentico.KInspector.Web
 					.Where(x => x.SupportedVersions.Contains(version))
 					.Where(x => x.Category != null && x.Category.StartsWith("Setup", StringComparison.InvariantCultureIgnoreCase));
 
-				if (modules.Count() == 0)
+				if (!modules.Any())
 				{
-					return Request.CreateResponse(HttpStatusCode.BadRequest,
-						String.Format("There are no modules available for version {0}.", version));
+					return Request.CreateResponse(HttpStatusCode.BadRequest, $"There are no modules available for version {version}.");
 				}
 
 				return Request.CreateResponse(HttpStatusCode.OK, modules);
@@ -88,7 +90,9 @@ namespace Kentico.KInspector.Web
 		}
 
 
-		// GET api/modules/GetModuleResult
+		/// <summary>
+		/// GET api/modules/GetModuleResult
+		/// </summary>
 		[ActionName("GetModuleResult")]
 		public HttpResponseMessage GetModuleResult(string moduleName, [FromUri]InstanceConfig config)
 		{
@@ -101,13 +105,14 @@ namespace Kentico.KInspector.Web
 			}
 			catch (Exception e)
 			{
-				return Request.CreateResponse(HttpStatusCode.InternalServerError,
-					String.Format("Error in \"{0}\" module. Error message: {1}", moduleName, e.Message));
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error in \"{moduleName}\" module. Error message: {e.Message}");
 			}
 		}
 
 
-		// Get api/modules/GetKenticoVersion
+		/// <summary>
+		/// Get api/modules/GetKenticoVersion
+		/// </summary>
 		[ActionName("GetKenticoVersion")]
 		public HttpResponseMessage GetKenticoVersion([FromUri]InstanceConfig config)
 		{
@@ -122,5 +127,5 @@ namespace Kentico.KInspector.Web
 				return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
 			}
 		}
-	}
+    }
 }

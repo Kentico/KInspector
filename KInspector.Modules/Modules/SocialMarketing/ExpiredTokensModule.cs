@@ -63,7 +63,7 @@ namespace Kentico.KInspector.Modules
                 {
                     Result = expiredTokens,
                     Status = Status.Error,
-                    ResultComment = "Tokens have expired, posting stuff on some social markenting accounts doesn't work at all for accounts in results. Tell customer to reauthorize the pages.",
+                    ResultComment = "Tokens have expired, posting stuff on some social marketing accounts doesn't work at all for accounts in results. Tell customer to reauthorize the pages.",
                 };
             }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 
 namespace Kentico.KInspector.Core
 {
@@ -109,7 +110,7 @@ namespace Kentico.KInspector.Core
         /// <remarks>
         /// You can put the result directly into <see cref="ModuleResults.Result"/>.
         /// </remarks>
-        private DataSet ExecuteAndGetDataSet(string sql, params SqlParameter[] parameters)
+        public DataSet ExecuteAndGetDataSet(string sql, params SqlParameter[] parameters)
         {
             using (var connection = new SqlConnection(mConnectionString))
             {
@@ -187,11 +188,8 @@ namespace Kentico.KInspector.Core
                 // This is the way how to handle PRINT statements
                 conn.InfoMessage += (s, ea) =>
                 {
-                    // All the PRINT statements are saved separatly in ea.Errors collection
-                    foreach (SqlError error in ea.Errors)
-                    {
-                        output.Add(error.Message);
-                    }
+                    // All the PRINT statements are saved separately in ea.Errors collection
+	                output.AddRange(ea.Errors.Cast<SqlError>().Select(error => error.Message));
                 };
 
                 var command = new SqlCommand(sql, conn)
@@ -229,7 +227,7 @@ namespace Kentico.KInspector.Core
         public T GetSetting<T>(string key, string siteName = "") where T : IConvertible
         {
             return ExecuteAndGetScalar<T>(
-                String.Format(@"SELECT ISNULL(
+                string.Format(@"SELECT ISNULL(
                                 (SELECT KeyValue 
                                 FROM CMS_SettingsKey AS SK LEFT JOIN CMS_Site AS S ON S.SiteID = SK.SiteID 
                                 WHERE S.SiteName = '{0}' AND KeyName = '{1}'),

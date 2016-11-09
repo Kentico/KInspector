@@ -15,7 +15,8 @@ namespace Kentico.KInspector.Modules
                     new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"), 
-                    new Version("8.2")
+                    new Version("8.2"),
+                    new Version("9.0")
                 },
                 Comment = @"Displays list of web parts where 'columns' property is not specified.
 
@@ -35,6 +36,12 @@ https://docs.kentico.com/display/K82/Loading+data+efficiently",
                 return new ModuleResults
                 {
                     Result = dbService.ExecuteAndGetPrintsFromFile("WebPartColumnsModule6.sql"),
+                };
+            } else if (instanceInfo.Version == new Version("9.0"))
+            {
+                return new ModuleResults
+                {
+                    Result = dbService.ExecuteAndGetPrintsFromFile("WebPartColumnsModule9.sql"),
                 };
             }
 

@@ -29,7 +29,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
         public void Should_HaveCorrectSupportedVersions_When_ReturningModuleMetadata()
         {
             // arrange...
-            List<Version> expectedVersions = new List<Version>() { new Version("7.0"), new Version("8.0"), new Version("8.1"), new Version("8.2"), new Version("9.0") };
+            List<Version> expectedVersions = new List<Version> { new Version("7.0"), new Version("8.0"), new Version("8.1"), new Version("8.2"), new Version("9.0") };
             PasswordPolicyModule mod = new PasswordPolicyModule();
 
             // act...
@@ -177,7 +177,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             {
                 // add a row for password policy
                 newRow = tbl.NewRow();
-                newRow["SiteDisplayName"] = string.Format("Good Site Name {0}", i);
+                newRow["SiteDisplayName"] = $"Good Site Name {i}";
                 newRow["KeyName"] = "CMSUsePasswordPolicy";
                 newRow["KeyValue"] = "True";
                 tbl.Rows.Add(newRow);                
@@ -186,7 +186,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             {
                 // add a row for password policy
                 newRow = tbl.NewRow();
-                newRow["SiteDisplayName"] = string.Format("Bad Site Name {0}", j);
+                newRow["SiteDisplayName"] = $"Bad Site Name {j}";
                 newRow["KeyName"] = "CMSUsePasswordPolicy";
                 newRow["KeyValue"] = "False";
                 tbl.Rows.Add(newRow);                
