@@ -56,6 +56,6 @@ select @sql = @sql + 'Select [' + columnname + '] as AttachmentGUID, ' + siteID 
 
 
 --remove the trailing 'union'
-Select @sql = substring(@sql, 1, len(@sql) - 6)
+Select @sql = substring(@sql, 1, IIF(len(@sql) - 6 >= 0, len(@sql) - 6, 0))
 
 exec (@sql)
