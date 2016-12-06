@@ -366,14 +366,21 @@ Note: Page attachments and metafiles can be administered in System->Files: https
 					throw new ArgumentNullException($"baseUri value is null");
 				}
 
-				if(baseUri.StartsWith("~/"))
+				try
 				{
-					var absPath = Combine(info.Directory.FullName, baseUri.Substring(2));
-					return new DirectoryInfo(absPath).GetFiles("*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+					if(baseUri.StartsWith("~/"))
+					{
+						var absPath = Combine(info.Directory.FullName, baseUri.Substring(2));
+						return Directory.Exists(absPath) ? new DirectoryInfo(absPath).GetFiles("*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly) : new FileInfo[] { };
+					}
+					else
+						return Directory.Exists(baseUri) ? new DirectoryInfo(baseUri).GetFiles("*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly) : new FileInfo[] { };
 				}
-				else
-					return new DirectoryInfo(baseUri).GetFiles("*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-			}
+				catch(Exception ex)
+				{
+					throw ex;
+				}
+	}
 
 			/// <summary>
 			/// Combines a base url with a list of folders afterwards.
