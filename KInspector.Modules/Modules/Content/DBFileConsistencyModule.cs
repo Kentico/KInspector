@@ -16,8 +16,6 @@ namespace Kentico.KInspector.Modules
 			{
 				Name = "Form Attachments and Media Library Consistency Check",
 				SupportedVersions = new[] {
-					new Version("6.0"),
-					new Version("7.0"),
 					new Version("8.0"),
 					new Version("8.1"),
 					new Version("8.2"),

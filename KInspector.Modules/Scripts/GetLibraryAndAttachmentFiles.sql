@@ -56,6 +56,6 @@ select @sql = @sql + 'Select [' + columnname + '] as AttachmentGUID, ' + siteID 
 
 
 --remove the trailing 'union'
-Select @sql = substring(@sql, 1, IIF(len(@sql) - 6 >= 0, len(@sql) - 6, 0))
+Select @sql = CASE WHEN  len(@sql) - 6 >= 0 THEN substring(@sql, 1, len(@sql) - 6) ELSE 'Select top 0 newid() as AttachmentGUID, 0 as SiteID, '''' as TableName' END
 
 exec (@sql)
