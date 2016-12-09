@@ -116,6 +116,7 @@
     <Compile Include="Modules\Content\PageTypeAssignedToSiteModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
+    <Compile Include="Modules\DebugCheckModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\Content\DuplicatePageAliasesModule.cs" />
     <Compile Include="Modules\EventLog\EventLogSizeModule.cs" />
@@ -203,6 +204,7 @@
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\DebugCheckModule.sql" />
     <Content Include="Scripts\FloodProtectionModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
