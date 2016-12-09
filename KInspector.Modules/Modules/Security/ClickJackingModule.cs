@@ -33,7 +33,7 @@ namespace Kentico.KInspector.Modules
             Version kenticoVersion = instanceInfo.Version;
             string pathToWebConfig = instanceInfo.Directory.ToString();
 
-            if(( kenticoVersion >= new Version("8.0") ) && !( instanceInfo.Directory.ToString().EndsWith("\\CMS\\") || instanceInfo.Directory.ToString().EndsWith("\\CMS") ))
+            if ((kenticoVersion >= new Version("8.0")) && !(instanceInfo.Directory.ToString().EndsWith("\\CMS\\") || instanceInfo.Directory.ToString().EndsWith("\\CMS")))
             {
                 pathToWebConfig += "\\CMS";
             }
@@ -41,13 +41,13 @@ namespace Kentico.KInspector.Modules
             ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap { ExeConfigFilename = pathToWebConfig + "\\web.config" };
             Configuration configuration = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
 
-            string entry = configuration.AppSettings.Settings["CMSXFrameOptionsExclude"].Value;
-            bool hasEntry = !string.IsNullOrEmpty(entry);
+            var entry = configuration.AppSettings.Settings["CMSXFrameOptionsExcluded"];
+            bool hasEntry = entry != null;
 
-            if(hasEntry)
+            if (hasEntry)
             {
                 result = new ModuleResults();
-                result.Result = entry;
+                result.Result = entry.Value;
                 result.Status = Status.Warning;
                 result.ResultComment =
                     @"Click jacking protection is disabled for the paths specified in ModuleResults.Result. See https://docs.kentico.com/display/K9/Clickjacking";
