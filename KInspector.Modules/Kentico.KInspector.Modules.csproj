@@ -114,6 +114,8 @@
     <Compile Include="Modules\Content\NumberOfAliasesModule.cs" />
     <Compile Include="Modules\Content\RobotsTxtModule.cs" />
     <Compile Include="Modules\Content\PageTypeAssignedToSiteModule.cs" />
+    <Compile Include="Modules\Content\UnusedPageTypesModule.cs" />
+    <Compile Include="Modules\Content\UnusedTemplatesModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
     <Compile Include="Modules\General\DebugCheckModule.cs" />
@@ -217,6 +219,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\Setup\GlobalAdminSetupModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\UnusedPageTypesModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\UnusedTemplatesModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\WebPartColumnsModule9.sql">
