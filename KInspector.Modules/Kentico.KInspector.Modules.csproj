@@ -110,12 +110,14 @@
     <Compile Include="Helpers\ProbeHelper.cs" />
     <Compile Include="Helpers\ProjectCodeFilesHelper.cs" />
     <Compile Include="Modules\Content\AttachmentsBySizeModule.cs" />
+    <Compile Include="Modules\Content\DBFileConsistencyModule.cs" />
     <Compile Include="Modules\Content\NumberOfAliasesModule.cs" />
     <Compile Include="Modules\Content\RobotsTxtModule.cs" />
     <Compile Include="Modules\Content\PageTypeAssignedToSiteModule.cs" />
     <Compile Include="Modules\Content\UnusedTemplatesModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
+    <Compile Include="Modules\General\DebugCheckModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\Content\DuplicatePageAliasesModule.cs" />
     <Compile Include="Modules\EventLog\EventLogSizeModule.cs" />
@@ -139,6 +141,7 @@
     <Compile Include="Modules\OnlineMarketing\OMInactiveContactsDeletion.cs" />
     <Compile Include="Modules\OnlineMarketing\OMNewslettersWithoutQueue.cs" />
     <Compile Include="Modules\OnlineMarketing\OMTablesSize.cs" />
+    <Compile Include="Modules\Security\ClickJackingModule.cs" />
     <Compile Include="Modules\Security\DataStructures\VulnerabilityAnalysisResults.cs" />
     <Compile Include="Modules\Security\FloodProtectionModule.cs" />
     <Compile Include="Modules\Security\PasswordPolicyModule.cs" />
@@ -202,7 +205,13 @@
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\DebugCheckModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\FloodProtectionModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\GetLibraryAndAttachmentFiles.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\PageTypeFieldsDataTypeMismatchModule.sql">
@@ -348,7 +357,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\DocumentsConsistencyIssuesModule.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\UsersWithEmptyPasswordsModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
