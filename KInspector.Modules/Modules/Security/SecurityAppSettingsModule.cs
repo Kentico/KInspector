@@ -26,7 +26,8 @@ namespace Kentico.KInspector.Modules
 - Cookieless authentication
 - Session fixation
 - Http only cookies
-- Viewstate (MAC) validation",
+- Viewstate (MAC) validation
+- Hash string salt",
 
                 SupportedVersions = new[] {
                     new Version("7.0"),
@@ -154,6 +155,26 @@ namespace Kentico.KInspector.Modules
             if (!viewstatemac)
             {
                 result.Rows.Add("Viewstate MAC (<pages EnableViewStateMac=\"...)", viewstatemac.ToString(), RECOMMENDED_VALUE_TRUE);
+            }
+
+            #endregion
+
+            #region "CMS hash string salt"
+
+            string hashStringSalt = string.Empty;
+            
+            try
+            {
+                hashStringSalt = configuration.AppSettings.Settings["CMSHashStringSalt"].Value;
+            }
+            catch (Exception ex)
+            {
+                // Do nothing, value is not set.
+            }
+
+            if (string.IsNullOrWhiteSpace(hashStringSalt))
+            {
+                result.Rows.Add("hash string salt (<add key=\"CMSHashStringSalt\" ...)", VALUE_NOT_SET, "Recommend any value (typically a GUID)");
             }
 
             #endregion
