@@ -162,7 +162,7 @@ namespace Kentico.KInspector.Modules
             #region "CMS hash string salt"
 
             string hashStringSalt = string.Empty;
-            
+
             try
             {
                 hashStringSalt = configuration.AppSettings.Settings["CMSHashStringSalt"].Value;
@@ -174,8 +174,28 @@ namespace Kentico.KInspector.Modules
 
             if (string.IsNullOrWhiteSpace(hashStringSalt))
             {
-                result.Rows.Add("hash string salt (<add key=\"CMSHashStringSalt\" ...)", VALUE_NOT_SET, "Recommend any value (typically a GUID)");
+                result.Rows.Add("Hash string salt (<add key=\"CMSHashStringSalt\" ...)", VALUE_NOT_SET, "Any value (typically a GUID)");
             }
+
+            #endregion
+
+            #region "Using SA account for SQL connection"
+
+            var connectionString = configuration.ConnectionStrings.ConnectionStrings["CMSConnectionString"];
+
+            if (connectionString != null)
+            {
+                var usingServerAdminAccount = connectionString.ConnectionString.ToLower().Contains("user id=sa;");
+                if (usingServerAdminAccount)
+                {
+                    result.Rows.Add("CMS Connection string is using SA account", "User ID=SA;", "Use integrated security or a specific user");
+                }
+            }
+            else
+            {
+                result.Rows.Add("CMS Connection string is not present", VALUE_NOT_SET, "Add a CMSConnectionString");
+            }
+
 
             #endregion
 
