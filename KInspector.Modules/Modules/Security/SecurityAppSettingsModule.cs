@@ -12,18 +12,26 @@ namespace Kentico.KInspector.Modules
     {
         private const string RECOMMENDED_VALUE_TRUE = "True";
         private const string RECOMMENDED_VALUE_FALSE = "False";
-        private const string VALUE_NOT_SET = "Settings was not set at all.";
+        private const string VALUE_NOT_SET = "No value set";
 
         public ModuleMetadata GetModuleMetadata()
         {
             return new ModuleMetadata
             {
-                Name = "Security web.config settings",
-                Comment = "Checks security settings in web.config.",
-                SupportedVersions = new[] { 
+                Name = "Security settings in web.config",
+                Comment = @"Checks the following security settings in web.config:
+- Compilation debug
+- Tracing
+- Custom errors
+- Cookieless authentication
+- Session fixation
+- Http only cookies
+- Viewstate (MAC) validation",
+
+                SupportedVersions = new[] {
                     new Version("7.0"),
-                    new Version("8.0"), 
-                    new Version("8.1"), 
+                    new Version("8.0"),
+                    new Version("8.1"),
                     new Version("8.2"),
                     new Version("9.0")
                 },
@@ -52,11 +60,11 @@ namespace Kentico.KInspector.Modules
             var configuration = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
 
             # region "Debug mode"
-            var compilationNode = (CompilationSection) configuration.GetSection("system.web/compilation");
+            var compilationNode = (CompilationSection)configuration.GetSection("system.web/compilation");
             bool debugMode = compilationNode.Debug;
 
             if (debugMode)
-            {                
+            {
                 result.Rows.Add("Debug (<compilation debug=\"...)", debugMode.ToString(), RECOMMENDED_VALUE_FALSE);
             }
 
@@ -64,7 +72,7 @@ namespace Kentico.KInspector.Modules
 
             # region "Tracing"
 
-            var traceNode = (TraceSection) configuration.GetSection("system.web/trace");
+            var traceNode = (TraceSection)configuration.GetSection("system.web/trace");
             bool tracing = traceNode.Enabled;
 
             if (tracing)
@@ -76,7 +84,7 @@ namespace Kentico.KInspector.Modules
 
             # region "Custom errors"
 
-            var customErrorsNode = (CustomErrorsSection) configuration.GetSection("system.web/customErrors");
+            var customErrorsNode = (CustomErrorsSection)configuration.GetSection("system.web/customErrors");
             var customErrors = customErrorsNode.Mode;
 
             if (customErrors != CustomErrorsMode.On)
@@ -88,7 +96,7 @@ namespace Kentico.KInspector.Modules
 
             # region "Cookieless authentication"
 
-            var authNode = (AuthenticationSection) configuration.GetSection("system.web/authentication");
+            var authNode = (AuthenticationSection)configuration.GetSection("system.web/authentication");
             var cookieless = authNode.Forms.Cookieless;
 
             if (cookieless != HttpCookieMode.UseCookies) // Auto? Device?
@@ -122,10 +130,10 @@ namespace Kentico.KInspector.Modules
 
             # region "HttpOnlyCookies"
 
-            var httpOnlyCookiesNode = (HttpCookiesSection) configuration.GetSection("system.web/httpCookies");
+            var httpOnlyCookiesNode = (HttpCookiesSection)configuration.GetSection("system.web/httpCookies");
             bool httpOnlyCookies = httpOnlyCookiesNode.HttpOnlyCookies;
 
-            if (!httpOnlyCookies) 
+            if (!httpOnlyCookies)
             {
                 result.Rows.Add("HttpOnlyCookies (<httpCookies httpOnlyCookies=\"...)", httpOnlyCookies.ToString(), RECOMMENDED_VALUE_TRUE);
             }
@@ -134,7 +142,7 @@ namespace Kentico.KInspector.Modules
 
             # region "Viewstate (MAC) validation"
 
-            var pagesNode = (PagesSection) configuration.GetSection("system.web/pages");
+            var pagesNode = (PagesSection)configuration.GetSection("system.web/pages");
             bool viewstate = pagesNode.EnableViewState;
             bool viewstatemac = pagesNode.EnableViewStateMac;
 
@@ -147,8 +155,8 @@ namespace Kentico.KInspector.Modules
             {
                 result.Rows.Add("Viewstate MAC (<pages EnableViewStateMac=\"...)", viewstatemac.ToString(), RECOMMENDED_VALUE_TRUE);
             }
-            
-            # endregion
+
+            #endregion
 
             // Return result depending on findings
             if (result.Rows.Count > 0)
