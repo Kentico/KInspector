@@ -60,7 +60,7 @@ namespace Kentico.KInspector.Modules
         {
             return new ModuleMetadata
             { 
-                Name = "Site templates",
+                Name = "Page template overview",
                 SupportedVersions = new[] {
                     new Version("7.0"),
                     new Version("8.0"), 
@@ -68,7 +68,7 @@ namespace Kentico.KInspector.Modules
                     new Version("8.2"),
                     new Version("9.0")
                 },
-                Comment = @"Analyzes all templates used on sites.",
+                Comment = @"Shows the basic web part configuration for all page templates and lists all the documents that use that template.",
             };
         }
 
@@ -89,10 +89,13 @@ namespace Kentico.KInspector.Modules
                 if (results.Tables.Contains(templateName))
                 {
                     // Page template code names should be unique
-                    templateName += " - DUPLICATE CODENAME (ID: " + template["PageTemplateID"] + ")";
+                    templateName += $" - DUPLICATE CODENAME, ID: {template["PageTemplateID"]}";
                     duplicateTemplateCodeName = true;
                 }
-                DataTable result = GetTableForTemplateResult(templateName);
+
+                var tableHeader = $"{template["PageTemplateDisplayName"]} [{templateName}]";
+
+                DataTable result = GetTableForTemplateResult(tableHeader);
 
                 if (templateWP.WebPartZones != null)
                 {
@@ -100,6 +103,10 @@ namespace Kentico.KInspector.Modules
                     {
                         if (zone.WebParts == null || zone.WebParts.Length == 0)
                         {
+                            var row = result.NewRow();
+                            row["WebPartTitle"] = "No web parts";
+                            row["Zone"] = zone.ID;
+                            result.Rows.Add(row);
                             continue;
                         }
                         foreach (var wp in zone.WebParts)
@@ -138,12 +145,18 @@ namespace Kentico.KInspector.Modules
                         }
                     }
                 }
+                else
+                {
+                    var row = result.NewRow();
+                    row["WebPartTitle"] = "No web part zones";
+                    result.Rows.Add(row);
+                }
                 
                 results.Tables.Add(result);
 
                 var documents = dbService.ExecuteAndGetTableFromFile("SiteTemplatesModule-Documents.sql", 
                     new SqlParameter("PageTemplateID", template["PageTemplateID"]));
-                documents.TableName = $"{templateName} - Documents";
+                documents.TableName = $"{tableHeader} - Documents";
                 results.Tables.Add(documents.Copy());
             }
 
@@ -171,9 +184,9 @@ namespace Kentico.KInspector.Modules
             }
         }
 
-        protected DataTable GetTableForTemplateResult(string templateName)
+        protected DataTable GetTableForTemplateResult(string tableName)
         {
-            DataTable result = new DataTable(templateName);
+            DataTable result = new DataTable(tableName);
             result.Columns.Add("WebPartTitle");
             result.Columns.Add("WebPartType");
             result.Columns.Add("ID");
