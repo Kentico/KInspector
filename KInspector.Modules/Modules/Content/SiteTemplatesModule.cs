@@ -89,10 +89,13 @@ namespace Kentico.KInspector.Modules
                 if (results.Tables.Contains(templateName))
                 {
                     // Page template code names should be unique
-                    templateName += " - DUPLICATE CODENAME (ID: " + template["PageTemplateID"] + ")";
+                    templateName += $" - DUPLICATE CODENAME, ID: {template["PageTemplateID"]}";
                     duplicateTemplateCodeName = true;
                 }
-                DataTable result = GetTableForTemplateResult(templateName);
+
+                var tableHeader = $"{template["PageTemplateDisplayName"]} [{templateName}]";
+
+                DataTable result = GetTableForTemplateResult(tableHeader);
 
                 if (templateWP.WebPartZones != null)
                 {
@@ -143,7 +146,7 @@ namespace Kentico.KInspector.Modules
 
                 var documents = dbService.ExecuteAndGetTableFromFile("SiteTemplatesModule-Documents.sql", 
                     new SqlParameter("PageTemplateID", template["PageTemplateID"]));
-                documents.TableName = $"{templateName} - Documents";
+                documents.TableName = $"{tableHeader} - Documents";
                 results.Tables.Add(documents.Copy());
             }
 
@@ -171,9 +174,9 @@ namespace Kentico.KInspector.Modules
             }
         }
 
-        protected DataTable GetTableForTemplateResult(string templateName)
+        protected DataTable GetTableForTemplateResult(string tableName)
         {
-            DataTable result = new DataTable(templateName);
+            DataTable result = new DataTable(tableName);
             result.Columns.Add("WebPartTitle");
             result.Columns.Add("WebPartType");
             result.Columns.Add("ID");

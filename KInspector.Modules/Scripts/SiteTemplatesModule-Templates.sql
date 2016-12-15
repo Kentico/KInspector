@@ -1,4 +1,4 @@
-﻿SELECT PageTemplateID, PageTemplateCodeName, PageTemplateWebParts 
+﻿SELECT PageTemplateID, PageTemplateDisplayName, PageTemplateCodeName, PageTemplateWebParts 
 FROM [CMS_PageTemplate] 
 WHERE PageTemplateID IN (
 	SELECT DISTINCT DocumentPageTemplateID 
