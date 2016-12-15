@@ -95,20 +95,17 @@ Note: Although it may seem that touch icon is for Apple devices only, this is no
 
             foreach (DataRow alias in aliases.Rows)
             {
-                var redirected = alias["Redirected"].ToString();
+                var redirected = alias["Redirected"].ToString().ToLower();
                 switch (redirected)
                 {
                     // If version 8 and higher is used and page is redirected to first child
                     case "1":
+                    case "true":
+                        alias["Redirected"] = "True";
                         continue;
-
-                    // If version 7 and lower is used, database column does not exist
-                    case "DOESNOTEXIST":
-                        alias["Redirected"] = "N/A";
-                        break;
-
+                    case "doesnotexist": // If version 7 and lower is used, database column does not exist
                     default:
-                        alias["Redirected"] = "NO";
+                        alias["Redirected"] = "False";
                         break;
                 }
 
