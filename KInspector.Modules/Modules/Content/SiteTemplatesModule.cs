@@ -60,7 +60,7 @@ namespace Kentico.KInspector.Modules
         {
             return new ModuleMetadata
             { 
-                Name = "Site templates",
+                Name = "Page template overview",
                 SupportedVersions = new[] {
                     new Version("7.0"),
                     new Version("8.0"), 
@@ -68,7 +68,7 @@ namespace Kentico.KInspector.Modules
                     new Version("8.2"),
                     new Version("9.0")
                 },
-                Comment = @"Analyzes all templates used on sites.",
+                Comment = @"Shows the basic web part configuration for all page templates and lists all the documents that use that template.",
             };
         }
 
@@ -103,6 +103,10 @@ namespace Kentico.KInspector.Modules
                     {
                         if (zone.WebParts == null || zone.WebParts.Length == 0)
                         {
+                            var row = result.NewRow();
+                            row["WebPartTitle"] = "No web parts";
+                            row["Zone"] = zone.ID;
+                            result.Rows.Add(row);
                             continue;
                         }
                         foreach (var wp in zone.WebParts)
@@ -140,6 +144,12 @@ namespace Kentico.KInspector.Modules
                             result.Rows.Add(row);
                         }
                     }
+                }
+                else
+                {
+                    var row = result.NewRow();
+                    row["WebPartTitle"] = "No web part zones";
+                    result.Rows.Add(row);
                 }
                 
                 results.Tables.Add(result);
