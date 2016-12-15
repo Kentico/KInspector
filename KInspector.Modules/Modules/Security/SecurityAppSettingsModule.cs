@@ -27,7 +27,8 @@ namespace Kentico.KInspector.Modules
 - Session fixation
 - Http only cookies
 - Viewstate (MAC) validation
-- Hash string salt",
+- Hash string salt
+- SA in CMSConnectionString",
 
                 SupportedVersions = new[] {
                     new Version("7.0"),
