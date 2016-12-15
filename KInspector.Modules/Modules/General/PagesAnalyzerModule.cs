@@ -66,12 +66,23 @@ Note: Although it may seem that touch icon is for Apple devices only, this is no
 
         public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
-            var dbService = instanceInfo.DBService;
-            var siteID = dbService.ExecuteAndGetScalar<int>(string.Format(@"SELECT s.SiteID FROM CMS_Site AS s LEFT JOIN CMS_SiteDomainAlias AS sa ON s.SiteID = sa.SiteID 
-WHERE ('{0}' LIKE '%' + s.SiteDomainName + '%'
-OR '{0}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'", instanceInfo.Uri));
-
             var results = new ModuleResults();
+
+            var dbService = instanceInfo.DBService;
+            var sql = $@"SELECT s.SiteID FROM CMS_Site AS s LEFT JOIN CMS_SiteDomainAlias AS sa ON s.SiteID = sa.SiteID
+                            WHERE ('{instanceInfo.Uri}' LIKE '%' + s.SiteDomainName + '%'
+                            OR '{instanceInfo.Uri}' LIKE '%' + sa.SiteDomainAliasName + '%') AND s.SiteStatus = N'RUNNING'";
+
+            var siteIDRaw = dbService.ExecuteAndGetScalar<string>(sql);
+            int siteID = 0;
+            if(!int.TryParse(siteIDRaw, out siteID))
+            {
+                results.Result = $"No site found matching the URL: {instanceInfo.Uri}";
+                results.Status = Status.Error;
+                return results;
+            }
+            
+            
             var aliases = dbService.ExecuteAndGetTableFromFile("PagesAnalyzerModule.sql",
                 new SqlParameter("SiteId", siteID.ToString()));
             var allLinks = new Dictionary<string, List<string>>();
