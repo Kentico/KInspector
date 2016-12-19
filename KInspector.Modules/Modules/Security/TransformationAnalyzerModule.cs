@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -98,6 +99,7 @@ namespace Kentico.KInspector.Modules
                 foreach (string templateTransformationFullName in templateTransformationFullNames)
                 {
                     mTransformationFullNames.Add(templateTransformationFullName);
+                    string transformationClassName = templateTransformationFullName.Substring(0, templateTransformationFullName.LastIndexOf('.'));
                     string transformationName = templateTransformationFullName.Substring(templateTransformationFullName.LastIndexOf('.') + 1);
                     transformationNames.Add(transformationName);
                 }
@@ -116,6 +118,10 @@ namespace Kentico.KInspector.Modules
                 if (!string.IsNullOrEmpty(xssResult))
                 {
                     xssReport.Add(xssResult);
+                }
+                else
+                {
+                    xssReport.Add($"Identified 0 issues in {transformationName} ({transformationId})");
                 }
 
                 if (checkForCustomMacros)
@@ -251,10 +257,22 @@ namespace Kentico.KInspector.Modules
                 return null;
             }
 
-            string listOfNames = "'" + string.Join("', '", transformationNames) + "'";
+            var nameTable = new DataTable("KI_TransformationNames");
+            nameTable.Columns.Add("TransformationName");
 
-            return mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-TransformationCodes.sql",
-                            new SqlParameter("ListOfNames", listOfNames));
+            foreach (var name in transformationNames)
+            {
+                nameTable.Rows.Add(name);
+            }
+
+            var listOfNames = new SqlParameter();
+            listOfNames.ParameterName = "@ListOfNames";
+            listOfNames.SqlDbType = SqlDbType.Structured;
+            listOfNames.TypeName = "KI_TransformationNames";
+            listOfNames.Value = nameTable;
+
+            mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-TransformationCodes-Pre.sql");
+            return mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-TransformationCodes.sql", listOfNames);
         }
 
 

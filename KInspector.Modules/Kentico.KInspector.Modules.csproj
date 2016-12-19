@@ -221,6 +221,9 @@
     <Content Include="Scripts\Setup\GlobalAdminSetupModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\TransformationAnalyzerModule-TransformationCodes-Pre.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\UnusedPageTypesModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
