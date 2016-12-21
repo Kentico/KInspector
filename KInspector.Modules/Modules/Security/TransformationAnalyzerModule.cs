@@ -13,50 +13,15 @@ namespace Kentico.KInspector.Modules
 {
     public class TransformationAnalyzerModule : IModule
     {
-        #region "Constants"
-
-        private static readonly Regex queryRegex = new Regex("QueryHelper\\.GetString");
-        private static readonly Regex requestRegex = new Regex("Request\\.QueryString");
-        private static readonly Regex cookieRegex = new Regex("CookieHelper\\.GetValue");
-        private static readonly Regex getQueryRegex = new Regex("URLHelper\\.GetQueryValue");
-        private static readonly Regex getQuery = new Regex("URLHelper\\.GetQuery");
-        private static readonly Regex currentUrlRegex = new Regex("currenturl");
-        private static readonly Regex getStringRegex = new Regex("ScriptHelper\\.GetScript");
-
-
-        /// <summary>
-        /// Array of regular expressions used for transformation analysis.
-        /// </summary>
-        private static readonly Regex[] patterns = { queryRegex, requestRegex, cookieRegex, getQueryRegex, getQuery, currentUrlRegex, getStringRegex };
-
-        #endregion
-
-
-        #region "Fields"
-
-        private IDatabaseService mDatabaseService;
-        private string mInstancePath;
-        HashSet<string> mTransformationFullNames;
-        #endregion
-
-
-        #region "Properties"
-
-        /// <summary>
-        /// Constraints transformation analysis on transformations used in web parts,
-        /// which are located on page templates with display name like this one.
-        /// </summary>
-        /// <remarks>
-        /// The current modules implementation does not allow the user to provide
-        /// module parameters (unless they are in the global configuration object).
-        /// This should be improved to be able to set the value of this property
-        /// based on what the user wants.
-        /// </remarks>
-        public string LikePageTemplateDisplayName { get; set; } = "%";
-        #endregion
-
-
-        #region "IModule interface methods"
+        private static readonly Regex regexForCookie = new Regex("CookieHelper\\.GetValue");
+        private static readonly Regex regexForCurrentUrl = new Regex("currenturl");
+        private static readonly Regex regexForGetQuery = new Regex("URLHelper\\.GetQuery");
+        private static readonly Regex regexForGetQueryValue = new Regex("URLHelper\\.GetQueryValue");
+        private static readonly Regex regexForGetScript = new Regex("ScriptHelper\\.GetScript");
+        private static readonly Regex regexForGetSring = new Regex("QueryHelper\\.GetString");
+        private static readonly Regex regexForQueryString = new Regex("Request\\.QueryString");
+        private static readonly Regex[] regexPatterns = { regexForQueryString, regexForGetSring, regexForCookie, regexForGetQueryValue, regexForGetQuery, regexForCurrentUrl, regexForGetScript };
+        private IInstanceInfo instanceInfo;
 
         public ModuleMetadata GetModuleMetadata()
         {
@@ -77,60 +42,42 @@ namespace Kentico.KInspector.Modules
 
         public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
-            List<string> report = new List<string>();
+            this.instanceInfo = instanceInfo;
 
+            List<string> report = new List<string>();
             List<string> xssReport = new List<string>();
             List<string> customMacrosReport = new List<string>();
 
-            mDatabaseService = instanceInfo.DBService;
-            mInstancePath = instanceInfo.Directory.FullName;
+            var webPartConfigurations = GetWebPartConfigurationsForTemplates();
 
-            HashSet<string> transformationNames = new HashSet<string>();
-            mTransformationFullNames = new HashSet<string>();
+            var transformationInfos = GetTransformationInfo(webPartConfigurations);
+            var checkForCustomMacros = MacroValidator.Current.CheckForCustomMacros(instanceInfo.Version);
 
-            DataTable webPartsInTransformationsTable = GetPageTemplateWebParts(LikePageTemplateDisplayName);
-            foreach (DataRow webPart in webPartsInTransformationsTable.Rows)
+            foreach (var transformationInfo in transformationInfos)
             {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(webPart["PageTemplateWebParts"] as string);
+                var xssResult = string.Empty;
 
-                IEnumerable<string> templateTransformationFullNames = GetTransformationNamesInPageTemplateWebParts(xmlDoc);
-
-                foreach (string templateTransformationFullName in templateTransformationFullNames)
-                {
-                    mTransformationFullNames.Add(templateTransformationFullName);
-                    string transformationClassName = templateTransformationFullName.Substring(0, templateTransformationFullName.LastIndexOf('.'));
-                    string transformationName = templateTransformationFullName.Substring(templateTransformationFullName.LastIndexOf('.') + 1);
-                    transformationNames.Add(transformationName);
-                }
-            }
-
-            DataTable transformationCodesTable = GetTransformationCodes(transformationNames);
-            bool checkForCustomMacros = MacroValidator.Current.CheckForCustomMacros(instanceInfo.Version);
-            foreach (DataRow transformation in transformationCodesTable.Rows)
-            {
-                int transformationId = (int)transformation["TransformationID"];
-                string transformationName = transformation["TransformationName"] as string;
-                string transformationCode = transformation["TransformationCode"] as string;
-
-                string xssResult = null;
-                AnalyseXss(transformationId, transformationName, transformationCode, ref xssResult);
+                AnalyseXss(transformationInfo, ref xssResult);
                 if (!string.IsNullOrEmpty(xssResult))
                 {
                     xssReport.Add(xssResult);
                 }
                 else
                 {
-                    xssReport.Add($"Identified 0 issues in {transformationName} ({transformationId})");
+                    xssReport.Add($"Identified 0 XSS issues in {transformationInfo.FullName} ({transformationInfo.ID})");
                 }
 
                 if (checkForCustomMacros)
                 {
                     string customMacroResult = null;
-                    AnalyseCustomMacros(transformationId, transformationName, transformationCode, ref customMacroResult);
+                    AnalyseCustomMacros(transformationInfo, ref customMacroResult);
                     if (!string.IsNullOrEmpty(customMacroResult))
                     {
                         customMacrosReport.Add(customMacroResult);
+                    }
+                    else
+                    {
+                        customMacrosReport.Add($"Identified 0 Custom Macro issues in {transformationInfo.FullName} ({transformationInfo.ID})");
                     }
                 }
             }
@@ -165,10 +112,27 @@ namespace Kentico.KInspector.Modules
             };
         }
 
-        #endregion
+        /// <summary>
+        /// Analyse transformation for deprecated custom macros.
+        /// </summary>
+        /// <param name="transformationId">ID of the transformation.</param>
+        /// <param name="transformationName">Name of the transformation.</param>
+        /// <param name="transformationCode">Code of the transformation.</param>
+        /// <param name="result">Result of deprecated custom macro analysis (not modified if none found).</param>
+        private void AnalyseCustomMacros(TransformationInfo transformationInfo, ref string result)
+        {
+            if (!string.IsNullOrWhiteSpace(transformationInfo.Code))
+            {
+                // Check if transformation code contains deprecated custom macros
+                bool customMacrosFound = MacroValidator.Current.ContainsMacros(transformationInfo.Code, MacroValidator.MacroType.Custom);
 
-
-        #region "Methods"
+                // If custom macros have been found, set appropriate result
+                if (customMacrosFound)
+                {
+                    result = GetTransformationReportLink(transformationInfo);
+                }
+            }
+        }
 
         /// <summary>
         /// Analysis transformation code for XSS vulnerabilities.
@@ -177,104 +141,105 @@ namespace Kentico.KInspector.Modules
         /// <param name="transformationName">Name of the transformation.</param>
         /// <param name="transformationCode">Code of the transformation.</param>
         /// <param name="result">Result of XSS vulnerability analysis (not modified if none found).</param>
-        private void AnalyseXss(int transformationId, string transformationName, string transformationCode, ref string result)
+        private void AnalyseXss(TransformationInfo transformationInfo, ref string result)
         {
-            // Check if transformation code contains the malicious input
-            bool potentialXssFound = patterns.Any(p => p.IsMatch(transformationCode));
-
-            // If potential XSS has been found, set appropriate result
-            if (potentialXssFound)
+            if (!string.IsNullOrWhiteSpace(transformationInfo.Code))
             {
-                result = GetTransformationReportLink(transformationId, transformationName, transformationCode);
+                // Check if transformation code contains the malicious input
+                bool potentialXssFound = regexPatterns.Any(p => p.IsMatch(transformationInfo.Code));
+
+                // If potential XSS has been found, set appropriate result
+                if (potentialXssFound)
+                {
+                    result = GetTransformationReportLink(transformationInfo);
+                }
             }
         }
 
-
-        /// <summary>
-        /// Analyse transformation for deprecated custom macros.
-        /// </summary>
-        /// <param name="transformationId">ID of the transformation.</param>
-        /// <param name="transformationName">Name of the transformation.</param>
-        /// <param name="transformationCode">Code of the transformation.</param>
-        /// <param name="result">Result of deprecated custom macro analysis (not modified if none found).</param>
-        private void AnalyseCustomMacros(int transformationId, string transformationName, string transformationCode, ref string result)
+        private Dictionary<string, int> GetClassInfo(IEnumerable<string> classNames)
         {
-            // Check if transformation code contains deprecated custom macros
-            bool customMacrosFound = MacroValidator.Current.ContainsMacros(transformationCode, MacroValidator.MacroType.Custom);
+            var classData = GetDataWhereInTable("KI_ClassNames", "ClassName", classNames);
+            var classInfo = new Dictionary<string, int>();
 
-            // If custom macros have been found, set appropriate result
-            if (customMacrosFound)
+            foreach (DataRow row in classData.Rows)
             {
-                result = GetTransformationReportLink(transformationId, transformationName, transformationCode);
+                var classID = int.Parse(row["ClassID"].ToString());
+                var className = row["ClassName"].ToString().ToLower();
+                classInfo.Add(className, classID);
             }
+
+            return classInfo;
         }
 
-
-        /// <summary>
-        /// Gets page template web parts where page template display name
-        /// is like given <paramref name="likePageTemplateDisplayName"/> pattern.
-        /// </summary>
-        /// <param name="likePageTemplateDisplayName">Like pattern for page template display name.</param>
-        /// <returns>DataTable containing page template web parts in its 'PageTemplateWebParts' column.</returns>
-        private DataTable GetPageTemplateWebParts(string likePageTemplateDisplayName)
+        private DataTable GetDataWhereInTable(DataTable table)
         {
-            return mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-PageTemplateWebParts.sql",
-                                new SqlParameter("PageTemplateDisplayName", likePageTemplateDisplayName));
+            var tableValueParameter = new SqlParameter();
+            tableValueParameter.ParameterName = "@TableValueParameter";
+            tableValueParameter.SqlDbType = SqlDbType.Structured;
+            tableValueParameter.TypeName = table.TableName;
+            tableValueParameter.Value = table;
+
+            instanceInfo.DBService.ExecuteAndGetTableFromFile($"TransformationAnalyzerModule-Initialize-{table.TableName}.sql");
+            return instanceInfo.DBService.ExecuteAndGetTableFromFile($"TransformationAnalyzerModule-GetDataWhereIn-{table.TableName}.sql", tableValueParameter);
         }
 
+        private DataTable GetDataWhereInTable(string dataTableName, string columnName, IEnumerable<object> items)
+        {
+            if (!items.Any())
+            {
+                return null;
+            }
+
+            var tableDefinition = new DataTable(dataTableName);
+            tableDefinition.Columns.Add(columnName);
+
+            foreach (var item in items)
+            {
+                tableDefinition.Rows.Add(item);
+            }
+
+            return GetDataWhereInTable(tableDefinition);
+        }
 
         /// <summary>
         /// Gets full names of transformations used in page template web parts.
         /// </summary>
         /// <param name="pageTemplateWebParts">Content of PageTemplateWebParts column from <c>CMS_PageTemplate</c> table.</param>
         /// <returns>Enumeration of transformation full names.</returns>
-        private IEnumerable<string> GetTransformationNamesInPageTemplateWebParts(XmlDocument pageTemplateWebParts)
+        private HashSet<string> GetFullTransformationNamesFromWebPartConfiguration(XmlDocument webPartConfiguration)
         {
-            HashSet<string> res = new HashSet<string>();
+            HashSet<string> results = new HashSet<string>();
 
-            foreach (XmlNode webPartPropertyNode in pageTemplateWebParts.SelectNodes("/page/webpartzone/webpart/property"))
+            foreach (XmlNode webPartPropertyNode in webPartConfiguration.SelectNodes("/page/webpartzone/webpart/property"))
             {
                 XmlAttribute nameAttribute = webPartPropertyNode.Attributes["name"];
-                if ((nameAttribute != null) && nameAttribute.Value.Contains("transformation") && !string.IsNullOrEmpty(webPartPropertyNode.InnerText))
+
+                var isValidAttribute = nameAttribute != null && nameAttribute.Value.Contains("transformation");
+                var hasValue = !string.IsNullOrEmpty(webPartPropertyNode.InnerText);
+
+                if (isValidAttribute && hasValue)
                 {
-                    res.Add(webPartPropertyNode.InnerText);
+                    results.Add(webPartPropertyNode.InnerText.ToLower());
                 }
             }
 
-            return res;
+            return results;
         }
 
-
-        /// <summary>
-        /// Gets table with transformation codes.
-        /// </summary>
-        /// <param name="transformationNames">Enumeration of transformation names.</param>
-        /// <returns>Table of transformation codes, or null if <paramref name="transformationNames"/> does not contain any item).</returns>
-        private DataTable GetTransformationCodes(IEnumerable<string> transformationNames)
+        private HashSet<string> GetFullTransformationNamesFromWebPartConfigurations(IEnumerable<XmlDocument> webPartConfigurations)
         {
-            if (!transformationNames.Any())
+            var fullTransformationNames = new HashSet<string>();
+            foreach (var configurationXml in webPartConfigurations)
             {
-                return null;
+                var fullTransformationNamesInWebPartConfiguration = GetFullTransformationNamesFromWebPartConfiguration(configurationXml);
+                foreach (var fullTransformationName in fullTransformationNamesInWebPartConfiguration)
+                {
+                    fullTransformationNames.Add(fullTransformationName);
+                }
             }
 
-            var nameTable = new DataTable("KI_TransformationNames");
-            nameTable.Columns.Add("TransformationName");
-
-            foreach (var name in transformationNames)
-            {
-                nameTable.Rows.Add(name);
-            }
-
-            var listOfNames = new SqlParameter();
-            listOfNames.ParameterName = "@ListOfNames";
-            listOfNames.SqlDbType = SqlDbType.Structured;
-            listOfNames.TypeName = "KI_TransformationNames";
-            listOfNames.Value = nameTable;
-
-            mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-TransformationCodes-Pre.sql");
-            return mDatabaseService.ExecuteAndGetTableFromFile("TransformationAnalyzerModule-TransformationCodes.sql", listOfNames);
+            return fullTransformationNames;
         }
-
 
         /// <summary>
         /// Gets enumeration of possible full names for given transformation name
@@ -289,6 +254,76 @@ namespace Kentico.KInspector.Modules
             return transformationFullNames.Where(it => it.EndsWith("." + transformationName));
         }
 
+        private List<TransformationInfo> GetTransformationInfo(IEnumerable<XmlDocument> webPartConfigurations)
+        {
+            HashSet<string> fullTransformationNames = GetFullTransformationNamesFromWebPartConfigurations(webPartConfigurations);
+            return GetTransformationInfo(fullTransformationNames);
+        }
+
+        private List<TransformationInfo> GetTransformationInfo(IEnumerable<string> fullTransformationNames)
+        {
+            var transformationInfos = new List<TransformationInfo>();
+            foreach (var fullTransformationName in fullTransformationNames)
+            {
+                var name = fullTransformationName.Substring(fullTransformationName.LastIndexOf('.') + 1);
+                var className = fullTransformationName.Substring(0, fullTransformationName.LastIndexOf('.'));
+
+                var transformationInfo = new TransformationInfo()
+                {
+                    FullName = fullTransformationName,
+                    Name = name,
+                    ClassName = className,
+                };
+
+                transformationInfos.Add(transformationInfo);
+            }
+
+            var classNames = transformationInfos.Select(x => x.ClassName).Distinct();
+            var classDetails = GetClassInfo(classNames);
+
+            foreach (var transformationInfo in transformationInfos)
+            {
+                int classID = 0;
+                classDetails.TryGetValue(transformationInfo.ClassName, out classID);
+                transformationInfo.ClassID = classID;
+            }
+
+            var transformationTable = GetTransformationListTable(transformationInfos);
+            var transformationInfoData = GetDataWhereInTable(transformationTable);
+
+            foreach (DataRow item in transformationInfoData.Rows)
+            {
+                var id = int.Parse(item["TransformationID"].ToString());
+                var classID = int.Parse(item["TransformationClassID"].ToString());
+                var name = item["TransformationName"].ToString();
+                var code = item["TransformationCode"].ToString();
+
+                var index = transformationInfos.FindIndex(ti => ti.Name.ToLower() == name.ToLower() && ti.ClassID == classID);
+                transformationInfos[index].ID = id;
+                transformationInfos[index].Code = code;
+            }
+
+            return transformationInfos;
+        }
+
+        private DataTable GetTransformationListTable(List<TransformationInfo> transformationInfos)
+        {
+            if (!transformationInfos.Any())
+            {
+                return null;
+            }
+
+            var table = new DataTable("KI_TransformationList");
+            table.Columns.Add("TransformationName");
+            table.Columns.Add("TransformationClassID");
+
+            foreach (var transformationInfo in transformationInfos)
+            {
+                table.Rows.Add(transformationInfo.Name, transformationInfo.ClassID);
+            }
+
+            return table;
+        }
 
         /// <summary>
         /// Gets the transformation report links.
@@ -297,23 +332,50 @@ namespace Kentico.KInspector.Modules
         /// <param name="transformationName">Name of the transformation.</param>
         /// <param name="transformationCode">Code of the transformation.</param>
         /// <returns>Report with possible links for given transformation.</returns>
-        private string GetTransformationReportLink(int transformationId, string transformationName, string transformationCode)
+        private string GetTransformationReportLink(TransformationInfo transformationInfo)
         {
-            IEnumerable<string> fullNames = GetTransformationFullNamesForName(transformationName, mTransformationFullNames);
             StringBuilder res = new StringBuilder();
-            res.Append(transformationName).Append(" ");
-            foreach (string fullName in fullNames)
-            {
-                res.Append("<a href=\"").Append(mInstancePath)
-                    .Append("/CMSModules/DocumentTypes/Pages/Development/DocumentType_Edit_Transformation_Edit.aspx?objectid=")
-                    .Append(transformationId)
-                    .Append("\" target=\"_blank\">")
-                    .Append(fullName)
-                    .Append("</a> ");
-            }
+            res.Append("<a href=\"").Append(instanceInfo.Uri)
+                .Append("/CMSModules/DocumentTypes/Pages/Development/DocumentType_Edit_Transformation_Edit.aspx?objectid=")
+                .Append(transformationInfo.ID)
+                .Append("\" target=\"_blank\">")
+                .Append(transformationInfo.FullName)
+                .Append("</a> ");
+
             return res.ToString();
         }
 
-        #endregion
+        /// <summary>
+        /// Gets web part configurations for page templates where display name
+        /// is like <paramref name="pageTemplateDisplayNameLike"/>.
+        /// </summary>
+        /// <param name="pageTemplateDisplayNameLike">SQL Like pattern for page template display name. Default is all</param>
+        /// <returns>DataTable containing page template web parts in its 'PageTemplateWebParts' column.</returns>
+        private List<XmlDocument> GetWebPartConfigurationsForTemplates(string pageTemplateDisplayNameLike = "%")
+        {
+            var results = new List<XmlDocument>();
+
+            var sqlFile = "TransformationAnalyzerModule-PageTemplateWebParts.sql";
+            var sqlParameter = new SqlParameter("PageTemplateDisplayName", pageTemplateDisplayNameLike);
+            var webPartConfigurationsData = instanceInfo.DBService.ExecuteAndGetTableFromFile(sqlFile, sqlParameter);
+            foreach (DataRow webPartConfiguration in webPartConfigurationsData.Rows)
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(webPartConfiguration["PageTemplateWebParts"].ToString());
+                results.Add(xmlDoc);
+            }
+
+            return results;
+        }
+    }
+
+    public class TransformationInfo
+    {
+        public int ClassID { get; set; }
+        public string ClassName { get; set; }
+        public string Code { get; set; }
+        public string FullName { get; set; }
+        public int ID { get; set; }
+        public string Name { get; set; }
     }
 }
