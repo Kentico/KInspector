@@ -53,41 +53,11 @@ namespace Kentico.KInspector.Modules
             var transformationInfos = GetTransformationInfo(webPartConfigurations);
             var checkForCustomMacros = MacroValidator.Current.CheckForCustomMacros(instanceInfo.Version);
 
-            foreach (var transformationInfo in transformationInfos)
-            {
-                var xssResult = string.Empty;
+            PerformAnalysis(transformationInfos, checkForCustomMacros, xssReport, customMacrosReport);
 
-                AnalyseXss(transformationInfo, ref xssResult);
-                if (!string.IsNullOrEmpty(xssResult))
-                {
-                    xssReport.Add(xssResult);
-                }
-                else
-                {
-                    xssReport.Add($"Identified 0 XSS issues in {transformationInfo.FullName} ({transformationInfo.ID})");
-                }
-
-                if (checkForCustomMacros)
-                {
-                    string customMacroResult = null;
-                    AnalyseCustomMacros(transformationInfo, ref customMacroResult);
-                    if (!string.IsNullOrEmpty(customMacroResult))
-                    {
-                        customMacrosReport.Add(customMacroResult);
-                    }
-                    else
-                    {
-                        customMacrosReport.Add($"Identified 0 Custom Macro issues in {transformationInfo.FullName} ({transformationInfo.ID})");
-                    }
-                }
-            }
-
-            if (xssReport.Count > 0)
-            {
-                report.Add("------------------------ Transformations - XSS Analysis report -----------------");
-                report.AddRange(xssReport);
-                report.Add("<br /><br />");
-            }
+            report.Add("------------------------ Transformations - XSS Analysis report -----------------");
+            report.AddRange(xssReport);
+            report.Add("<br /><br />");
 
             if (customMacrosReport.Count > 0)
             {
@@ -95,21 +65,27 @@ namespace Kentico.KInspector.Modules
                 report.AddRange(customMacrosReport);
                 report.Add("<br /><br />");
             }
-
-            if (report.Count == 0)
-            {
-                return new ModuleResults
-                {
-                    ResultComment = "No problems in transformations found.",
-                    Status = Status.Good
-                };
-            }
-
+            
             return new ModuleResults
             {
                 Result = report,
                 Trusted = true
             };
+        }
+
+        private void PerformAnalysis(List<TransformationInfo> transformationInfos, bool checkForCustomMacros, List<string> xssReport, List<string> customMacrosReport)
+        {
+            foreach (var transformationInfo in transformationInfos)
+            {
+                var xssResult = string.Empty;
+
+                AnalyseXss(transformationInfo, xssReport);
+
+                if (checkForCustomMacros)
+                {
+                    AnalyseCustomMacros(transformationInfo, customMacrosReport);
+                }
+            }
         }
 
         /// <summary>
@@ -119,7 +95,7 @@ namespace Kentico.KInspector.Modules
         /// <param name="transformationName">Name of the transformation.</param>
         /// <param name="transformationCode">Code of the transformation.</param>
         /// <param name="result">Result of deprecated custom macro analysis (not modified if none found).</param>
-        private void AnalyseCustomMacros(TransformationInfo transformationInfo, ref string result)
+        private void AnalyseCustomMacros(TransformationInfo transformationInfo, List<string> report)
         {
             if (!string.IsNullOrWhiteSpace(transformationInfo.Code))
             {
@@ -127,10 +103,7 @@ namespace Kentico.KInspector.Modules
                 bool customMacrosFound = MacroValidator.Current.ContainsMacros(transformationInfo.Code, MacroValidator.MacroType.Custom);
 
                 // If custom macros have been found, set appropriate result
-                if (customMacrosFound)
-                {
-                    result = GetTransformationReportLink(transformationInfo);
-                }
+                UpdateReport(transformationInfo, report, customMacrosFound);
             }
         }
 
@@ -141,18 +114,30 @@ namespace Kentico.KInspector.Modules
         /// <param name="transformationName">Name of the transformation.</param>
         /// <param name="transformationCode">Code of the transformation.</param>
         /// <param name="result">Result of XSS vulnerability analysis (not modified if none found).</param>
-        private void AnalyseXss(TransformationInfo transformationInfo, ref string result)
+        private void AnalyseXss(TransformationInfo transformationInfo, List<string> report)
         {
+            var result = string.Empty;
+
             if (!string.IsNullOrWhiteSpace(transformationInfo.Code))
             {
                 // Check if transformation code contains the malicious input
                 bool potentialXssFound = regexPatterns.Any(p => p.IsMatch(transformationInfo.Code));
 
                 // If potential XSS has been found, set appropriate result
-                if (potentialXssFound)
-                {
-                    result = GetTransformationReportLink(transformationInfo);
-                }
+
+                UpdateReport(transformationInfo, report, potentialXssFound);
+            }
+        }
+
+        private void UpdateReport(TransformationInfo transformationInfo, List<string> report, bool issueFound)
+        {
+            if (issueFound)
+            {
+                report.Add(GetTransformationReportLink(transformationInfo));
+            }
+            else
+            {
+                report.Add($"Identified no issues in <em>{transformationInfo.FullName}</em> ({transformationInfo.ID})");
             }
         }
 
