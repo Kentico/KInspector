@@ -221,6 +221,15 @@
     <Content Include="Scripts\Setup\GlobalAdminSetupModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\TransformationAnalyzerModule-GetDataWhereIn-KI_ClassNames.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\TransformationAnalyzerModule-Initialize-KI_ClassNames.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\TransformationAnalyzerModule-Initialize-KI_TransformationList.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\UnusedPageTypesModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -257,7 +266,7 @@
     <Content Include="Scripts\PasswordPolicy.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\TransformationAnalyzerModule-TransformationCodes.sql">
+    <Content Include="Scripts\TransformationAnalyzerModule-GetDataWhereIn-KI_TransformationList.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\TransformationAnalyzerModule-PageTemplateWebParts.sql">
