@@ -12,11 +12,6 @@ namespace Kentico.KInspector.Modules
             {
                 Name = "Task processing issues",
                 SupportedVersions = new[] {
-                    new Version("6.0"),
-                    new Version("7.0"),
-                    new Version("8.0"),
-                    new Version("8.1"),
-                    new Version("8.2"),
                     new Version("9.0")
                 },
                 Comment = @"Checks for possible issues with processing system, workflow, marketing automation, smart search, and web farm tasks.",
