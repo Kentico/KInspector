@@ -118,6 +118,7 @@
     <Compile Include="Modules\Content\UnusedTemplatesModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
+    <Compile Include="Modules\General\TaskProcessingIssuesModule.cs" />
     <Compile Include="Modules\General\DebugCheckModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\Content\DuplicatePageAliasesModule.cs" />
@@ -219,6 +220,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\Setup\GlobalAdminSetupModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\TaskProcessingIssueModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\TransformationAnalyzerModule-GetDataWhereIn-KI_ClassNames.sql">
