@@ -27,7 +27,8 @@ You should use hierarchical transformation instead (see https://docs.kentico.com
                     new Version("8.0"), 
                     new Version("8.1"), 
                     new Version("8.2"),
-                    new Version("9.0")
+                    new Version("9.0"),
+                    new Version("10.0")
                 },
                 Category = "Content",
             };
