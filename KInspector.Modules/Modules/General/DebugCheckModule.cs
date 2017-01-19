@@ -20,7 +20,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.0"),
                     new Version("8.1"),
                     new Version("8.2"),
-                    new Version("9.0")
+                    new Version("9.0"),
+                    new Version("10.0")
                 },
                 Comment = @"Ensures that all debug keys in the CMS_SettingsKey table and the web.config file are set to false."
             };
