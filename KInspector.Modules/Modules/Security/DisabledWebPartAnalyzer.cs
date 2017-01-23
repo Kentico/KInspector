@@ -41,7 +41,6 @@ namespace Kentico.KInspector.Modules
             {
                 return new ModuleResults
                 {
-
                     ResultComment = "No page templates with disabled web parts found.",
                     Status = Status.Good
                 };
