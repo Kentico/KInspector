@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Data;
+using System.Linq;
+using System.IO;
 using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules
@@ -18,7 +21,7 @@ namespace Kentico.KInspector.Modules
                     new Version("9.0"),
                     new Version("10.0")
                 },
-                Category = "Security",
+                Category = "General",
                 Comment = @"Displays all page templates with disabled web parts, meaning templates which have property 'visible' set to 'false'."
             };
         }
@@ -32,7 +35,7 @@ namespace Kentico.KInspector.Modules
             {
                 return new ModuleResults
                 {
-                    Result = results,
+                    Result = results.AsEnumerable().Select(r => r.Field<String>("PageTemplateDisplayName")).ToList<String>(),
                     ResultComment = "Page templates with disabled web parts found, check the table for the template names.",
                     Status = Status.Warning
                 };
