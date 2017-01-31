@@ -12,7 +12,7 @@ namespace Kentico.KInspector.Modules
         {
             return new ModuleMetadata
             {
-                Name = "Disabled web parts",
+                Name = "Disabled web parts and web part zones",
                 SupportedVersions = new[] {
                     new Version("7.0"),
                     new Version("8.0"),
@@ -22,7 +22,7 @@ namespace Kentico.KInspector.Modules
                     new Version("10.0")
                 },
                 Category = "General",
-                Comment = @"Displays all page templates with disabled web parts, meaning templates which have property 'visible' set to 'false'."
+                Comment = @"Displays all page templates with disabled web parts and web part zones, meaning templates which have property 'visible' set to 'false'."
             };
         }
 
