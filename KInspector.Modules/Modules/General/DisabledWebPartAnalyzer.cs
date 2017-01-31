@@ -35,7 +35,7 @@ namespace Kentico.KInspector.Modules
             {
                 return new ModuleResults
                 {
-                    Result = results.AsEnumerable().Select(r => r.Field<String>("PageTemplateDisplayName")).ToList<String>(),
+                    Result = results,
                     ResultComment = "Page templates with disabled web parts found, check the table for the template names.",
                     Status = Status.Warning
                 };
