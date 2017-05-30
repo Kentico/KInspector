@@ -29,7 +29,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
         public void Should_HaveCorrectSupportedVersions_When_ReturningModuleMetadata()
         {
             // arrange...
-            List<Version> expectedVersions = new List<Version> { new Version("7.0"), new Version("8.0"), new Version("8.1"), new Version("8.2"), new Version("9.0") };
+            List<Version> expectedVersions = new List<Version> { new Version("7.0"), new Version("8.0"), new Version("8.1"), new Version("8.2"), new Version("9.0"), new Version("10.0") };
             PasswordPolicyModule mod = new PasswordPolicyModule();
 
             // act...

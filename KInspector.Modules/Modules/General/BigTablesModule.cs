@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules
@@ -9,16 +9,18 @@ namespace Kentico.KInspector.Modules
         {
             return new ModuleMetadata
             { 
-                Name = "Top 25 tables by size",
+                Name = "Top 25 tables by size (MB)",
                 SupportedVersions = new[] { 
                     new Version("6.0"),
                     new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"), 
                     new Version("8.2"),
-                    new Version("9.0")
+                    new Version("9.0"),
+                    new Version("10.0")
                 },
                 Comment = @"Displays top 25 biggest tables from the database.",
+                Category = "Database"
             };
         }
 

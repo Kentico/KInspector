@@ -16,7 +16,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.0"),
                     new Version("8.1"),
                     new Version("8.2"),
-                    new Version("9.0")
+                    new Version("9.0"),
+                    new Version("10.0")
                 },
                 Category = "Setup",
             };
@@ -25,7 +26,10 @@ namespace Kentico.KInspector.Modules
         public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
-            var results = dbService.ExecuteAndGetDataSetFromFile("Setup/GlobalAdminSetupModule.sql");
+
+            var sqlFile = instanceInfo.Version.Major != 10 ? "Setup/GlobalAdminSetupModule.sql" : "Setup/GlobalAdminSetupModule-V10.sql";
+
+            var results = dbService.ExecuteAndGetDataSetFromFile(sqlFile);
 
             return new ModuleResults
             {

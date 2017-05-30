@@ -18,7 +18,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.0"), 
                     new Version("8.1"), 
                     new Version("8.2"),
-                    new Version("9.0")
+                    new Version("9.0"),
+                    new Version("10.0")
                 },
                 Comment = @"Checks that CMS_Tree and CMS_Document tables are without any consistency issues.",
                 Category = "Consistency issues"

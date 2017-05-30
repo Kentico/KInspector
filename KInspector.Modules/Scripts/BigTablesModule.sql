@@ -6,4 +6,4 @@
 FROM sys.dm_db_partition_stats s, sys.objects o
 WHERE o.object_id = s.object_id
 GROUP BY o.Name
-ORDER BY 'Rows' DESC
+ORDER BY 'Size [MB]' DESC

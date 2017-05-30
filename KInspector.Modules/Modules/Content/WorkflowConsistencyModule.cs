@@ -24,12 +24,14 @@ namespace Kentico.KInspector.Modules
             return new ModuleMetadata
             {
                 Name = "Workflow consistency",
-                SupportedVersions = new[] { 
+                SupportedVersions = new[] {
                     new Version("7.0"),
-                    new Version("8.0"), 
+                    new Version("8.0"),
                     new Version("8.1"),
                     new Version("8.2"),
-                    new Version("9.0") },
+                    new Version("9.0"),
+                    new Version("10.0")
+                },
                 Comment = @"Checks if there are any inconsistencies between published data and data in CMS_Version history. Checks only custom fields stored in coupled table (excludes Document/Node properties)
 
 Inconsistency can occur when a PUBLISHED document under WORKFLOW is updated in the API (when not creating/managing versions manually)
@@ -91,6 +93,12 @@ Implication of such inconsistency is that when you look at a document in Content
             foreach (var document in documents)
             {
                 var classItem = GetClassItem(document.ClassName);
+
+                if (!classItem.ClassIsDocumentType || !classItem.ClassIsCoupledClass)
+                {
+                    // Skip processing of document that has no coupled table
+                    continue;
+                }
 
                 // Get published data values
                 var publishedValues = GetDictionaryWithValues(classItem, document.DocumentForeignKeyValue);
@@ -227,13 +235,13 @@ Implication of such inconsistency is that when you look at a document in Content
             {
                 list.Add(new DocumentItem
                 {
-                    DocumentID = Convert.ToInt32(documentItem["DocumentID"]),
-                    DocumentName = documentItem["DocumentName"].ToString(),
-                    ClassName = documentItem["ClassName"].ToString(),
-                    DocumentForeignKeyValue = Convert.ToInt32(documentItem["DocumentForeignKeyValue"]),
+                    DocumentID = Convert.IsDBNull(documentItem["DocumentID"]) ? 0 : Convert.ToInt32(documentItem["DocumentID"]),
+                    DocumentName = documentItem["DocumentName"]?.ToString(),
+                    ClassName = documentItem["ClassName"]?.ToString(),
+                    DocumentForeignKeyValue = Convert.IsDBNull(documentItem["DocumentForeignKeyValue"]) ? 0 : Convert.ToInt32(documentItem["DocumentForeignKeyValue"]),
                     NodeXML = documentItem["NodeXML"].ToString(),
-                    NodeAliasPath = documentItem["NodeAliasPath"].ToString(),
-                    DocumentCulture = documentItem["DocumentCulture"].ToString()
+                    NodeAliasPath = documentItem["NodeAliasPath"]?.ToString(),
+                    DocumentCulture = documentItem["DocumentCulture"]?.ToString()
                 });
             }
 
@@ -242,7 +250,7 @@ Implication of such inconsistency is that when you look at a document in Content
 
         private void InitializeClassNames()
         {
-            var sql = "select ClassName, ClassFormDefinition, ClassTableName from CMS_Class where ClassIsDocumentType = '1'";
+            var sql = "select ClassName, ClassFormDefinition, ClassTableName, ClassIsCoupledClass, ClassIsDocumentType from CMS_Class";
             var result = InstanceInfo.DBService.ExecuteAndGetDataSet(sql);
 
             var list = new List<ClassItem>();
@@ -253,7 +261,9 @@ Implication of such inconsistency is that when you look at a document in Content
                 {
                     ClassName = classItem["ClassName"].ToString(),
                     TableName = classItem["ClassTableName"].ToString(),
-                    ClassFormDefinition = classItem["ClassFormDefinition"].ToString()
+                    ClassFormDefinition = classItem["ClassFormDefinition"].ToString(),
+                    ClassIsCoupledClass = Convert.ToBoolean(classItem["ClassIsCoupledClass"]),
+                    ClassIsDocumentType = Convert.ToBoolean(classItem["ClassIsDocumentType"]),
                 });
             }
 
@@ -301,6 +311,8 @@ Implication of such inconsistency is that when you look at a document in Content
 
         private class ClassItem
         {
+            public bool ClassIsDocumentType { get; set; }
+            public bool ClassIsCoupledClass { get; set; }
             public string ClassName { get; set; }
             public string TableName { get; set; }
             public string ClassFormDefinition { get; set; }
