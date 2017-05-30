@@ -118,6 +118,7 @@
     <Compile Include="Modules\Content\UnusedTemplatesModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
+    <Compile Include="Modules\General\ClassTableValidation.cs" />
     <Compile Include="Modules\General\TaskProcessingIssuesModule.cs" />
     <Compile Include="Modules\General\DebugCheckModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
@@ -206,6 +207,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\ClassTableValidationClasses.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\ClassTableValidationTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\DisabledWebPartAnalyzerModule.sql">
