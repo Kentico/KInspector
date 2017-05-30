@@ -20,7 +20,7 @@ namespace Kentico.KInspector.Modules
                     new Version("9.0"),
                     new Version("10.0")
                 },
-                Comment = @"Compares Kentico Classes against tables in database and displays non-matching entries. Excludes those classes, which are not meant to have a table. Tables without Class may introduce collision during upgrade. Classes without table indicate invalid CMS_Class table entry.",
+                Comment = @"Compares Kentico Classes against tables in database, and displays non-matching entries. Lists tables without Class, Classes without specified table, and missing Class tables. Excludes those classes, which are not meant to have a table. ",
                 Category = "Database"
             };
         }
