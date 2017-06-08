@@ -10,13 +10,14 @@ namespace Kentico.KInspector.Modules
             return new ModuleMetadata
             {
                 Name = "Unspecified 'columns' setting in web parts",
-                SupportedVersions = new[] { 
+                SupportedVersions = new[] {
                     new Version("6.0"),
                     new Version("7.0"),
-                    new Version("8.0"), 
-                    new Version("8.1"), 
+                    new Version("8.0"),
+                    new Version("8.1"),
                     new Version("8.2"),
-                    new Version("9.0")
+                    new Version("9.0"),
+                    new Version("10.0")
                 },
                 Comment = @"Displays list of web parts where 'columns' property is not specified.
 
@@ -31,23 +32,28 @@ https://docs.kentico.com/display/K82/Loading+data+efficiently",
         public ModuleResults GetResults(IInstanceInfo instanceInfo)
         {
             var dbService = instanceInfo.DBService;
-            if (instanceInfo.Version == new Version("6.0"))
+
+            string scriptFileName = string.Empty;
+
+            if (instanceInfo.Version.Major == 6)
             {
-                return new ModuleResults
-                {
-                    Result = dbService.ExecuteAndGetPrintsFromFile("WebPartColumnsModule6.sql"),
-                };
-            } else if (instanceInfo.Version == new Version("9.0"))
-            {
-                return new ModuleResults
-                {
-                    Result = dbService.ExecuteAndGetPrintsFromFile("WebPartColumnsModule9.sql"),
-                };
+                scriptFileName = "WebPartColumnsModule6.sql";
             }
+
+            if (instanceInfo.Version.Major == 7 || instanceInfo.Version.Major == 8)
+            {
+                scriptFileName = "WebPartColumnsModule7.sql";
+            }
+
+            if (instanceInfo.Version.Major >= 9)
+            {
+                scriptFileName = "WebPartColumnsModule9.sql";
+            }
+
 
             return new ModuleResults
             {
-                Result = dbService.ExecuteAndGetPrintsFromFile("WebPartColumnsModule.sql"),
+                Result = string.IsNullOrWhiteSpace(scriptFileName) ? null : dbService.ExecuteAndGetPrintsFromFile(scriptFileName)
             };
         }
     }

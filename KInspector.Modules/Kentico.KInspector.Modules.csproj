@@ -375,7 +375,7 @@
     <Content Include="Scripts\WebPartColumnsModule6.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\WebPartColumnsModule.sql">
+    <Content Include="Scripts\WebPartColumnsModule7.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\SiteMapModule.sql">
