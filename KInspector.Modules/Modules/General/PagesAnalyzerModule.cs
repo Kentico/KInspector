@@ -111,8 +111,8 @@ Note: Although it may seem that touch icon is for Apple devices only, this is no
 
                 var aliasPath = alias["AliasPath"].ToString().TrimStart('/');
 
-                // In case of MVC page skip
-                if (aliasPath.StartsWith("ROUTE"))
+                // In case of Route or MVC path type skip
+                if (aliasPath.StartsWith("ROUTE:") || aliasPath.StartsWith("MVC:"))
                 {
                     continue;
                 }
