@@ -115,6 +115,7 @@
     <Compile Include="Modules\Content\RobotsTxtModule.cs" />
     <Compile Include="Modules\Content\PageTypeAssignedToSiteModule.cs" />
     <Compile Include="Modules\Content\UnusedPageTypesModule.cs" />
+    <Compile Include="Modules\Content\IdenticalTemplateLayoutsModule.cs" />
     <Compile Include="Modules\Content\UnusedTemplatesModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
@@ -249,6 +250,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\UnusedPageTypesModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\IdenticalTemplateLayoutsModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\UnusedTemplatesModule.sql">
