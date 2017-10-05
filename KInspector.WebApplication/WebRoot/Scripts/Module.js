@@ -20,7 +20,7 @@
 
                 $scope.model.showLoader = true;
 
-                $http.get("http://localhost:9000/api/modules/GetKenticoVersion/", { params: $scope.model.config })
+                $http.get("/api/modules/GetKenticoVersion/", { params: $scope.model.config })
                     .success(function (data) {
 
                         // Hack - clear the cached module results

@@ -83,7 +83,7 @@
                     else {
                         // Return results from server and cache them
                         var paramsWithModuleName = angular.extend({ moduleName: moduleName }, configService.getConfig());
-                        $http.get("http://localhost:9000/api/modules/GetModuleResult", { params: paramsWithModuleName })
+                        $http.get("/api/modules/GetModuleResult", { params: paramsWithModuleName })
                             .success(function (data) {
                                 // Get it the second time so there's no concurrent issues
                                 var resultArray = JSON.parse(localStorage.getItem('knlModuleResults')) || {};
@@ -111,7 +111,7 @@
                     }
                     else {
                         // Return results from server and cache them
-                        $http.get("http://localhost:9000/api/modules/GetSetupModulesMetadata", { cache: true, params: configService.getConfig() })
+                        $http.get("/api/modules/GetSetupModulesMetadata", { cache: true, params: configService.getConfig() })
                             .success(function(data) {
                                 var moduleMetaData = {};
                                 angular.forEach(data, function(metaData) {
@@ -146,7 +146,7 @@
                         // Return results from server and cache them
                         var params = configService.getConfig();
                         params.category = category;
-                        $http.get("http://localhost:9000/api/modules/GetModulesMetadata", { cache: true, params: params })
+                        $http.get("/api/modules/GetModulesMetadata", { cache: true, params: params })
                             .success(function(data) {
                                 var moduleMetaData = {};
                                 angular.forEach(data, function(metaData) {
@@ -185,7 +185,7 @@
                         // Return cached results
                         deferred.resolve(cachedExportModulesMetaData);
                     } else {
-                        $http.get("http://localhost:9000/api/export/GetExportModulesMetadata", { cache: true })
+                        $http.get("/api/export/GetExportModulesMetadata", { cache: true })
                             .success(function (exportModulesMetaData) {
                                 localStorage.setItem('kiExportModulesMetaData', JSON.stringify(exportModulesMetaData));
                                 deferred.resolve(exportModulesMetaData);
@@ -205,7 +205,7 @@
                     }
 
                     var paramsWithModuleNames = angular.extend({ moduleNames: this.selectedModules.sort() }, configService.getConfig(), { exportModuleCodeName: exportModuleCodeName });
-                    var url = "http://localhost:9000/api/export/GetModuleExport?" + $.param(paramsWithModuleNames);
+                    var url = "/api/export/GetModuleExport?" + $.param(paramsWithModuleNames);
 
                     window.open(url, '_blank');
                 }

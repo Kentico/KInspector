@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Kentico.KInspector.Core;
 
 using Ninject;
@@ -35,9 +37,10 @@ namespace Kentico.KInspector.Modules.Export
 
         private static void LoadModules()
         {
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase.Substring(8));
             var kernel = new StandardKernel();
             kernel.Bind(c => c
-                    .FromAssembliesInPath("./")
+                    .FromAssembliesInPath(path)
                         .SelectAllClasses()
                         .InheritedFrom<IExportModule>()
                         .BindAllInterfaces());
