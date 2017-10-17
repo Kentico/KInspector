@@ -172,6 +172,39 @@ Implication of such inconsistency is that when you look at a document in Content
                         notMatchingFields.Add(publishedItem.Key);
                     }
                 }
+                else if (publishedItem.Value is decimal)
+                {
+                    decimal publishedValue;
+                    decimal.TryParse(publishedItem.Value.ToString(), out publishedValue);
+
+                    decimal editedValue;
+                    decimal.TryParse(editedValues[publishedItem.Key], out editedValue);
+
+                    var valuesMatch = publishedValue == editedValue;
+
+                    if (!valuesMatch)
+                    {
+                        var publishedPrecision = publishedValue.ToString().Split('.')?[1]?.Length;
+                        var editedPrecision = editedValue.ToString().Split('.')?[1]?.Length;
+
+                        if (publishedPrecision.HasValue && editedPrecision.HasValue)
+                        {
+                            var targetPrecision = publishedPrecision < editedPrecision ? publishedPrecision.Value : editedPrecision.Value;
+                            var publishedTargetPrecision = Math.Round(publishedValue, targetPrecision, MidpointRounding.AwayFromZero);
+                            var editedTargetPrecision = Math.Round(editedValue, targetPrecision, MidpointRounding.AwayFromZero);
+
+                            if (publishedTargetPrecision == editedTargetPrecision)
+                            {
+                                valuesMatch = true;
+                            }
+                        }
+
+                        if (!valuesMatch)
+                        {
+                            notMatchingFields.Add(publishedItem.Key);
+                        }
+                    }
+                }
                 else
                 {
                     // Check if the column has the same value as edited value
