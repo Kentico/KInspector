@@ -142,15 +142,13 @@ Implication of such inconsistency is that when you look at a document in Content
                 // Handle different types of values
                 if (publishedItem.Value is DateTime)
                 {
-                    // Compare dates
-                    DateTime publishedDate;
-                    DateTime editedDate;
+                    var publishedDateRaw = publishedItem.Value.ToString();
+                    var PublishedDateTimeOffset = DateTimeOffset.Parse(publishedDateRaw, null, System.Globalization.DateTimeStyles.AssumeUniversal);
+                    
+                    var editedDateRaw = editedValues[publishedItem.Key];
+                    var EditedDateTimeOffset = DateTimeOffset.Parse(editedDateRaw);
 
-                    DateTime.TryParse(publishedItem.Value.ToString(), out publishedDate);
-                    DateTime.TryParse(editedValues[publishedItem.Key], out editedDate);
-
-                    bool datesMatch = publishedDate.CompareTo(editedDate) == 0;
-
+                    var datesMatch = EditedDateTimeOffset.DateTime == PublishedDateTimeOffset.DateTime;
                     if (!datesMatch)
                     {
                         notMatchingFields.Add(publishedItem.Key);
