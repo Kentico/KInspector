@@ -21,7 +21,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.1"),
                     new Version("8.2"),
                     new Version("9.0"),
-                    new Version("10.0")
+                    new Version("10.0"),
+                    new Version("11.0")
                 },
                 Category = "Security",
             };
