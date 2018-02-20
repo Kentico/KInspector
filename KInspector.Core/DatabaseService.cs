@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Kentico.KInspector.Core
 {
@@ -15,7 +14,7 @@ namespace Kentico.KInspector.Core
     {
         private readonly string mConnectionString;
         private const int SQL_COMMAND_TIMEOUT_SECONDS = 90;
-        private static string executingPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase.Substring(8));
+        private static string scriptPath = PathHelper.GetExecutingPath() + "\\Scripts\\";
 
 
         public DatabaseService(InstanceConfig config)
@@ -98,7 +97,7 @@ namespace Kentico.KInspector.Core
         /// <param name="parameters">Optional parameters send to SQL script</param>
         public DataTable ExecuteAndGetTableFromFile(string filePath, params SqlParameter[] parameters)
         {
-            using (var sr = new StreamReader( executingPath + "\\Scripts\\" + filePath))
+            using (var sr = new StreamReader( scriptPath + filePath))
             {
                 var fileContents = sr.ReadToEnd();
                 return ExecuteAndGetTable(fileContents, parameters);
@@ -165,7 +164,7 @@ namespace Kentico.KInspector.Core
         /// <param name="filePath">Path of the file in './Scripts/' folder</param>
         public DataSet ExecuteAndGetDataSetFromFile(string filePath)
         {
-            using (var sr = new StreamReader(executingPath + "\\Scripts\\" + filePath))
+            using (var sr = new StreamReader(scriptPath + filePath))
             {
                 var fileContents = sr.ReadToEnd();
                 return ExecuteAndGetDataSet(fileContents);
@@ -214,7 +213,7 @@ namespace Kentico.KInspector.Core
         /// </remarks>
         public List<string> ExecuteAndGetPrintsFromFile(string filePath)
         {
-            using (var sr = new StreamReader(executingPath + "\\Scripts\\" + filePath))
+            using (var sr = new StreamReader(scriptPath + filePath))
             {
                 var fileContents = sr.ReadToEnd();
                 return ExecuteAndGetPrints(fileContents);
