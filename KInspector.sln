@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F3EF3619-F312-4B17-B5BE-5764A8010D38}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,14 +18,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentico.KInspector.Tests", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{68B3CDB1-A97C-4733-A672-56F2EE39D121}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentico.KInspector.Web", "KInspector.Web\Kentico.KInspector.Web.csproj", "{94C43526-335E-43F1-A5D6-020FB0A98E85}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5977CB97-CB8F-4C77-836E-EAC1CCD3DEED}"
 	ProjectSection(SolutionItems) = preProject
 		CONTRIBUTING.md = CONTRIBUTING.md
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentico.KInspector.WebApplication", "KInspector.WebApplication\Kentico.KInspector.WebApplication.csproj", "{00EC2EAF-3886-4A7B-BDAC-564094BEF8E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentico.KInspector.Server", "Kentico.KInspector.Server\Kentico.KInspector.Server.csproj", "{62B3BC9A-ABD6-4676-9103-368CD11C0641}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +47,14 @@ Global
 		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00EC2EAF-3886-4A7B-BDAC-564094BEF8E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00EC2EAF-3886-4A7B-BDAC-564094BEF8E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00EC2EAF-3886-4A7B-BDAC-564094BEF8E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00EC2EAF-3886-4A7B-BDAC-564094BEF8E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62B3BC9A-ABD6-4676-9103-368CD11C0641}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62B3BC9A-ABD6-4676-9103-368CD11C0641}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62B3BC9A-ABD6-4676-9103-368CD11C0641}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62B3BC9A-ABD6-4676-9103-368CD11C0641}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

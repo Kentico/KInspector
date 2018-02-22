@@ -10,7 +10,7 @@ using Kentico.KInspector.Core;
 
 using Kentico.KInspector.Modules.Export;
 
-namespace Kentico.KInspector.Web
+namespace Kentico.KInspector.WebApplication.WebApi.Controllers
 {
 	/// <summary>
 	/// Controller handling export functionality.

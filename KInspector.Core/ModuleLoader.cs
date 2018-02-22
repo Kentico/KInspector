@@ -30,13 +30,13 @@ namespace Kentico.KInspector.Core
                 return mModules.Values;
             }
         }
-
-
+        
         private static void LoadModules()
         {
+            var path = PathHelper.GetExecutingPath();
             var kernel = new StandardKernel();
             kernel.Bind(c =>
-                    c.FromAssembliesInPath("./")
+                    c.FromAssembliesInPath(path)
                         .SelectAllClasses()
                         .InheritedFrom<IModule>()
                         .BindAllInterfaces());

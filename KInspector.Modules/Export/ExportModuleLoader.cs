@@ -35,9 +35,10 @@ namespace Kentico.KInspector.Modules.Export
 
         private static void LoadModules()
         {
+            var path = PathHelper.GetExecutingPath();
             var kernel = new StandardKernel();
             kernel.Bind(c => c
-                    .FromAssembliesInPath("./")
+                    .FromAssembliesInPath(path)
                         .SelectAllClasses()
                         .InheritedFrom<IExportModule>()
                         .BindAllInterfaces());

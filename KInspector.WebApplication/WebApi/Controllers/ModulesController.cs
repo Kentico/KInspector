@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Kentico.KInspector.Core;
 
-namespace Kentico.KInspector.Web
+namespace Kentico.KInspector.WebApplication.WebApi.Controllers
 {
     public class ModulesController : ApiController
 	{
