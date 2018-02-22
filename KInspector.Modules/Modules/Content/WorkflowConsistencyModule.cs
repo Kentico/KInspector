@@ -30,7 +30,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.1"),
                     new Version("8.2"),
                     new Version("9.0"),
-                    new Version("10.0")
+                    new Version("10.0"),
+                    new Version("11.0")
                 },
                 Comment = @"Checks if there are any inconsistencies between published data and data in CMS_Version history. Checks only custom fields stored in coupled table (excludes Document/Node properties)
 
