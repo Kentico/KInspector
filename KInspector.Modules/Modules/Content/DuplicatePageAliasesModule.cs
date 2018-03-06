@@ -19,7 +19,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.1"), 
                     new Version("8.2"),
                     new Version("9.0"),
-                    new Version("10.0")
+                    new Version("10.0"),
+                    new Version("11.0")
                 },
                 Comment = @"Checks that the CMS_DocumentAlias table does not contain any duplicates.",
                 Category = "Content"

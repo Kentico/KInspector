@@ -17,7 +17,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.1"),
                     new Version("8.2"),
                     new Version("9.0"),
-                    new Version("10.0")
+                    new Version("10.0"),
+                    new Version("11.0")
                 },
                 Comment = @"Returns number of aliases per node + total count of aliases and documents for direct comparison.
 

@@ -30,7 +30,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.1"),
                     new Version("8.2"),
                     new Version("9.0"),
-                    new Version("10.0")
+                    new Version("10.0"),
+                    new Version("11.0")
                 },
                 Comment = @"Checks if there are any inconsistencies between published data and data in CMS_Version history. Checks only custom fields stored in coupled table (excludes Document/Node properties)
 
@@ -104,7 +105,7 @@ Implication of such inconsistency is that when you look at a document in Content
                 var publishedValues = GetDictionaryWithValues(classItem, document.DocumentForeignKeyValue);
 
                 // Get values from latest edited version
-                var latestEditedValues = GetDictionaryWithValues(document.NodeXML);
+                var latestEditedValues = GetDictionaryWithValues(document.NodeXML, classItem.TableName);
 
                 // Compare published values with latest edited values
                 var matchResult = CompareDictionaries(publishedValues, latestEditedValues);
@@ -144,7 +145,7 @@ Implication of such inconsistency is that when you look at a document in Content
                 {
                     var publishedDateRaw = publishedItem.Value.ToString();
                     var PublishedDateTimeOffset = DateTimeOffset.Parse(publishedDateRaw, null, System.Globalization.DateTimeStyles.AssumeUniversal);
-                    
+
                     var editedDateRaw = editedValues[publishedItem.Key];
                     var EditedDateTimeOffset = DateTimeOffset.Parse(editedDateRaw);
 
@@ -216,14 +217,15 @@ Implication of such inconsistency is that when you look at a document in Content
             return notMatchingFields;
         }
 
-        private Dictionary<string, string> GetDictionaryWithValues(string versionHistoryXML)
+        private Dictionary<string, string> GetDictionaryWithValues(string versionHistoryXML, string classTableName)
         {
             var dict = new Dictionary<string, string>();
 
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(versionHistoryXML);
-
-            XmlNodeList fields = xml.SelectNodes("/NewDataSet/Table1/*");
+            var fields = xml.SelectNodes("/NewDataSet/Table1/*");
+            if (fields == null || fields.Count == 0)
+                fields = xml.SelectNodes($"/NewDataSet/{classTableName}/*");
 
             foreach (XmlNode field in fields)
             {

@@ -17,7 +17,8 @@ namespace Kentico.KInspector.Modules
 					new Version("8.1"),
 					new Version("8.2"),
 					new Version("9.0"),
-                    new Version("10.0")
+                    new Version("10.0"),
+                    new Version("11.0")
                 },
 				Category = "Performance",
 				Comment = @"Web sites utilizing Azure Blob storage should limit media library folder size to maximum 100 items per folder to achieve good performance.",
