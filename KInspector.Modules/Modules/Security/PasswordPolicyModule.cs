@@ -20,7 +20,8 @@ This module also checks that there is a password policy enforced to ensure users
                     new Version("8.1"),
                     new Version("8.2"),
                     new Version("9.0"),
-                    new Version("10.0")
+                    new Version("10.0"),
+                    new Version("11.0")
                 },
                 Category = "Security",
             };
@@ -37,7 +38,7 @@ This module also checks that there is a password policy enforced to ensure users
                 DataRow[] passwordFormatRows = results.Select("KeyName = 'CMSPasswordFormat'");
                 DataRow[] passwordPolicyRows = results.Select("KeyName = 'CMSUsePasswordPolicy'");
 
-                if (passwordFormatRows.Any(r => r["KeyValue"].ToString() != "SHA2SALT"))
+                if (instanceInfo.Version.Major < 10 &&  passwordFormatRows.Any(r => r["KeyValue"].ToString() != "SHA2SALT"))
                         {
                             return new ModuleResults
                             {
@@ -46,6 +47,15 @@ This module also checks that there is a password policy enforced to ensure users
                                 Status = Status.Error,
                             };
                         } 
+                else if (instanceInfo.Version.Major >= 10 && passwordFormatRows.Any(r => r["KeyValue"].ToString() != "PBKDF2"))
+                {
+                    return new ModuleResults
+                    {
+                        Result = results,
+                        ResultComment = "The CMSPasswordFormat should be set to 'PBKDF2'.",
+                        Status = Status.Error,
+                    };
+                }
                 else if(passwordPolicyRows.Any(r => r["KeyValue"].ToString() != "True"))
                             {
                                 return new ModuleResults
