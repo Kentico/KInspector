@@ -16,7 +16,8 @@ namespace Kentico.KInspector.Modules
             {
                 Name = "Templates with identical layouts",
                 SupportedVersions = new[] {
-                    new Version("10.0")
+                    new Version("10.0"),
+                    new Version("11.0")
                 },
                 Comment = @"Returns the list of templates with identical custom layouts (whitespace sensitive).",
             };
