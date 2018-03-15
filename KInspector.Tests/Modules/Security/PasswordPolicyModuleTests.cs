@@ -66,7 +66,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
         }
 
         [TestMethod]
-        public void Should_HaveStatusGood_When_PasswordPolicyDataIsGood()
+        public void Should_HaveStatusGood_When_PasswordPolicyDataIsGood_KenticoUnder_9_0()
         {
             // arrange...
             // Mocks...
@@ -74,6 +74,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(true,3,0));
             var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
             mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
+            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("9.0"));
 
             // Real Module under test...
             PasswordPolicyModule mod = new PasswordPolicyModule();
@@ -89,7 +90,31 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
         }
 
         [TestMethod]
-        public void Should_HaveStatusError_When_PasswordFormatIsNotCorrect()
+        public void Should_HaveStatusGood_When_PasswordPolicyDataIsGood_KenticoAbove_9_0()
+        {
+            // arrange...
+            // Mocks...
+            var mockDbs = Mock.Of<IDatabaseService>();
+            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(true, 3, 0, "PBKDF2"));
+            var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
+            mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
+            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("10.0"));
+
+            // Real Module under test...
+            PasswordPolicyModule mod = new PasswordPolicyModule();
+
+            // act...
+            var result = mod.GetResults(mockInstanceInfo.Object);
+
+            // assert...
+            StringAssert.Equals(result.ResultComment, "Password settings look good.");
+            Assert.AreEqual(Status.Good, result.Status);
+            mockInstanceInfo.VerifyAll();
+            Mock.Get(mockDbs).VerifyAll();
+        }
+
+        [TestMethod]
+        public void Should_HaveStatusError_When_PasswordFormatIsNotCorrect_KenticoUnder_9_0()
         {
             // arrange...
             // Mocks...
@@ -97,6 +122,31 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(false, 2,0));
             var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
             mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
+            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("9.0"));
+
+            // Real Module under test...
+            PasswordPolicyModule mod = new PasswordPolicyModule();
+
+            // act...
+            var result = mod.GetResults(mockInstanceInfo.Object);
+
+            // assert...
+            StringAssert.Equals(result.ResultComment, "The CMSPasswordFormat should be set to 'SHA2SALT'.");
+            Assert.AreEqual(Status.Error, result.Status);
+            mockInstanceInfo.VerifyAll();
+            Mock.Get(mockDbs).VerifyAll();
+        }
+
+        [TestMethod]
+        public void Should_HaveStatusError_When_PasswordFormatIsNotCorrect_KenticoAbove_9_0()
+        {
+            // arrange...
+            // Mocks...
+            var mockDbs = Mock.Of<IDatabaseService>();
+            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(false, 2, 0, "PBKDF2"));
+            var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
+            mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
+            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("10.0"));
 
             // Real Module under test...
             PasswordPolicyModule mod = new PasswordPolicyModule();
@@ -135,7 +185,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
         }
 
         [TestMethod]
-        public void Should_HaveStatusWarning_When_PasswordPolicyIsFalseForAnySite()
+        public void Should_HaveStatusWarning_When_PasswordPolicyIsFalseForAnySite_KenticoUnder_9_0()
         {
             // arrange...
             // Mocks...
@@ -143,6 +193,31 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(true, 2,1));
             var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
             mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
+            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("9.0"));
+
+            // Real Module under test...
+            PasswordPolicyModule mod = new PasswordPolicyModule();
+
+            // act...
+            var result = mod.GetResults(mockInstanceInfo.Object);
+
+            // assert...
+            StringAssert.Equals(result.ResultComment, "It is recommended that you have CMSUsePasswordPolicy set to 'True'.");
+            Assert.AreEqual(Status.Warning, result.Status);
+            mockInstanceInfo.VerifyAll();
+            Mock.Get(mockDbs).VerifyAll();
+        }
+
+        [TestMethod]
+        public void Should_HaveStatusWarning_When_PasswordPolicyIsFalseForAnySite_KenticoAbove_9_0()
+        {
+            // arrange...
+            // Mocks...
+            var mockDbs = Mock.Of<IDatabaseService>();
+            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(true, 2, 1, "PBKDF2"));
+            var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
+            mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
+            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("10.0"));
 
             // Real Module under test...
             PasswordPolicyModule mod = new PasswordPolicyModule();
@@ -164,14 +239,14 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
         /// <param name="goodPwdPolicyRowCount">Determines how many correct mock records will be created within the mock table.</param>
         /// <param name="badPwdPolicyRowCount">Determines how many incorrect mock records wil be created within the mock table.</param>
         /// <returns></returns>
-        private DataTable MakeData(bool hasGoodPasswordFormat = true, int goodPwdPolicyRowCount = 2, int badPwdPolicyRowCount = 0)
+        private DataTable MakeData(bool hasGoodPasswordFormat = true, int goodPwdPolicyRowCount = 2, int badPwdPolicyRowCount = 0, string passwordFormat = "SHA2SALT")
         {
             DataTable tbl = this.MakeEmptyTable();
             DataRow newRow = tbl.NewRow();
             // add a row for password format
             newRow["SiteDisplayName"] = "N/A"; ;
             newRow["KeyName"] = "CMSPasswordFormat";
-            newRow["KeyValue"] = hasGoodPasswordFormat ? "SHA2SALT" : "BAD PWD FORMAT";
+            newRow["KeyValue"] = hasGoodPasswordFormat ? passwordFormat : "BAD PWD FORMAT";
             tbl.Rows.Add(newRow);
             for (int i = 0; i < goodPwdPolicyRowCount; i++)
             {
