@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules
@@ -35,29 +37,45 @@ namespace Kentico.KInspector.Modules
             // Retrieve data
             var tablesWithoutClass = dbService.ExecuteAndGetTableFromFile("ClassTableValidationTables.sql");
             tablesWithoutClass.TableName = "Database tables without Kentico Class";
+            var tablesWithoutClassCount = tablesWithoutClass.Select($"TABLE_NAME not in ({formattedWhitelist})").Count();
+            
             var classesWithoutTable = dbService.ExecuteAndGetTableFromFile("ClassTableValidationClasses.sql");
             classesWithoutTable.TableName = "Kentico Classes without database table";
+            var classesWithoutTableCount = classesWithoutTable.Rows.Count;
 
             // Merge data into result
             var result = new DataSet("Non-matching Tables-Class entries");
-            if (tablesWithoutClass.Rows.Count > 0)
+            
+            if (tablesWithoutClassCount > 0)
             {
                 result.Merge(tablesWithoutClass);
             }
-            if (classesWithoutTable.Rows.Count > 0)
+            if (classesWithoutTableCount > 0)
             {
                 result.Merge(classesWithoutTable);
             }
 
             // Calculate total number of identified issues (if any)
-            int issues = tablesWithoutClass.Rows.Count + classesWithoutTable.Rows.Count;
-            
+            int issues = tablesWithoutClassCount + classesWithoutTableCount;
+
             return new ModuleResults
             {
                 Result = result,
                 ResultComment = $"{issues} invalid entries found",
                 Status = (issues > 0) ? Status.Error : Status.Good
             };
+        }
+        
+        private List<string> GetTableWhitelist(Version version)
+        {
+            var whitelist = new List<string>();
+            
+            if (version.Major >= 10)
+            {
+               whitelist.Add("CI_Migration");
+            }
+
+            return whitelist;
         }
     }
 }
