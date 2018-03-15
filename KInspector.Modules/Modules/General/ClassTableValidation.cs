@@ -37,6 +37,7 @@ namespace Kentico.KInspector.Modules
             // Retrieve data
             var tablesWithoutClass = dbService.ExecuteAndGetTableFromFile("ClassTableValidationTables.sql");
             tablesWithoutClass.TableName = "Database tables without Kentico Class";
+            var formattedWhitelist = string.Join(",", GetTableWhitelist(instanceInfo.Version).Select(tn => string.Format("'{0}'", tn)));
             var tablesWithoutClassCount = tablesWithoutClass.Select($"TABLE_NAME not in ({formattedWhitelist})").Count();
             
             var classesWithoutTable = dbService.ExecuteAndGetTableFromFile("ClassTableValidationClasses.sql");
