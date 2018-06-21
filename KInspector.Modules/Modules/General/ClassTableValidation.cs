@@ -44,6 +44,10 @@ namespace Kentico.KInspector.Modules
             {
                 tablesWithoutClassCount = tablesWithoutClass.Select($"TABLE_NAME not in ({formattedWhitelist})").Count();
             }
+            else
+            {
+                tablesWithoutClassCount = tablesWithoutClass.Select().Count();
+            }
 
             var classesWithoutTable = dbService.ExecuteAndGetTableFromFile("ClassTableValidationClasses.sql");
             classesWithoutTable.TableName = "Kentico Classes without database table";
