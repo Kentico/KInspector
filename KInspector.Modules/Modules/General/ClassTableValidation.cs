@@ -38,8 +38,17 @@ namespace Kentico.KInspector.Modules
             var tablesWithoutClass = dbService.ExecuteAndGetTableFromFile("ClassTableValidationTables.sql");
             tablesWithoutClass.TableName = "Database tables without Kentico Class";
             var formattedWhitelist = string.Join(",", GetTableWhitelist(instanceInfo.Version).Select(tn => string.Format("'{0}'", tn)));
-            var tablesWithoutClassCount = tablesWithoutClass.Select($"TABLE_NAME not in ({formattedWhitelist})").Count();
-            
+            var tablesWithoutClassCount = 0;
+
+            if (!string.IsNullOrEmpty(formattedWhitelist) && formattedWhitelist != ",")
+            {
+                tablesWithoutClassCount = tablesWithoutClass.Select($"TABLE_NAME not in ({formattedWhitelist})").Count();
+            }
+            else
+            {
+                tablesWithoutClassCount = tablesWithoutClass.Select().Count();
+            }
+
             var classesWithoutTable = dbService.ExecuteAndGetTableFromFile("ClassTableValidationClasses.sql");
             classesWithoutTable.TableName = "Kentico Classes without database table";
             var classesWithoutTableCount = classesWithoutTable.Rows.Count;
