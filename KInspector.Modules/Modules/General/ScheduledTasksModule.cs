@@ -37,7 +37,7 @@ namespace Kentico.KInspector.Modules
             };
 
             if (results.Any(x => x.Contains("DISABLE SCHEDULED TASK!") 
-                || x.Contains("DON NOT RUN THE task as EXTERNAL") 
+                || x.Contains("DO NOT RUN THE task as EXTERNAL") 
                 || x.Contains("RUN THE task as EXTERNAL")))
             {
                 res.Status = Status.Warning;
