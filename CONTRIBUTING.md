@@ -58,8 +58,8 @@ If not stated otherwise, we use [feature branch workflow](https://www.atlassian.
 We hate sloppy commit messages. No more ```Performance tuning``` or ```Changed a few files```. Please read the following articles to understand what a good commit message is.
 
 - [Writing good commit messages](https://github.com/erlang/otp/wiki/Writing-good-commit-messages)
-- [A Note About Git Commit Messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
-- [On commit messages](http://who-t.blogspot.com/2009/12/on-commit-messages.html)
+- [A Note About Git Commit Messages](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+- [On commit messages](https://who-t.blogspot.com/2009/12/on-commit-messages.html)
 
 ## Code of Conduct
 
