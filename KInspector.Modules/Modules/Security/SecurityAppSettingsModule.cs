@@ -130,9 +130,28 @@ namespace Kentico.KInspector.Modules
                 result.Rows.Add("Session fixation (<add key=\"CMSRenewSessionAuthChange\" ...)", sessionFixation, RECOMMENDED_VALUE_TRUE);
             }
 
-            # endregion
+            #endregion
 
-            # region "HttpOnlyCookies"
+            #region CSRF Protection
+
+            string csrfProtection = VALUE_NOT_SET;
+
+            try
+            {
+                csrfProtection = configuration.AppSettings.Settings["CMSEnableCsrfProtection"].Value;
+            }
+            catch (Exception e)
+            {
+                //Value not set
+            }
+
+            if (!(bool.TryParse(csrfProtection, out bool csrfProtectionEnabled) && csrfProtectionEnabled)){
+                result.Rows.Add("Session fixation (<add key=\"CMSEnableCsrfProtection\" ...)", csrfProtection, RECOMMENDED_VALUE_TRUE);
+            }
+
+            #endregion
+
+            #region "HttpOnlyCookies"
 
             var httpOnlyCookiesNode = (HttpCookiesSection)configuration.GetSection("system.web/httpCookies");
             bool httpOnlyCookies = httpOnlyCookiesNode.HttpOnlyCookies;
