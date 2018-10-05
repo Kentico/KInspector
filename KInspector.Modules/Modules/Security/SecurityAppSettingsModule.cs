@@ -135,7 +135,7 @@ namespace Kentico.KInspector.Modules
             #region CSRF Protection
 
             string csrfProtection = VALUE_NOT_SET;
-
+            bool csrfProtectionEnabled = false;
             try
             {
                 csrfProtection = configuration.AppSettings.Settings["CMSEnableCsrfProtection"].Value;
@@ -145,7 +145,8 @@ namespace Kentico.KInspector.Modules
                 //Value not set
             }
 
-            if (!(bool.TryParse(csrfProtection, out bool csrfProtectionEnabled) && csrfProtectionEnabled)){
+            if (!(bool.TryParse(csrfProtection, out csrfProtectionEnabled) && csrfProtectionEnabled))
+            {
                 result.Rows.Add("Session fixation (<add key=\"CMSEnableCsrfProtection\" ...)", csrfProtection, RECOMMENDED_VALUE_TRUE);
             }
 
