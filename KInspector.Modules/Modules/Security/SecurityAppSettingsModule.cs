@@ -25,6 +25,7 @@ namespace Kentico.KInspector.Modules
 - Custom errors
 - Cookieless authentication
 - Session fixation
+- CSRF protection check 
 - Http only cookies
 - Viewstate (MAC) validation
 - Hash string salt
@@ -147,7 +148,7 @@ namespace Kentico.KInspector.Modules
 
             if (!(bool.TryParse(csrfProtection, out csrfProtectionEnabled) && csrfProtectionEnabled))
             {
-                result.Rows.Add("Session fixation (<add key=\"CMSEnableCsrfProtection\" ...)", csrfProtection, RECOMMENDED_VALUE_TRUE);
+                result.Rows.Add("CSRF protection (<add key=\"CMSEnableCsrfProtection\" ...)", csrfProtection, RECOMMENDED_VALUE_TRUE);
             }
 
             #endregion
