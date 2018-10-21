@@ -37,12 +37,12 @@ namespace Kentico.KInspector.Modules
             // Retrieve data
             var tablesWithoutClass = dbService.ExecuteAndGetTableFromFile("ClassTableValidationTables.sql");
             tablesWithoutClass.TableName = "Database tables without Kentico Class";
-            var formattedWhitelist = string.Join(",", GetTableWhitelist(instanceInfo.Version).Select(tn => string.Format("'{0}'", tn)));
+            var formattedTableWhitelist = string.Join(",", GetTableWhitelist(instanceInfo.Version).Select(tn => string.Format("'{0}'", tn)));
             var tablesWithoutClassCount = 0;
 
-            if (!string.IsNullOrEmpty(formattedWhitelist) && formattedWhitelist != ",")
+            if (!string.IsNullOrEmpty(formattedTableWhitelist) && formattedTableWhitelist != ",")
             {
-                tablesWithoutClassCount = tablesWithoutClass.Select($"TABLE_NAME not in ({formattedWhitelist})").Count();
+                tablesWithoutClassCount = tablesWithoutClass.Select($"TABLE_NAME not in ({formattedTableWhitelist})").Count();
             }
             else
             {
@@ -51,7 +51,16 @@ namespace Kentico.KInspector.Modules
 
             var classesWithoutTable = dbService.ExecuteAndGetTableFromFile("ClassTableValidationClasses.sql");
             classesWithoutTable.TableName = "Kentico Classes without database table";
-            var classesWithoutTableCount = classesWithoutTable.Rows.Count;
+            var formattedClassWhitelist = string.Join(",", GetClassWhitelist(instanceInfo.Version).Select(tn => string.Format("'{0}'", tn)));
+            
+            if (!string.IsNullOrEmpty(formattedClassWhitelist) && formattedClassWhitelist != ",")
+            {
+                classesWithoutTableCount = classesWithoutTable.Select($"ClassTableName not in ({formattedClassWhitelist})").Count();
+            }
+            else
+            {
+                classesWithoutTableCount = classesWithoutTable.Select().Count();
+            }
 
             // Merge data into result
             var result = new DataSet("Non-matching Tables-Class entries");
@@ -83,6 +92,28 @@ namespace Kentico.KInspector.Modules
             if (version.Major >= 10)
             {
                whitelist.Add("CI_Migration");
+            }
+            
+            if (version.Major == 7)
+            {
+               whitelist.Add("Analytics_ExitPages");
+               whitelist.Add("Analytics_Index");
+               whitelist.Add("CMS_Session");
+               whitelist.Add("CMS_WebFarmServerTask");
+               whitelist.Add("OM_ScoreContactRule");
+            }
+
+            return whitelist;
+        }
+        
+        private List<string> GetClassWhitelist(Version version)
+        {
+            var whitelist = new List<string>();
+            
+            if (version.Major == 7)
+            {
+               whitelist.Add("COM_SKUOption");
+               whitelist.Add("COM_VariantOption");
             }
 
             return whitelist;
