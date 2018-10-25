@@ -52,6 +52,7 @@ namespace Kentico.KInspector.Modules
             var classesWithoutTable = dbService.ExecuteAndGetTableFromFile("ClassTableValidationClasses.sql");
             classesWithoutTable.TableName = "Kentico Classes without database table";
             var formattedClassWhitelist = string.Join(",", GetClassWhitelist(instanceInfo.Version).Select(tn => string.Format("'{0}'", tn)));
+            var classesWithoutTableCount = 0;
             
             if (!string.IsNullOrEmpty(formattedClassWhitelist) && formattedClassWhitelist != ",")
             {
