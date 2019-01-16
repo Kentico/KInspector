@@ -141,7 +141,6 @@
     <Compile Include="Modules\OnlineMarketing\OMTablesSize.cs" />
     <Compile Include="Modules\General\DisabledWebPartAnalyzer.cs" />
     <Compile Include="Modules\Security\DataStructures\VulnerabilityAnalysisResults.cs" />
-    <Compile Include="Modules\Security\FloodProtectionModule.cs" />
     <Compile Include="Modules\Security\PasswordPolicyModule.cs" />
     <Compile Include="Modules\Security\SecurityAppSettingsModule.cs" />
     <Compile Include="Modules\Security\SecuritySettingsModule.cs" />
@@ -198,9 +197,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\DebugCheckModule.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\FloodProtectionModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\GetLibraryAndAttachmentFiles.sql">
