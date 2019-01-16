@@ -136,7 +136,6 @@
     <Compile Include="Modules\Content\SiteTemplatesModule.cs" />
     <Compile Include="Modules\General\ScreenshotterModule.cs" />
     <Compile Include="Modules\General\SiteMapModule.cs" />
-    <Compile Include="Modules\General\CMSFileModule.cs" />
     <Compile Include="Modules\General\ScheduledTasksModule.cs" />
     <Compile Include="Modules\General\DocumentsConsistencyIssuesModule.cs" />
     <Compile Include="Modules\OnlineMarketing\OMContactGroupsWithManualMacro.cs" />
@@ -369,9 +368,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\SiteMapModule.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\CMSFileModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\ScheduledTasksModule.sql">
