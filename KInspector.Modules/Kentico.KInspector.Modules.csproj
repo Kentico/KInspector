@@ -131,7 +131,6 @@
     <Compile Include="Modules\EventLog\PageNotFoundsModule.cs" />
     <Compile Include="Modules\EventLog\ApplicationRestartsModule.cs" />
     <Compile Include="Modules\General\InstanceInfoModule.cs" />
-    <Compile Include="Modules\General\OldWebFarmTasks.cs" />
     <Compile Include="Modules\General\PagesAnalyzerModule.cs" />
     <Compile Include="Modules\Content\SiteTemplatesModule.cs" />
     <Compile Include="Modules\General\ScreenshotterModule.cs" />
