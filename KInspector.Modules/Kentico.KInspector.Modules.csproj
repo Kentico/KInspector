@@ -156,9 +156,6 @@
     <Compile Include="Modules\General\BigTablesModule.cs" />
     <Compile Include="Modules\Security\WebPartAnalyzerModule.cs" />
     <Compile Include="Modules\Setup\GlobalAdminSetupModule.cs" />
-    <Compile Include="Modules\Setup\LicenseSetupModule.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Modules\Setup\SiteDomainAliasesSetupModule.cs" />
     <Compile Include="Modules\Setup\SitesSetupModule.cs" />
     <Compile Include="Modules\Setup\SmtpServersSetupModule.cs" />
@@ -328,9 +325,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\SecuritySettingsModule.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\Setup\LicenseSetupModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\Setup\SiteDomainAliasesSetupModule.sql">
