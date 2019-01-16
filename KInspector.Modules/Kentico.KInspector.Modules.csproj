@@ -140,7 +140,6 @@
     <Compile Include="Modules\General\DocumentsConsistencyIssuesModule.cs" />
     <Compile Include="Modules\OnlineMarketing\OMContactGroupsWithManualMacro.cs" />
     <Compile Include="Modules\OnlineMarketing\OMInactiveContactsDeletion.cs" />
-    <Compile Include="Modules\OnlineMarketing\OMNewslettersWithoutQueue.cs" />
     <Compile Include="Modules\OnlineMarketing\OMTablesSize.cs" />
     <Compile Include="Modules\General\DisabledWebPartAnalyzer.cs" />
     <Compile Include="Modules\Security\ClickJackingModule.cs" />
@@ -298,9 +297,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\OMInactiveContactsDeletion.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\OMNewslettersWithoutQueue.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\OMContactGroupsWithManualMacro.sql">
