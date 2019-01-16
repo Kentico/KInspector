@@ -107,7 +107,6 @@
     <Compile Include="Export\Modules\ExportXmlExtensions.cs" />
     <Compile Include="Export\NpoiMemoryStream.cs" />
     <Compile Include="Helpers\MacroValidator.cs" />
-    <Compile Include="Helpers\ProbeHelper.cs" />
     <Compile Include="Helpers\ProjectCodeFilesHelper.cs" />
     <Compile Include="Modules\Content\AttachmentsBySizeModule.cs" />
     <Compile Include="Modules\Content\DBFileConsistencyModule.cs" />
@@ -131,7 +130,6 @@
     <Compile Include="Modules\Content\WebPartColumnsModule.cs" />
     <Compile Include="Modules\EventLog\PageNotFoundsModule.cs" />
     <Compile Include="Modules\EventLog\ApplicationRestartsModule.cs" />
-    <Compile Include="Modules\General\CacheItemsModule.cs" />
     <Compile Include="Modules\General\InstanceInfoModule.cs" />
     <Compile Include="Modules\General\OldWebFarmTasks.cs" />
     <Compile Include="Modules\General\PagesAnalyzerModule.cs" />
@@ -189,15 +187,6 @@
     <Content Include="Data\DefaultInstallationFiles\K8website.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx.cs">
-      <DependentUpon>KInspectorProbe.aspx</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
-    <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx.designer.cs">
-      <DependentUpon>KInspectorProbe.aspx.cs</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -207,9 +196,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ProbeData\CMSPages\KInspectorProbe.aspx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\ClassTableValidationClasses.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
