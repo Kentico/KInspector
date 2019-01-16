@@ -78,7 +78,7 @@ namespace Kentico.KInspector.Modules
             {
                 Result = results,
                 ResultComment = "",
-                Status = Status.Warning,
+                Status = results.Rows.Count == 0 ? Status.Good : Status.Warning
             };
         }
 

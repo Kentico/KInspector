@@ -141,7 +141,6 @@
     <Compile Include="Modules\OnlineMarketing\OMTablesSize.cs" />
     <Compile Include="Modules\General\DisabledWebPartAnalyzer.cs" />
     <Compile Include="Modules\Security\DataStructures\VulnerabilityAnalysisResults.cs" />
-    <Compile Include="Modules\Security\PasswordPolicyModule.cs" />
     <Compile Include="Modules\Security\SecurityAppSettingsModule.cs" />
     <Compile Include="Modules\Security\SecuritySettingsModule.cs" />
     <Compile Include="Modules\Security\TransformationAnalyzerModule.cs" />
@@ -253,9 +252,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\ScreenshotterModule-v9.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\PasswordPolicy.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\TransformationAnalyzerModule-GetDataWhereIn-KI_TransformationList.sql">
