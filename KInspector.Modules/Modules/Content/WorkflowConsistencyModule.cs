@@ -13,6 +13,7 @@ namespace Kentico.KInspector.Modules
         #region Properties
 
         private List<ClassItem> ClassItems { get; set; }
+
         private IInstanceInfo InstanceInfo { get; set; }
 
         #endregion
@@ -33,7 +34,7 @@ namespace Kentico.KInspector.Modules
                     new Version("10.0"),
                     new Version("11.0")
                 },
-                Comment = @"Checks if there are any inconsistencies between published data and data in CMS_Version history. Checks only custom fields stored in coupled table (excludes Document/Node properties)
+                Comment = @"Checks if there are any inconsistencies between published data and data in CMS_VersionHistory. Checks only custom fields stored in coupled table (excludes Document/Node properties)
 
 Inconsistency can occur when a PUBLISHED document under WORKFLOW is updated in the API (when not creating/managing versions manually)
 
@@ -105,10 +106,11 @@ Implication of such inconsistency is that when you look at a document in Content
                 var publishedValues = GetDictionaryWithValues(classItem, document.DocumentForeignKeyValue);
 
                 // Get values from latest edited version
-                var latestEditedValues = GetDictionaryWithValues(document.NodeXML, classItem.TableName);
+                // ClassItem.ClassName is used instead of ClassItem.TableName because TranslationHelper.GetSafeClassName is used for version data
+                var latestEditedValues = GetDictionaryWithValues(document.NodeXML, classItem.ClassName.Replace(".", "_"));
 
                 // Compare published values with latest edited values
-                var matchResult = CompareDictionaries(publishedValues, latestEditedValues);
+                var matchResult = CompareDictionaries(publishedValues, latestEditedValues, classItem.ClassFormDefinition);
 
                 if (matchResult.Count != 0)
                 {
@@ -120,19 +122,29 @@ Implication of such inconsistency is that when you look at a document in Content
             return inconsistentDocuments;
         }
 
-        private List<string> CompareDictionaries(Dictionary<string, object> publishedValues, Dictionary<string, string> editedValues)
+        private List<string> CompareDictionaries(Dictionary<string, object> publishedValues, Dictionary<string, string> editedValues, string classFormDefinition)
         {
             var notMatchingFields = new List<string>();
+
+            XmlDocument xml = new XmlDocument();
+            xml.LoadXml(classFormDefinition);
 
             // Check if values match JUST by checking values from PUBLISHED values which is containing just data from coupled table (no document specific data)
             foreach (var publishedItem in publishedValues)
             {
                 // Check if the column is present in both published and edited dictionaries
-                // Kentico does not store field in CMS_Version history if its value is set null
+                // Kentico does not store field in CMS_VersionHistory if its value is set null
                 if (!editedValues.ContainsKey(publishedItem.Key))
                 {
-                    // Check if published value is also empty
-                    if (!string.IsNullOrEmpty(publishedItem.Value.ToString()))
+                    var defaultValue = xml.SelectSingleNode($"/form/field[@column='{publishedItem.Key}']/properties/defaultvalue");
+
+                    Guid possibleEmptyGuid;
+                    Guid.TryParse(publishedItem.Value.ToString(), out possibleEmptyGuid);
+
+                    // Check if published value is also empty or is an empty Guid or is different from field default value
+                    if (!string.IsNullOrEmpty(publishedItem.Value.ToString())
+                        && !possibleEmptyGuid.Equals(Guid.Empty)
+                        && publishedItem.Value.ToString() != defaultValue?.InnerText)
                     {
                         // Published value is not empty, but Edited value is
                         notMatchingFields.Add(publishedItem.Key);
@@ -154,7 +166,6 @@ Implication of such inconsistency is that when you look at a document in Content
                     {
                         notMatchingFields.Add(publishedItem.Key);
                     }
-
                 }
                 else if (publishedItem.Value is bool)
                 {
@@ -223,9 +234,9 @@ Implication of such inconsistency is that when you look at a document in Content
 
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(versionHistoryXML);
-            var fields = xml.SelectNodes("/NewDataSet/Table1/*");
-            if (fields == null || fields.Count == 0)
-                fields = xml.SelectNodes($"/NewDataSet/{classTableName}/*");
+
+            // Try Table1 for legacy
+            var fields = xml.SelectNodes($"/NewDataSet/Table1/*|/NewDataSet/{classTableName}/*|/NewDataSet/{classTableName.ToLower()}/*");
 
             foreach (XmlNode field in fields)
             {
@@ -316,8 +327,11 @@ Implication of such inconsistency is that when you look at a document in Content
         private class ResultItem
         {
             public int DocumentID { get; private set; }
+
             public List<string> NotMatchingFields { get; private set; }
+
             public string DocumentCulture { get; private set; }
+
             public string NodeAliasPath { get; private set; }
 
             public string NotMachingFieldsString => string.Join(";", NotMatchingFields);
@@ -334,21 +348,32 @@ Implication of such inconsistency is that when you look at a document in Content
         private class DocumentItem
         {
             public int DocumentID { get; set; }
+
             public string DocumentName { get; set; }
+
             public string ClassName { get; set; }
+
             public int DocumentForeignKeyValue { get; set; }
+
             public string NodeXML { get; set; }
+
             public string DocumentCulture { get; set; }
+
             public string NodeAliasPath { get; set; }
         }
 
         private class ClassItem
         {
             public bool ClassIsDocumentType { get; set; }
+
             public bool ClassIsCoupledClass { get; set; }
+
             public string ClassName { get; set; }
+
             public string TableName { get; set; }
+
             public string ClassFormDefinition { get; set; }
+
             public string PrimaryKeyName => GetPrimaryKeyName();
 
             private string GetPrimaryKeyName()
