@@ -1,6 +1,6 @@
 # KInspector
 
-[![Join the chat at https://gitter.im/Kentico/KInspector](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Kentico/KInspector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://kentico-community.slack.com](https://img.shields.io/badge/join-slack-E6186D.svg)](https://kentico-community.slack.com)
 [![Build status](https://ci.appveyor.com/api/projects/status/udykjx510v83w9y6?svg=true)](https://ci.appveyor.com/project/kentico/kinspector)
 [![first-timers-only](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 [![Github All Releases](https://img.shields.io/github/downloads/kentico/kinspector/total.svg)](https://github.com/Kentico/KInspector/releases)
@@ -34,3 +34,5 @@ Want to improve the KInspector? Great! Read the [contributing guidelines](https:
 [![Check out KInspector on YouTube!](http://img.youtube.com/vi/ixGakcfITe8/0.jpg)](http://www.youtube.com/watch?v=ixGakcfITe8)
 
 If anything feels wrong or incomplete, please let us know. Create a new [issue](https://github.com/Kentico/KInspector/issues/new) or submit a [pull request](https://help.github.com/articles/using-pull-requests/).
+
+![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/KInspector?pixel)

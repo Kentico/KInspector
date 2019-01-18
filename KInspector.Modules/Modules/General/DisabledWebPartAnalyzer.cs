@@ -19,7 +19,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.1"),
                     new Version("8.2"),
                     new Version("9.0"),
-                    new Version("10.0")
+                    new Version("10.0"),
+                    new Version("11.0")
                 },
                 Category = "General",
                 Comment = @"Displays all page templates with disabled web parts and web part zones, meaning templates which have property 'visible' set to 'false'."

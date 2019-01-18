@@ -24,7 +24,7 @@ DECLARE @moduleNotPossibleToCheck nvarchar(300)
 DECLARE @moduleRunAsExternal nvarchar(300)	
 	SET @moduleRunAsExternal =				N'	- RUN THE task as EXTERNAL'
 DECLARE @moduleDontRunAsExternal nvarchar(300)	
-	SET @moduleDontRunAsExternal =			N'  - DON NOT RUN THE task as EXTERNAL'
+	SET @moduleDontRunAsExternal =			N'  - DO NOT RUN THE task as EXTERNAL'
 DECLARE @tastAllowExternalServiceIsNull nvarchar(300)	
 	SET @tastAllowExternalServiceIsNull =	N'  - Allow EXTERNAL SERVICE IS NULL - PLEASE CHECK THE SETTINGS'
 

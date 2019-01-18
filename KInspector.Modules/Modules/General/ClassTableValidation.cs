@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Kentico.KInspector.Core;
 
 namespace Kentico.KInspector.Modules
@@ -18,7 +20,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.1"), 
                     new Version("8.2"),
                     new Version("9.0"),
-                    new Version("10.0")
+                    new Version("10.0"),
+                    new Version("11.0")
                 },
                 Comment = @"Compares Kentico Classes against tables in database, and displays non-matching entries. Lists tables without Class, Classes without specified table, and missing Class tables. Excludes those classes, which are not meant to have a table. ",
                 Category = "Database"
@@ -34,29 +37,55 @@ namespace Kentico.KInspector.Modules
             // Retrieve data
             var tablesWithoutClass = dbService.ExecuteAndGetTableFromFile("ClassTableValidationTables.sql");
             tablesWithoutClass.TableName = "Database tables without Kentico Class";
+            var formattedWhitelist = string.Join(",", GetTableWhitelist(instanceInfo.Version).Select(tn => string.Format("'{0}'", tn)));
+            var tablesWithoutClassCount = 0;
+
+            if (!string.IsNullOrEmpty(formattedWhitelist) && formattedWhitelist != ",")
+            {
+                tablesWithoutClassCount = tablesWithoutClass.Select($"TABLE_NAME not in ({formattedWhitelist})").Count();
+            }
+            else
+            {
+                tablesWithoutClassCount = tablesWithoutClass.Select().Count();
+            }
+
             var classesWithoutTable = dbService.ExecuteAndGetTableFromFile("ClassTableValidationClasses.sql");
             classesWithoutTable.TableName = "Kentico Classes without database table";
+            var classesWithoutTableCount = classesWithoutTable.Rows.Count;
 
             // Merge data into result
             var result = new DataSet("Non-matching Tables-Class entries");
-            if (tablesWithoutClass.Rows.Count > 0)
+            
+            if (tablesWithoutClassCount > 0)
             {
                 result.Merge(tablesWithoutClass);
             }
-            if (classesWithoutTable.Rows.Count > 0)
+            if (classesWithoutTableCount > 0)
             {
                 result.Merge(classesWithoutTable);
             }
 
             // Calculate total number of identified issues (if any)
-            int issues = tablesWithoutClass.Rows.Count + classesWithoutTable.Rows.Count;
-            
+            int issues = tablesWithoutClassCount + classesWithoutTableCount;
+
             return new ModuleResults
             {
                 Result = result,
                 ResultComment = $"{issues} invalid entries found",
                 Status = (issues > 0) ? Status.Error : Status.Good
             };
+        }
+        
+        private List<string> GetTableWhitelist(Version version)
+        {
+            var whitelist = new List<string>();
+            
+            if (version.Major >= 10)
+            {
+               whitelist.Add("CI_Migration");
+            }
+
+            return whitelist;
         }
     }
 }
