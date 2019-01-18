@@ -1,1 +1,0 @@
-﻿SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSUseSSLForAdministrationInterface' AND KeyValue = 'True'

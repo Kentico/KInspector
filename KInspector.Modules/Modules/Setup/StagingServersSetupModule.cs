@@ -20,7 +20,8 @@ Setting the Enabled state of all servers to false would result in UI not being a
                     new Version("8.2"),
                     new Version("9.0"),
                     new Version("10.0"),
-                    new Version("11.0")
+                    new Version("11.0"),
+                    new Version("12.0"), 
                 },
                 Category = "Setup",
             };

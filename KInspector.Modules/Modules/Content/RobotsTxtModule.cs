@@ -16,9 +16,13 @@ namespace Kentico.KInspector.Modules
                     new Version("7.0"),
                     new Version("8.0"), 
                     new Version("8.1"), 
-                    new Version("8.2")
+                    new Version("8.2"),
+                    new Version("9.0"), 
+                    new Version("10.0"), 
+                    new Version("11.0"), 
+                    new Version("12.0")
                 },
-                Comment = @"Checks that the robots.txt file is present. See http://www.robotstxt.org/robotstxt.html for more details",
+                Comment = @"Checks that the ~/robots.txt file is present and accessible. See http://www.robotstxt.org/robotstxt.html for more details",
                 
                 Category = "Content",
             };
@@ -31,24 +35,32 @@ namespace Kentico.KInspector.Modules
                 return new ModuleResults
                 {
                     Status = Status.Warning,
-                    Result = "Missing! Please add the robots.txt into the web root",
+                    Result = "Robots.txt does not exist.",
                 };
             }
 
             return new ModuleResults
             {
                 Status = Status.Good,
-                Result = "All good, robots.txt found.",
+                Result = "Robots.txt exists or is inaccessible.",
             };
         }
 
         private static bool TestUrl(Uri url, string file)
         {
-            HttpWebRequest request = WebRequest.CreateHttp(new Uri(url, file));
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            try
             {
-                return response.StatusCode == HttpStatusCode.OK;
+                HttpWebRequest request = WebRequest.CreateHttp(new Uri(url, file));
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
             }
+            catch
+            {
+                return false;
+            }
+
         }
     }
 }

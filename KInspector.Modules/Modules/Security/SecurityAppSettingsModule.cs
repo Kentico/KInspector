@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Web;
 using System.Web.Configuration;
 using Kentico.KInspector.Core;
@@ -19,7 +21,8 @@ namespace Kentico.KInspector.Modules
             return new ModuleMetadata
             {
                 Name = "Security settings in web.config",
-                Comment = @"Checks the following security settings in web.config:
+                Comment = 
+@"Checks the following security settings in web.config:
 - Compilation debug
 - Tracing
 - Custom errors
@@ -29,8 +32,8 @@ namespace Kentico.KInspector.Modules
 - Http only cookies
 - Viewstate (MAC) validation
 - Hash string salt
-- SA in CMSConnectionString",
-
+- SA in CMSConnectionString
+- Click jacking protection override",
                 SupportedVersions = new[] {
                     new Version("7.0"),
                     new Version("8.0"),
@@ -38,7 +41,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.2"),
                     new Version("9.0"),
                     new Version("10.0"),
-                    new Version("11.0")
+                    new Version("11.0"),
+                    new Version("12.0")
                 },
                 Category = "Security",
             };
@@ -48,8 +52,8 @@ namespace Kentico.KInspector.Modules
         {
             // Prepare result
             DataTable result = new DataTable();
-            result.Columns.Add("Key", typeof(string));
-            result.Columns.Add("Actual value", typeof(string));
+            result.Columns.Add("Element / Key", typeof(string));
+            result.Columns.Add("Value", typeof(string));
             result.Columns.Add("Recommended value", typeof(string));
 
             // Update web.config path with "CMS" folder for Kentico 8 and newer versions
@@ -111,48 +115,6 @@ namespace Kentico.KInspector.Modules
 
             # endregion
 
-            # region "Session fixation"
-
-            // Check web.config keys (according to Kentico security audit POI)
-            string sessionFixation = VALUE_NOT_SET;
-            bool sessionFixationEnabled = false;
-
-            try
-            {
-                sessionFixation = configuration.AppSettings.Settings["CMSRenewSessionAuthChange"].Value;
-            }
-            catch (Exception ex)
-            {
-                // Do nothing, value is not set.
-            }
-
-            if (!(bool.TryParse(sessionFixation, out sessionFixationEnabled) && sessionFixationEnabled))
-            {
-                result.Rows.Add("Session fixation (<add key=\"CMSRenewSessionAuthChange\" ...)", sessionFixation, RECOMMENDED_VALUE_TRUE);
-            }
-
-            #endregion
-
-            #region CSRF Protection
-
-            string csrfProtection = VALUE_NOT_SET;
-            bool csrfProtectionEnabled = false;
-            try
-            {
-                csrfProtection = configuration.AppSettings.Settings["CMSEnableCsrfProtection"].Value;
-            }
-            catch (Exception e)
-            {
-                //Value not set
-            }
-
-            if (!(bool.TryParse(csrfProtection, out csrfProtectionEnabled) && csrfProtectionEnabled))
-            {
-                result.Rows.Add("CSRF protection (<add key=\"CMSEnableCsrfProtection\" ...)", csrfProtection, RECOMMENDED_VALUE_TRUE);
-            }
-
-            #endregion
-
             #region "HttpOnlyCookies"
 
             var httpOnlyCookiesNode = (HttpCookiesSection)configuration.GetSection("system.web/httpCookies");
@@ -183,26 +145,6 @@ namespace Kentico.KInspector.Modules
 
             #endregion
 
-            #region "CMS hash string salt"
-
-            string hashStringSalt = string.Empty;
-
-            try
-            {
-                hashStringSalt = configuration.AppSettings.Settings["CMSHashStringSalt"].Value;
-            }
-            catch (Exception ex)
-            {
-                // Do nothing, value is not set.
-            }
-
-            if (string.IsNullOrWhiteSpace(hashStringSalt))
-            {
-                result.Rows.Add("Hash string salt (<add key=\"CMSHashStringSalt\" ...)", VALUE_NOT_SET, "Any value (typically a GUID)");
-            }
-
-            #endregion
-
             #region "Using SA account for SQL connection"
 
             var connectionString = configuration.ConnectionStrings.ConnectionStrings["CMSConnectionString"];
@@ -220,6 +162,53 @@ namespace Kentico.KInspector.Modules
                 result.Rows.Add("CMS Connection string is not present", VALUE_NOT_SET, "Add a CMSConnectionString");
             }
 
+
+            #endregion
+
+            #region Recommended key values
+
+            // Create list of (tuple) keys to check in format:
+            // Item1 Key name
+            // Item2 Recommended value test (predicate)
+            // Item3 "display name"
+            // Item4 Explanation
+            var keyValues = new List<Tuple<string, Predicate<string>, string, string>>
+            {
+                new Tuple<string, Predicate<string>, string, string>(
+                    "CMSRenewSessionAuthChange",
+                    val => val == null || val.ToString().ToLower() == "true", 
+                    "Session fixation (<add key=\"CMSRenewSessionAuthChange\" ...)",
+                    "Consider enabling session renewal, to enforce User session disposal: https://docs.kentico.com/k12/securing-websites/designing-secure-websites/securing-and-protecting-the-system/session-protection"
+                    ),
+                new Tuple<string, Predicate<string>, string, string>(
+                    "CMSEnableCsrfProtection",
+                    val => val == null || val.ToString().ToLower() == "true",
+                    "CSRF protection (<add key=\"CMSEnableCsrfProtection\" ...)",
+                    "Default CSRF disabled. Ensure custom protection has been implemented: https://docs.kentico.com/k12/securing-websites/developing-secure-websites/cross-site-request-forgery-csrf-xsrf#Crosssiterequestforgery(CSRF/XSRF)-AvoidingCSRF"
+                    ),
+                new Tuple<string, Predicate<string>, string, string>(
+                    "CMSHashStringSalt",
+                    val => val != null,
+                    "Hash string salt (<add key=\"CMSHashStringSalt\" ...)",
+                    "Macro signature hash salt not set. This may cause macro security to break if CMSConnectionString is changed. Generate a GUID value: https://docs.kentico.com/k12/macro-expressions/troubleshooting-macros/working-with-macro-signatures"
+                    ),
+                new Tuple<string, Predicate<string>, string, string>(
+                    "CMSXFrameOptionsExcluded",
+                    val => string.IsNullOrEmpty(val),
+                    "Click jacking protection (<add key=\"CMSXFrameOptionsExcluded\"...)",
+                    "Click jacking protection is disabled for these paths. See documentation: https://docs.kentico.com/k12/securing-websites/designing-secure-websites/securing-and-protecting-the-system/clickjacking-protection"
+                )
+            };
+            
+            foreach (var key in keyValues)
+            {
+                // If value does not match expected condition, add row to result.
+                var val = configuration.AppSettings.Settings[key.Item1]?.Value;
+                if (!key.Item2(val))
+                {
+                    result.Rows.Add(key.Item3, val, key.Item4);
+                }
+            }
 
             #endregion
 

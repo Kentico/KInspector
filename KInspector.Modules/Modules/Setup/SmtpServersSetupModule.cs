@@ -19,7 +19,8 @@ The servers are disabled by setting their server address to invalid value, so th
                     new Version("8.2"),
                     new Version("9.0"),
                     new Version("10.0"),
-                    new Version("11.0")
+                    new Version("11.0"),
+                    new Version("12.0"), 
                 },
                 Category = "Setup",
             };
