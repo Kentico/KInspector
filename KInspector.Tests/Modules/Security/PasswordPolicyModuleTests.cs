@@ -10,13 +10,13 @@ using System.Data;
 namespace Kentico.KInspector.Tests.ModuleTests.Security
 {
     [TestClass]
-    public class PasswordPolicyModuleTests
+    public class SecuritySettingsModuleTests
     {
         [TestMethod]
         public void Should_BeInSecurityCategory_When_ReturningModuleMetadata()
         {
             // arrange...
-            PasswordPolicyModule mod = new PasswordPolicyModule();
+            SecuritySettingsModule mod = new SecuritySettingsModule();
 
             // act...
             var meta = mod.GetModuleMetadata();
@@ -29,8 +29,8 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
         public void Should_HaveCorrectSupportedVersions_When_ReturningModuleMetadata()
         {
             // arrange...
-            List<Version> expectedVersions = new List<Version> { new Version("7.0"), new Version("8.0"), new Version("8.1"), new Version("8.2"), new Version("9.0"), new Version("10.0"), new Version("11.0") };
-            PasswordPolicyModule mod = new PasswordPolicyModule();
+            List<Version> expectedVersions = new List<Version> { new Version("7.0"), new Version("8.0"), new Version("8.1"), new Version("8.2"), new Version("9.0"), new Version("10.0"), new Version("11.0"), new Version("12.0") };
+            SecuritySettingsModule mod = new SecuritySettingsModule();
 
             // act...
             var meta = mod.GetModuleMetadata();
@@ -43,7 +43,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
         public void Should_PopulatedName_When_ReturningModuleMetadata()
         {
             // arrange...
-            PasswordPolicyModule mod = new PasswordPolicyModule();
+            SecuritySettingsModule mod = new SecuritySettingsModule();
 
             // act...
             var meta = mod.GetModuleMetadata();
@@ -56,7 +56,7 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
         public void Should_PopulateComments_When_ReturningModuleMetadata()
         {
             // arrange...
-            PasswordPolicyModule mod = new PasswordPolicyModule();
+            SecuritySettingsModule mod = new SecuritySettingsModule();
 
             // act...
             var meta = mod.GetModuleMetadata();
@@ -65,104 +65,9 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             Assert.IsFalse(string.IsNullOrEmpty(meta.Comment));
         }
 
-        [TestMethod]
-        public void Should_HaveStatusGood_When_PasswordPolicyDataIsGood_KenticoUnder_9_0()
-        {
-            // arrange...
-            // Mocks...
-            var mockDbs = Mock.Of<IDatabaseService>();
-            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(true,3,0));
-            var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
-            mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
-            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("9.0"));
-
-            // Real Module under test...
-            PasswordPolicyModule mod = new PasswordPolicyModule();
-
-            // act...
-            var result = mod.GetResults(mockInstanceInfo.Object);
-
-            // assert...
-            StringAssert.Equals(result.ResultComment, "Password settings look good.");
-            Assert.AreEqual(Status.Good, result.Status);
-            mockInstanceInfo.VerifyAll();
-            Mock.Get(mockDbs).VerifyAll();
-        }
 
         [TestMethod]
-        public void Should_HaveStatusGood_When_PasswordPolicyDataIsGood_KenticoAbove_9_0()
-        {
-            // arrange...
-            // Mocks...
-            var mockDbs = Mock.Of<IDatabaseService>();
-            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(true, 3, 0, "PBKDF2"));
-            var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
-            mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
-            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("10.0"));
-
-            // Real Module under test...
-            PasswordPolicyModule mod = new PasswordPolicyModule();
-
-            // act...
-            var result = mod.GetResults(mockInstanceInfo.Object);
-
-            // assert...
-            StringAssert.Equals(result.ResultComment, "Password settings look good.");
-            Assert.AreEqual(Status.Good, result.Status);
-            mockInstanceInfo.VerifyAll();
-            Mock.Get(mockDbs).VerifyAll();
-        }
-
-        [TestMethod]
-        public void Should_HaveStatusError_When_PasswordFormatIsNotCorrect_KenticoUnder_9_0()
-        {
-            // arrange...
-            // Mocks...
-            var mockDbs = Mock.Of<IDatabaseService>();
-            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(false, 2,0));
-            var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
-            mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
-            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("9.0"));
-
-            // Real Module under test...
-            PasswordPolicyModule mod = new PasswordPolicyModule();
-
-            // act...
-            var result = mod.GetResults(mockInstanceInfo.Object);
-
-            // assert...
-            StringAssert.Equals(result.ResultComment, "The CMSPasswordFormat should be set to 'SHA2SALT'.");
-            Assert.AreEqual(Status.Error, result.Status);
-            mockInstanceInfo.VerifyAll();
-            Mock.Get(mockDbs).VerifyAll();
-        }
-
-        [TestMethod]
-        public void Should_HaveStatusError_When_PasswordFormatIsNotCorrect_KenticoAbove_9_0()
-        {
-            // arrange...
-            // Mocks...
-            var mockDbs = Mock.Of<IDatabaseService>();
-            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(false, 2, 0, "PBKDF2"));
-            var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
-            mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
-            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("10.0"));
-
-            // Real Module under test...
-            PasswordPolicyModule mod = new PasswordPolicyModule();
-
-            // act...
-            var result = mod.GetResults(mockInstanceInfo.Object);
-
-            // assert...
-            StringAssert.Equals(result.ResultComment, "The CMSPasswordFormat should be set to 'SHA2SALT'.");
-            Assert.AreEqual(Status.Error, result.Status);
-            mockInstanceInfo.VerifyAll();
-            Mock.Get(mockDbs).VerifyAll();
-        }
-
-        [TestMethod]
-        public void Should_HaveStatusError_When_NoRecordsAreRetrieved()
+        public void Should_HaveStatusGood_When_NoRecordsAreRetrieved()
         {
             // arrange...
             // Mocks...
@@ -172,62 +77,13 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
 
             // Real Module under test...
-            PasswordPolicyModule mod = new PasswordPolicyModule();
+            SecuritySettingsModule mod = new SecuritySettingsModule();
 
             // act...
             var result = mod.GetResults(mockInstanceInfo.Object);
 
             // assert...
-            StringAssert.Equals(result.ResultComment, "Failed to check settings as expected.");
-            Assert.AreEqual(Status.Error, result.Status);
-            mockInstanceInfo.VerifyAll();
-            Mock.Get(mockDbs).VerifyAll();
-        }
-
-        [TestMethod]
-        public void Should_HaveStatusWarning_When_PasswordPolicyIsFalseForAnySite_KenticoUnder_9_0()
-        {
-            // arrange...
-            // Mocks...
-            var mockDbs = Mock.Of<IDatabaseService>();
-            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(true, 2,1));
-            var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
-            mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
-            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("9.0"));
-
-            // Real Module under test...
-            PasswordPolicyModule mod = new PasswordPolicyModule();
-
-            // act...
-            var result = mod.GetResults(mockInstanceInfo.Object);
-
-            // assert...
-            StringAssert.Equals(result.ResultComment, "It is recommended that you have CMSUsePasswordPolicy set to 'True'.");
-            Assert.AreEqual(Status.Warning, result.Status);
-            mockInstanceInfo.VerifyAll();
-            Mock.Get(mockDbs).VerifyAll();
-        }
-
-        [TestMethod]
-        public void Should_HaveStatusWarning_When_PasswordPolicyIsFalseForAnySite_KenticoAbove_9_0()
-        {
-            // arrange...
-            // Mocks...
-            var mockDbs = Mock.Of<IDatabaseService>();
-            Mock.Get(mockDbs).Setup(_ => _.ExecuteAndGetTableFromFile(It.IsAny<string>())).Returns(this.MakeData(true, 2, 1, "PBKDF2"));
-            var mockInstanceInfo = new Mock<IInstanceInfo>(MockBehavior.Strict);
-            mockInstanceInfo.Setup(_ => _.DBService).Returns(mockDbs);
-            mockInstanceInfo.Setup(_ => _.Version).Returns(new Version("10.0"));
-
-            // Real Module under test...
-            PasswordPolicyModule mod = new PasswordPolicyModule();
-
-            // act...
-            var result = mod.GetResults(mockInstanceInfo.Object);
-
-            // assert...
-            StringAssert.Equals(result.ResultComment, "It is recommended that you have CMSUsePasswordPolicy set to 'True'.");
-            Assert.AreEqual(Status.Warning, result.Status);
+            Assert.AreEqual(Status.Good, result.Status);
             mockInstanceInfo.VerifyAll();
             Mock.Get(mockDbs).VerifyAll();
         }
@@ -244,26 +100,26 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             DataTable tbl = this.MakeEmptyTable();
             DataRow newRow = tbl.NewRow();
             // add a row for password format
-            newRow["SiteDisplayName"] = "N/A"; ;
-            newRow["KeyName"] = "CMSPasswordFormat";
-            newRow["KeyValue"] = hasGoodPasswordFormat ? passwordFormat : "BAD PWD FORMAT";
+            newRow["Site name"] = "N/A"; ;
+            newRow["Key name"] = "CMSPasswordFormat";
+            newRow["Key value"] = hasGoodPasswordFormat ? passwordFormat : "BAD PWD FORMAT";
             tbl.Rows.Add(newRow);
             for (int i = 0; i < goodPwdPolicyRowCount; i++)
             {
                 // add a row for password policy
                 newRow = tbl.NewRow();
-                newRow["SiteDisplayName"] = $"Good Site Name {i}";
-                newRow["KeyName"] = "CMSUsePasswordPolicy";
-                newRow["KeyValue"] = "True";
+                newRow["Site name"] = $"Good Site Name {i}";
+                newRow["Key name"] = "CMSUsePasswordPolicy";
+                newRow["Key value"] = "True";
                 tbl.Rows.Add(newRow);                
             }
             for (int j = 0; j < badPwdPolicyRowCount; j++)
             {
                 // add a row for password policy
                 newRow = tbl.NewRow();
-                newRow["SiteDisplayName"] = $"Bad Site Name {j}";
-                newRow["KeyName"] = "CMSUsePasswordPolicy";
-                newRow["KeyValue"] = "False";
+                newRow["Site name"] = $"Bad Site Name {j}";
+                newRow["Key name"] = "CMSUsePasswordPolicy";
+                newRow["Key value"] = "False";
                 tbl.Rows.Add(newRow);                
             }            // return the table
             return tbl;
@@ -281,19 +137,19 @@ namespace Kentico.KInspector.Tests.ModuleTests.Security
             columnSpec = new DataColumn
             {
                 DataType = typeof(string),
-                ColumnName = "SiteDisplayName"
+                ColumnName = "Site name"
             };
             tbl.Columns.Add(columnSpec);
             columnSpec = new DataColumn
             {
                 DataType = typeof(string),
-                ColumnName = "KeyName"
+                ColumnName = "Key name"
             };
             tbl.Columns.Add(columnSpec);
             columnSpec = new DataColumn
             {
                 DataType = typeof(string),
-                ColumnName = "KeyValue"
+                ColumnName = "Key value"
             };
             tbl.Columns.Add(columnSpec);
             return tbl;

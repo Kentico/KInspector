@@ -1,6 +1,6 @@
 -- Settings modification
 ------------------------
--- Defaul email server in Settings is disabled by settings its erver name to invalid value
+-- Default email server in Settings is disabled by settings its server name to invalid value
 -- The servers disabled by audit can be identified by having '.disabled' suffix
 
 SELECT N'1a Settings > System > E-mails servers which were not set by the customer' AS N'#KInspectorNextTableName'
