@@ -40,8 +40,8 @@ namespace Kentico.KInspector.Modules
         {
             return new ModuleMetadata
             {
-                Name = "WebPart analyzer",
-                Comment = "Analyzes possible vulnerabilities in web parts.",
+                Name = "Portal Engine WebPart analyzer",
+                Comment = "Analyzes possible vulnerabilities in Portal Engine web parts. Not applicable to MVC development model.",
                 SupportedVersions = new[] {
                     new Version("7.0"),
                     new Version("8.0"),
@@ -49,7 +49,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.2"),
                     new Version("9.0"),
                     new Version("10.0"),
-                    new Version("11.0")
+                    new Version("11.0"),
+                    new Version("12.0"),
                 },
                 Category = "Security",
             };
