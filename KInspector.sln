@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentico.KInspector.WebAppli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentico.KInspector.Server", "Kentico.KInspector.Server\Kentico.KInspector.Server.csproj", "{62B3BC9A-ABD6-4676-9103-368CD11C0641}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KenticoInspector.WebApplication", "KenticoInspector.WebApplication\KenticoInspector.WebApplication.csproj", "{0C9FB1D4-87F2-48A0-81CD-45D5D2EF6C05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,11 +57,18 @@ Global
 		{62B3BC9A-ABD6-4676-9103-368CD11C0641}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62B3BC9A-ABD6-4676-9103-368CD11C0641}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62B3BC9A-ABD6-4676-9103-368CD11C0641}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C9FB1D4-87F2-48A0-81CD-45D5D2EF6C05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C9FB1D4-87F2-48A0-81CD-45D5D2EF6C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C9FB1D4-87F2-48A0-81CD-45D5D2EF6C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C9FB1D4-87F2-48A0-81CD-45D5D2EF6C05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0CD9708F-1740-4585-A9AE-B681C9F030E6} = {68B3CDB1-A97C-4733-A672-56F2EE39D121}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F97074A-AB88-4F8F-AC4A-32A6C4CED4C1}
 	EndGlobalSection
 EndGlobal
