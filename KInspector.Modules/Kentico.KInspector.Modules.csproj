@@ -123,6 +123,7 @@
     <Compile Include="Modules\General\DebugCheckModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\Content\DuplicatePageAliasesModule.cs" />
+    <Compile Include="Modules\EventLog\EventLogSizeModule.cs" />
     <Compile Include="Modules\General\PageTypeFieldsDataTypeMismatchModule.cs" />
     <Compile Include="Modules\General\MediaLibraryAzureLimitModule.cs" />
     <Compile Include="Modules\General\DatabaseConsistencyCheckModule.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Modules\OnlineMarketing\OMTablesSize.cs" />
     <Compile Include="Modules\General\DisabledWebPartAnalyzer.cs" />
     <Compile Include="Modules\Security\DataStructures\VulnerabilityAnalysisResults.cs" />
+    <Compile Include="Modules\Security\PasswordFormatModule.cs" />
     <Compile Include="Modules\Security\SecurityAppSettingsModule.cs" />
     <Compile Include="Modules\Security\SecuritySettingsModule.cs" />
     <Compile Include="Modules\Security\TransformationAnalyzerModule.cs" />
@@ -241,6 +243,9 @@
     <Content Include="Scripts\DuplicatePageAliasesModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\EventLogSizeModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\PageTypeAssignedToSiteModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -248,6 +253,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\ScreenshotterModule-v9.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\PasswordFormat.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\TransformationAnalyzerModule-GetDataWhereIn-KI_TransformationList.sql">
