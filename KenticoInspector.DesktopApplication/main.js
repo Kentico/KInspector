@@ -57,11 +57,10 @@ var apiProcess = null;
 function startApi() {
   // run server
   const apipath = path.join(__dirname, '..\\publish\\console\\KenticoInspector.WebApplication.exe')
-  apiProcess = spawn(apipath, [], { shell: true });
-  //apiProcess = child_process.exec(apipath,)
+  apiProcess = spawn(apipath);
 
   apiProcess.stdout.on('data', (data) => {
-    writeLog(`stdout: ${data}`);
+    writeLog(`Server: ${data}`);
     if (mainWindow == null) {
       createWindow();
     }
@@ -69,9 +68,9 @@ function startApi() {
 }
 
 //Kill process when electron exits
-process.on('exit', function () {
+app.on('quit', function () {
   writeLog('exit');
-  spawn("taskkill", ["/pid", apiProcess.pid, '/f', '/t']);
+  apiProcess.kill();
 });
 
 function writeLog(msg){
