@@ -12,7 +12,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({width: 800, height: 600})
 
   // and load the index.html of the app.
-  mainWindow.loadURL('https://localhost:5001/api/values')
+  mainWindow.loadURL('https://localhost:5001/')
   //mainWindow.loadFile('index.html')
 
   // Open the DevTools.
