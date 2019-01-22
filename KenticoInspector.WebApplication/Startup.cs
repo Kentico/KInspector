@@ -26,6 +26,10 @@ namespace KenticoInspector.WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSpaStaticFiles(configuration => {
+                configuration.RootPath = "ClientApp/dist";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,7 +46,16 @@ namespace KenticoInspector.WebApplication
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
             app.UseMvc();
+            app.UseSpa(spa => {
+                spa.Options.SourcePath = "ClientApp";
+
+                //if (env.IsDevelopment()) {
+                //    spa.UseProxyToSpaDevelopmentServer("http://localhost:1234");
+                //}
+            });
         }
     }
 }
