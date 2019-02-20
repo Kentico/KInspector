@@ -56,7 +56,7 @@ var apiProcess = null;
 
 function startApi() {
   // run server
-  const apipath = path.join(__dirname, '..\\publish\\console\\KenticoInspector.WebApplication.exe')
+  const apipath = path.join(__dirname, '..\\publish\\KenticoInspector.WebApplication.exe')
   apiProcess = spawn(apipath);
 
   apiProcess.stdout.on('data', (data) => {
