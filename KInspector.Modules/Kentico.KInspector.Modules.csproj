@@ -120,6 +120,7 @@
     <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
     <Compile Include="Modules\General\ClassTableValidation.cs" />
+    <Compile Include="Modules\General\RecommendedSettingsModule.cs" />
     <Compile Include="Modules\General\TaskProcessingIssuesModule.cs" />
     <Compile Include="Modules\General\DebugCheckModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
@@ -203,6 +204,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\PageTypeFieldsDataTypeMismatchModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\RecommendedSettingsModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\Setup\GlobalAdminSetupModule-V10.sql">
