@@ -459,8 +459,8 @@ IF NOT EXISTS (SELECT * FROM sys.types WHERE is_table_type = 1 AND name ='{KEYST
 
             public static Func<string, bool> IS_NOT_EMPTY = s => !string.IsNullOrEmpty(s);
             public static Func<string, bool> IS_EMPTY = s => string.IsNullOrEmpty(s);
-            public static Func<string, bool> IS_TRUE = s => bool.Parse(s);
-            public static Func<string, bool> IS_FALSE = s => !bool.Parse(s);
+            public static Func<string, bool> IS_TRUE = s => s.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase);
+            public static Func<string, bool> IS_FALSE = s => s.Equals(bool.FalseString, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private class KeyInfo : SimpleBaseInfo
