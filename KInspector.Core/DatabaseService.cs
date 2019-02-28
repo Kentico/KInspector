@@ -15,12 +15,10 @@ namespace Kentico.KInspector.Core
         private readonly string mConnectionString;
         private const int SQL_COMMAND_TIMEOUT_SECONDS = 90;
 
-
         public DatabaseService(InstanceConfig config)
         {
             mConnectionString = BuildConnectionString(config);
         }
-
 
         /// <summary>
         /// Builds connection string based on instance configuration.
@@ -45,9 +43,8 @@ namespace Kentico.KInspector.Core
             return sb.ConnectionString;
         }
 
-
         /// <summary>
-        /// Executes the query in <paramref name="sql"/> and returns the result object. 
+        /// Executes the query in <paramref name="sql"/> and returns the result object.
         /// </summary>
         /// <remarks>
         /// You can put the result directly into <see cref="ModuleResults.Result"/>.
@@ -64,9 +61,8 @@ namespace Kentico.KInspector.Core
             }
         }
 
-
         /// <summary>
-        /// Executes the query in <paramref name="sql"/> and returns the result table. 
+        /// Executes the query in <paramref name="sql"/> and returns the result table.
         /// </summary>
         /// <remarks>
         /// You can put the result directly into <see cref="ModuleResults.Result"/>.
@@ -84,9 +80,8 @@ namespace Kentico.KInspector.Core
             }
         }
 
-
         /// <summary>
-        /// Executes a SQL file in <paramref name="filePath"/> and returns the whole table. 
+        /// Executes a SQL file in <paramref name="filePath"/> and returns the whole table.
         /// The file must be in './Scripts/' folder.
         /// </summary>
         /// <remarks>
@@ -103,9 +98,26 @@ namespace Kentico.KInspector.Core
             }
         }
 
+        /// <summary>
+        /// Executes a SQL file in <paramref name="filePath"/> and returns the whole data set.
+        /// The file must be in './Scripts/' folder.
+        /// </summary>
+        /// <remarks>
+        /// You can put the result directly into <see cref="ModuleResults.Result"/>.
+        /// </remarks>
+        /// <param name="filePath">Path of the file in './Scripts/' folder</param>
+        /// <param name="parameters">Optional parameters send to SQL script</param>
+        public DataSet ExecuteAndGetDataSetFromFile(string filePath, params SqlParameter[] parameters)
+        {
+            using (var sr = new StreamReader($"./Scripts/{filePath}"))
+            {
+                var fileContents = sr.ReadToEnd();
+                return ExecuteAndGetDataSet(fileContents, parameters);
+            }
+        }
 
         /// <summary>
-        /// Executes the query in <paramref name="sql"/> and returns the result data set. 
+        /// Executes the query in <paramref name="sql"/> and returns the result data set.
         /// </summary>
         /// <remarks>
         /// You can put the result directly into <see cref="ModuleResults.Result"/>.
@@ -128,7 +140,7 @@ namespace Kentico.KInspector.Core
 
                 if (dataSet.Tables.Count >= 2)
                 {
-                    // Check for dummy tables containing the name the table that follows 
+                    // Check for dummy tables containing the name the table that follows
                     // (dummy table has exactly one column named "#KenticoNextTableName")
                     for (int i = dataSet.Tables.Count - 2; i >= 0; i--)
                     {
@@ -141,7 +153,7 @@ namespace Kentico.KInspector.Core
                             // Remove dummy table
                             dataSet.Tables.Remove(table);
 
-                            // We have name for table [i+1], table [i] is dummy and is removed, so 
+                            // We have name for table [i+1], table [i] is dummy and is removed, so
                             // table [i-1] cannot contain the name of another table and can be safely skipped.
                             i--;
                         }
@@ -152,9 +164,8 @@ namespace Kentico.KInspector.Core
             }
         }
 
-
         /// <summary>
-        /// Executes a SQL file in <paramref name="filePath"/> and returns the whole data set. 
+        /// Executes a SQL file in <paramref name="filePath"/> and returns the whole data set.
         /// The file must be in './Scripts/' folder.
         /// </summary>
         /// <remarks>
@@ -169,7 +180,6 @@ namespace Kentico.KInspector.Core
                 return ExecuteAndGetDataSet(fileContents);
             }
         }
-
 
         /// <summary>
         /// Executes the query and returns all the PRINT statements that are included.
@@ -189,7 +199,7 @@ namespace Kentico.KInspector.Core
                 conn.InfoMessage += (s, ea) =>
                 {
                     // All the PRINT statements are saved separately in ea.Errors collection
-	                output.AddRange(ea.Errors.Cast<SqlError>().Select(error => error.Message));
+                    output.AddRange(ea.Errors.Cast<SqlError>().Select(error => error.Message));
                 };
 
                 var command = new SqlCommand(sql, conn)
@@ -201,7 +211,6 @@ namespace Kentico.KInspector.Core
 
             return output;
         }
-
 
         /// <summary>
         /// Similar to <see cref="ExecuteAndGetPrints"/>, but takes SQL script URL as a parameter.
@@ -219,19 +228,18 @@ namespace Kentico.KInspector.Core
             }
         }
 
-
         /// <summary>
-        /// Returns setting value for a certain site. 
+        /// Returns setting value for a certain site.
         /// If setting is not set for this site, then the global value is received.
         /// </summary>
         public T GetSetting<T>(string key, string siteName = "") where T : IConvertible
         {
             return ExecuteAndGetScalar<T>(
                 string.Format(@"SELECT ISNULL(
-                                (SELECT KeyValue 
-                                FROM CMS_SettingsKey AS SK LEFT JOIN CMS_Site AS S ON S.SiteID = SK.SiteID 
+                                (SELECT KeyValue
+                                FROM CMS_SettingsKey AS SK LEFT JOIN CMS_Site AS S ON S.SiteID = SK.SiteID
                                 WHERE S.SiteName = '{0}' AND KeyName = '{1}'),
-                                (SELECT KeyValue FROM CMS_SettingsKey AS SK LEFT JOIN CMS_Site AS S ON S.SiteID = SK.SiteID 
+                                (SELECT KeyValue FROM CMS_SettingsKey AS SK LEFT JOIN CMS_Site AS S ON S.SiteID = SK.SiteID
                                     WHERE S.SiteName IS NULL AND KeyName = '{1}'))", siteName, key));
         }
     }

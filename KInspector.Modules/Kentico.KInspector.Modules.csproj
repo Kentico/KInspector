@@ -96,6 +96,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\StrongTypedInfos\SimpleBaseInfo.cs" />
     <Compile Include="Export\ExportModuleLoader.cs" />
     <Compile Include="Export\ExportModuleMetaData.cs" />
     <Compile Include="Export\IExportModule.cs" />
