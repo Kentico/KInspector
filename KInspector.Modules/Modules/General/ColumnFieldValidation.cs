@@ -132,7 +132,7 @@ namespace Kentico.KInspector.Modules.Modules.General
             var columnList = new List<string>();
             foreach (DataRow dataRow in rows)
             {
-                if(dataRow[0].ToString() == tableName)
+                if(dataRow[0].ToString().ToLower() == tableName.ToLower())
                     columnList.Add(dataRow[1].ToString().ToLower());
             }
 
