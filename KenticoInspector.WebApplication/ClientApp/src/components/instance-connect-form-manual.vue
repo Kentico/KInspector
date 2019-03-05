@@ -1,13 +1,5 @@
 <template>
   <v-card>
-    <v-toolbar
-      dark
-      color="primary"
-      >
-      <v-toolbar-title>
-        Connect Manually
-      </v-toolbar-title>
-    </v-toolbar>
     <v-card-text>
       <v-form
         ref="form"
