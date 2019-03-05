@@ -1,29 +1,86 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      clipped
+      app
+      >
+      <v-list>
+        <v-list-tile
+          to="/"
+          >
+          <v-list-tile-action>
+            <v-icon>home</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              Home
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile
+          to="/connect"
+          >
+          <v-list-tile-action>
+            <v-icon>power</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              Connect
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-toolbar
+      fixed
+      clipped-left
+      app
+      >
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <span>
+        <v-img
+          :src="require('./assets/kentico.svg')"
+          contain
+          height="38"
+          width="38"
+          />
+      </span>
+      <v-toolbar-title class="headline text-uppercase ml-1">
+        <span>Kentico</span>
+        <span class="font-weight-light">Inspector</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn
+        flat
+        href="https://github.com/kentico/kinspector"
+        target="_blank"
+      >
+        <span class="mr-2">View on Github</span>
+        <v-icon>open_in_new</v-icon>
+      </v-btn>
+    </v-toolbar>
+
+    <v-content>
+      <router-view/>
+    </v-content>
+    <v-footer class="pa-3">
+    <v-spacer></v-spacer>
+    <div>Version 4.0 Alpha</div>
+  </v-footer>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+
+export default {
+  name: 'App',
+  data () {
+    return {
+      drawer: null
     }
   }
 }
-</style>
+</script>
