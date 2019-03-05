@@ -1,18 +1,17 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-container>
+    <v-layout
+      row
+      wrap
+      >
+      <v-flex xs12>
+        <h1>
+          Welcome to Kentico Inspector
+        </h1>
+        <p>
+          The open source tool for analyzing Kentico EMS instances.
+        </p>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
-
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
-export default {
-  name: 'home',
-  components: {
-    HelloWorld
-  }
-}
-</script>
