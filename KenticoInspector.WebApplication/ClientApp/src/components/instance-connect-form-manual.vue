@@ -36,10 +36,14 @@
           label="Authentication Type"
         ></v-select>
 
-        <div v-show="instance.database.authentication.type === 'account'">
+        <div > <!-- v-show="instance.database.authentication.type === 'account'" -->
           <v-text-field
             v-model="instance.database.authentication.user"
-            :rules="[v => !!v || 'SQL user is required']"
+            :rules="[v => {
+              const isAccount = this.instance.database.authentication.type === 'account'
+              isValid = !isAccount ? true : !!v
+              return isValid || 'SQL user is required'
+            }]"
             label="SQL User"
             required
             />
@@ -71,17 +75,12 @@
     <v-card-actions>
       <v-spacer />
       <v-btn
+        large
         :disabled="!valid"
-        color="success"
+        color="primary"
         @click="validate"
         >
-        Connect
-      </v-btn>
-      <v-btn
-        color="error"
-        @click="reset"
-      >
-        Reset
+        Connect to Kentico Instance
       </v-btn>
     </v-card-actions>
   </v-card>
