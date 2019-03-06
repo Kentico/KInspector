@@ -55,7 +55,7 @@ export default {
     },
     filteredReports: function() {
       return this.reports.filter(report => {
-        const showForCompatibility = this.showIncompatible ? true : report.compatibility.includes(this.version)
+        const showForCompatibility = this.showIncompatible ? true : report.compatible.includes(this.version)
         const showForTags = this.selectedTags.length === 0 ? true : report.tags.reduce((acc,cur) => {
           return acc || this.selectedTags.includes(cur)
         }, false)

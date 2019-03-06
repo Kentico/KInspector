@@ -7,7 +7,8 @@
     "results": {
       "status": "success"
     },
-    "compatibility": ["V10","V11","V12"]
+    "compatible": ["V10","V11","V12"],
+    "notCompatible": []
   },
   {
     "name": "Report has error",
@@ -17,7 +18,8 @@
     "results": {
       "status": "error"
     },
-    "compatibility": ["V10","V11","V12"]
+    "compatible": ["V10","V11","V12"],
+    "notCompatible": []
   },
   {
     "name": "Report has warning",
@@ -27,7 +29,8 @@
     "results": {
       "status": "warning"
     },
-    "compatibility": ["V10","V11","V12"]
+    "compatible": ["V10","V11","V12"],
+    "notCompatible": []
   },
   {
     "name": "Report run, only info",
@@ -37,7 +40,8 @@
     "results": {
       "status": "info"
     },
-    "compatibility": ["V10","V11","V12"]
+    "compatible": ["V10","V11","V12"],
+    "notCompatible": []
   },
   {
     "name": "Report not run",
@@ -47,37 +51,41 @@
     "results": {
       "status": ""
     },
-    "compatibility": ["V10","V11","V12"]
+    "compatible": ["V10","V11","V12"],
+    "notCompatible": []
   },
   {
-    "name": "Incompatible report warn",
+    "name": "Untested report warn",
     "shortDescription": "This is a very short description highlighting the basics",
     "longDescription": " <p>This is a longer description with a lot more details.<\/p>\r\n      <p>There many be multiple paragraphs and <a href=\"https:\/\/docs.kentico.com\/k12\" target=\"_blank\">links to documentation<\/a> for more information.<\/p>",
     "tags": ["content","settings"],
     "results": {
       "status": "warning"
     },
-    "compatibility": ["V10","V11"]
+    "compatible": ["V10","V11"],
+    "notCompatible": []
   },
   {
-    "name": "Incompatible report error",
+    "name": "Untested report error",
     "shortDescription": "This is a very short description highlighting the basics",
     "longDescription": " <p>This is a longer description with a lot more details.<\/p>\r\n      <p>There many be multiple paragraphs and <a href=\"https:\/\/docs.kentico.com\/k12\" target=\"_blank\">links to documentation<\/a> for more information.<\/p>",
     "tags": ["content","settings"],
     "results": {
       "status": "error"
     },
-    "compatibility": ["V10","V11"]
+    "compatible": ["V10","V11"],
+    "notCompatible": []
   },
   {
-    "name": "Incompatible report info",
+    "name": "Untested report info",
     "shortDescription": "This is a very short description highlighting the basics",
     "longDescription": " <p>This is a longer description with a lot more details.<\/p>\r\n      <p>There many be multiple paragraphs and <a href=\"https:\/\/docs.kentico.com\/k12\" target=\"_blank\">links to documentation<\/a> for more information.<\/p>",
     "tags": ["content","settings"],
     "results": {
       "status": "info"
     },
-    "compatibility": ["V10","V11"]
+    "compatible": ["V10","V11"],
+    "notCompatible": []
   },
   {
     "name": "Incompatible report not run",
@@ -87,6 +95,7 @@
     "results": {
       "status": ""
     },
-    "compatibility": ["V10","V11"]
+    "compatible": ["V10","V11"],
+    "notCompatible": ["V12"]
   }
 ]
