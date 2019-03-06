@@ -66,7 +66,6 @@ export default {
   methods: {
     getReports: function() {
       reportService.getReports().then(reports => {
-        console.log(reports)
         this.reports = reports
       })
     }
