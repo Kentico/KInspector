@@ -34,7 +34,7 @@
 </template>
 
 <script>
-
+import { reportService } from '../api/report-service'
 import ReportList from '../components/report-list'
 
 export default {
@@ -45,74 +45,7 @@ export default {
     showIncompatible: false,
     version: "V12",
     selectedTags: [],
-    reports: [
-      {
-        name: "Report has success",
-        shortDescription: "This is a very short description highlighting the basics",
-        longDescription: `
-          <p>This is a longer description with a lot more details.</p>
-          <p>There many be multiple paragraphs and <a href="https://docs.kentico.com/k12" target="_blank">links to documentation</a> for more information.</p>`,
-        tags: ['content','unique'],
-        results: {
-          status: "success"
-        },
-        compatibility: ['V10','V11','V12']
-      },
-      {
-        name: "Report has error",
-        shortDescription: "This is a very short description highlighting the basics",
-        longDescription: `
-          <p>This is a longer description with a lot more details.</p>
-          <p>There many be multiple paragraphs and <a href="https://docs.kentico.com/k12" target="_blank">links to documentation</a> for more information.</p>`,
-        tags: ['content','settings'],
-        results: {
-          status: "error"
-        },
-        compatibility: ['V10','V11','V12']
-      },
-      {
-        name: "Report has warning",
-        shortDescription: "This is a very short description highlighting the basics",
-        longDescription: `
-          <p>This is a longer description with a lot more details.</p>
-          <p>There many be multiple paragraphs and <a href="https://docs.kentico.com/k12" target="_blank">links to documentation</a> for more information.</p>`,
-        tags: ['security','settings'],
-        results: {
-          status: "warning"
-        },
-        compatibility: ['V10','V11','V12']
-      },
-      {
-        name: "Report run, only info",
-        shortDescription: "This is a very short description highlighting the basics",
-        longDescription: `
-          <p>This is a longer description with a lot more details.</p>
-          <p>There many be multiple paragraphs and <a href="https://docs.kentico.com/k12" target="_blank">links to documentation</a> for more information.</p>`,
-        tags: ['security','web-config'],
-        results: {
-          status: "info"
-        },
-        compatibility: ['V10','V11','V12']
-      },
-      {
-        name: "Report not run",
-        shortDescription: "This is a very short description highlighting the basics",
-        longDescription: `
-          <p>This is a longer description with a lot more details.</p>
-          <p>There many be multiple paragraphs and <a href="https://docs.kentico.com/k12" target="_blank">links to documentation</a> for more information.</p>`,
-        tags: ['content','settings'],
-        compatibility: ['V10','V11','V12']
-      },
-      {
-        name: "Incompatible report",
-        shortDescription: "This is a very short description highlighting the basics",
-        longDescription: `
-          <p>This is a longer description with a lot more details.</p>
-          <p>There many be multiple paragraphs and <a href="https://docs.kentico.com/k12" target="_blank">links to documentation</a> for more information.</p>`,
-        tags: ['content','settings'],
-        compatibility: ['V10','V11']
-      }
-    ]
+    reports: []
   }),
   computed: {
     tags: function () {
@@ -128,6 +61,20 @@ export default {
         }, false)
         return showForCompatibility && showForTags;
       })
+    }
+  },
+  methods: {
+    getReports: function() {
+      reportService.getReports().then(reports => {
+        console.log(reports)
+        this.reports = reports
+      })
+    }
+  },
+  watch: {
+    '$route': {
+      handler: 'getReports',
+      immediate: true
     }
   }
 }
