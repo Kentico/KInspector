@@ -3,23 +3,26 @@
     <v-toolbar
       flat
       :color="status"
+      dark
       >
       <v-toolbar-title>
-        <div>
-          {{ report.name }}
-        </div>
+            <v-avatar
+              v-if="notCompatible"
+              color="error darken-1"
+              size="32"
+              tile
+              class="elevation-4 "
+              style="position: absolute; left: -16px"
+              >
+              <v-icon
+                color="white"
+                >
+                warning
+              </v-icon>
+            </v-avatar>
+        {{ report.name }}
       </v-toolbar-title>
       <v-spacer />
-      <v-avatar
-            v-if="notCompatible"
-            color="warning"
-            >
-            <v-icon
-            color="white"
-              >
-              report_problem
-            </v-icon>
-          </v-avatar>
       <v-btn icon>
         <v-icon>{{ hasResults ? 'replay' : 'play_arrow' }}</v-icon>
       </v-btn>
