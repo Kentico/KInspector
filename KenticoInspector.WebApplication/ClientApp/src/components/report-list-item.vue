@@ -2,8 +2,6 @@
   <v-card class="mb-2" >
     <v-toolbar
       flat
-      :color="status"
-      dark
       dense
       >
       <v-toolbar-title>
@@ -56,16 +54,44 @@
         </v-layout>
       </v-container>
     </v-card-text>
+
     <v-slide-y-transition>
       <v-card-text v-show="show">
+        <h3>Detailed description</h3>
         <div v-html="report.longDescription" />
       </v-card-text>
     </v-slide-y-transition>
+
+    <v-divider v-show="show"></v-divider>
+
+    <v-slide-y-transition>
+      <v-card-text v-if="show && hasResults">
+        <h3>Detailed results</h3>
+        <report-result-details
+          :type="report.results.type"
+          :data="report.results.data"
+          >
+        </report-result-details>
+      </v-card-text>
+    </v-slide-y-transition>
+
+    <v-card-text v-if="hasResults" class="pa-0 subheading white--text">
+      <div
+        :class="`${status} px-3 py-2`"
+        v-html="report.results.summary"
+        />
+
+    </v-card-text>
+
   </v-card>
 </template>
 
 <script>
+import ReportResultDetails from "./report-result-details"
 export default {
+  components: {
+    ReportResultDetails
+  },
   props: {
     report: {
       type: Object,
@@ -77,7 +103,7 @@ export default {
   }),
   computed: {
     hasResults: function () {
-      return !!this.report.results && !!this.report.results.status
+      return !!this.report.results
     },
     status: function() {
       return this.hasResults ? this.report.results.status : ''
