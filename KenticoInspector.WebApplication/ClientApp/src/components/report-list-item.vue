@@ -25,18 +25,18 @@
       <v-btn icon :disabled="notCompatible">
         <v-icon>{{ hasResults ? 'replay' : 'play_arrow' }}</v-icon>
       </v-btn>
-      <v-btn icon @click="show = !show">
-        <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
-      </v-btn>
     </v-toolbar>
-    <v-card-text class="py-2">
-      <v-container fluid class="pa-0">
+    <v-card-text
+      class="pa-0"
+      >
         <v-layout
           align-center
           justify-center
           row
           fill-height
-          class="pa-0"
+          pr-0
+          pl-3
+          py-1
           >
           <v-flex grow>
             {{ report.shortDescription }}
@@ -50,23 +50,44 @@
               >
               {{ tag }}
             </v-chip>
+            <v-btn icon @click="showDescription = !showDescription">
+              <v-icon>{{ showDescription ? 'expand_less' : 'expand_more' }}</v-icon>
+            </v-btn>
           </v-flex>
         </v-layout>
-      </v-container>
     </v-card-text>
 
     <v-slide-y-transition>
-      <v-card-text v-show="show">
-        <h3>Detailed description</h3>
+      <v-card-text v-show="showDescription">
         <div v-html="report.longDescription" />
       </v-card-text>
     </v-slide-y-transition>
 
-    <v-divider v-show="show"></v-divider>
+    <v-card-text v-if="hasResults" class="pa-0 subheading white--text">
+      <v-layout
+        align-center
+        justify-center
+        row
+        fill-height
+        pr-0
+        pl-3
+        py-1
+        :class="status"
+        >
+        <v-flex grow>
+          <div v-html="report.results.summary" />
+        </v-flex>
+        <v-spacer></v-spacer>
+        <v-flex shrink>
+          <v-btn icon @click="showResults = !showResults">
+            <v-icon color="white">{{ showResults ? 'expand_less' : 'expand_more' }}</v-icon>
+          </v-btn>
+        </v-flex>
+      </v-layout>
+    </v-card-text>
 
     <v-slide-y-transition>
-      <v-card-text v-if="show && hasResults">
-        <h3>Detailed results</h3>
+      <v-card-text v-if="showResults && hasResults">
         <report-result-details
           :type="report.results.type"
           :data="report.results.data"
@@ -74,14 +95,6 @@
         </report-result-details>
       </v-card-text>
     </v-slide-y-transition>
-
-    <v-card-text v-if="hasResults" class="pa-0 subheading white--text">
-      <div
-        :class="`${status} px-3 py-2`"
-        v-html="report.results.summary"
-        />
-
-    </v-card-text>
 
   </v-card>
 </template>
@@ -99,7 +112,8 @@ export default {
     }
   },
   data: () => ({
-    show: false
+    showDescription: false,
+    showResults: false
   }),
   computed: {
     hasResults: function () {
