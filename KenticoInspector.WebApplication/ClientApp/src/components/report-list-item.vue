@@ -4,12 +4,13 @@
       flat
       :color="status"
       dark
+      dense
       >
       <v-toolbar-title>
             <v-avatar
               v-if="notTested || notCompatible"
               :color="notCompatible ? 'error darken-1' : 'warning lighten-1'"
-              size="32"
+              size="30"
               tile
               class="elevation-4 "
               style="position: absolute; left: -16px"
