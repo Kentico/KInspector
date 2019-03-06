@@ -757,6 +757,8 @@
     "tags": ["security", "web-config"],
     "results": {
       "status": "info",
+      "summary": "This is a result summary that is informational only",
+      "type": "TableList",
       "data": [
         {
           "name": "A/B test example page template [ABTestExamplePageTemplate]",
@@ -849,9 +851,7 @@
     "shortDescription": "This is a very short description highlighting the basics",
     "longDescription": " <p>This is a longer description with a lot more details.</p>\r\n      <p>There many be multiple paragraphs and <a href=\"https://docs.kentico.com/k12\" target=\"_blank\">links to documentation</a> for more information.</p>",
     "tags": ["content", "settings"],
-    "results": {
-      "status": ""
-    },
+    "results": null,
     "compatible": ["V10", "V11", "V12"],
     "notCompatible": []
   },
@@ -861,7 +861,10 @@
     "longDescription": " <p>This is a longer description with a lot more details.</p>\r\n      <p>There many be multiple paragraphs and <a href=\"https://docs.kentico.com/k12\" target=\"_blank\">links to documentation</a> for more information.</p>",
     "tags": ["content", "settings"],
     "results": {
-      "status": "warning"
+      "status": "warning",
+      "summary": "This is a result summary",
+      "type": "String",
+      "data": "This is a simple string result"
     },
     "compatible": ["V10", "V11"],
     "notCompatible": []
@@ -872,7 +875,10 @@
     "longDescription": " <p>This is a longer description with a lot more details.</p>\r\n      <p>There many be multiple paragraphs and <a href=\"https://docs.kentico.com/k12\" target=\"_blank\">links to documentation</a> for more information.</p>",
     "tags": ["content", "settings"],
     "results": {
-      "status": "error"
+      "status": "error",
+      "summary": "This is a result summary",
+      "type": "String",
+      "data": "This is a simple string result"
     },
     "compatible": ["V10", "V11"],
     "notCompatible": []
@@ -883,7 +889,10 @@
     "longDescription": " <p>This is a longer description with a lot more details.</p>\r\n      <p>There many be multiple paragraphs and <a href=\"https://docs.kentico.com/k12\" target=\"_blank\">links to documentation</a> for more information.</p>",
     "tags": ["content", "settings"],
     "results": {
-      "status": "info"
+      "status": "info",
+      "summary": "This is a result summary",
+      "type": "String",
+      "data": "This is a simple string result"
     },
     "compatible": ["V10", "V11"],
     "notCompatible": []
@@ -893,9 +902,7 @@
     "shortDescription": "This is a very short description highlighting the basics",
     "longDescription": " <p>This is a longer description with a lot more details.</p>\r\n      <p>There many be multiple paragraphs and <a href=\"https://docs.kentico.com/k12\" target=\"_blank\">links to documentation</a> for more information.</p>",
     "tags": ["content", "settings"],
-    "results": {
-      "status": ""
-    },
+    "results": null,
     "compatible": ["V10", "V11"],
     "notCompatible": ["V12"]
   }
