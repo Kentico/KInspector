@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mb-2" >
+  <v-card class="mt-4" >
     <v-toolbar
       flat
       dense
@@ -38,11 +38,11 @@
           pl-3
           py-1
           >
-          <v-flex grow>
+          <v-flex>
             {{ report.shortDescription }}
           </v-flex>
           <v-spacer></v-spacer>
-          <v-flex shrink>
+          <v-flex shrink class="hidden-xs-only">
             <v-chip
               v-for="tag in report.tags"
               :key="tag"
@@ -50,6 +50,8 @@
               >
               {{ tag }}
             </v-chip>
+          </v-flex>
+          <v-flex shrink>
             <v-btn icon @click="showDescription = !showDescription">
               <v-icon>{{ showDescription ? 'expand_less' : 'expand_more' }}</v-icon>
             </v-btn>
@@ -74,7 +76,7 @@
         py-1
         :class="status"
         >
-        <v-flex grow>
+        <v-flex>
           <div v-html="report.results.summary" />
         </v-flex>
         <v-spacer></v-spacer>
