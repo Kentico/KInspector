@@ -10,6 +10,16 @@
         </div>
       </v-toolbar-title>
       <v-spacer />
+      <v-avatar
+            v-if="notCompatible"
+            color="warning"
+            >
+            <v-icon
+            color="white"
+              >
+              report_problem
+            </v-icon>
+          </v-avatar>
       <v-btn icon>
         <v-icon>{{ hasResults ? 'replay' : 'play_arrow' }}</v-icon>
       </v-btn>
@@ -67,6 +77,10 @@ export default {
     },
     status: function() {
       return this.hasResults ? this.report.results.status : ''
+    },
+    notCompatible: function () {
+      //TODO: reach out to get instance version instead of hard coded value
+      return !this.report.compatibility.includes('V12')
     }
   }
 }
