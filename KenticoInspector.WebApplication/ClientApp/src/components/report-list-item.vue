@@ -7,8 +7,8 @@
       >
       <v-toolbar-title>
             <v-avatar
-              v-if="notCompatible"
-              color="error darken-1"
+              v-if="notTested || notCompatible"
+              :color="notCompatible ? 'error darken-1' : 'warning lighten-1'"
               size="32"
               tile
               class="elevation-4 "
@@ -17,13 +17,13 @@
               <v-icon
                 color="white"
                 >
-                warning
+                {{ notCompatible ? "not_interested" : "warning" }}
               </v-icon>
             </v-avatar>
         {{ report.name }}
       </v-toolbar-title>
       <v-spacer />
-      <v-btn icon>
+      <v-btn icon :disabled="notCompatible">
         <v-icon>{{ hasResults ? 'replay' : 'play_arrow' }}</v-icon>
       </v-btn>
       <v-btn icon @click="show = !show">
@@ -76,14 +76,19 @@ export default {
   }),
   computed: {
     hasResults: function () {
-      return !!this.report.results
+      return !!this.report.results && !!this.report.results.status
     },
     status: function() {
       return this.hasResults ? this.report.results.status : ''
     },
+
+    notTested: function () {
+      //TODO: reach out to get instance version instead of hard coded value
+      return !this.report.compatible.includes('V12')
+    },
     notCompatible: function () {
       //TODO: reach out to get instance version instead of hard coded value
-      return !this.report.compatibility.includes('V12')
+      return this.report.notCompatible.includes('V12')
     }
   }
 }
