@@ -17,12 +17,24 @@
             multiple
             solo
             hide-details
-          ></v-select>
+          >
+        </v-select>
+      </v-flex>
+      <v-flex sm6>
+        <v-switch
+          v-model="showUntested"
+          label="Show untested reports"
+          color="red"
+          >
+        </v-switch>
+      </v-flex>
+      <v-flex sm6>
         <v-switch
           v-model="showIncompatible"
           label="Show incompatible reports"
           color="red"
-          ></v-switch>
+          >
+        </v-switch>
       </v-flex>
 
       <v-flex xs12>
@@ -43,6 +55,7 @@ export default {
   },
   data: () => ({
     showIncompatible: false,
+    showUntested: false,
     version: "V12",
     selectedTags: [],
     reports: []
@@ -55,11 +68,20 @@ export default {
     },
     filteredReports: function() {
       return this.reports.filter(report => {
-        const showForCompatibility = this.showIncompatible ? true : report.compatible.includes(this.version)
-        const showForTags = this.selectedTags.length === 0 ? true : report.tags.reduce((acc,cur) => {
-          return acc || this.selectedTags.includes(cur)
-        }, false)
-        return showForCompatibility && showForTags;
+        const isCompatible = report.compatible.includes(this.version)
+        const isIncompatible = report.notCompatible.includes(this.version)
+        const isUntested = !isCompatible && !isIncompatible
+
+        const hasSelectedTags = this.selectedTags.length > 0
+        const meetsTagRequirements = hasSelectedTags ? this.hasSelectedTag(report) : true
+
+        if(meetsTagRequirements) {
+          return isCompatible
+            || (this.showUntested && isUntested)
+            || (this.showIncompatible && isIncompatible)
+        }
+
+        return false
       })
     }
   },
@@ -68,6 +90,12 @@ export default {
       reportService.getReports().then(reports => {
         this.reports = reports
       })
+    },
+    hasSelectedTag(report) {
+      return report.tags.reduce(
+        (acc,cur) => {
+          return acc || this.selectedTags.includes(cur)
+        }, false)
     }
   },
   watch: {
