@@ -13,7 +13,7 @@
           to="/"
           >
           <v-list-tile-action>
-            <v-icon>home</v-icon>
+            <v-icon>mdi-home</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>
@@ -25,7 +25,7 @@
           to="/reports"
           >
           <v-list-tile-action>
-            <v-icon>apps</v-icon>
+            <v-icon>mdi-file-chart</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>
@@ -37,7 +37,7 @@
           to="/connect"
           >
           <v-list-tile-action>
-            <v-icon>power</v-icon>
+            <v-icon>mdi-power-plug</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>
@@ -76,7 +76,7 @@
         target="_blank"
       >
         <span class="mr-2">View on Github</span>
-        <v-icon>open_in_new</v-icon>
+        <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-toolbar>
 
