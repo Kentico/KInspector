@@ -5,21 +5,27 @@
       dense
       >
       <v-toolbar-title>
-            <v-avatar
-              v-if="notTested || notCompatible"
-              :color="notCompatible ? 'error darken-1' : 'warning lighten-1'"
-              size="30"
-              tile
-              class="elevation-4 "
-              style="position: absolute; left: -16px"
-              >
-              <v-icon
-                color="white"
-                >
-                {{ notCompatible ? "mdi-close-octagon" : "mdi-alert" }}
-              </v-icon>
-            </v-avatar>
         {{ report.name }}
+
+        <v-chip
+          v-if="notTested"
+          color="amber"
+          label
+          small
+          >
+          Untested
+        </v-chip>
+
+        <v-chip
+          v-if="notCompatible"
+          color="red darken-1"
+          dark
+          label
+          small
+          >
+          Incompatible
+        </v-chip>
+
       </v-toolbar-title>
       <v-spacer />
       <v-chip
@@ -146,7 +152,7 @@ export default {
 
     notTested: function () {
       //TODO: reach out to get instance version instead of hard coded value
-      return !this.report.compatible.includes('V12')
+      return !this.report.compatible.includes('V12') && !this.notCompatible
     },
     notCompatible: function () {
       //TODO: reach out to get instance version instead of hard coded value
