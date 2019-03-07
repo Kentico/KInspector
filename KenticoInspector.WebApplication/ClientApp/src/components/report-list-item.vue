@@ -37,6 +37,7 @@
           pr-0
           pl-3
           py-1
+          @click="showDescription = !showDescription"
           >
           <v-flex>
             {{ report.shortDescription }}
@@ -52,7 +53,7 @@
             </v-chip>
           </v-flex>
           <v-flex shrink>
-            <v-btn icon @click="showDescription = !showDescription">
+            <v-btn icon>
               <v-icon>{{ showDescription ? 'expand_less' : 'expand_more' }}</v-icon>
             </v-btn>
           </v-flex>
@@ -75,13 +76,20 @@
         pl-3
         py-1
         :class="status"
+         @click="showResults = !showResults"
         >
         <v-flex>
-          <div v-html="report.results.summary" />
+          <v-icon
+            :color="resultIconColor"
+            left
+            >
+            {{ resultIcon }}
+          </v-icon>
+          <span v-html="report.results.summary" />
         </v-flex>
         <v-spacer></v-spacer>
         <v-flex shrink>
-          <v-btn icon @click="showResults = !showResults">
+          <v-btn icon>
             <v-icon color="white">{{ showResults ? 'expand_less' : 'expand_more' }}</v-icon>
           </v-btn>
         </v-flex>
@@ -132,6 +140,28 @@ export default {
     notCompatible: function () {
       //TODO: reach out to get instance version instead of hard coded value
       return this.report.notCompatible.includes('V12')
+    },
+    resultIcon: function () {
+      let icon = ""
+      switch (this.report.results.status) {
+        case "success":
+          icon = "check_circle"
+          break
+        case "info":
+          icon = "info"
+          break
+        case "warning":
+          icon = "flag"
+          break
+        case "error":
+          icon = "warning"
+          break
+      }
+
+      return icon
+    },
+    resultIconColor: function () {
+      return `${this.report.results.status} darken-3`
     }
   }
 }
