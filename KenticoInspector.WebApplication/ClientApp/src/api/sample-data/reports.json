@@ -17,7 +17,7 @@
     "name": "Error report w/list of strings result",
     "shortDescription": "This is a very short description highlighting the basics",
     "longDescription": " <p>This is a longer description with a lot more details.</p>\r\n      <p>There many be multiple paragraphs and <a href=\"https://docs.kentico.com/k12\" target=\"_blank\">links to documentation</a> for more information.</p>",
-    "tags": ["content", "settings"],
+    "tags": ["content", "settings","table","important stuff", "another", "general"],
     "results": {
       "status": "error",
       "summary": "This is a result summary indicating an issue",
