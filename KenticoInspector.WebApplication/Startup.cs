@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using VueCliMiddleware;
 
 namespace KenticoInspector.WebApplication
 {
@@ -45,16 +46,22 @@ namespace KenticoInspector.WebApplication
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseMvc();
             app.UseSpa(spa => {
                 spa.Options.SourcePath = "ClientApp";
 
-                //if (env.IsDevelopment()) {
-                //    spa.UseProxyToSpaDevelopmentServer("http://localhost:1234");
-                //}
+                if (env.IsDevelopment())
+                {
+                    if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ASPNETCORE_USE_EXTERNAL_CLIENT")))
+                    {
+                        spa.UseProxyToSpaDevelopmentServer("http://localhost:8080");
+                    }
+                    else {
+                        spa.UseVueCli(npmScript: "serve", port: 8080);
+                    }
+                }
             });
         }
     }
