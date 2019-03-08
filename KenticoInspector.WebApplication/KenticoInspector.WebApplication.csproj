@@ -10,8 +10,5 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="cd .\ClientApp&#xD;&#xA;npm run deploy" />
-  </Target>
 
 </Project>
