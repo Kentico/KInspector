@@ -16,11 +16,11 @@
           v-model="tab"
           >
           <v-tabs-slider></v-tabs-slider>
+          <v-tab key="recent">
+            Saved Connections
+          </v-tab>
           <v-tab key="new">
             New Connection
-          </v-tab>
-          <v-tab key="recent">
-            Recent Connections
           </v-tab>
           <v-tab key="iis">
             IIS Connection
@@ -29,11 +29,11 @@
         <v-tabs-items
           v-model="tab"
           >
+          <v-tab-item key="recent">
+            <instance-connection-list :items="instanceConfigurations" />
+          </v-tab-item>
           <v-tab-item key="new">
             <instance-connect-form-manual />
-          </v-tab-item>
-          <v-tab-item key="recent">
-            <card-coming-soon />
           </v-tab-item>
           <v-tab-item key="iis">
             <card-coming-soon />
@@ -46,17 +46,35 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import CardComingSoon from '../components/card-coming-soon'
 import InstanceConnectFormManual from '../components/instance-connect-form-manual'
+import InstanceConnectionList from '../components/instance-connection-list'
 
 export default {
   components: {
     CardComingSoon,
-    InstanceConnectFormManual
+    InstanceConnectFormManual,
+    InstanceConnectionList
   },
   data: () => ({
     tab: null
-  })
+  }),
+  mounted () {
+    this.getInstanceConfigurations()
+  },
+  computed: {
+    ...mapState([
+      'instanceConfigurations'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'getInstanceConfigurations',
+      'deleteInstanceConfiguration',
+      'selectInstanceConfiguration'
+    ]),
+  }
 }
 </script>
 

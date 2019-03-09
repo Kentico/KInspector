@@ -7,60 +7,64 @@
         lazy-validation
         >
         <v-text-field
-          v-model="instance.database.serverName"
+          v-model="instanceConfiguration.databaseConfiguration.serverName"
           :rules="[v => !!v || 'Database server name is required']"
           label="Database server name"
           required
+          clearable
           />
 
         <v-text-field
-          v-model="instance.database.databaseName"
+          v-model="instanceConfiguration.databaseConfiguration.databaseName"
           :rules="[v => !!v || 'Database name is required']"
           label="Database name"
           required
+          clearable
           />
 
-        <v-select
-          v-model="instance.database.authentication.type"
-          :items="authenticationTypes"
-          item-text="text"
-          item-value="value"
-          label="Authentication Type"
-        ></v-select>
+        <v-switch
+          v-model="instanceConfiguration.databaseConfiguration.integratedSecurity"
+          label="Integrated Security"
+          >
+        </v-switch>
 
-        <div > <!-- v-show="instance.database.authentication.type === 'account'" -->
+        <div v-show="!instanceConfiguration.databaseConfiguration.integratedSecurity">
           <v-text-field
-            v-model="instance.database.authentication.user"
+            v-model="instanceConfiguration.databaseConfiguration.user"
             :rules="[v => {
-              const isAccount = this.instance.database.authentication.type === 'account'
-              isValid = !isAccount ? true : !!v
+              const isIntegrated = this.instanceConfiguration.databaseConfiguration.integratedSecurity
+              isValid = isIntegrated ? true : !!v
               return isValid || 'SQL user is required'
             }]"
             label="SQL User"
             required
+            clearable
             />
 
           <v-text-field
-            v-model="instance.database.authentication.password"
+            v-model="instanceConfiguration.databaseConfiguration.password"
             type="password"
             label="SQL user password"
+            clearable
             />
         </div>
 
         <v-text-field
-          v-model="instance.site.url"
+          v-model="instanceConfiguration.administrationConfiguration.uri"
           :rules="[v => !!v || 'Site URL is required']"
           label="Site URL"
           placeholder="https:\\localhost\DancingGoat"
           required
+          clearable
           />
 
         <v-text-field
-          v-model="instance.site.filePath"
+          v-model="instanceConfiguration.administrationConfiguration.directoryPath"
           :rules="[v => !!v || 'Administration instance root folder is required']"
           label="Administration instance root folder"
           placeholder="C:\inetpub\wwwroot\DancingGoat\CMS"
           required
+          clearable
           />
       </v-form>
     </v-card-text>
@@ -70,7 +74,7 @@
         large
         :disabled="!valid"
         color="primary"
-        @click="validate"
+        @click="submit"
         >
         Connect to Kentico Instance
       </v-btn>
@@ -79,6 +83,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   data: () => ({
     authenticationTypes: [
@@ -91,27 +96,29 @@ export default {
         value: "account"
       }
     ],
-    valid: true,
-    instance: {
-      database: {
+    valid: false,
+    instanceConfiguration: {
+      databaseConfiguration: {
         serverName: "",
         databaseName: "",
-        authentication: {
-          type: "",
-          username: "",
-          password: "",
-        }
+        integratedSecurity: false,
+        user: "",
+        password: ""
       },
-      site: {
-        url: "",
-        filePath: ""
+      administrationConfiguration: {
+        uri: "",
+        directoryPath: ""
       }
     }
   }),
   methods: {
-    validate () {
+    ...mapActions([
+      'UPSERT_INSTANCE_CONFIGURATION'
+    ]),
+    submit () {
       if (this.$refs.form.validate()) {
-        this.snackbar = true
+        this.UPSERT_INSTANCE_CONFIGURATION(this.instanceConfiguration)
+        this.$refs.form.reset()
       }
     },
     reset () {
