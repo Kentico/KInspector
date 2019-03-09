@@ -10,10 +10,11 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0-rc.1",
+    "axios": "^0.18.0",
     "roboto-fontface": "*",
     "vue": "^2.5.21",
     "vue-router": "^3.0.1",
-    "vuetify": "^1.5.4",
+    "vuetify": "^1.5.5",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
