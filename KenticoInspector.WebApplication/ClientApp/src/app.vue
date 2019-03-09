@@ -48,37 +48,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-toolbar
-      fixed
-      clipped-left
-      app
-      dark
-      color="#262524"
-      >
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <span>
-        <v-img
-          :src="require('./assets/kentico.svg')"
-          contain
-          height="38"
-          width="38"
-          style="background-color: #F05A22"
-          />
-      </span>
-      <v-toolbar-title class="headline text-uppercase ml-1">
-        <span>Kentico</span>
-        <span class="font-weight-light">Inspector</span>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn
-        flat
-        href="https://github.com/kentico/kinspector"
-        target="_blank"
-      >
-        <span class="mr-2">View on Github</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-toolbar>
+    <the-main-toolbar></the-main-toolbar>
 
     <v-content>
       <router-view/>
@@ -91,9 +61,13 @@
 </template>
 
 <script>
+import TheMainToolbar from './components/the-main-toolbar'
 
 export default {
   name: 'App',
+  components: {
+    TheMainToolbar
+  },
   data () {
     return {
       drawer: null
@@ -103,6 +77,8 @@ export default {
 </script>
 
 <style>
+  html { overflow-y: auto }
+
   .layout {
     background-color: rgba(255,255,255,.85);
     padding: 0 24px;
