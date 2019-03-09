@@ -45,5 +45,18 @@ export default new Vuex.Store({
     selectInstanceConfiguration: ({ commit }, guid) => {
       commit('setCurrentInstanceConfiguration', guid)
     },
+  },
+  getters: {
+    connected: state => {
+      return !!state.curentInstanceConfiguration
+    },
+
+    connectedInstance: (state, getters) => {
+      if(getters.connected) {
+        return state.instanceConfigurations.find(i=>i.guid == state.curentInstanceConfiguration)
+      } else {
+        return null
+      }
+    },
   }
 })
