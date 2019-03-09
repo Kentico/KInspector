@@ -17,17 +17,7 @@ namespace KenticoInspector.WebApplication.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<InstanceConfiguration>> Get()
         {
-            var db = new DatabaseConfiguration();
-            db.User = "Me";
-            db.ServerName = $"S-{DateTime.Now.Millisecond}";
-
-            var admin = new AdministrationConfiguration("http://localhost", "C:\\inetpub\\");
-
-            var instance = new InstanceConfiguration(db, admin);
             var fsics = new FileSystemInstanceConfigurationService();
-
-            //fsics.Upsert(instance);
-
             return fsics.GetItems();
         }
 
@@ -47,10 +37,10 @@ namespace KenticoInspector.WebApplication.Controllers
         }
 
         [HttpPost]
-        public void Post([FromBody] InstanceConfiguration instanceConfiguration)
+        public Guid Post([FromBody] InstanceConfiguration instanceConfiguration)
         {
             var fsics = new FileSystemInstanceConfigurationService();
-            fsics.Upsert(instanceConfiguration);
+            return fsics.Upsert(instanceConfiguration);
         }
     }
 }
