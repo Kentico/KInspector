@@ -54,8 +54,12 @@ export default new Vuex.Store({
     connectedInstance: (state, getters) => {
       if(getters.connected) {
         return state.instanceConfigurations.find(i=>i.guid == state.curentInstanceConfiguration)
-      } else {
-        return null
+      }
+    },
+
+    connectedInstanceName: (state, getters) => {
+      if(getters.connected) {
+        return !!getters.connectedInstance ? getters.connectedInstance.administrationConfiguration.uri : 'UNKNOWN'
       }
     },
   }

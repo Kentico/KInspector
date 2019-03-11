@@ -21,6 +21,7 @@ export default {
     ...mapGetters([
       'connected',
       'connectedInstance',
+      'connectedInstanceName',
     ]),
     color () {
       return this.connected ? '' : 'error'
@@ -30,9 +31,6 @@ export default {
     },
     icon () {
       return this.connected ? 'mdi-power-plug' : 'mdi-power-plug-off'
-    },
-    connectedInstanceName () {
-      return !!this.connectedInstance ? this.connectedInstance.administrationConfiguration.uri : 'UNKNOWN'
     }
   }
 }
