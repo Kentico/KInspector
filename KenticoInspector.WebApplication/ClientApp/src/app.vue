@@ -9,6 +9,15 @@
     </v-content>
     <v-footer class="pa-3" color="rgba(255,255,255,.85)">
       <v-spacer></v-spacer>
+      <v-btn
+        flat
+        href="https://github.com/kentico/kinspector"
+        target="_blank"
+        class="my-0"
+        >
+        <span class="mr-2">Source on Github</span>
+        <v-icon>mdi-github-box</v-icon>
+      </v-btn>
       <div>Version 4.0 Alpha</div>
     </v-footer>
   </v-app>
