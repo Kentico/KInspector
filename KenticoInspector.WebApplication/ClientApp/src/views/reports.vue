@@ -11,45 +11,61 @@
         </h1>
       </v-flex>
 
-      <v-flex xs12>
-        <v-select
-            v-model="selectedTags"
-            :items="tags"
-            label="Show reports by tag(s)"
-            clearable
-            small-chips
-            multiple
-            solo
-            hide-details
-          >
-        </v-select>
-      </v-flex>
-      <v-flex sm6>
-        <v-switch
-          v-model="showUntested"
-          label="Show untested reports"
-          color="red"
-          >
-        </v-switch>
-      </v-flex>
-      <v-flex sm6>
-        <v-switch
-          v-model="showIncompatible"
-          label="Show incompatible reports"
-          color="red"
-          >
-        </v-switch>
-      </v-flex>
+      <template v-if="connected">
+        <v-flex xs12>
+          <v-select
+              v-model="selectedTags"
+              :items="tags"
+              label="Show reports by tag(s)"
+              clearable
+              small-chips
+              multiple
+              solo
+              hide-details
+            >
+          </v-select>
+        </v-flex>
 
-      <v-flex xs12>
-        <report-list :reports="filteredReports" />
-      </v-flex>
+        <v-flex sm6>
+          <v-switch
+            v-model="showUntested"
+            label="Show untested reports"
+            color="red"
+            >
+          </v-switch>
+        </v-flex>
 
+        <v-flex sm6>
+          <v-switch
+            v-model="showIncompatible"
+            label="Show incompatible reports"
+            color="red"
+            >
+          </v-switch>
+        </v-flex>
+
+        <v-flex xs12>
+          <report-list :reports="filteredReports" />
+        </v-flex>
+      </template>
+      <v-flex
+        v-else
+        xs12
+        >
+        <v-card
+          color="error"
+          >
+          <v-card-text>
+            Disconnected
+          </v-card-text>
+        </v-card>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { reportService } from '../api/report-service'
 import ReportList from '../components/report-list'
 
@@ -65,6 +81,7 @@ export default {
     reports: []
   }),
   computed: {
+    ...mapGetters(['connected']),
     tags: function () {
       const allTags = this.reports.reduce(getTagsFromReports,[])
       const uniqueTags = getUniqueTags(allTags)
