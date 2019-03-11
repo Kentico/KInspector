@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <v-layout wrap>
+    <v-layout
+      row
+      wrap
+      class="glass-pane pa-3"
+      >
       <v-flex xs12>
         <h1 class="display-2 mb-3">
          Reports
