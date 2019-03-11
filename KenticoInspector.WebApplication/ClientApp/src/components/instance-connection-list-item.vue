@@ -1,11 +1,11 @@
 <template>
   <v-card>
-    <v-card-title>{{ item.administrationConfiguration.uri }}</v-card-title>
+    <instance-details :instance="item"></instance-details>
     <v-divider></v-divider>
     <v-card-actions>
       <v-btn
         color="success"
-        @click="selectInstanceConfiguration(item.guid)"
+        @click="connect(item.guid)"
         >
         Connect
       </v-btn>
@@ -21,8 +21,12 @@
 
 <script>
 import { mapActions } from 'vuex'
+import InstanceDetails from './instance-details'
 
 export default {
+  components: {
+    InstanceDetails
+  },
   props: {
     item: {
       type: Object,
@@ -34,6 +38,10 @@ export default {
       'deleteInstanceConfiguration',
       'selectInstanceConfiguration'
     ]),
+    connect(guid) {
+      this.selectInstanceConfiguration(guid)
+      this.$router.push('/reports')
+    }
   }
 }
 </script>
