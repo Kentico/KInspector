@@ -20,6 +20,12 @@
         <span class="font-weight-light">Inspector</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn
+        icon
+        to="/"
+        >
+        <v-icon>mdi-home</v-icon>
+      </v-btn>
       <connection-status-indicator></connection-status-indicator>
       <v-btn
         flat
