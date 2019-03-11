@@ -28,15 +28,19 @@
 
       </v-toolbar-title>
       <v-spacer />
-      <v-chip
+      <div class="d-flex">
+        <v-chip
               v-for="tag in report.tags"
               :key="tag"
               small
               disabled
               text-color="black"
+              class="hidden-xs-only"
               >
               {{ tag }}
             </v-chip>
+      </div>
+
       <v-btn icon :disabled="notCompatible">
         <v-icon>{{ hasResults ? 'mdi-refresh' : 'mdi-play' }}</v-icon>
       </v-btn>
@@ -88,19 +92,18 @@
          @click="showResults = !showResults"
          v-ripple
         >
-        <v-flex style="height: 24px">
+        <v-flex>
           <v-icon
             :color="resultIconColor"
             class="pr-1"
             >
             {{ resultIcon }}
           </v-icon>
-          <div
+          <span
             v-html="report.results.summary"
-            class="d-inline-block"
-            style="position: relative;top: -1px;"
+            style="position: relative;top: -2px;"
             >
-          </div>
+          </span>
         </v-flex>
         <v-spacer></v-spacer>
         <v-flex shrink>
