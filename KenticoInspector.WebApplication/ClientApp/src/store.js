@@ -45,6 +45,10 @@ export default new Vuex.Store({
     selectInstanceConfiguration: ({ commit }, guid) => {
       commit('setCurrentInstanceConfiguration', guid)
     },
+
+    clearInstanceConfiguration: ({ commit }) => {
+      commit('setCurrentInstanceConfiguration', null)
+    },
   },
   getters: {
     connected: state => {
@@ -54,12 +58,6 @@ export default new Vuex.Store({
     connectedInstance: (state, getters) => {
       if(getters.connected) {
         return state.instanceConfigurations.find(i=>i.guid == state.curentInstanceConfiguration)
-      }
-    },
-
-    connectedInstanceName: (state, getters) => {
-      if(getters.connected) {
-        return !!getters.connectedInstance ? getters.connectedInstance.administrationConfiguration.uri : 'UNKNOWN'
       }
     },
   }
