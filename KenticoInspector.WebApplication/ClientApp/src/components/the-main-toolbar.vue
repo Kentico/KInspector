@@ -15,34 +15,42 @@
           style="background-color: #F05A22"
           />
       </span>
-      <v-toolbar-title class="headline text-uppercase ml-1">
+      <v-toolbar-title class="headline text-uppercase ml-1 hidden-xs-only">
         <span>Kentico</span>
         <span class="font-weight-light">Inspector</span>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
+
       <v-btn
+        flat
         icon
         to="/"
         >
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <connection-status-indicator></connection-status-indicator>
+
       <v-btn
         flat
-        href="https://github.com/kentico/kinspector"
-        target="_blank"
-      >
-        <span class="mr-2">View on Github</span>
-        <v-icon>mdi-open-in-new</v-icon>
+        icon
+        to="/reports"
+        :disabled="!connected"
+        >
+        <v-icon>mdi-file-chart</v-icon>
       </v-btn>
+
+      <v-spacer></v-spacer>
+      <connection-status-indicator></connection-status-indicator>
     </v-toolbar>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import ConnectionStatusIndicator from './connection-status-indicator'
 export default {
   components: {
     ConnectionStatusIndicator
+  },
+  computed: {
+    ...mapGetters(['connected'])
   }
 }
 </script>
