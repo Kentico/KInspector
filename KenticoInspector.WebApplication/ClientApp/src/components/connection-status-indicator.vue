@@ -83,7 +83,7 @@ export default {
     ]),
     disconnect() {
       this.clearInstanceConfiguration()
-      this.$router.push('/')
+      this.$router.push('/connect')
     }
   }
 }
