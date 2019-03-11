@@ -6,26 +6,6 @@
       >
       <v-toolbar-title>
         {{ report.name }}
-
-        <v-chip
-          v-if="notTested"
-          color="amber"
-          label
-          small
-          >
-          Untested
-        </v-chip>
-
-        <v-chip
-          v-if="notCompatible"
-          color="red darken-1"
-          dark
-          label
-          small
-          >
-          Incompatible
-        </v-chip>
-
       </v-toolbar-title>
       <v-spacer />
       <div class="d-flex">
@@ -63,6 +43,23 @@
             {{ report.shortDescription }}
           </v-flex>
           <v-spacer></v-spacer>
+          <v-chip
+            v-if="notTested"
+            color="amber"
+            label
+            small
+            >
+            Untested
+          </v-chip>
+          <v-chip
+            v-if="notCompatible"
+            color="red darken-1"
+            dark
+            label
+            small
+            >
+            Incompatible
+          </v-chip>
           <v-flex shrink class="hidden-xs-only">
 
           </v-flex>
