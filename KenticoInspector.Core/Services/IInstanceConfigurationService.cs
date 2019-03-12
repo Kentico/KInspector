@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace KenticoInspector.Core.Services
 {
-    interface IInstanceConfigurationService
+    public interface IInstanceConfigurationService
     {
         InstanceConfiguration GetItem(Guid Guid);
 
