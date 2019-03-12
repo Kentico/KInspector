@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KenticoInspector.Core.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +32,8 @@ namespace KenticoInspector.WebApplication
             services.AddSpaStaticFiles(configuration => {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddTransient<IInstanceConfigurationService, FileSystemInstanceConfigurationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

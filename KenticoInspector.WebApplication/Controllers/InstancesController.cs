@@ -14,33 +14,35 @@ namespace KenticoInspector.WebApplication.Controllers
     [ApiController]
     public class InstancesController : ControllerBase
     {
+        IInstanceConfigurationService instanceConfigurationService;
+
+        public InstancesController(IInstanceConfigurationService instanceConfigurationService)
+        {
+            this.instanceConfigurationService = instanceConfigurationService;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<InstanceConfiguration>> Get()
         {
-            var fsics = new FileSystemInstanceConfigurationService();
-            return fsics.GetItems();
+            return instanceConfigurationService.GetItems();
         }
 
         [HttpGet("{guid}")]
         public ActionResult<InstanceConfiguration> Get(Guid guid)
         {
-            var fsics = new FileSystemInstanceConfigurationService();
-            return fsics.GetItem(guid);
+            return instanceConfigurationService.GetItem(guid);
         }
 
         [HttpDelete("{guid}")]
         public void Delete(Guid guid)
-
         {
-            var fsics = new FileSystemInstanceConfigurationService();
-            fsics.Delete(guid);
+            instanceConfigurationService.Delete(guid);
         }
 
         [HttpPost]
         public Guid Post([FromBody] InstanceConfiguration instanceConfiguration)
         {
-            var fsics = new FileSystemInstanceConfigurationService();
-            return fsics.Upsert(instanceConfiguration);
+            return instanceConfigurationService.Upsert(instanceConfiguration);
         }
     }
 }
