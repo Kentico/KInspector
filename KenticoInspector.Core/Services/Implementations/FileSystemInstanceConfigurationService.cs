@@ -6,7 +6,7 @@ using System.Text;
 using KenticoInspector.Core.Models;
 using Newtonsoft.Json;
 
-namespace KenticoInspector.Core.Services
+namespace KenticoInspector.Core.Services.Implementations
 {
     public class FileSystemInstanceConfigurationService : IInstanceConfigurationService
     {

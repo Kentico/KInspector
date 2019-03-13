@@ -5,8 +5,8 @@ using System.Text;
 
 namespace KenticoInspector.Core.Services
 {
-    interface IInstanceService
+    public interface IInstanceService
     {
-        Instance ConnectToInstance(InstanceConfiguration instanceConfiguration);
+        Instance GetInstance(InstanceConfiguration instanceConfiguration);
     }
 }
