@@ -10,6 +10,12 @@ namespace KenticoInspector.WebApplication.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -33,12 +39,6 @@ namespace KenticoInspector.WebApplication.Controllers
         // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
         {
         }
     }

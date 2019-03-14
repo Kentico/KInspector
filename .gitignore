@@ -194,4 +194,6 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
-KenticoInspector.WebApplication/InstanceConfigurations.json
+
+# Kentico Inspector Specifics
+KenticoInspector.WebApplication/SavedInstances.json

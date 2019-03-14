@@ -32,7 +32,7 @@
         flat
         icon
         to="/reports"
-        :disabled="!connected"
+        :disabled="!isConnected"
         >
         <v-icon>mdi-file-chart</v-icon>
       </v-btn>
@@ -50,7 +50,7 @@ export default {
     ConnectionStatusIndicator
   },
   computed: {
-    ...mapGetters(['connected'])
+    ...mapGetters(['isConnected'])
   }
 }
 </script>
