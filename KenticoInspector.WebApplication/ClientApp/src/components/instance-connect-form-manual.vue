@@ -7,7 +7,7 @@
         lazy-validation
         >
         <v-text-field
-          v-model="instanceConfiguration.databaseConfiguration.serverName"
+          v-model="instance.databaseSettings.server"
           :rules="[v => !!v || 'Database server name is required']"
           label="Database server name"
           required
@@ -15,7 +15,7 @@
           />
 
         <v-text-field
-          v-model="instanceConfiguration.databaseConfiguration.databaseName"
+          v-model="instance.databaseSettings.database"
           :rules="[v => !!v || 'Database name is required']"
           label="Database name"
           required
@@ -23,16 +23,16 @@
           />
 
         <v-switch
-          v-model="instanceConfiguration.databaseConfiguration.integratedSecurity"
+          v-model="instance.databaseSettings.integratedSecurity"
           label="Integrated Security"
           >
         </v-switch>
 
-        <div v-show="!instanceConfiguration.databaseConfiguration.integratedSecurity">
+        <div v-show="!instance.databaseSettings.integratedSecurity">
           <v-text-field
-            v-model="instanceConfiguration.databaseConfiguration.user"
+            v-model="instance.databaseSettings.user"
             :rules="[v => {
-              const isIntegrated = this.instanceConfiguration.databaseConfiguration.integratedSecurity
+              const isIntegrated = this.instance.databaseSettings.integratedSecurity
               isValid = isIntegrated ? true : !!v
               return isValid || 'SQL user is required'
             }]"
@@ -42,7 +42,7 @@
             />
 
           <v-text-field
-            v-model="instanceConfiguration.databaseConfiguration.password"
+            v-model="instance.databaseSettings.password"
             type="password"
             label="SQL user password"
             clearable
@@ -50,7 +50,7 @@
         </div>
 
         <v-text-field
-          v-model="instanceConfiguration.administrationConfiguration.uri"
+          v-model="instance.url"
           :rules="[v => !!v || 'Site URL is required']"
           label="Site URL"
           placeholder="https:\\localhost\DancingGoat"
@@ -59,11 +59,17 @@
           />
 
         <v-text-field
-          v-model="instanceConfiguration.administrationConfiguration.directoryPath"
+          v-model="instance.path"
           :rules="[v => !!v || 'Administration instance root folder is required']"
           label="Administration instance root folder"
           placeholder="C:\inetpub\wwwroot\DancingGoat\CMS"
           required
+          clearable
+          />
+        <v-text-field
+          v-model="instance.name"
+          label="Name (optional)"
+          placeholder="Dancing Goat"
           clearable
           />
       </v-form>
@@ -97,28 +103,27 @@ export default {
       }
     ],
     valid: false,
-    instanceConfiguration: {
-      databaseConfiguration: {
-        serverName: "",
-        databaseName: "",
+    instance: {
+      databaseSettings: {
+        server: "",
+        database: "",
         integratedSecurity: false,
         user: "",
         password: ""
       },
-      administrationConfiguration: {
-        uri: "",
-        directoryPath: ""
-      }
+      url: "",
+      path: "",
+      name: ""
     }
   }),
   methods: {
     ...mapActions([
-      'UPSERT_INSTANCE_CONFIGURATION'
+      'upsertInstance'
     ]),
     submit () {
       if (this.$refs.form.validate()) {
-        this.UPSERT_INSTANCE_CONFIGURATION(this.instanceConfiguration)
-        this.$refs.form.reset()
+        this.upsertInstance(this.instance)
+        //this.$refs.form.reset()
       }
     },
     reset () {

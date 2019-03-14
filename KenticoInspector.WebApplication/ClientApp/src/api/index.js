@@ -1,32 +1,35 @@
 import axios from "axios";
+import { arrayToObject } from '../helpers'
 
 export default {
-  getInstanceConfigurations () {
+  getInstances () {
     return new Promise((resolve)=>{
       axios.get("/api/instances")
       .then(r => r.data)
       .then(instances => {
-        resolve(instances)
+        const instancesObject = arrayToObject(instances, "guid")
+        resolve(instancesObject)
       })
     })
   },
 
-  upsertInstanceConfiguration (instanceConfiguration) {
-    return new Promise((resolve)=>{
-      axios.post("/api/instances", instanceConfiguration)
+  upsertInstance (instance) {
+    return new Promise((resolve,reject)=>{
+      axios.post("/api/instances", instance)
       .then(r => r.data)
+      .catch(reject)
       .then(instances => {
         resolve(instances)
       })
     })
   },
 
-  deleteInstanceConfiguration (instanceConfigurationGuid) {
+  deleteInstance (guid) {
     return new Promise((resolve)=>{
-      console.log(instanceConfigurationGuid)
-      axios.delete(`/api/instances/${instanceConfigurationGuid}`)
-      .then(() => {
-        resolve()
+      axios.delete(`/api/instances/${guid}`)
+      .then(r => r.data)
+      .then(result => {
+        resolve(result)
       })
     })
   }

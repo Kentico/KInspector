@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services;
-using Microsoft.AspNetCore.Http;
+﻿using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace KenticoInspector.WebApplication.Controllers
 {
@@ -14,39 +10,35 @@ namespace KenticoInspector.WebApplication.Controllers
     [ApiController]
     public class InstancesController : ControllerBase
     {
-        private readonly IInstanceConfigurationService _instanceConfigurationService;
-        private readonly IInstanceService _instanceService;
+        private readonly IInstanceRepository _instanceRepository;
 
-        public InstancesController(IInstanceConfigurationService instanceConfigurationService, IInstanceService instanceService)
+        public InstancesController(IInstanceRepository instanceRepository)
         {
-            _instanceConfigurationService = instanceConfigurationService;
-            _instanceService = instanceService;
-        }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<InstanceConfiguration>> Get()
-        {
-            return _instanceConfigurationService.GetItems();
-        }
-
-        [HttpGet("{guid}")]
-        public ActionResult<InstanceConfiguration> Get(Guid guid)
-        {
-            var instanceConfiguration = _instanceConfigurationService.GetItem(guid);
-            var instance = _instanceService.GetInstance(instanceConfiguration);
-            return instanceConfiguration;
+            _instanceRepository = instanceRepository;
         }
 
         [HttpDelete("{guid}")]
         public void Delete(Guid guid)
         {
-            _instanceConfigurationService.Delete(guid);
+            _instanceRepository.DeleteInstance(guid);
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<Instance>> Get()
+        {
+            return _instanceRepository.GetInstances();
+        }
+
+        [HttpGet("{guid}")]
+        public ActionResult<Instance> Get(Guid guid)
+        {
+            return _instanceRepository.GetInstance(guid);
         }
 
         [HttpPost]
-        public Guid Post([FromBody] InstanceConfiguration instanceConfiguration)
+        public Instance Post([FromBody] Instance instance)
         {
-            return _instanceConfigurationService.Upsert(instanceConfiguration);
+            return _instanceRepository.UpsertInstance(instance);
         }
     }
 }

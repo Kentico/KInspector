@@ -36,7 +36,7 @@
           >
 
           <v-tab-item key="recent">
-            <instance-connection-list :items="instanceConfigurations" />
+            <instance-connection-list :items="allInstances" />
           </v-tab-item>
 
           <v-tab-item key="new">
@@ -78,18 +78,21 @@ export default {
     tab: null
   }),
   mounted () {
-    this.getInstanceConfigurations()
+    this.getInstances()
   },
   computed: {
     ...mapState([
-      'instanceConfigurations'
-    ])
+      'instances'
+    ]),
+    allInstances: function () {
+      return Object.values(this.instances)
+    }
   },
   methods: {
     ...mapActions([
-      'getInstanceConfigurations',
-      'deleteInstanceConfiguration',
-      'selectInstanceConfiguration'
+      'getInstances',
+      'deleteInstance',
+      'selectInstance'
     ]),
   }
 }

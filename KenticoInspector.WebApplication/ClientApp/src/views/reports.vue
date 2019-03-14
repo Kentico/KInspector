@@ -11,7 +11,7 @@
         </h1>
       </v-flex>
 
-      <template v-if="connected">
+      <template v-if="isConnected">
         <v-flex xs12>
           <v-select
               v-model="selectedTags"
@@ -81,7 +81,7 @@ export default {
     reports: []
   }),
   computed: {
-    ...mapGetters(['connected']),
+    ...mapGetters(['isConnected']),
     tags: function () {
       const allTags = this.reports.reduce(getTagsFromReports,[])
       const uniqueTags = getUniqueTags(allTags)

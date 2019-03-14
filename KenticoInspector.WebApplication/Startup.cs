@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using KenticoInspector.Core.Services;
-using KenticoInspector.Core.Services.Implementations;
+using KenticoInspector.Core.Repositories;
+using KenticoInspector.Core.Repositories.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,9 +34,7 @@ namespace KenticoInspector.WebApplication
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddScoped<IDatabaseService, DatabaseService>();
-            services.AddScoped<IInstanceConfigurationService, FileSystemInstanceConfigurationService>();
-            services.AddScoped<IInstanceService, InstanceService>();
+            services.AddScoped<IInstanceRepository, InstanceRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
