@@ -36,7 +36,7 @@
           >
 
           <v-tab-item key="recent">
-            <instance-connection-list :items="allInstances" />
+            <instance-connection-list />
           </v-tab-item>
 
           <v-tab-item key="new">
@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
 import CardComingSoon from '../components/card-coming-soon'
 import InstanceConnectFormManual from '../components/instance-connect-form-manual'
 import InstanceConnectionList from '../components/instance-connection-list'
@@ -77,24 +76,6 @@ export default {
   data: () => ({
     tab: null
   }),
-  mounted () {
-    this.getInstances()
-  },
-  computed: {
-    ...mapState([
-      'instances'
-    ]),
-    allInstances: function () {
-      return Object.values(this.instances)
-    }
-  },
-  methods: {
-    ...mapActions([
-      'getInstances',
-      'deleteInstance',
-      'selectInstance'
-    ]),
-  }
 }
 </script>
 

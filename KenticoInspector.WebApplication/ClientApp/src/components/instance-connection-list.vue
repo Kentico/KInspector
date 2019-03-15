@@ -26,17 +26,23 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 import InstanceConnectionListItem from './instance-connection-list-item'
 
 export default {
   components: {
     InstanceConnectionListItem
   },
-  props: {
-    items: {
-      type: Array,
-      default: () => ([])
-    }
+  mounted () {
+    this.getAll()
+  },
+  computed: {
+    ...mapState({
+      items: state => Object.values(state.instances.items)
+    }),
+  },
+  methods: {
+    ...mapActions('instances', ['getAll']),
   }
 }
 </script>

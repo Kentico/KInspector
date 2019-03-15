@@ -68,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
+    ...mapGetters('instances', [
       'getInstanceDisplayName'
     ]),
     displayName: function() {

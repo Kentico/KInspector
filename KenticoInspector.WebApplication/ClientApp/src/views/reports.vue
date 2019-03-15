@@ -81,7 +81,7 @@ export default {
     reports: []
   }),
   computed: {
-    ...mapGetters(['isConnected']),
+    ...mapGetters('instances',['isConnected']),
     tags: function () {
       const allTags = this.reports.reduce(getTagsFromReports,[])
       const uniqueTags = getUniqueTags(allTags)
