@@ -20,7 +20,22 @@ namespace KenticoInspector.Core.Repositories
 
         public List<Site> GetSites(Instance instance)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var instanceConnection = DatabaseHelper.GetSqlConnection(instance.DatabaseSettings);
+
+                using (var connection = instanceConnection)
+                {
+                    var query = "SELECT SiteId as Id, SiteName as Name, SiteGUID as Guid, SiteDomainName as DomainName, SitePresentationURL as PresentationUrl, SiteIsContentOnly as ContentOnly from CMS_Site";
+                    connection.Open();
+                    var sites = connection.Query<Site>(query).ToList();
+                    return sites;
+                }
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

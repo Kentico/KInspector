@@ -17,7 +17,7 @@ namespace KenticoInspector.WebApplication.Controllers
             _instanceService = instanceService;
         }
 
-        [HttpGet("{guid}")]
+        [HttpGet("connect/{guid}")]
         public ActionResult<ConnectedInstanceDetails> Connect(Guid guid)
         {
             return _instanceService.ConnectToInstance(guid);

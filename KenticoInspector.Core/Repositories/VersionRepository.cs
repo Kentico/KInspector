@@ -13,6 +13,8 @@ namespace KenticoInspector.Core.Services
     {
         const string _administrationDllToCheck = "CMS.DataEngine.dll";
         const string _relativeAdministrationDllPath = "bin";
+        const string _relativeHotfixFileFolderPath = "App_Data\\Install";
+        const string _hotfixFile = "Hotfix.txt";
 
         public Version GetKenticoAdministrationVersion(Instance instance)
         {
@@ -39,8 +41,20 @@ namespace KenticoInspector.Core.Services
             }
 
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(dllFileToCheck);
-            var fileVersion = fileVersionInfo.FileVersion;
-            return new Version(fileVersion);
+
+            var hotfix = "0";
+            var hotfixDirectory = Path.Combine(rootPath, _relativeHotfixFileFolderPath);
+            if (Directory.Exists(hotfixDirectory))
+            {
+                var hotfixFile = Path.Combine(hotfixDirectory, _hotfixFile);
+                if (File.Exists(hotfixFile))
+                {
+                    hotfix = File.ReadAllText(hotfixFile);
+                }
+            }
+
+            var version = $"{fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}.{hotfix}";
+            return new Version(version);
         }
         
         public Version GetKenticoDatabaseVersion(Instance instance)
@@ -56,10 +70,10 @@ namespace KenticoInspector.Core.Services
 
                 using (var connection = instanceConnection)
                 {
-                    var query = "SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSDBVersion'";
                     connection.Open();
-                    var version = connection.QuerySingle<string>(query);
-                    return new Version(version);
+                    var version = connection.QuerySingle<string>("SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSDBVersion'");
+                    var hotfix = connection.QuerySingle<string>("SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSHotfixVersion'");
+                    return new Version($"{version}.{hotfix}");
                 }
             }
             catch

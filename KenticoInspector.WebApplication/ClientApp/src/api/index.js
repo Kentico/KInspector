@@ -32,5 +32,18 @@ export default {
         resolve(result)
       })
     })
+  },
+
+  connectInstance (guid) {
+    return new Promise((resolve,reject)=>{
+      axios.get(`/api/instances/connect/${guid}`)
+      .then(r => r.data)
+      .catch(reason => {
+        reject({ message: 'Error Connecting', response: reason.response })
+      })
+      .then(result => {
+        resolve(result)
+      })
+    })
   }
 }
