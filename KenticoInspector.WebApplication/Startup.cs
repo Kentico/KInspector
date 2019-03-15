@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using KenticoInspector.Core.Repositories;
 using KenticoInspector.Core.Repositories.Interfaces;
+using KenticoInspector.Core.Services;
+using KenticoInspector.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,7 +31,7 @@ namespace KenticoInspector.WebApplication
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -34,7 +39,38 @@ namespace KenticoInspector.WebApplication
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddScoped<IInstanceRepository, InstanceRepository>();
+            return ConfigureAutofac(services);
+        }
+
+        private IServiceProvider ConfigureAutofac(IServiceCollection services)
+        {
+            var containerBuilder = new ContainerBuilder();
+
+            containerBuilder.Populate(services);
+            var assemblies = Assembly
+                .GetEntryAssembly()
+                .GetReferencedAssemblies()
+                .Select(Assembly.Load)
+                .ToArray();
+                
+            containerBuilder.RegisterAssemblyTypes(assemblies)
+                .Where(t => t.IsClass
+                    && !t.IsAbstract
+                    && typeof(IService).IsAssignableFrom(t)
+                    )
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterAssemblyTypes(assemblies)
+                .Where(t => t.IsClass
+                    && !t.IsAbstract
+                    && typeof(IRepository).IsAssignableFrom(t)
+                    )
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            var container = containerBuilder.Build();
+            return new AutofacServiceProvider(container);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
