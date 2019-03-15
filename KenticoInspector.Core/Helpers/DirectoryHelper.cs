@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using KenticoInspector.Core.Models;
+using System.IO;
 using System.Reflection;
 
 namespace KenticoInspector.Core.Helpers

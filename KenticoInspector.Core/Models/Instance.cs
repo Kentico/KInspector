@@ -12,7 +12,6 @@ namespace KenticoInspector.Core.Models
         public Version KenticoDatabaseVersion { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
-        public List<Site> Sites { get; set; }
         public string Url { get; set; }
         public void AddErrorMessage(string message, Exception exception)
         {
