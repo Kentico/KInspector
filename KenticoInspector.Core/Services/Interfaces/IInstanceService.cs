@@ -5,7 +5,7 @@ using System.Text;
 
 namespace KenticoInspector.Core.Services.Interfaces
 {
-    public interface IInstanceService
+    public interface IInstanceService : IService
     {
         ConnectedInstanceDetails ConnectToInstance(Guid guid);
 

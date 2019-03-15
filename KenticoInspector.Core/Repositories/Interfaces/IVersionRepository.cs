@@ -5,7 +5,7 @@ using System.Text;
 
 namespace KenticoInspector.Core.Repositories.Interfaces
 {
-    public interface IVersionRepository
+    public interface IVersionRepository : IRepository
     {
         Version GetKenticoAdministrationVersion(Instance instance);
         Version GetKenticoAdministrationVersion(string rootPath);
