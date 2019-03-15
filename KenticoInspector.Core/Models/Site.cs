@@ -4,7 +4,6 @@ namespace KenticoInspector.Core.Models
 { 
     public class Site
     {
-        public Guid InstanceGuid { get; set; }
         public bool ContentOnly { get; set; }
         public string DomainName { get; set; }
         public Guid Guid { get; set; }

@@ -15,9 +15,43 @@
             {{displayName}}
           </a>
         </v-list-tile-title>
-        <v-list-tile-sub-title>Site</v-list-tile-sub-title>
+        <v-list-tile-sub-title>Instance</v-list-tile-sub-title>
       </v-list-tile-content>
     </v-list-tile>
+    <template v-if="isConnected">
+      <v-list-tile>
+        <v-list-tile-content>
+          <v-list-tile-title>
+              {{currentInstanceDetails.administrationVersion.major}}.{{currentInstanceDetails.administrationVersion.minor}}.{{currentInstanceDetails.administrationVersion.build}}
+          </v-list-tile-title>
+          <v-list-tile-sub-title>Administration Version</v-list-tile-sub-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile>
+        <v-list-tile-content>
+          <v-list-tile-title>
+              {{currentInstanceDetails.databaseVersion.major}}.{{currentInstanceDetails.databaseVersion.minor}}.{{currentInstanceDetails.databaseVersion.build}}
+          </v-list-tile-title>
+          <v-list-tile-sub-title>Database Version</v-list-tile-sub-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile>
+        <v-list-tile-content>
+          <v-list-tile-title>
+              {{currentInstanceDetails.sites.length}}
+          </v-list-tile-title>
+          <v-list-tile-sub-title>Site Count</v-list-tile-sub-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile>
+        <v-list-tile-content>
+          <v-list-tile-title>
+              {{currentInstanceDetails.sites.length}}
+          </v-list-tile-title>
+          <v-list-tile-sub-title>Site Count</v-list-tile-sub-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </template>
     <v-list-tile>
       <v-list-tile-content>
         <v-list-tile-title>{{instance.path}}</v-list-tile-title>
@@ -59,7 +93,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 export default {
   props: {
     instance: {
@@ -69,8 +103,10 @@ export default {
   },
   computed: {
     ...mapGetters('instances', [
-      'getInstanceDisplayName'
+      'getInstanceDisplayName',
+      'isConnected'
     ]),
+    ...mapState('instances',['currentInstanceDetails']),
     displayName: function() {
       const name = this.getInstanceDisplayName(this.instance.guid)
       return name

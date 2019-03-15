@@ -41,7 +41,7 @@
         </v-btn>
         <v-btn
           v-else
-          @click="disconnect()"
+          @click="doDisconnect()"
           block
           color="error"
           >
@@ -78,11 +78,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'deselectItem'
+    ...mapActions('instances', [
+      'disconnect'
     ]),
-    disconnect() {
-      this.deselectItem()
+    doDisconnect() {
+      this.disconnect()
       this.$router.push('/connect')
     }
   }

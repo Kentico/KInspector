@@ -5,13 +5,13 @@
     <v-card-actions>
       <v-btn
         color="success"
-        @click="connect(item.guid)"
+        @click="connectToInstance(item.guid)"
         >
         Connect
       </v-btn>
       <v-btn
         color="error"
-        @click="deleteItem(item.guid)"
+        @click="deleteInstance(item.guid)"
         >
         Delete
       </v-btn>
@@ -34,13 +34,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions('instances',[
-      'deleteItem',
-      'selectItem'
-    ]),
-    connect(guid) {
-      this.selectItem(guid)
-      this.$router.push('/reports')
+    ...mapActions('instances',{
+      deleteInstance: 'deleteItem',
+      connectInstance: 'connect'
+    }),
+    connectToInstance(guid) {
+      this.connectInstance(guid)
+        .then(() => {
+          this.$router.push('/reports')
+        })
     }
   }
 }
