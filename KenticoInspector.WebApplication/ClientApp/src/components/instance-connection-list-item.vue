@@ -11,7 +11,7 @@
       </v-btn>
       <v-btn
         color="error"
-        @click="deleteInstance(item.guid)"
+        @click="deleteItem(item.guid)"
         >
         Delete
       </v-btn>
@@ -34,12 +34,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'deleteInstance',
-      'selectInstance'
+    ...mapActions('instances',[
+      'deleteItem',
+      'selectItem'
     ]),
     connect(guid) {
-      this.selectInstance(guid)
+      this.selectItem(guid)
       this.$router.push('/reports')
     }
   }

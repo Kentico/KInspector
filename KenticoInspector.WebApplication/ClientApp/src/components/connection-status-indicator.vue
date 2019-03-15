@@ -62,7 +62,7 @@ export default {
     InstanceDetails
   },
   computed: {
-    ...mapGetters([
+    ...mapGetters('instances',[
       'isConnected',
       'connectedInstance',
       'getInstanceDisplayName',
@@ -79,10 +79,10 @@ export default {
   },
   methods: {
     ...mapActions([
-      'deselectInstance'
+      'deselectItem'
     ]),
     disconnect() {
-      this.deselectInstance()
+      this.deselectItem()
       this.$router.push('/connect')
     }
   }

@@ -50,7 +50,7 @@ export default {
     ConnectionStatusIndicator
   },
   computed: {
-    ...mapGetters(['isConnected'])
+    ...mapGetters('instances',['isConnected'])
   }
 }
 </script>
