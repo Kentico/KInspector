@@ -17,17 +17,23 @@ namespace KenticoInspector.Core.Repositories
                 
         public bool DeleteInstance(Guid guid)
         {
-            return DeleteInstanceInternal(guid);
+            var currentInstances = LoadSavedInstances();
+            var totalRemoved = currentInstances.RemoveAll(i => i.Guid == guid);
+            SaveInstances(currentInstances);
+            return totalRemoved > 0;
         }
 
         public Instance GetInstance(Guid guid)
         {
-            return GetInstanceInternal(guid);
+            var instances = GetInstances();
+            var selectedInstance = instances.FirstOrDefault(i => i.Guid == guid);
+            
+            return selectedInstance;
         }
 
         public List<Instance> GetInstances()
         {
-            return LoadSavedInstances(true);
+            return LoadSavedInstances();
         }
 
         public Instance UpsertInstance(Instance instance)
@@ -51,76 +57,13 @@ namespace KenticoInspector.Core.Repositories
             return instance;
         }
 
-        private bool DeleteInstanceInternal(Guid guid)
-        {
-            var currentInstances = LoadSavedInstances();
-            var totalRemoved = currentInstances.RemoveAll(i => i.Guid == guid);
-            SaveInstances(currentInstances);
-            return totalRemoved > 0;
-        }
-
-        private Instance GetInstanceInternal(Guid guid)
-        {
-            var instances = GetInstances();
-            var selectedInstance = instances.FirstOrDefault(i => i.Guid == guid);
-            if (selectedInstance != null) {
-                LoadInstanceDynamicProperties(selectedInstance);
-            }
-
-            return selectedInstance;
-        }
-
-        private List<Site> GetInstanceSites(Instance instance)
-        {
-            // TODO: Get sites for instance
-            return new List<Site>();
-        }
-
-        private Version GetKenticoAdministrationVersion(Instance instance)
-        {
-            try
-            {
-                var instanceConnection = DatabaseHelper.GetSqlConnection(instance.DatabaseSettings);
-
-                using (var connection = instanceConnection)
-                {
-                    var query = "SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSDBVersion'";
-                    connection.Open();
-                    var version = connection.QuerySingle<string>(query);
-                    return new Version(version);
-                }
-            }
-            catch (Exception e)
-            {
-                instance.AddErrorMessage("Could not retrieve database version", e);
-                return null;
-            }            
-        }
-
-        private void LoadInstanceDynamicProperties(Instance instance)
-        {
-            if (instance != null)
-            {
-                // TODO: Get administration version from disk
-                instance.KenticoAdministrationVersion = new Version();
-                instance.KenticoDatabaseVersion = GetKenticoAdministrationVersion(instance);
-                instance.Sites = GetInstanceSites(instance);
-            }
-        }
-
-        private List<Instance> LoadSavedInstances(bool loadDynamicProperties = false)
+        private List<Instance> LoadSavedInstances()
         {
             var saveFileExists = File.Exists(_saveFileLocation);
             if (saveFileExists)
             {
                 var saveFileContents = File.ReadAllText(_saveFileLocation);
                 var loadedInstances = JsonConvert.DeserializeObject<List<Instance>>(saveFileContents);
-                if (loadDynamicProperties) {
-                    foreach (var instance in loadedInstances)
-                    {
-                        LoadInstanceDynamicProperties(instance);
-                    }
-                }
 
                 return loadedInstances;
             }
