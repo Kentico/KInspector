@@ -7,58 +7,61 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    instanceConfigurations: [],
-    curentInstanceConfiguration: null
+    instances: [],
+    connectedInstanceGuid: null
   },
   mutations: {
-    setInstanceConfigurations (state, instanceConfigurations) {
-      state.instanceConfigurations = instanceConfigurations
+    setInstances (state, instances) {
+      state.instances = instances
     },
 
-    setCurrentInstanceConfiguration (state, instanceConfigurationGuid) {
-      state.curentInstanceConfiguration = instanceConfigurationGuid
+    setCurrentInstanceGuid (state, guid) {
+      state.connectedInstanceGuid = guid
     }
   },
   actions: {
-    getInstanceConfigurations: ({ commit }) => {
-      api.getInstanceConfigurations()
-        .then(instanceConfigurations => {
-          commit('setInstanceConfigurations', instanceConfigurations)
+    getInstances: ({ commit }) => {
+      api.getInstances()
+        .then(instances => {
+          commit('setInstances', instances)
         })
     },
 
-    upsertInstanceConfiguration: ({ commit, dispatch }, instanceConfiguration) => {
-      api.upsertInstanceConfiguration(instanceConfiguration)
+    upsertInstance: ({ commit, dispatch }, instance) => {
+      api.upsertInstance(instance)
         .then(guid=>{
-          dispatch('getInstanceConfigurations')
-          commit('setCurrentInstanceConfiguration', guid)
+          dispatch('getInstances')
+          commit('setCurrentInstanceGuid', guid)
         })
     },
 
-    deleteInstanceConfiguration: ({ dispatch }, guid) => {
-      api.deleteInstanceConfiguration(guid)
+    deleteInstance: ({ dispatch }, guid) => {
+      api.deleteInstance(guid)
         .then(()=>{
-          dispatch('getInstanceConfigurations')
+          dispatch('getInstances')
         })
     },
 
-    selectInstanceConfiguration: ({ commit }, guid) => {
-      commit('setCurrentInstanceConfiguration', guid)
+    selectInstance: ({ commit }, guid) => {
+      commit('setCurrentInstanceGuid', guid)
     },
 
-    clearInstanceConfiguration: ({ commit }) => {
-      commit('setCurrentInstanceConfiguration', null)
+    deselectInstance: ({ commit }) => {
+      commit('setCurrentInstanceGuid', null)
     },
   },
   getters: {
-    connected: state => {
-      return !!state.curentInstanceConfiguration
+    isConnected: state => {
+      return !!state.connectedInstanceGuid
     },
 
     connectedInstance: (state, getters) => {
-      if(getters.connected) {
-        return state.instanceConfigurations.find(i=>i.guid == state.curentInstanceConfiguration)
-      }
+      return getters.isConnected ? state.instances[state.connectedInstanceGuid] : null
     },
+
+    getInstanceDisplayName: (state) => (guid) => {
+      const name = state.instances[guid].name
+      return name ? name : "(Unnamed)"
+    }
   }
 })

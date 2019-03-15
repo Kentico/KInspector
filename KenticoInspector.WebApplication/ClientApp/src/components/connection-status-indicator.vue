@@ -8,14 +8,14 @@
         :color="color"
         >
         <div
-          v-if="connected"
+          v-if="isConnected"
           class="text-xs-right caption"
           >
           <span class="grey--text text-lowercase">Server </span>
-          <span class="white--text">{{connectedInstance.databaseConfiguration.serverName}}</span>
+          <span class="white--text">{{connectedInstance.databaseSettings.server}}</span>
           <br>
           <span class="grey--text text-lowercase">Database </span>
-          <span class="white--text">{{connectedInstance.databaseConfiguration.databaseName}}</span>
+          <span class="white--text">{{connectedInstance.databaseSettings.database}}</span>
         </div>
         <span v-else>Disconnected</span>
         <v-icon
@@ -27,12 +27,12 @@
     </template>
     <v-card>
       <instance-details
-        v-if="connected"
+        v-if="isConnected"
         :instance="connectedInstance">
         </instance-details>
       <v-card-actions>
         <v-btn
-          v-if="!connected"
+          v-if="!isConnected"
           to="/connect"
           block
           color="success"
@@ -63,26 +63,26 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'connected',
+      'isConnected',
       'connectedInstance',
-      'connectedInstanceName',
+      'getInstanceDisplayName',
     ]),
     color () {
-      return this.connected ? 'success' : 'error'
+      return this.isConnected ? 'success' : 'error'
     },
     status () {
-      return this.connected ? `Server: ${this.connectedInstance.databaseConfiguration.serverName}<br>Database: ${this.connectedInstance.databaseConfiguration.databaseName}` : 'Disconnected'
+      return this.isConnected ? `Server: ${this.connectedInstance.databaseConfiguration.serverName}<br>Database: ${this.connectedInstance.databaseConfiguration.databaseName}` : 'Disconnected'
     },
     icon () {
-      return this.connected ? 'mdi-power-plug' : 'mdi-power-plug-off'
+      return this.isConnected ? 'mdi-power-plug' : 'mdi-power-plug-off'
     }
   },
   methods: {
     ...mapActions([
-      'clearInstanceConfiguration'
+      'deselectInstance'
     ]),
     disconnect() {
-      this.clearInstanceConfiguration()
+      this.deselectInstance()
       this.$router.push('/connect')
     }
   }
