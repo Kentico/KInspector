@@ -215,7 +215,7 @@ IF NOT EXISTS (SELECT * FROM sys.types WHERE is_table_type = 1 AND name ='{KEYST
             int[] keySeverities = { 0, 0, 0 };
             Status resultStatus = Status.Good;
 
-            using (_CMSResxSet = GetCMSResXResourceSet(instanceInfo.Directory))
+            using (_CMSResxSet = GetCMSResXResourceSet(instanceInfo.Directory, instanceInfo.Version))
             {
                 finalDataSet = BuildDataSet(results.Tables[1], results.Tables[0], keySeverities);
             }
@@ -236,9 +236,20 @@ IF NOT EXISTS (SELECT * FROM sys.types WHERE is_table_type = 1 AND name ='{KEYST
             };
         }
 
-        private static ResXResourceSet GetCMSResXResourceSet(DirectoryInfo directory)
+        private static ResXResourceSet GetCMSResXResourceSet(DirectoryInfo directory, Version version)
         {
-            var resXPath = directory.ToString() + "\\CMS\\CMSResources\\CMS.resx";
+            // Prevent the following invalid paths:
+            // Project
+            // Project\
+            // Project\CMS\
+            var projectPath = directory.ToString().TrimEnd('\\');
+
+            if (!projectPath.EndsWith("\\CMS"))
+            {
+                projectPath += "\\CMS";
+            }
+
+            var resXPath = projectPath + "\\CMSResources\\CMS.resx";
 
             if (File.Exists(resXPath))
             {
