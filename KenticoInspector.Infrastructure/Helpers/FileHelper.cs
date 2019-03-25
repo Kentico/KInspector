@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace KenticoInspector.Core.Helpers
+namespace KenticoInspector.Infrastructure.Helpers
 {
     static class FileHelper
     {

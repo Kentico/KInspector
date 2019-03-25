@@ -5,11 +5,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 
-namespace KenticoInspector.Core.Helpers
+namespace KenticoInspector.Infrastructure.Helpers
 {
     public class DatabaseHelper
     {
-        public static string BuildConnectionString(DatabaseSettings databaseSettings)
+        public static string GetConnectionString(DatabaseSettings databaseSettings)
         {
             SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder();
 
@@ -31,7 +31,7 @@ namespace KenticoInspector.Core.Helpers
 
         public static IDbConnection GetSqlConnection(DatabaseSettings databaseSettings)
         {
-            var connectionString = BuildConnectionString(databaseSettings);
+            var connectionString = GetConnectionString(databaseSettings);
             return new SqlConnection(connectionString);
         }
     }

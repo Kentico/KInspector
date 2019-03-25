@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using KenticoInspector.Core.Helpers;
+using KenticoInspector.Infrastructure.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
 using Newtonsoft.Json;
@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace KenticoInspector.Core.Repositories
+namespace KenticoInspector.Infrastructure.Repositories
 {
     public class InstanceRepository : IInstanceRepository
     {
