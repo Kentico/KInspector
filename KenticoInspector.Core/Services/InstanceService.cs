@@ -3,6 +3,7 @@ using KenticoInspector.Core.Repositories.Interfaces;
 using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace KenticoInspector.Core.Services
@@ -33,7 +34,7 @@ namespace KenticoInspector.Core.Services
                 Guid = instance.Guid,
                 AdministrationVersion = _versionService.GetKenticoAdministrationVersion(instance),
                 DatabaseVersion = _versionService.GetKenticoDatabaseVersion(instance),
-                Sites = _siteRepository.GetSites(instance)
+                Sites = _siteRepository.GetSites(instance).ToList()
             };
         }
 

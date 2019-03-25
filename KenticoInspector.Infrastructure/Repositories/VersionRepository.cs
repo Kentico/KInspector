@@ -1,13 +1,12 @@
 ﻿using Dapper;
-using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
-using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Infrastructure.Helpers;
 using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace KenticoInspector.Core.Services
+namespace KenticoInspector.Infrastructure.Services
 {
     public class VersionRepository : IVersionRepository
     {
@@ -56,7 +55,7 @@ namespace KenticoInspector.Core.Services
             var version = $"{fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}.{hotfix}";
             return new Version(version);
         }
-        
+
         public Version GetKenticoDatabaseVersion(Instance instance)
         {
             return GetKenticoDatabaseVersion(instance.DatabaseSettings);
@@ -66,15 +65,10 @@ namespace KenticoInspector.Core.Services
         {
             try
             {
-                var instanceConnection = DatabaseHelper.GetSqlConnection(databaseSettings);
-
-                using (var connection = instanceConnection)
-                {
-                    connection.Open();
-                    var version = connection.QuerySingle<string>("SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSDBVersion'");
-                    var hotfix = connection.QuerySingle<string>("SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSHotfixVersion'");
-                    return new Version($"{version}.{hotfix}");
-                }
+                var connection = DatabaseHelper.GetSqlConnection(databaseSettings);
+                var version = connection.QuerySingle<string>("SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSDBVersion'");
+                var hotfix = connection.QuerySingle<string>("SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSHotfixVersion'");
+                return new Version($"{version}.{hotfix}");
             }
             catch
             {

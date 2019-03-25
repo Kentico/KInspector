@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -47,12 +48,8 @@ namespace KenticoInspector.WebApplication
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.Populate(services);
-            var assemblies = Assembly
-                .GetEntryAssembly()
-                .GetReferencedAssemblies()
-                .Select(Assembly.Load)
-                .ToArray();
-                
+            Assembly[] assemblies = GetAssemblies();
+
             containerBuilder.RegisterAssemblyTypes(assemblies)
                 .Where(t => t.IsClass
                     && !t.IsAbstract
@@ -71,6 +68,21 @@ namespace KenticoInspector.WebApplication
 
             var container = containerBuilder.Build();
             return new AutofacServiceProvider(container);
+        }
+
+        private static Assembly[] GetAssemblies()
+        {
+            var assemblies = Assembly
+                .GetEntryAssembly()
+                .GetReferencedAssemblies()
+                .Select(Assembly.Load);
+
+            var currentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var InfrastructureAssembly = Assembly.LoadFile(currentDirectory + "\\KenticoInspector.Infrastructure.dll");
+
+            assemblies = assemblies.Append(InfrastructureAssembly);
+
+            return assemblies.ToArray();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

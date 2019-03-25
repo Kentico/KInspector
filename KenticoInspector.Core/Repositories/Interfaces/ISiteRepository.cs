@@ -6,6 +6,6 @@ namespace KenticoInspector.Core.Repositories.Interfaces
     public interface ISiteRepository : IRepository
     {
         Site GetSite(Instance instance, int siteId);
-        List<Site> GetSites(Instance instance);
+        IEnumerable<Site> GetSites(Instance instance);
     }
 }
