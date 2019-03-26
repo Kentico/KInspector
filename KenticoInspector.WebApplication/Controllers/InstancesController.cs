@@ -3,6 +3,7 @@ using KenticoInspector.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.WebApplication.Controllers
 {
@@ -17,10 +18,10 @@ namespace KenticoInspector.WebApplication.Controllers
             _instanceService = instanceService;
         }
 
-        [HttpGet("connect/{guid}")]
-        public ActionResult<ConnectedInstanceDetails> Connect(Guid guid)
+        [HttpGet("details/{guid}")]
+        public ActionResult<InstanceDetails> Details(Guid guid)
         {
-            return _instanceService.ConnectToInstance(guid);
+            return _instanceService.GetInstanceDetails(guid);
         }
 
         [HttpDelete("{guid}")]
@@ -32,7 +33,8 @@ namespace KenticoInspector.WebApplication.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Instance>> Get()
         {
-            return _instanceService.GetInstances();
+            var instances = _instanceService.GetInstances();
+            return instances.ToList();
         }
 
         [HttpGet("{guid}")]

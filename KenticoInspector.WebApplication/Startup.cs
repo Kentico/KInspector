@@ -6,10 +6,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using KenticoInspector.Core.Repositories;
 using KenticoInspector.Core.Repositories.Interfaces;
-using KenticoInspector.Core.Services;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Infrastructure;
+using KenticoInspector.Reports;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -66,6 +66,9 @@ namespace KenticoInspector.WebApplication
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
+            containerBuilder.RegisterModule(new InfrastructureModule());
+            containerBuilder.RegisterModule(new ReportsModule());
+
             var container = containerBuilder.Build();
             return new AutofacServiceProvider(container);
         }
@@ -76,11 +79,6 @@ namespace KenticoInspector.WebApplication
                 .GetEntryAssembly()
                 .GetReferencedAssemblies()
                 .Select(Assembly.Load);
-
-            var currentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var InfrastructureAssembly = Assembly.LoadFile(currentDirectory + "\\KenticoInspector.Infrastructure.dll");
-
-            assemblies = assemblies.Append(InfrastructureAssembly);
 
             return assemblies.ToArray();
         }

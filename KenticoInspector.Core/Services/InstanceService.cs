@@ -10,32 +10,15 @@ namespace KenticoInspector.Core.Services
 {
     public class InstanceService : IInstanceService
     {
-        private readonly IVersionRepository _versionService;
         private readonly IInstanceRepository _instanceRepository;
         private readonly ISiteRepository _siteRepository;
+        private readonly IVersionRepository _versionRepository;
 
-        public InstanceService(IInstanceRepository instanceRepository, IVersionRepository versionService, ISiteRepository siteRepository)
+        public InstanceService(IInstanceRepository instanceRepository, IVersionRepository versionRepository, ISiteRepository siteRepository)
         {
             _instanceRepository = instanceRepository;
-            _versionService = versionService;
+            _versionRepository = versionRepository;
             _siteRepository = siteRepository;
-        }
-
-        public ConnectedInstanceDetails ConnectToInstance(Guid guid)
-        {
-            var instance = _instanceRepository.GetInstance(guid);
-            return ConnectToInstance(instance);
-        }
-
-        public ConnectedInstanceDetails ConnectToInstance(Instance instance)
-        {
-            return new ConnectedInstanceDetails
-            {
-                Guid = instance.Guid,
-                AdministrationVersion = _versionService.GetKenticoAdministrationVersion(instance),
-                DatabaseVersion = _versionService.GetKenticoDatabaseVersion(instance),
-                Sites = _siteRepository.GetSites(instance).ToList()
-            };
         }
 
         public bool DeleteInstance(Guid guid)
@@ -48,7 +31,24 @@ namespace KenticoInspector.Core.Services
             return _instanceRepository.GetInstance(guid);
         }
 
-        public List<Instance> GetInstances()
+        public InstanceDetails GetInstanceDetails(Guid guid)
+        {
+            var instance = _instanceRepository.GetInstance(guid);
+            return GetInstanceDetails(instance);
+        }
+
+        public InstanceDetails GetInstanceDetails(Instance instance)
+        {
+            return new InstanceDetails
+            {
+                Guid = instance.Guid,
+                AdministrationVersion = _versionRepository.GetKenticoAdministrationVersion(instance),
+                DatabaseVersion = _versionRepository.GetKenticoDatabaseVersion(instance),
+                Sites = _siteRepository.GetSites(instance).ToList()
+            };
+        }
+
+        public IList<Instance> GetInstances()
         {
             return _instanceRepository.GetInstances();
         }

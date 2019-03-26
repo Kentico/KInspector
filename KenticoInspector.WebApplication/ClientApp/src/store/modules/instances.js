@@ -49,7 +49,7 @@ const actions = {
   connect: ({ commit }, guid) => {
     return new Promise((resolve) => {
       commit('setConnecting',true)
-      api.connectInstance(guid)
+      api.getInstanceDetails(guid)
         .then(instanceDetails => {
           commit('setCurrentInstanceDetails', instanceDetails)
           commit('setConnecting',false)
