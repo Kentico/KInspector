@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.1" />
+    <PackageReference Include="Autofac" Version="4.9.2" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\KenticoInspector.Core\KenticoInspector.Core.csproj" />
     <ProjectReference Include="..\KenticoInspector.Infrastructure\KenticoInspector.Infrastructure.csproj" />
+    <ProjectReference Include="..\KenticoInspector.Reports\KenticoInspector.Reports.csproj" />
   </ItemGroup>
 
 </Project>

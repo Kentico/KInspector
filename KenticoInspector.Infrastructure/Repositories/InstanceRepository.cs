@@ -1,13 +1,10 @@
-﻿using Dapper;
-using KenticoInspector.Infrastructure.Helpers;
-using KenticoInspector.Core.Models;
+﻿using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace KenticoInspector.Infrastructure.Repositories
 {
@@ -31,7 +28,7 @@ namespace KenticoInspector.Infrastructure.Repositories
             return selectedInstance;
         }
 
-        public List<Instance> GetInstances()
+        public IList<Instance> GetInstances()
         {
             return LoadSavedInstances();
         }

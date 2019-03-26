@@ -11,7 +11,7 @@ namespace KenticoInspector.Core.Repositories.Interfaces
 
         Instance GetInstance(Guid guid);
 
-        List<Instance> GetInstances();
+        IList<Instance> GetInstances();
 
         Instance UpsertInstance(Instance instance);
     }

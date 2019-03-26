@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KenticoInspector.Core.Models
 {
-    public class ConnectedInstanceDetails
+    public class InstanceDetails
     {
         public Guid Guid { get; set; }
         public Version AdministrationVersion { get; set; }

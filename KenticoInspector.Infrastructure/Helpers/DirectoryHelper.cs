@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace KenticoInspector.Infrastructure.Helpers
 {
-    class DirectoryHelper
+    public class DirectoryHelper
     {
         public static string GetExecutingDirectory()
         {
