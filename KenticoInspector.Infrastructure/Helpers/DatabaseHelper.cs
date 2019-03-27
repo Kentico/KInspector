@@ -49,6 +49,5 @@ namespace KenticoInspector.Infrastructure.Helpers
         public static IDbConnection GetSqlConnection(string connectionString) {
             return new SqlConnection(connectionString);
         }
-
     }
 }

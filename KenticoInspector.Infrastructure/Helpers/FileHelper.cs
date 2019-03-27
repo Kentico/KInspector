@@ -7,10 +7,10 @@ namespace KenticoInspector.Infrastructure.Helpers
 {
     static class FileHelper
     {
-        public static string GetSqlScriptText(string relativeFilePath)
+        public static string GetSqlQueryText(string relativeFilePath)
         {
             var executingDirectory = DirectoryHelper.GetExecutingDirectory();
-            var fullPathToScript = $"{executingDirectory}/Scripts/{relativeFilePath}";
+            var fullPathToScript = $"{executingDirectory}/{relativeFilePath}";
             return File.ReadAllText(fullPathToScript);
         }
     }

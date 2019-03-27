@@ -23,6 +23,8 @@ namespace KenticoInspector.Infrastructure.Repositories
 
         private IList<IReport> LoadReports() {
             var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule(new CoreModule());
+            containerBuilder.RegisterModule(new InfrastructureModule());
             containerBuilder.RegisterModule(new ReportsModule());
             var container = containerBuilder.Build();
             var registeredReports = container.Resolve<IList<IReport>>();

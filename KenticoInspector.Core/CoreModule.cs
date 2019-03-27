@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace KenticoInspector.Infrastructure
+namespace KenticoInspector.Core
 {
-    public class InfrastructureModule : Autofac.Module
+    public class CoreModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {
