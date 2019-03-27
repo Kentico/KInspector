@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using KenticoInspector.Core;
 using KenticoInspector.Core.Repositories.Interfaces;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Infrastructure;
@@ -48,24 +49,8 @@ namespace KenticoInspector.WebApplication
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.Populate(services);
-            Assembly[] assemblies = GetAssemblies();
-
-            containerBuilder.RegisterAssemblyTypes(assemblies)
-                .Where(t => t.IsClass
-                    && !t.IsAbstract
-                    && typeof(IService).IsAssignableFrom(t)
-                    )
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-
-            containerBuilder.RegisterAssemblyTypes(assemblies)
-                .Where(t => t.IsClass
-                    && !t.IsAbstract
-                    && typeof(IRepository).IsAssignableFrom(t)
-                    )
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-
+            
+            containerBuilder.RegisterModule(new CoreModule());
             containerBuilder.RegisterModule(new InfrastructureModule());
             containerBuilder.RegisterModule(new ReportsModule());
 

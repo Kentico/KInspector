@@ -27,7 +27,7 @@ namespace KenticoInspector.Reports
         {
             return new ReportResults()
             {
-                Status = ReportResultsStatus.Information,
+                Status = ReportResultsStatus.Information.ToString(),
                 Summary = "Test is fake.",
                 Type = typeof(string).ToString(),
                 Data = "Totally fake"
