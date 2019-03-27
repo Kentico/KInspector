@@ -21,7 +21,7 @@
             </v-chip>
       </div>
 
-      <v-btn icon :disabled="incompatible">
+      <v-btn icon :disabled="incompatible" @click="runReport(runConfiguration)">
         <v-icon>{{ hasResults ? 'mdi-refresh' : 'mdi-play' }}</v-icon>
       </v-btn>
     </v-toolbar>
@@ -97,7 +97,7 @@
             {{ resultIcon }}
           </v-icon>
           <span
-            v-html="report.results.summary"
+            v-html="results.summary"
             style="position: relative;top: -2px;"
             >
           </span>
@@ -112,8 +112,8 @@
     <v-slide-y-transition>
       <v-card-text v-if="showResults && hasResults">
         <report-result-details
-          :type="report.results.type"
-          :data="report.results.data"
+          :type="results.type"
+          :data="results.data"
           >
         </report-result-details>
       </v-card-text>
@@ -123,7 +123,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import ReportResultDetails from "./report-result-details"
 export default {
@@ -142,14 +142,38 @@ export default {
   }),
   computed: {
     ...mapGetters('instances',['connectedInstanceDetails']),
+    ...mapGetters('reports',['getReportResult']),
+    results: function() {
+      const reportResults = this.getReportResult(this.report.codename)
+      return reportResults.results
+    },
     hasResults: function () {
-      return false
+      return !!this.results
     },
     status: function() {
-      return ''
+      let status = ''
+
+      if(this.hasResults) {
+        switch (this.results.status) {
+          case "Good":
+            status = 'success'
+            break
+          case "Information":
+            status = 'info'
+            break
+          case "Warning":
+            status = 'warning'
+            break
+          case "Error":
+            status = 'error'
+            break
+        }
+      }
+
+      return status
     },
     statusDark: function() {
-      return this.status == 'error' || this.status == "info"
+      return this.status == 'Error' || this.status == "Information"
     },
     instanceMajorVersion: function() {
       return this.connectedInstanceDetails.databaseVersion.major
@@ -169,28 +193,37 @@ export default {
     incompatible: function () {
       return this.reportIncompatibleMajorVersions.includes(this.instanceMajorVersion)
     },
+    runConfiguration: function() {
+      return {
+        codename: this.report.codename,
+        instanceGuid: this.connectedInstanceDetails.guid
+      }
+    },
     resultIcon: function () {
       let icon = ""
-      // switch (this.report.results.status) {
-      //   case "success":
-      //     icon = "mdi-checkbox-marked-circle"
-      //     break
-      //   case "info":
-      //     icon = "mdi-information"
-      //     break
-      //   case "warning":
-      //     icon = "mdi-alert"
-      //     break
-      //   case "error":
-      //     icon = "mdi-alert-octagon"
-      //     break
-      // }
+      switch (this.status) {
+        case "success":
+          icon = "mdi-checkbox-marked-circle"
+          break
+        case "info":
+          icon = "mdi-information"
+          break
+        case "warning":
+          icon = "mdi-alert"
+          break
+        case "error":
+          icon = "mdi-alert-octagon"
+          break
+      }
 
       return icon
     },
     resultIconColor: function () {
-      return `${this.report.results.status} darken-3`
+      return `${this.status} darken-3`
     }
+  },
+  methods: {
+    ...mapActions('reports', ['runReport'])
   }
 }
 </script>
