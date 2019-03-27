@@ -29,7 +29,7 @@ namespace KenticoInspector.Reports
             {
                 Status = ReportResultsStatus.Information.ToString(),
                 Summary = "Test is fake.",
-                Type = typeof(string).ToString(),
+                Type = ReportResultsType.String.ToString(),
                 Data = "Totally fake"
             };
         }
