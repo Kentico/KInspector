@@ -21,7 +21,7 @@
             </v-chip>
       </div>
 
-      <v-btn icon :disabled="notCompatible">
+      <v-btn icon :disabled="incompatible">
         <v-icon>{{ hasResults ? 'mdi-refresh' : 'mdi-play' }}</v-icon>
       </v-btn>
     </v-toolbar>
@@ -44,7 +44,7 @@
           </v-flex>
           <v-spacer></v-spacer>
           <v-chip
-            v-if="notTested"
+            v-if="untested"
             color="amber"
             label
             small
@@ -52,7 +52,7 @@
             Untested
           </v-chip>
           <v-chip
-            v-if="notCompatible"
+            v-if="incompatible"
             color="red darken-1"
             dark
             label
@@ -123,6 +123,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import ReportResultDetails from "./report-result-details"
 export default {
   components: {
@@ -139,41 +141,50 @@ export default {
     showResults: false
   }),
   computed: {
+    ...mapGetters('instances',['connectedInstanceDetails']),
     hasResults: function () {
-      return !!this.report.results
+      return false
     },
     status: function() {
-      return this.hasResults ? this.report.results.status : ''
+      return ''
     },
-
     statusDark: function() {
       return this.status == 'error' || this.status == "info"
     },
-
-    notTested: function () {
-      //TODO: reach out to get instance version instead of hard coded value
-      return !this.report.compatible.includes('V12') && !this.notCompatible
+    instanceMajorVersion: function() {
+      return this.connectedInstanceDetails.databaseVersion.major
     },
-    notCompatible: function () {
-      //TODO: reach out to get instance version instead of hard coded value
-      return this.report.notCompatible.includes('V12')
+    reportCompatibleMajorVersions: function() {
+      return this.report.compatibleVersions.map(v=> v.major)
+    },
+    reportIncompatibleMajorVersions: function() {
+      return this.report.incompatibleVersions.map(v=> v.major)
+    },
+    compatible: function() {
+      return this.reportCompatibleMajorVersions.includes(this.instanceMajorVersion)
+    },
+    untested: function () {
+      return !this.compatible && !this.incompatible
+    },
+    incompatible: function () {
+      return this.reportIncompatibleMajorVersions.includes(this.instanceMajorVersion)
     },
     resultIcon: function () {
       let icon = ""
-      switch (this.report.results.status) {
-        case "success":
-          icon = "mdi-checkbox-marked-circle"
-          break
-        case "info":
-          icon = "mdi-information"
-          break
-        case "warning":
-          icon = "mdi-alert"
-          break
-        case "error":
-          icon = "mdi-alert-octagon"
-          break
-      }
+      // switch (this.report.results.status) {
+      //   case "success":
+      //     icon = "mdi-checkbox-marked-circle"
+      //     break
+      //   case "info":
+      //     icon = "mdi-information"
+      //     break
+      //   case "warning":
+      //     icon = "mdi-alert"
+      //     break
+      //   case "error":
+      //     icon = "mdi-alert-octagon"
+      //     break
+      // }
 
       return icon
     },

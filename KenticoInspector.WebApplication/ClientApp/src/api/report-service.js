@@ -1,8 +1,16 @@
-import * as reportsData from './sample-data/reports.json'
+import axios from "axios";
+import { arrayToObject } from '../helpers'
 
 class ReportService {
-  async getReports () {
-    return reportsData.default
+  getReports () {
+    return new Promise((resolve)=>{
+      axios.get("/api/reports")
+      .then(r => r.data)
+      .then(reports => {
+        const reportsObject = arrayToObject(reports, "codename")
+        resolve(reportsObject)
+      })
+    })
   }
 }
 
