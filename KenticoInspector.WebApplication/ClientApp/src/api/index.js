@@ -1,5 +1,6 @@
 import axios from "axios";
 import { arrayToObject } from '../helpers'
+import { reportService } from './report-service'
 
 export default {
   getInstances () {
@@ -45,5 +46,7 @@ export default {
         resolve(result)
       })
     })
-  }
+  },
+
+  reportService
 }

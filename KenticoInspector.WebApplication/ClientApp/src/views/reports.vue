@@ -45,9 +45,10 @@
         </v-flex>
 
         <v-flex xs12>
-          <report-list :reports="filteredReports" />
+          <report-list :reports="reports" />
         </v-flex>
       </template>
+
       <v-flex
         v-else
         xs12
@@ -65,8 +66,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { reportService } from '../api/report-service'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import ReportList from '../components/report-list'
 
 export default {
@@ -78,40 +78,22 @@ export default {
     showUntested: false,
     version: "V12",
     selectedTags: [],
-    reports: []
   }),
   computed: {
     ...mapGetters('instances',['isConnected']),
+    ...mapState({
+      reports: state => Object.values(state.reports.items)
+    }),
     tags: function () {
       const allTags = this.reports.reduce(getTagsFromReports,[])
       const uniqueTags = getUniqueTags(allTags)
       return uniqueTags
-    },
-    filteredReports: function() {
-      return this.reports.filter(report => {
-        const isCompatible = report.compatible.includes(this.version)
-        const isIncompatible = report.notCompatible.includes(this.version)
-        const isUntested = !isCompatible && !isIncompatible
-
-        const hasSelectedTags = this.selectedTags.length > 0
-        const meetsTagRequirements = hasSelectedTags ? this.hasSelectedTag(report) : true
-
-        if(meetsTagRequirements) {
-          return isCompatible
-            || (this.showUntested && isUntested)
-            || (this.showIncompatible && isIncompatible)
-        }
-
-        return false
-      })
     }
   },
   methods: {
-    getReports: function() {
-      reportService.getReports().then(reports => {
-        this.reports = reports
-      })
-    },
+    ...mapActions('reports', {
+      getReports: 'getAll'
+    }),
     hasSelectedTag(report) {
       return report.tags.reduce(
         (acc,cur) => {

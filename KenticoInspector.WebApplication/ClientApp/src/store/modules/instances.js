@@ -2,7 +2,6 @@ import api from '../../api'
 
 const state = {
   items: {},
-  selectedItemGuid: null,
   currentInstanceDetails: null,
   connecting: false,
   connectionError: null
@@ -15,6 +14,10 @@ const getters = {
 
   connectedInstance: (state, getters) => {
     return getters.isConnected ? state.items[state.currentInstanceDetails.guid] : null
+  },
+
+  connectedInstanceDetails: (state, getters) => {
+    return getters.isConnected ? state.currentInstanceDetails : null
   },
 
   getInstanceDisplayName: (state) => (guid) => {
@@ -31,11 +34,10 @@ const actions = {
       })
   },
 
-  upsertItem: ({ commit, dispatch }, instance) => {
+  upsertItem: ({ dispatch }, instance) => {
     api.upsertInstance(instance)
-      .then(guid=>{
+      .then(()=>{
         dispatch('getAll')
-        commit('setSelectedItemGuid', guid)
       })
   },
 
@@ -67,7 +69,7 @@ const actions = {
   },
 
   disconnect: ({ commit }) => {
-    commit('setSelectedItemGuid', null)
+    commit('setCurrentInstanceDetails', null)
   },
 }
 
@@ -87,10 +89,6 @@ const mutations = {
   setItems (state, items) {
     state.items = items
   },
-
-  setSelectedItemGuid (state, guid) {
-    state.selectedItemGuid = guid
-  }
 }
 
 export default {

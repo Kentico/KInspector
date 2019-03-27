@@ -2,7 +2,7 @@
   <div>
     <report-list-item
       v-for="report in reports"
-      :key="report.name"
+      :key="report.codename"
       :report="report"
       />
     <div v-if="reports.length === 0">
