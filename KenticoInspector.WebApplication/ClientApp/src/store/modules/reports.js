@@ -8,8 +8,9 @@ const state = {
 }
 
 const getters = {
-  getReportResult: (state) => (codename) => {
-    const currentResult = state.reportResults[codename]
+  getReportResult: (state) => (codename, instanceGuid) => {
+    const resultId = `${codename}-${instanceGuid}`
+    const currentResult = state.reportResults[resultId]
     return currentResult ? currentResult : {
       loading: false,
       results: null
@@ -28,7 +29,8 @@ const actions = {
     commit('setItemResults', { codename, loading: true })
     api.reportService.getReportResults({codename, instanceGuid})
       .then(results =>{
-        commit('setItemResults', { codename, loading: false, results })
+        const resultId = `${codename}-${instanceGuid}`
+        commit('setItemResults', { resultId, loading: false, results })
       })
     }
 }
@@ -37,8 +39,8 @@ const mutations = {
   setItems (state, items) {
     state.items = items
   },
-  setItemResults (state, { codename, loading, results }) {
-    Vue.set(state.reportResults, codename, { loading, results })
+  setItemResults (state, { resultId, loading, results }) {
+    Vue.set(state.reportResults, resultId, { loading, results })
   },
 }
 
