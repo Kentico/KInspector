@@ -144,7 +144,7 @@ export default {
     ...mapGetters('instances',['connectedInstanceDetails']),
     ...mapGetters('reports',['getReportResult']),
     results: function() {
-      const reportResults = this.getReportResult(this.report.codename)
+      const reportResults = this.getReportResult(this.report.codename, this.connectedInstanceDetails.guid)
       return reportResults.results
     },
     hasResults: function () {
