@@ -1,1 +1,0 @@
-﻿SELECT UserName AS 'User name' FROM CMS_User WHERE NULLIF(UserPasswordFormat, '') IS NULL
