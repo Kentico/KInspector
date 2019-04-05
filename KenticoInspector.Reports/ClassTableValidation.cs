@@ -7,14 +7,27 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace KenticoInspector.Reports.ClassTableValidation
+namespace KenticoInspector.Reports
 {
-    class ClassTableValidation : IReport
+    public static class ClassTableValidationScripts {
+        public const string ClassesWithMissingTables = "Scripts/ClassTableValidation/GetClassesWithMissingTables.sql";
+        public const string TablesWithMissingClasses = "Scripts/ClassTableValidation/GetTablesWithMissingClasses.sql";
+    }
+
+    public class ClassesResult
+    {
+        public string ClassDisplayName { get; set; }
+        public string ClassName { get; set; }
+        public string ClassTableName { get; set; }
+    }
+
+    public class ClassTableValidation : IReport
     {
         readonly IDatabaseService _databaseService;
         readonly IInstanceService _instanceService;
 
-        public ClassTableValidation(IDatabaseService databaseService, IInstanceService instanceService) {
+        public ClassTableValidation(IDatabaseService databaseService, IInstanceService instanceService)
+        {
             _databaseService = databaseService;
             _instanceService = instanceService;
         }
@@ -51,7 +64,7 @@ namespace KenticoInspector.Reports.ClassTableValidation
             return CompileResults(tablesWithMissingClass, classesWithMissingTable);
         }
 
-        private static ReportResults CompileResults(IEnumerable<dynamic>tablesWithMissingClass, IEnumerable<dynamic> classesWithMissingTable)
+        private static ReportResults CompileResults(IEnumerable<TablesResult> tablesWithMissingClass, IEnumerable<ClassesResult> classesWithMissingTable)
         {
             var tableErrors = tablesWithMissingClass.Count();
             var tableResults = new TableResult<dynamic>()
@@ -59,7 +72,7 @@ namespace KenticoInspector.Reports.ClassTableValidation
                 Name = "Database tables with missing Kentico classes",
                 Rows = tablesWithMissingClass
             };
-            
+
             var classErrors = classesWithMissingTable.Count();
             var classResults = new TableResult<dynamic>()
             {
@@ -68,14 +81,17 @@ namespace KenticoInspector.Reports.ClassTableValidation
             };
 
             var totalErrors = tableErrors + classErrors;
-            
+
             var results = new ReportResults
             {
-                Type = ReportResultsType.TableList.ToString(),
-                Data = new { tableResults, classResults }
+                Type = ReportResultsType.TableList.ToString()
             };
 
-            switch (totalErrors) {
+            results.Data.TableResults = tableResults;
+            results.Data.ClassResults = classResults;
+
+            switch (totalErrors)
+            {
                 case 0:
                     results.Status = ReportResultsStatus.Good.ToString();
                     results.Summary = "No issues found.";
@@ -93,22 +109,20 @@ namespace KenticoInspector.Reports.ClassTableValidation
             return results;
         }
 
-        private IEnumerable<dynamic> GetResultsForClasses()
+        private IEnumerable<ClassesResult> GetResultsForClasses()
         {
-            var classesWithMissingTable = _databaseService.ExecuteSqlFromFile<dynamic>("ClassTableValidation\\GetClassesWithMissingTable.sql");
-            //classesWithMissingTable.TableName = "Kentico Classes with missing database table";
+            var classesWithMissingTable = _databaseService.ExecuteSqlFromFile<ClassesResult>(ClassTableValidationScripts.ClassesWithMissingTables);
             return classesWithMissingTable;
         }
 
-        private IEnumerable<dynamic> GetResultsForTables(InstanceDetails instanceDetails)
+        private IEnumerable<TablesResult> GetResultsForTables(InstanceDetails instanceDetails)
         {
-            var tablesWithMissingClass = _databaseService.ExecuteSqlFromFile<dynamic>("ClassTableValidation/GetTablesWithMissingClass.sql");
-            //tablesWithMissingClass.TableName = "Database tables with missing Kentico class";
+            var tablesWithMissingClass = _databaseService.ExecuteSqlFromFile<TablesResult>(ClassTableValidationScripts.TablesWithMissingClasses);
 
             var tableWhitelist = GetTableWhitelist(instanceDetails.DatabaseVersion);
             if (tableWhitelist.Count > 0)
             {
-                tablesWithMissingClass = tablesWithMissingClass.Where(t => !tableWhitelist.Contains(t.TABLE_NAME)).ToList();
+                tablesWithMissingClass = tablesWithMissingClass.Where(t => !tableWhitelist.Contains(t.TableName)).ToList();
             }
 
             return tablesWithMissingClass;
@@ -125,5 +139,10 @@ namespace KenticoInspector.Reports.ClassTableValidation
 
             return whitelist;
         }
+    }
+
+    public class TablesResult
+    {
+        public string TableName { get; set; }
     }
 }
