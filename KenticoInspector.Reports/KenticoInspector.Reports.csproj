@@ -13,10 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ClassTableValidation\GetClassesWithMissingTable.sql">
+    <None Update="Scripts\ClassTableValidation\GetClassesWithMissingTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ClassTableValidation\GetTablesWithMissingClass.sql">
+    <None Update="Scripts\ClassTableValidation\GetTablesWithMissingClasses.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

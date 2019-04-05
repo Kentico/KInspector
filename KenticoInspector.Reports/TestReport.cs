@@ -19,7 +19,7 @@ namespace KenticoInspector.Reports
         public string Name => "Test Report";
         public string ShortDescription => "This is a short description.";
         public IList<string> Tags => new List<string> {
-            "Test",
+            "UI Test",
             "Fake"
         };
 
