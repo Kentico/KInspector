@@ -10,11 +10,11 @@ using System.Text;
 namespace KenticoInspector.Reports
 {
     public static class ClassTableValidationScripts {
-        public const string ClassesWithMissingTables = "Scripts/ClassTableValidation/GetClassesWithMissingTables.sql";
-        public const string TablesWithMissingClasses = "Scripts/ClassTableValidation/GetTablesWithMissingClasses.sql";
+        public const string ClassesWithNoTable = "Scripts/ClassTableValidation/GetClassesWithNoTable.sql";
+        public const string TablesWithNoClass = "Scripts/ClassTableValidation/GetTablesWithNoClass.sql";
     }
 
-    public class ClassesResult
+    public class ClassWithNoTable
     {
         public string ClassDisplayName { get; set; }
         public string ClassName { get; set; }
@@ -64,7 +64,7 @@ namespace KenticoInspector.Reports
             return CompileResults(tablesWithMissingClass, classesWithMissingTable);
         }
 
-        private static ReportResults CompileResults(IEnumerable<TablesResult> tablesWithMissingClass, IEnumerable<ClassesResult> classesWithMissingTable)
+        private static ReportResults CompileResults(IEnumerable<TableWithNoClass> tablesWithMissingClass, IEnumerable<ClassWithNoTable> classesWithMissingTable)
         {
             var tableErrors = tablesWithMissingClass.Count();
             var tableResults = new TableResult<dynamic>()
@@ -109,15 +109,15 @@ namespace KenticoInspector.Reports
             return results;
         }
 
-        private IEnumerable<ClassesResult> GetResultsForClasses()
+        private IEnumerable<ClassWithNoTable> GetResultsForClasses()
         {
-            var classesWithMissingTable = _databaseService.ExecuteSqlFromFile<ClassesResult>(ClassTableValidationScripts.ClassesWithMissingTables);
+            var classesWithMissingTable = _databaseService.ExecuteSqlFromFile<ClassWithNoTable>(ClassTableValidationScripts.ClassesWithNoTable);
             return classesWithMissingTable;
         }
 
-        private IEnumerable<TablesResult> GetResultsForTables(InstanceDetails instanceDetails)
+        private IEnumerable<TableWithNoClass> GetResultsForTables(InstanceDetails instanceDetails)
         {
-            var tablesWithMissingClass = _databaseService.ExecuteSqlFromFile<TablesResult>(ClassTableValidationScripts.TablesWithMissingClasses);
+            var tablesWithMissingClass = _databaseService.ExecuteSqlFromFile<TableWithNoClass>(ClassTableValidationScripts.TablesWithNoClass);
 
             var tableWhitelist = GetTableWhitelist(instanceDetails.DatabaseVersion);
             if (tableWhitelist.Count > 0)
@@ -141,7 +141,7 @@ namespace KenticoInspector.Reports
         }
     }
 
-    public class TablesResult
+    public class TableWithNoClass
     {
         public string TableName { get; set; }
     }

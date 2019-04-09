@@ -9,50 +9,133 @@ using System.Dynamic;
 
 namespace KenticoInspector.Reports.Tests
 {
-    [TestFixture]
+    [TestFixture(9)]
+    [TestFixture(10)]
+    [TestFixture(11)]
+    [TestFixture(12)]
     public class ClassTableValidationTests
     {
-        private Mock<IInstanceService> _mockInstanceService;
         private Mock<IDatabaseService> _mockDatabaseService;
 
-        [SetUp]
-        public void Setup()
+        private Instance _mockInstance;
+
+        private InstanceDetails _mockInstanceDetails;
+
+        private Mock<IInstanceService> _mockInstanceService;
+
+        public ClassTableValidationTests(int majorVersion)
         {
+            InitializeCommonMocks(majorVersion);
         }
 
-
-        [TestCase(9)]
-        [TestCase(10)]
-        [TestCase(11)]
-        [TestCase(12)]
-        public void Should_ReturnCleanResult_When_DatabaseIsClean(int majorVersion)
+        [TestCase]
+        public void Should_ReturnCleanResult_When_DatabaseIsClean()
         {
             // Arrange
-            var instance = MockInstances.Get(majorVersion);
-            var instanceDetails = MockInstanceDetails.Get(majorVersion, instance);
-            var tableResults = new List<TablesResult>();
-            var classResults = new List<ClassesResult>();
-
-            if (majorVersion >= 10)
-            {
-                tableResults.Add(new TablesResult() { TableName = "CI_Migration" });
-            }
-
-            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(instance, instanceDetails);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(instance);
-            
-            _mockDatabaseService.Setup(p => p.ExecuteSqlFromFile<TablesResult>(ClassTableValidationScripts.TablesWithMissingClasses))
+            var tableResults = GetCleanTableResults();
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(ClassTableValidationScripts.TablesWithNoClass))
                 .Returns(tableResults);
-            _mockDatabaseService.Setup(p => p.ExecuteSqlFromFile<ClassesResult>(ClassTableValidationScripts.ClassesWithMissingTables))
-                .Returns(new List<ClassesResult>());
+
+            var classResults = GetCleanClassResults();
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(ClassTableValidationScripts.ClassesWithNoTable))
+                .Returns(classResults);
+
+            var report = new ClassTableValidation(_mockDatabaseService.Object, _mockInstanceService.Object);
 
             // Act
-            var report = new ClassTableValidation(_mockDatabaseService.Object, _mockInstanceService.Object);
-            var results = report.GetResults(instance.Guid);
+            var results = report.GetResults(_mockInstance.Guid);
 
             // Assert
             Assert.That(results.Data.TableResults.Rows.Count == 0);
+            Assert.That(results.Data.ClassResults.Rows.Count == 0);
             Assert.That(results.Status == ReportResultsStatus.Good.ToString());
+        }
+
+        [TestCase]
+        public void Should_ReturnErrorResult_When_DatabaseHasClassWithNoTable()
+        {
+            // Arrange
+            var tableResults = GetCleanTableResults();
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(ClassTableValidationScripts.TablesWithNoClass))
+                .Returns(tableResults);
+
+            var classResults = GetCleanClassResults();
+            classResults.Add(new ClassWithNoTable
+            {
+                ClassDisplayName = "Has no table",
+                ClassName = "HasNoTable",
+                ClassTableName = "Custom_HasNoTable"
+            });
+
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(ClassTableValidationScripts.ClassesWithNoTable))
+                .Returns(classResults);
+
+            var report = new ClassTableValidation(_mockDatabaseService.Object, _mockInstanceService.Object);
+
+            // Act
+            var results = report.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Data.TableResults.Rows.Count == 0);
+            Assert.That(results.Data.ClassResults.Rows.Count == 1);
+            Assert.That(results.Status == ReportResultsStatus.Error.ToString());
+        }
+
+        [TestCase]
+        public void Should_ReturnErrorResult_When_DatabaseHasTableWithNoClass()
+        {
+            // Arrange
+            var tableResults = GetCleanTableResults(false);
+            tableResults.Add(new TableWithNoClass {
+                TableName = "HasNoClass"
+            });
+
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(ClassTableValidationScripts.TablesWithNoClass))
+                .Returns(tableResults);
+
+            var classResults = GetCleanClassResults();
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(ClassTableValidationScripts.ClassesWithNoTable))
+                .Returns(classResults);
+
+            var report = new ClassTableValidation(_mockDatabaseService.Object, _mockInstanceService.Object);
+
+            // Act
+            var results = report.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Data.TableResults.Rows.Count == 1);
+            Assert.That(results.Data.ClassResults.Rows.Count == 0);
+            Assert.That(results.Status == ReportResultsStatus.Error.ToString());
+        }
+
+        private List<ClassWithNoTable> GetCleanClassResults()
+        {
+            return new List<ClassWithNoTable>();
+        }
+
+        private List<TableWithNoClass> GetCleanTableResults(bool includeWhitelistedTables = true)
+        {
+            var tableResults = new List<TableWithNoClass>();
+            if (includeWhitelistedTables && _mockInstanceDetails.DatabaseVersion.Major >= 10)
+            {
+                tableResults.Add(new TableWithNoClass() { TableName = "CI_Migration" });
+            }
+
+            return tableResults;
+        }
+
+        private void InitializeCommonMocks(int majorVersion)
+        {
+            _mockInstance = MockInstances.Get(majorVersion);
+            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
+            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
+            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
         }
     }
 }
