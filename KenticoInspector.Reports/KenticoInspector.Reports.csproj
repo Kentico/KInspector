@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Scripts\ApplicationRestartAnalysis\GetApplicationRestartEvents.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Scripts\ClassTableValidation\GetClassesWithNoTable.sql">
