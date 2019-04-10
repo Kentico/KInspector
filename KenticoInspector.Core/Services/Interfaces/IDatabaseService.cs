@@ -10,6 +10,8 @@ namespace KenticoInspector.Core.Services.Interfaces
     {
         void ConfigureForInstance(Instance instance);
 
-        IEnumerable<T> ExecuteSqlFromFile<T>(string fileName);
+        IEnumerable<T> ExecuteSqlFromFile<T>(string relativeFilePath);
+
+        DataTable ExecuteSqlFromFileAsDataTable(string relativeFilePath);
     }
 }
