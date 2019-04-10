@@ -16,13 +16,13 @@
     <None Update="DatabaseConsistencyCheck\GetCheckDbResults.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\ApplicationRestartAnalysis\GetApplicationRestartEvents.sql">
+    <None Update="ApplicationRestartAnalysis\GetApplicationRestartEvents.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\ClassTableValidation\GetClassesWithNoTable.sql">
+    <None Update="ClassTableValidation\GetClassesWithNoTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\ClassTableValidation\GetTablesWithNoClass.sql">
+    <None Update="ClassTableValidation\GetTablesWithNoClass.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
