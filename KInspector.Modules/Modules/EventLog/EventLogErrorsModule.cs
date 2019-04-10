@@ -18,7 +18,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.2"),
                     new Version("9.0"),
                     new Version("10.0"),
-                    new Version("11.0")
+                    new Version("11.0"),
+                    new Version("12.0")
                 },
                 Comment = @"Displays all errors from the event log.
 

@@ -14,7 +14,8 @@ namespace Kentico.KInspector.Modules
                 SupportedVersions = new[] {
                     new Version("9.0"),
                     new Version("10.0"),
-                    new Version("11.0")
+                    new Version("11.0"),
+                    new Version("12.0")
                 },
                 Comment = @"Checks for possible issues with processing system, workflow, marketing automation, smart search, and web farm tasks.",
                 Category = "Database"

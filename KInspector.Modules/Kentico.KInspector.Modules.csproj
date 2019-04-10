@@ -96,6 +96,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\StrongTypedInfos\SimpleBaseInfo.cs" />
     <Compile Include="Export\ExportModuleLoader.cs" />
     <Compile Include="Export\ExportModuleMetaData.cs" />
     <Compile Include="Export\IExportModule.cs" />
@@ -118,11 +119,13 @@
     <Compile Include="Modules\Content\UnusedTemplatesModule.cs" />
     <Compile Include="Modules\Content\WebPartsInTransformationsModule.cs" />
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
+    <Compile Include="Modules\General\ColumnFieldValidation.cs" />
     <Compile Include="Modules\General\ClassTableValidation.cs" />
     <Compile Include="Modules\General\TaskProcessingIssuesModule.cs" />
     <Compile Include="Modules\General\DebugCheckModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
     <Compile Include="Modules\Content\DuplicatePageAliasesModule.cs" />
+    <Compile Include="Modules\EventLog\EventLogSizeModule.cs" />
     <Compile Include="Modules\General\PageTypeFieldsDataTypeMismatchModule.cs" />
     <Compile Include="Modules\General\MediaLibraryAzureLimitModule.cs" />
     <Compile Include="Modules\General\DatabaseConsistencyCheckModule.cs" />
@@ -140,6 +143,7 @@
     <Compile Include="Modules\OnlineMarketing\OMTablesSize.cs" />
     <Compile Include="Modules\General\DisabledWebPartAnalyzer.cs" />
     <Compile Include="Modules\Security\DataStructures\VulnerabilityAnalysisResults.cs" />
+    <Compile Include="Modules\Security\PasswordFormatModule.cs" />
     <Compile Include="Modules\Security\SecurityAppSettingsModule.cs" />
     <Compile Include="Modules\Security\SecuritySettingsModule.cs" />
     <Compile Include="Modules\Security\TransformationAnalyzerModule.cs" />
@@ -196,7 +200,16 @@
     <Content Include="Scripts\DebugCheckModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\GetClassSchema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\GetLibraryAndAttachmentFiles.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\GetTableColumns.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\InstanceInfo8.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\PageTypeFieldsDataTypeMismatchModule.sql">
@@ -241,6 +254,9 @@
     <Content Include="Scripts\DuplicatePageAliasesModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\EventLogSizeModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\PageTypeAssignedToSiteModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -248,6 +264,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\ScreenshotterModule-v9.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\PasswordFormat.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\TransformationAnalyzerModule-GetDataWhereIn-KI_TransformationList.sql">
@@ -304,7 +323,7 @@
     <Content Include="Scripts\ScreenshotterModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\InstanceInfo.sql">
+    <Content Include="Scripts\InstanceInfo10.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\SecuritySettingsModule.sql">
