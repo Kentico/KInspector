@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="DatabaseConsistencyCheck\GetCheckDbResults.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Scripts\ApplicationRestartAnalysis\GetApplicationRestartEvents.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

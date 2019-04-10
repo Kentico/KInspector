@@ -1,0 +1,51 @@
+﻿using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.DatabaseConsistencyCheck;
+using KenticoInspector.Reports.Tests.MockHelpers;
+using Moq;
+using NUnit.Framework;
+using System.Data;
+
+namespace KenticoInspector.Reports.Tests
+{
+    [TestFixture(10)]
+    [TestFixture(11)]
+    [TestFixture(12)]
+    public class DatabaseConsistencyCheckTests
+    {
+        private Instance _mockInstance;
+        private InstanceDetails _mockInstanceDetails;
+        private Mock<IDatabaseService> _mockDatabaseService;
+        private Mock<IInstanceService> _mockInstanceService;
+        private Report _mockReport;
+
+        public DatabaseConsistencyCheckTests(int majorVersion)
+        {
+            InitializeCommonMocks(majorVersion);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object);
+        }
+
+        [Test]
+        public void Should_ReturnInfoStatus() {
+            // Arrange
+            var emptyResult = new DataTable();
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFileAsDataTable(Scripts.GetCheckDbResults))
+                .Returns(emptyResult);
+            
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            //Assert
+            Assert.That(results.Status == ReportResultsStatus.Information.ToString());
+        }
+
+        private void InitializeCommonMocks(int majorVersion)
+        {
+            _mockInstance = MockInstances.Get(majorVersion);
+            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
+            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
+            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
+        }
+    }
+}
