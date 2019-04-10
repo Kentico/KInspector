@@ -7,26 +7,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace KenticoInspector.Reports
+namespace KenticoInspector.Reports.ApplicationRestartAnalysis
 {
-    public static class ApplicationRestartsScripts
-    {
-        public const string GetApplicationRestartEvents = "Scripts/ApplicationRestartAnalysis/GetApplicationRestartEvents.sql";
-    }
-
-    public class ApplicationRestartEvent
-    {
-        public string EventCode { get; set; }
-        public DateTime EventTime { get; set; }
-        public string EventMachineName { get; set; }
-    }
-
-    public class ApplicationRestartAnalysis : IReport
+    public class Report : IReport
     {
         readonly IDatabaseService _databaseService;
         readonly IInstanceService _instanceService;
 
-        public ApplicationRestartAnalysis(IDatabaseService databaseService, IInstanceService instanceService)
+        public Report(IDatabaseService databaseService, IInstanceService instanceService)
         {
             _databaseService = databaseService;
             _instanceService = instanceService;
@@ -59,7 +47,7 @@ namespace KenticoInspector.Reports
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
             _databaseService.ConfigureForInstance(instance);
 
-            var applicationRestartEvents = _databaseService.ExecuteSqlFromFile<ApplicationRestartEvent>(ApplicationRestartsScripts.GetApplicationRestartEvents);
+            var applicationRestartEvents = _databaseService.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents);
 
             return CompileResults(applicationRestartEvents);
         }
@@ -75,8 +63,8 @@ namespace KenticoInspector.Reports
             var totalEvents = applicationRestartEvents.Count();
             var totalStartEvents = applicationRestartEvents.Where(e => e.EventCode == "STARTAPP").Count();
             var totalEndEvents = applicationRestartEvents.Where(e => e.EventCode == "ENDAPP").Count();
-            var earliestTime = applicationRestartEvents.Min(e => e.EventTime);
-            var latestTime = applicationRestartEvents.Max(e => e.EventTime);
+            var earliestTime = totalEvents > 0 ? applicationRestartEvents.Min(e => e.EventTime) : new DateTime();
+            var latestTime = totalEvents > 0 ? applicationRestartEvents.Max(e => e.EventTime) : new DateTime();
 
             var totalEventsText = $"{totalEvents} event {(totalEvents == 1 ? string.Empty : "s")}";
             var totalStartEventsText = $"{totalStartEvents} start{(totalStartEvents == 1 ? string.Empty : "s")}";

@@ -1,5 +1,6 @@
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.ClassTableValidation;
 using KenticoInspector.Reports.Tests.MockHelpers;
 using Moq;
 using NUnit.Framework;
@@ -9,43 +10,39 @@ using System.Dynamic;
 
 namespace KenticoInspector.Reports.Tests
 {
-    [TestFixture(9)]
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
     public class ClassTableValidationTests
     {
         private Mock<IDatabaseService> _mockDatabaseService;
-
         private Instance _mockInstance;
-
         private InstanceDetails _mockInstanceDetails;
-
         private Mock<IInstanceService> _mockInstanceService;
+        private Report _mockReport;
 
         public ClassTableValidationTests(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object);
         }
 
-        [TestCase]
+        [Test]
         public void Should_ReturnCleanResult_When_DatabaseIsClean()
         {
             // Arrange
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(ClassTableValidationScripts.TablesWithNoClass))
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
                 .Returns(tableResults);
 
             var classResults = GetCleanClassResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(ClassTableValidationScripts.ClassesWithNoTable))
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
                 .Returns(classResults);
 
-            var report = new ClassTableValidation(_mockDatabaseService.Object, _mockInstanceService.Object);
-
             // Act
-            var results = report.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults(_mockInstance.Guid);
 
             // Assert
             Assert.That(results.Data.TableResults.Rows.Count == 0);
@@ -53,13 +50,13 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Good.ToString());
         }
 
-        [TestCase]
+        [Test]
         public void Should_ReturnErrorResult_When_DatabaseHasClassWithNoTable()
         {
             // Arrange
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(ClassTableValidationScripts.TablesWithNoClass))
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
                 .Returns(tableResults);
 
             var classResults = GetCleanClassResults();
@@ -71,13 +68,11 @@ namespace KenticoInspector.Reports.Tests
             });
 
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(ClassTableValidationScripts.ClassesWithNoTable))
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
                 .Returns(classResults);
 
-            var report = new ClassTableValidation(_mockDatabaseService.Object, _mockInstanceService.Object);
-
             // Act
-            var results = report.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults(_mockInstance.Guid);
 
             // Assert
             Assert.That(results.Data.TableResults.Rows.Count == 0);
@@ -85,7 +80,7 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Error.ToString());
         }
 
-        [TestCase]
+        [Test]
         public void Should_ReturnErrorResult_When_DatabaseHasTableWithNoClass()
         {
             // Arrange
@@ -95,18 +90,16 @@ namespace KenticoInspector.Reports.Tests
             });
 
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(ClassTableValidationScripts.TablesWithNoClass))
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
                 .Returns(tableResults);
 
             var classResults = GetCleanClassResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(ClassTableValidationScripts.ClassesWithNoTable))
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
                 .Returns(classResults);
 
-            var report = new ClassTableValidation(_mockDatabaseService.Object, _mockInstanceService.Object);
-
             // Act
-            var results = report.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults(_mockInstance.Guid);
 
             // Assert
             Assert.That(results.Data.TableResults.Rows.Count == 1);

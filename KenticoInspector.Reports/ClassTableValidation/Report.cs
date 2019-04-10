@@ -3,30 +3,16 @@ using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
 
-namespace KenticoInspector.Reports
+namespace KenticoInspector.Reports.ClassTableValidation
 {
-    public static class ClassTableValidationScripts {
-        public const string ClassesWithNoTable = "Scripts/ClassTableValidation/GetClassesWithNoTable.sql";
-        public const string TablesWithNoClass = "Scripts/ClassTableValidation/GetTablesWithNoClass.sql";
-    }
-
-    public class ClassWithNoTable
-    {
-        public string ClassDisplayName { get; set; }
-        public string ClassName { get; set; }
-        public string ClassTableName { get; set; }
-    }
-
-    public class ClassTableValidation : IReport
+    public class Report : IReport
     {
         readonly IDatabaseService _databaseService;
         readonly IInstanceService _instanceService;
 
-        public ClassTableValidation(IDatabaseService databaseService, IInstanceService instanceService)
+        public Report(IDatabaseService databaseService, IInstanceService instanceService)
         {
             _databaseService = databaseService;
             _instanceService = instanceService;
@@ -111,13 +97,13 @@ namespace KenticoInspector.Reports
 
         private IEnumerable<ClassWithNoTable> GetResultsForClasses()
         {
-            var classesWithMissingTable = _databaseService.ExecuteSqlFromFile<ClassWithNoTable>(ClassTableValidationScripts.ClassesWithNoTable);
+            var classesWithMissingTable = _databaseService.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable);
             return classesWithMissingTable;
         }
 
         private IEnumerable<TableWithNoClass> GetResultsForTables(InstanceDetails instanceDetails)
         {
-            var tablesWithMissingClass = _databaseService.ExecuteSqlFromFile<TableWithNoClass>(ClassTableValidationScripts.TablesWithNoClass);
+            var tablesWithMissingClass = _databaseService.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass);
 
             var tableWhitelist = GetTableWhitelist(instanceDetails.DatabaseVersion);
             if (tableWhitelist.Count > 0)
@@ -139,10 +125,5 @@ namespace KenticoInspector.Reports
 
             return whitelist;
         }
-    }
-
-    public class TableWithNoClass
-    {
-        public string TableName { get; set; }
     }
 }
