@@ -1,14 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+
 namespace Kentico.KInspector.Core
 {
     public interface IDatabaseService
     {
-        System.Data.DataSet ExecuteAndGetDataSetFromFile(string filePath);
-        System.Collections.Generic.List<string> ExecuteAndGetPrintsFromFile(string filePath);
+        DataSet ExecuteAndGetDataSetFromFile(string filePath);
+
+        List<string> ExecuteAndGetPrintsFromFile(string filePath);
+
         T ExecuteAndGetScalar<T>(string sql) where T : IConvertible;
-        System.Data.DataTable ExecuteAndGetTableFromFile(string filePath, params SqlParameter[] parameters);
+
+        DataTable ExecuteAndGetTableFromFile(string filePath, params SqlParameter[] parameters);
+
+        DataSet ExecuteAndGetDataSetFromFile(string filePath, params SqlParameter[] parameters);
+
         T GetSetting<T>(string key, string siteName = "") where T : IConvertible;
-        System.Data.DataSet ExecuteAndGetDataSet(string sql, params SqlParameter[] parameters);
+
+        DataSet ExecuteAndGetDataSet(string sql, params SqlParameter[] parameters);
     }
 }
