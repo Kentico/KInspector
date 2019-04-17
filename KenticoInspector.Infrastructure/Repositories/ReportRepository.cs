@@ -27,14 +27,7 @@ namespace KenticoInspector.Infrastructure.Repositories
             containerBuilder.RegisterModule(new InfrastructureModule());
             containerBuilder.RegisterModule(new ReportsModule());
             var container = containerBuilder.Build();
-            var registeredReports = container.Resolve<IList<IReport>>();
-
-            foreach (var report in registeredReports)
-            {
-                var location = report.GetType().FullName;
-            }
-
-            return registeredReports;
+            return container.Resolve<IList<IReport>>();
         }
     }
 }
