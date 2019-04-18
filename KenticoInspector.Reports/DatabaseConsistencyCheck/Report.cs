@@ -67,7 +67,7 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
             var results = new ReportResults
             {
                 Type = ReportResultsType.Table.ToString(),
-                Status = ReportResultsStatus.Information.ToString(),
+                Status = checkDbResults.Rows.Count == 0 ? ReportResultsStatus.Good.ToString() : ReportResultsStatus.Error.ToString(),
                 Summary = $"Check results table for any errors",
                 Data = checkDbResults
             };
