@@ -64,11 +64,13 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
 
         private static ReportResults CompileResults(DataTable checkDbResults)
         {
+            var hasIssues = checkDbResults.Rows.Count > 0;
+
             var results = new ReportResults
             {
                 Type = ReportResultsType.Table.ToString(),
-                Status = checkDbResults.Rows.Count == 0 ? ReportResultsStatus.Good.ToString() : ReportResultsStatus.Error.ToString(),
-                Summary = $"Check results table for any errors",
+                Status = hasIssues ? ReportResultsStatus.Error.ToString() : ReportResultsStatus.Good.ToString(),
+                Summary = hasIssues ? "Check results table for any issues" : "No issues found",
                 Data = checkDbResults
             };
 
