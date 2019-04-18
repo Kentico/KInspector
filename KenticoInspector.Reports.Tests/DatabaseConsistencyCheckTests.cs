@@ -26,7 +26,7 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnInfoStatus() {
+        public void Should_ReturnGoodStatus_When_ResultsEmpty() {
             // Arrange
             var emptyResult = new DataTable();
             _mockDatabaseService
@@ -37,7 +37,26 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults(_mockInstance.Guid);
 
             //Assert
-            Assert.That(results.Status == ReportResultsStatus.Information.ToString());
+            Assert.That(results.Status == ReportResultsStatus.Good.ToString());
+        }
+
+        [Test]
+        public void Should_ReturnErrorStatus_When_ResultsNotEmpty()
+        {
+            // Arrange
+            var result = new DataTable();
+            result.Columns.Add("TestColumn");
+            result.Rows.Add("value");
+            
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFileAsDataTable(Scripts.GetCheckDbResults))
+                .Returns(result);
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            //Assert
+            Assert.That(results.Status == ReportResultsStatus.Error.ToString());
         }
 
         private void InitializeCommonMocks(int majorVersion)
