@@ -85,7 +85,7 @@ namespace KenticoInspector.WebApplication
             app.UseSpaStaticFiles();
             app.UseMvc();
             app.UseSpa(spa => {
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "ClientApp/dist";
 
                 if (env.IsDevelopment())
                 {
@@ -93,9 +93,9 @@ namespace KenticoInspector.WebApplication
                     {
                         spa.UseProxyToSpaDevelopmentServer("http://localhost:8080");
                     }
-                    else {
-                        spa.UseVueCli(npmScript: "serve", port: 8080);
-                    }
+                    //else {
+                    //    spa.UseVueCli(npmScript: "serve");
+                    //}
                 }
             });
         }
