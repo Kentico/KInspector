@@ -93,9 +93,6 @@ namespace KenticoInspector.WebApplication
                     {
                         spa.UseProxyToSpaDevelopmentServer("http://localhost:8080");
                     }
-                    //else {
-                    //    spa.UseVueCli(npmScript: "serve");
-                    //}
                 }
             });
         }
