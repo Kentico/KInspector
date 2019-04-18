@@ -66,15 +66,26 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
         {
             var hasIssues = checkDbResults.Rows.Count > 0;
 
-            var results = new ReportResults
+            if (hasIssues)
             {
-                Type = ReportResultsType.Table.ToString(),
-                Status = hasIssues ? ReportResultsStatus.Error.ToString() : ReportResultsStatus.Good.ToString(),
-                Summary = hasIssues ? "Check results table for any issues" : "No issues found",
-                Data = checkDbResults
-            };
-
-            return results;
+                return new ReportResults
+                {
+                    Type = ReportResultsType.Table.ToString(),
+                    Status = ReportResultsStatus.Error.ToString(),
+                    Summary = "Check results table for any issues",
+                    Data = checkDbResults
+                };
+            }
+            else
+            {
+                return new ReportResults
+                {
+                    Type = ReportResultsType.String.ToString(),
+                    Status = ReportResultsStatus.Good.ToString(),
+                    Summary = "No issues found",
+                    Data = string.Empty
+                };
+            }
         }
     }
 }
