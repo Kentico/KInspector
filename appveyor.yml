@@ -1,0 +1,10 @@
+version: 1.0.{build}
+branches:
+  only:
+  - v4-dev
+image: Visual Studio 2017
+configuration: Release
+before_build:
+- cmd: dotnet restore
+build:
+  verbosity: minimal
