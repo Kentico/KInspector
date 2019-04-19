@@ -82,6 +82,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -121,6 +122,7 @@
     <Compile Include="Modules\Content\WorkflowConsistencyModule.cs" />
     <Compile Include="Modules\General\ColumnFieldValidation.cs" />
     <Compile Include="Modules\General\ClassTableValidation.cs" />
+    <Compile Include="Modules\General\RecommendedSettingsModule.cs" />
     <Compile Include="Modules\General\TaskProcessingIssuesModule.cs" />
     <Compile Include="Modules\General\DebugCheckModule.cs" />
     <Compile Include="Modules\EventLog\EventLogErrorsModule.cs" />
@@ -213,6 +215,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\PageTypeFieldsDataTypeMismatchModule.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\RecommendedSettingsModule.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\Setup\GlobalAdminSetupModule-V10.sql">
