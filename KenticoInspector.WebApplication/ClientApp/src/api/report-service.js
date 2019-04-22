@@ -1,5 +1,4 @@
 import axios from "axios";
-import { arrayToObject } from '../helpers'
 
 class ReportService {
   getReports () {
@@ -7,8 +6,7 @@ class ReportService {
       axios.get("/api/reports")
       .then(r => r.data)
       .then(reports => {
-        const reportsObject = arrayToObject(reports, "codename")
-        resolve(reportsObject)
+        resolve(reports)
       })
     })
   }

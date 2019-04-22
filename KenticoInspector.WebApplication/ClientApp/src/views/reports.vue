@@ -45,7 +45,7 @@
         </v-flex>
 
         <v-flex xs12>
-          <report-list :reports="reports" />
+          <report-list :reports="[]" />
         </v-flex>
       </template>
 
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import ReportList from '../components/report-list'
 
 export default {
@@ -76,29 +76,32 @@ export default {
   data: () => ({
     showIncompatible: false,
     showUntested: false,
-    version: "V12",
+    version: 11,
     selectedTags: [],
+    allReports: [],
   }),
   computed: {
     ...mapGetters('instances',['isConnected']),
-    ...mapState({
-      reports: state => Object.values(state.reports.items)
-    }),
-    tags: function () {
-      const allTags = this.reports.reduce(getTagsFromReports,[])
-      const uniqueTags = getUniqueTags(allTags)
-      return uniqueTags
+    ...mapGetters('reports',{ tags: 'getTags' }),
+    filteredReports: function() {
+      return this.getFilteredReports({version: this.version, showIncompatible: true, showUntested: true})
     }
   },
   methods: {
     ...mapActions('reports', {
-      getReports: 'getAll'
+      getAllReports: 'getAll'
+    }),
+    ...mapGetters('reports', {
+      getFilteredReports: 'getFiltered'
     }),
     hasSelectedTag(report) {
       return report.tags.reduce(
         (acc,cur) => {
           return acc || this.selectedTags.includes(cur)
         }, false)
+    },
+    getReports: function() {
+      this.getAllReports()
     }
   },
   watch: {
@@ -107,14 +110,5 @@ export default {
       immediate: true
     }
   }
-}
-
-function getTagsFromReports(allTags, report) {
-  allTags.push(...report.tags)
-  return allTags
-}
-
-function getUniqueTags(allTags) {
-  return [...new Set(allTags)]
 }
 </script>

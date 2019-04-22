@@ -2,12 +2,33 @@ import Vue from 'vue'
 import api from '../../api'
 
 const state = {
-  items: {},
+  items: [],
   reportResults: {},
   loadingItems: false
 }
 
 const getters = {
+  getFiltered: (state) => ({ version, showUntested = false, showIncompatible = false}) => {
+    const items = state.items.filter((item) => {
+      const isCompatible = item.compatibleVersions.reduce(x=>x.major).includes(version)
+      const isIncompatible = item.incompatibleVersions.reduce(x=>x.major).includes(version)
+      const isUntested = !isCompatible && !isIncompatible
+
+      return isCompatible
+        || (showUntested && isUntested)
+        || (showIncompatible && isIncompatible)
+    })
+
+    console.log(items)
+
+    return state.items
+  },
+
+  getTags: (state) => {
+    const allTags = state.items.reduce(getTagsFromReports,[])
+    return getUniqueTags(allTags)
+  },
+
   getReportResult: (state) => (codename, instanceGuid) => {
     const resultId = `${codename}-${instanceGuid}`
     const currentResult = state.reportResults[resultId]
@@ -50,4 +71,13 @@ export default {
   getters,
   actions,
   mutations
+}
+
+function getTagsFromReports(allTags, report) {
+  allTags.push(...report.tags)
+  return allTags
+}
+
+function getUniqueTags(allTags) {
+  return [...new Set(allTags)]
 }
