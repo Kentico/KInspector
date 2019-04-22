@@ -6,7 +6,8 @@ namespace KenticoInspector.Reports.ClassTableValidation
 {
     public static class Scripts
     {
-        public const string ClassesWithNoTable = "ClassTableValidation/GetClassesWithNoTable.sql";
-        public const string TablesWithNoClass = "ClassTableValidation/GetTablesWithNoClass.sql";
+        public const string BaseDirectory = "ClassTableValidation/";
+        public const string ClassesWithNoTable = BaseDirectory + "GetClassesWithNoTable.sql";
+        public const string TablesWithNoClass = BaseDirectory + "GetTablesWithNoClass.sql";
     }
 }
