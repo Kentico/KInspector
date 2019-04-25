@@ -17,4 +17,6 @@ We should migrate the [MODULE_NAME](LINK_TO_MODULE_CODE_FILE) module to the new 
 
 _Note: The [Class/Table Validation report](https://github.com/Kentico/KInspector/tree/v4-dev/KenticoInspector.Reports/ClassTableValidation) (and it's [tests](https://github.com/Kentico/KInspector/blob/v4-dev/KenticoInspector.Reports.Tests/ClassTableValidationTests.cs)) is a good, simple example of the main concepts._
 
-### Additional Details (optional)
+### Additional Details
+- New name: __NAME__
+- Tags: __tag 1, tag 2__
