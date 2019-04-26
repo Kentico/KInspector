@@ -8,15 +8,17 @@ const state = {
 }
 
 const getters = {
-  getFiltered: (state) => ({ version, showUntested = false, showIncompatible = false }) => {
+  getFiltered: (state) => ({ version, showUntested = false, showIncompatible = false, tags = [] }) => {
     const items = state.items.filter(item => {
       const isCompatible = item.compatibleVersions.filter(x => x.major === version).length > 0
       const isIncompatible = item.incompatibleVersions.filter(x => x.major === version).length > 0
       const isUntested = !isCompatible && !isIncompatible
 
-      return isCompatible
-        || (showIncompatible && isIncompatible)
-        || (showUntested && isUntested)
+      const meetsCompatibilityFilters = isCompatible || (showIncompatible && isIncompatible) || (showUntested && isUntested)
+
+      const meetsTagFilter = tags.length == 0 || tags.some(t=> item.tags.includes(t))
+
+      return meetsCompatibilityFilters && meetsTagFilter
     })
 
     return items

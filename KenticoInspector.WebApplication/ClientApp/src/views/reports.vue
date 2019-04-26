@@ -89,7 +89,7 @@ export default {
       getFilteredReports: 'getFiltered'
     }),
     filteredReports: function () {
-      return this.getFilteredReports({version: this.connectedInstanceDetails.databaseVersion.major, showIncompatible: this.showIncompatible, showUntested: this.showUntested })
+      return this.getFilteredReports({version: this.connectedInstanceDetails.databaseVersion.major, showIncompatible: this.showIncompatible, showUntested: this.showUntested, tags: this.selectedTags })
     }
   },
   methods: {
