@@ -3,20 +3,31 @@ import api from '../../api'
 
 const state = {
   items: [],
+  filterSettings: {
+    majorVersion: -1,
+    showIncompatible: false,
+    showUntested: false,
+    taggedWith: []
+  },
   reportResults: {},
   loadingItems: false
 }
 
 const getters = {
-  getFiltered: (state) => ({ version, showUntested = false, showIncompatible = false, tags = [] }) => {
+  filtered: (state) => {
     const items = state.items.filter(item => {
-      const isCompatible = item.compatibleVersions.filter(x => x.major === version).length > 0
+      const version = state.filterSettings.majorVersion
+      const showIncompatible = state.filterSettings.showIncompatible
+      const showUntested = state.filterSettings.showUntested
+      const taggedWith = state.filterSettings.taggedWith
+
+      const isCompatible = version > 0 && item.compatibleVersions.filter(x => x.major === version).length > 0
       const isIncompatible = item.incompatibleVersions.filter(x => x.major === version).length > 0
       const isUntested = !isCompatible && !isIncompatible
 
       const meetsCompatibilityFilters = isCompatible || (showIncompatible && isIncompatible) || (showUntested && isUntested)
 
-      const meetsTagFilter = tags.length == 0 || tags.some(t=> item.tags.includes(t))
+      const meetsTagFilter = taggedWith.length == 0 || item.tags.some(t=>taggedWith.includes(t))
 
       return meetsCompatibilityFilters && meetsTagFilter
     })
