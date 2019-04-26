@@ -19,8 +19,8 @@ export default {
       axios.post("/api/instances", instance)
       .then(r => r.data)
       .catch(reject)
-      .then(instances => {
-        resolve(instances)
+      .then(instance => {
+        resolve(instance)
       })
     })
   },

@@ -3,6 +3,8 @@ import api from '../../api'
 const state = {
   items: {},
   currentInstanceDetails: null,
+  upserting: false,
+  upsertingError: null,
   connecting: false,
   connectionError: null
 }
@@ -27,40 +29,39 @@ const getters = {
 }
 
 const actions = {
-  getAll: ({ commit }) => {
-    api.getInstances()
-      .then(instances => {
-        commit('setItems', instances)
-      })
+  async getAll ({ commit }) {
+    commit('setItems', await api.getInstances())
   },
 
-  upsertItem: ({ dispatch }, instance) => {
-    api.upsertInstance(instance)
-      .then(()=>{
-        dispatch('getAll')
-      })
+  async upsertItem ({ commit, dispatch }, instance) {
+    commit('setUpserting',true)
+    try {
+      const newInstance = await api.upsertInstance(instance)
+      dispatch('getAll')
+      return newInstance
+    } catch (error) {
+      commit('setUpsertingError', error)
+    }
+
+    commit('setUpserting',false)
   },
 
-  deleteItem: ({ dispatch }, guid) => {
-    api.deleteInstance(guid)
-      .then(()=>{
-        dispatch('getAll')
-      })
+  async deleteItem ({ dispatch }, guid) {
+    await api.deleteInstance(guid)
+    await dispatch('getAll')
   },
 
-  connect: ({ commit }, guid) => {
-    return new Promise((resolve) => {
-      commit('setConnecting',true)
-      api.getInstanceDetails(guid)
-        .then(instanceDetails => {
-          commit('setCurrentInstanceDetails', instanceDetails)
-          commit('setConnecting',false)
-          resolve()
-        })
-        .catch(reason => {
-          commit('setConnectionError', reason)
-        })
-    })
+  async connect ({ commit }, guid) {
+    commit('setConnecting',true)
+
+    try {
+      const instanceDetails = await api.getInstanceDetails(guid)
+      commit('setCurrentInstanceDetails', instanceDetails)
+    } catch (error) {
+      commit('setConnectionError', error)
+    }
+
+    commit('setConnecting',false)
   },
 
   cancelConnecting: ({ commit }) => {
@@ -80,6 +81,14 @@ const mutations = {
 
   setConnectionError (state, reason) {
     state.connectionError = reason
+  },
+
+  setUpserting (state, status) {
+    state.upserting = status
+  },
+
+  setUpsertingError (state, reason) {
+    state.upsertingError = reason
   },
 
   setCurrentInstanceDetails (state, instanceDetails) {

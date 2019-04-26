@@ -117,12 +117,19 @@ export default {
     }
   }),
   methods: {
-    ...mapActions([
-      'upsertInstance'
-    ]),
+    ...mapActions('instances', {
+      connectInstance: 'connect',
+      upsertInstance: 'upsertItem'
+    }),
     submit () {
       if (this.$refs.form.validate()) {
-        this.upsertInstance(this.instance)
+        this.upsertInstance(this.instance).then((newInstance) => {
+          this.connectInstance(newInstance.guid)
+            .then(() => {
+              this.$router.push('/reports')
+            })
+        })
+
         //this.$refs.form.reset()
       }
     },
