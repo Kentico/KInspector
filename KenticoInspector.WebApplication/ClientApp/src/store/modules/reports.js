@@ -8,24 +8,22 @@ const state = {
 }
 
 const getters = {
-  getFiltered: (state) => ({ version, showUntested = false, showIncompatible = false}) => {
-    const items = state.items.filter((item) => {
-      const isCompatible = item.compatibleVersions.reduce(x=>x.major).includes(version)
-      const isIncompatible = item.incompatibleVersions.reduce(x=>x.major).includes(version)
+  getFiltered: (state) => ({ version, showUntested = false, showIncompatible = false }) => {
+    const items = state.items.filter(item => {
+      const isCompatible = item.compatibleVersions.filter(x => x.major === version).length > 0
+      const isIncompatible = item.incompatibleVersions.filter(x => x.major === version).length > 0
       const isUntested = !isCompatible && !isIncompatible
 
       return isCompatible
-        || (showUntested && isUntested)
         || (showIncompatible && isIncompatible)
+        || (showUntested && isUntested)
     })
 
-    console.log(items)
-
-    return state.items
+    return items
   },
 
   getTags: (state) => {
-    const allTags = state.items.reduce(getTagsFromReports,[])
+    const allTags = state.items.reduce(getTagsFromReports, [])
     return getUniqueTags(allTags)
   },
 
@@ -48,12 +46,12 @@ const actions = {
   },
   runReport: ({ commit }, { codename, instanceGuid }) => {
     commit('setItemResults', { codename, loading: true })
-    api.reportService.getReportResults({codename, instanceGuid})
-      .then(results =>{
+    api.reportService.getReportResults({ codename, instanceGuid })
+      .then(results => {
         const resultId = `${codename}-${instanceGuid}`
         commit('setItemResults', { resultId, loading: false, results })
       })
-    }
+  }
 }
 
 const mutations = {
@@ -73,11 +71,11 @@ export default {
   mutations
 }
 
-function getTagsFromReports(allTags, report) {
+function getTagsFromReports (allTags, report) {
   allTags.push(...report.tags)
   return allTags
 }
 
-function getUniqueTags(allTags) {
+function getUniqueTags (allTags) {
   return [...new Set(allTags)]
 }

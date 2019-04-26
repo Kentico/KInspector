@@ -45,7 +45,7 @@
         </v-flex>
 
         <v-flex xs12>
-          <report-list :reports="[]" />
+          <report-list :reports="filteredReports" />
         </v-flex>
       </template>
 
@@ -76,23 +76,25 @@ export default {
   data: () => ({
     showIncompatible: false,
     showUntested: false,
-    version: 11,
     selectedTags: [],
     allReports: [],
   }),
   computed: {
-    ...mapGetters('instances',['isConnected']),
-    ...mapGetters('reports',{ tags: 'getTags' }),
-    filteredReports: function() {
-      return this.getFilteredReports({version: this.version, showIncompatible: true, showUntested: true})
+    ...mapGetters('instances', [
+      'connectedInstanceDetails',
+      'isConnected'
+    ]),
+    ...mapGetters('reports', {
+      tags: 'getTags',
+      getFilteredReports: 'getFiltered'
+    }),
+    filteredReports: function () {
+      return this.getFilteredReports({version: this.connectedInstanceDetails.databaseVersion.major, showIncompatible: this.showIncompatible, showUntested: this.showUntested })
     }
   },
   methods: {
     ...mapActions('reports', {
       getAllReports: 'getAll'
-    }),
-    ...mapGetters('reports', {
-      getFilteredReports: 'getFiltered'
     }),
     hasSelectedTag(report) {
       return report.tags.reduce(
