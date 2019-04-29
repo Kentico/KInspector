@@ -64,6 +64,14 @@ const actions = {
         const resultId = `${codename}-${instanceGuid}`
         commit('setItemResults', { resultId, loading: false, results })
       })
+  },
+  resetFilterSettings: ({ commit }, { majorVersion = -1, showIncompatible = false, showUntested = false, taggedWith = [] }) => {
+    commit('setFilterSettings', {
+      majorVersion,
+      showIncompatible,
+      showUntested,
+      taggedWith
+    })
   }
 }
 
@@ -73,6 +81,12 @@ const mutations = {
   },
   setItemResults (state, { resultId, loading, results }) {
     Vue.set(state.reportResults, resultId, { loading, results })
+  },
+  setFilterSetting(state, { name, value }) {
+    Vue.set(state.filterSettings, name, value)
+  },
+  setFilterSettings(state, filterSettings) {
+    state.filterSettings = filterSettings
   },
 }
 
