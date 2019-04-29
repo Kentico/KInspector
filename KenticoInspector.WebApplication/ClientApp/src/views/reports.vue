@@ -12,40 +12,9 @@
       </v-flex>
 
       <template v-if="isConnected">
+        <report-filters />
         <v-flex xs12>
-          <v-select
-              v-model="selectedTags"
-              :items="tags"
-              label="Show reports by tag(s)"
-              clearable
-              small-chips
-              multiple
-              solo
-              hide-details
-            >
-          </v-select>
-        </v-flex>
-
-        <v-flex sm6>
-          <v-switch
-            v-model="showUntested"
-            label="Show untested reports"
-            color="red"
-            >
-          </v-switch>
-        </v-flex>
-
-        <v-flex sm6>
-          <v-switch
-            v-model="showIncompatible"
-            label="Show incompatible reports"
-            color="red"
-            >
-          </v-switch>
-        </v-flex>
-
-        <v-flex xs12>
-          <report-list :reports="reports" />
+          <report-list :reports="filteredReports" />
         </v-flex>
       </template>
 
@@ -66,55 +35,42 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import ReportFilters from '../components/report-filters'
 import ReportList from '../components/report-list'
 
 export default {
   components: {
+    ReportFilters,
     ReportList
   },
-  data: () => ({
-    showIncompatible: false,
-    showUntested: false,
-    version: "V12",
-    selectedTags: [],
-  }),
   computed: {
-    ...mapGetters('instances',['isConnected']),
-    ...mapState({
-      reports: state => Object.values(state.reports.items)
-    }),
-    tags: function () {
-      const allTags = this.reports.reduce(getTagsFromReports,[])
-      const uniqueTags = getUniqueTags(allTags)
-      return uniqueTags
-    }
+    ...mapGetters('instances', [
+      'connectedInstanceDetails',
+      'isConnected'
+    ]),
+    ...mapGetters('reports', {
+      tags: 'getTags',
+      filteredReports: 'filtered'
+    })
   },
   methods: {
     ...mapActions('reports', {
-      getReports: 'getAll'
+      getAllReports: 'getAll',
+      resetFilterSettings: 'resetFilterSettings'
     }),
-    hasSelectedTag(report) {
-      return report.tags.reduce(
-        (acc,cur) => {
-          return acc || this.selectedTags.includes(cur)
-        }, false)
+    initPage: function() {
+      if(this.isConnected) {
+        this.getAllReports()
+        this.resetFilterSettings({ majorVersion: this.connectedInstanceDetails.databaseVersion.major })
+      }
     }
   },
   watch: {
     '$route': {
-      handler: 'getReports',
+      handler: 'initPage',
       immediate: true
     }
   }
-}
-
-function getTagsFromReports(allTags, report) {
-  allTags.push(...report.tags)
-  return allTags
-}
-
-function getUniqueTags(allTags) {
-  return [...new Set(allTags)]
 }
 </script>
