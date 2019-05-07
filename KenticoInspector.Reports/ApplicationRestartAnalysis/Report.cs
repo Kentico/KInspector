@@ -1,5 +1,6 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -36,9 +37,9 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
         public string ShortDescription => "Shows application restart events from event log";
 
         public IList<string> Tags => new List<string> {
-            "Database",
-            "Health",
-            "Event Log"
+            ReportTags.Database,
+            ReportTags.EventLog,
+            ReportTags.Health
         };
 
         public ReportResults GetResults(Guid InstanceGuid)

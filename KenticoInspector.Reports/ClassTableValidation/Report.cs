@@ -1,4 +1,5 @@
 ﻿using KenticoInspector.Core;
+using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using System;
@@ -34,8 +35,8 @@ namespace KenticoInspector.Reports.ClassTableValidation
         public string ShortDescription => "Validates that Kentico classes and Database tables are properly connected.";
 
         public IList<string> Tags => new List<string> {
-            "Database",
-            "Health",
+            ReportTags.Database,
+            ReportTags.Health,
         };
 
         public ReportResults GetResults(Guid InstanceGuid)
