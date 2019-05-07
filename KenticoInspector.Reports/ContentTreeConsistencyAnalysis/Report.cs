@@ -1,14 +1,24 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
-    class Report : IReport
+    public class Report : IReport
     {
+        readonly IDatabaseService _databaseService;
+        readonly IInstanceService _instanceService;
+
+        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        {
+            _databaseService = databaseService;
+            _instanceService = instanceService;
+        }
+
         public string Codename => "Content-Tree-Consistency-Analysis";
 
         public IList<Version> CompatibleVersions => new List<Version> {

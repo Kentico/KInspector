@@ -13,6 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetCmsTreeNodeDetails.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithMissingSiteId.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="DatabaseConsistencyCheck\GetCheckDbResults.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
