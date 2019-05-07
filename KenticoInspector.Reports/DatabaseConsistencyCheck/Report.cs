@@ -1,4 +1,5 @@
 ﻿using KenticoInspector.Core;
+using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using System;
@@ -47,8 +48,8 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
         public string ShortDescription => "Runs `DBCC CHECKDB` against the database to identify consistency issues.";
 
         public IList<string> Tags => new List<string> {
-            "Database",
-            "Health"
+            ReportTags.Database,
+            ReportTags.Health
         };
 
         public ReportResults GetResults(Guid InstanceGuid)
