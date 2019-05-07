@@ -22,7 +22,8 @@ namespace Kentico.KInspector.Modules.Modules.General
                     new Version("8.2"),
                     new Version("9.0"),
                     new Version("10.0"),
-                    new Version("11.0")
+                    new Version("11.0"),
+                    new Version("12.0"),
                 },
                 Comment = @"Compares Kentico class fields against table columns in database, and displays non-matching entries. Lists columns without class field and class fields without specified table column.",
                 Category = "Database"

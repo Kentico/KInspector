@@ -21,7 +21,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.2"),
                     new Version("9.0"),
                     new Version("10.0"),
-                    new Version("11.0")
+                    new Version("11.0"),
+                    new Version("12.0")
                 },
                 Comment = @"Compares Kentico Classes against tables in database, and displays non-matching entries. Lists tables without Class, Classes without specified table, and missing Class tables. Excludes those classes, which are not meant to have a table. ",
                 Category = "Database"

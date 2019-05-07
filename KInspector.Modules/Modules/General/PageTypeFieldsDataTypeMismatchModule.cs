@@ -18,7 +18,8 @@ namespace Kentico.KInspector.Modules
                     new Version("8.2"),
                     new Version("9.0"),
                     new Version("10.0"),
-                    new Version("11.0")
+                    new Version("11.0"),
+                    new Version("12.0")
                 },
                 Comment = @"You may face this error when exporting/importing a site or when working with web parts / widgets that list more than one-page type. 
 This error is caused by at least two different page types (for example A and B) having a field named in the same way (for example FieldName) but in each page type the field data is stored as a different data type (for example for A, it is 'Text' and for B it is 'GUID').

@@ -27,7 +27,8 @@ https://devnet.kentico.com/articles/maintenance-in-kentico",
                     new Version("8.2"),
                     new Version("9.0"),
                     new Version("10.0"),
-                    new Version("11.0")
+                    new Version("11.0"),
+                    new Version("12.0"),
                 },
                 Category = "Event log"
             };
