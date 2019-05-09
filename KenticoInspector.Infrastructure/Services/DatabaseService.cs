@@ -30,10 +30,10 @@ namespace KenticoInspector.Infrastructure.Services
             _connection = DatabaseHelper.GetSqlConnection(instance);
         }
 
-        public IEnumerable<T> ExecuteSqlFromFile<T>(string relativeFilePath)
+        public IEnumerable<T> ExecuteSqlFromFile<T>(string relativeFilePath, object parameters = null)
         {
             var query = FileHelper.GetSqlQueryText(relativeFilePath);
-            return Connection.Query<T>(query);
+            return Connection.Query<T>(query, parameters);
         }
 
         public DataTable ExecuteSqlFromFileAsDataTable(string relativeFilePath)
