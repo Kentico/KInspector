@@ -1,12 +1,11 @@
 ﻿using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis;
+using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using KenticoInspector.Reports.Tests.MockHelpers;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -35,12 +34,13 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetTreeNodeIdsWithBadParentSiteId, null))
                 .Returns(treeNodesWithMissingSiteId);
+            // TODO: Add arrange for all scripts
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good.ToString());
+            Assert.That(results.Status == ReportResultsStatus.Information.ToString());
         }
 
         private void InitializeCommonMocks(int majorVersion)
