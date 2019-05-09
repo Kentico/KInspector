@@ -12,6 +12,7 @@ namespace KenticoInspector.Core.Services.Interfaces
 
         IEnumerable<T> ExecuteSqlFromFile<T>(string relativeFilePath, object parameters = null);
 
+        [Obsolete("This should be a last resort when it is impossible to create a DTO")]
         DataTable ExecuteSqlFromFileAsDataTable(string relativeFilePath);
     }
 }
