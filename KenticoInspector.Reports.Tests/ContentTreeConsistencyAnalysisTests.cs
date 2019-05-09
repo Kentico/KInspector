@@ -33,7 +33,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var treeNodesWithMissingSiteId = new List<int>();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetTreeNodeIdsWithBadParentSiteId))
+                .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetTreeNodeIdsWithBadParentSiteId, null))
                 .Returns(treeNodesWithMissingSiteId);
 
             // Act
