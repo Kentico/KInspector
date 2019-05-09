@@ -10,6 +10,7 @@ namespace KenticoInspector.Core.Models
         }
 
         public dynamic Data { get; set; }
+        public string Heading { get; set; }
         public string Status { get; set; }
         public string Summary { get; set; }
         public string Type { get; set; }
