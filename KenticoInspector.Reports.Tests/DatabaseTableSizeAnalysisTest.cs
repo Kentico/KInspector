@@ -1,9 +1,10 @@
 ﻿using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
-using KenticoInspector.Reports.DatabaseConsistencyCheck;
+using KenticoInspector.Reports.DatabaseTableSizeAnalysis;
 using KenticoInspector.Reports.Tests.MockHelpers;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Data;
 
 namespace KenticoInspector.Reports.Tests
@@ -28,12 +29,37 @@ namespace KenticoInspector.Reports.Tests
         [Test]
         public void Should_ReturnTop25Databases_In_Size()
         {
+            // Arrange
+            IEnumerable<DatabaseTableSizeResult> dbResults = GetCleanResults();
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetDatabaseTableSize))
+                .Returns(dbResults);
 
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Data.Rows.Count == 25);
+            Assert.That(results.Status == ReportResultsStatus.Information.ToString());
+        }
+
+        private List<DatabaseTableSizeResult> GetCleanResults()
+        {
+            var results = new List<DatabaseTableSizeResult>();
+            for(var i = 0; i < 25; i++)
+            {
+                results.Add(new DatabaseTableSizeResult() { TableName = $"table {i}", Rows =  i, BytesPerRow = i, SizeInMB = i });
+            }
+
+            return results;
         }
 
         private void InitializeCommonMocks(int majorVersion)
         {
-
+            _mockInstance = MockInstances.Get(majorVersion);
+            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
+            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
+            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
         }
     }
 }

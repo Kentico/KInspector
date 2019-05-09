@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
 {
-    public class DatabaseTableSizeAnalysis
+    public class DatabaseTableSizeResult
     {
         public string TableName { get; set; }
         public int Rows { get; set; }

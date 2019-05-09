@@ -48,23 +48,22 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
             var instance = _instanceService.GetInstance(InstanceGuid);
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
             _databaseService.ConfigureForInstance(instance);
-
-            //var checkDbResults = _databaseService.ExecuteSqlFromFileAsDataTable(Scripts.GetDatabaseTableSize);
-            var checkDbResults = _databaseService.ExecuteSqlFromFile<DatabaseTableSizeAnalysis>(Scripts.GetDatabaseTableSize);
+            
+            var checkDbResults = _databaseService.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetDatabaseTableSize);
 
             return CompileResults(checkDbResults);
         }
 
-        private static ReportResults CompileResults(IEnumerable<DatabaseTableSizeAnalysis> checkDbResults)
+        private static ReportResults CompileResults(IEnumerable<DatabaseTableSizeResult> checkDbResults)
         {
-            var hasIssues = checkDbResults.Count() > 0;
+            //var hasIssues = checkDbResults.Count() > 0;
 
             return new ReportResults
             {
                 Type = ReportResultsType.Table.ToString(),
                 Status = ReportResultsStatus.Information.ToString(),
                 Summary = "Check results table for any issues",
-                Data = new TableResult<DatabaseTableSizeAnalysis>() {
+                Data = new TableResult<DatabaseTableSizeResult>() {
                     Name = "Top 25 Results",
                     Rows =  checkDbResults
                 }
