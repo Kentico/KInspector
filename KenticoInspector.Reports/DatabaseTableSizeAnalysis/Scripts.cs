@@ -6,7 +6,7 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
 {
     public static class Scripts
     {
-        public const string BaseDirectory = "DatabaseTableAnalysis/";
-        public const string DatabaseTableSize = BaseDirectory + "DatabaseTableSize.sql";
+        public const string BaseDirectory = "DatabaseTableSizeAnalysis/";
+        public const string GetDatabaseTableSize = BaseDirectory + "GetDatabaseTableSize.sql";
     }
 }
