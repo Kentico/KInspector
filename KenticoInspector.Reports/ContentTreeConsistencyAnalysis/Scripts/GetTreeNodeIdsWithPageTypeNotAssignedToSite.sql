@@ -1,4 +1,4 @@
-﻿SELECT NodeID, NodeClassID, NodeSiteID
+﻿SELECT NodeID
 	FROM CMS_Tree
 	WHERE NOT EXISTS (
 		SELECT * 

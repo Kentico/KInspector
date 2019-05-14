@@ -19,7 +19,7 @@
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeDetails.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetPageTypeAssignmentResults.sql">
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithPageTypeNotAssignedToSite.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithDuplicatedAliasPath.sql">
