@@ -31,12 +31,22 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
         public IList<Version> IncompatibleVersions => new List<Version>();
 
         public string LongDescription => @"
-        <p>Checks that CMS_Tree and CMS_Document tables are without any consistency issues.</p>
+        <p>This report checks for the following consistency issues:</p>
+        <ul>
+            <li>Tree nodes with a bad parent site</li>
+            <li>Tree nodes with a bad parent node</li>
+            <li>Tree nodes with level inconsistency based on the number of <code>/</code> in the alias path compared to it’s level</li>
+            <li>Tree nodes with level inconsistency based on the whether it’s parent node has a level one higher than it does</li>
+            <li>Tree node duplicates based on alias path</li>
+            <li>Tree nodes with no document node</li>
+            <li>Tree nodes using a page type that is not assigned to the node’s site</li>
+            <li>Document nodes with no tree node</li>
+        </ul>
         ";
 
         public string Name => "Content Tree Consistency Analysis";
 
-        public string ShortDescription => "Performs consistency analysis for content items in the content tree";
+        public string ShortDescription => "Performs consistency analysis for items in the content tree";
 
         public IList<string> Tags => new List<string>()
         {
@@ -51,13 +61,12 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
             var testResults = new Dictionary<string, IEnumerable<int>>();
 
-            var treeNodeWithBadParentSiteResults = GetTreeNodeTestResult("Tree Nodes with Bad Parent Site", Scripts.GetTreeNodeIdsWithBadParentSiteId);
-            var treeNodeWithBadParentNodeResults = GetTreeNodeTestResult("Tree Nodes with Bad Parent Node", Scripts.GetTreeNodeIdsWithBadParentNodeId);
-            var treeNodeWithLevelInconsistencyAliasatPathTestResults = GetTreeNodeTestResult("Tree Nodes with Level Inconsistency (alias path test)", Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest);
-            var treeNodeWithLevelInconsistencyParentChildLevelTestResults = GetTreeNodeTestResult("Tree Nodes with Level Inconsistency (parent/child level test)", Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest);
-            var treeNodeWithMissingDocumentResults = GetTreeNodeTestResult("Tree Nodes with Missing Document", Scripts.GetTreeNodeIdsWithMissingDocument);
-
-            var treeNodeDuplicateTestResult = GetTreeNodeDuplicateTestResult();
+            var treeNodeWithBadParentSiteResults = GetTreeNodeTestResult("Tree nodes with a bad parent site", Scripts.GetTreeNodeIdsWithBadParentSiteId);
+            var treeNodeWithBadParentNodeResults = GetTreeNodeTestResult("Tree nodes with a bad parent node", Scripts.GetTreeNodeIdsWithBadParentNodeId);
+            var treeNodeWithLevelInconsistencyAliasatPathTestResults = GetTreeNodeTestResult("Tree nodes with level inconsistency (alias path test)", Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest);
+            var treeNodeWithLevelInconsistencyParentChildLevelTestResults = GetTreeNodeTestResult("Tree Nodes with level inconsistency (parent/child level test)", Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest);
+            var treeNodeWithMissingDocumentResults = GetTreeNodeTestResult("Tree nodes with no document node", Scripts.GetTreeNodeIdsWithMissingDocument);
+            var treeNodeWithDuplicateAliasPathResults = GetTreeNodeTestResult("Tree nodes with duplicated alias paths", Scripts.GetTreeNodeIdsWithDuplicatedAliasPath);
 
             // TODO: Build report for Documents with missing Tree Node
             //var documentIdsWithMissingTreeNode = _databaseService.ExecuteSqlFromFile<int>(Scripts.GetDocumentIdsWithMissingTreeNode);
@@ -71,7 +80,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 treeNodeWithLevelInconsistencyAliasatPathTestResults,
                 treeNodeWithLevelInconsistencyParentChildLevelTestResults,
                 treeNodeWithMissingDocumentResults,
-                treeNodeDuplicateTestResult
+                treeNodeWithDuplicateAliasPathResults
                 );
         }
 
@@ -84,54 +93,6 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             {
                 Name = name,
                 Rows = nodeDetails
-            };
-
-            return new ReportResults
-            {
-                Data = data,
-                Status = ReportResultsStatus.Information.ToString(),
-                Summary = string.Empty,
-                Type = ReportResultsType.Table.ToString(),
-            };
-        }
-
-        private ReportResults GetTreeNodeDuplicateTestResult()
-        {
-            var treeNodeDuplicateResults = _databaseService.ExecuteSqlFromFile<TreeNodeDuplicateResult>(Scripts.GetDuplicateTreeNodeIdPairs);
-
-            var IDs = treeNodeDuplicateResults.SelectMany(x => new int[] { x.NodeID, x.DuplicateNodeID }).Distinct().ToArray();
-            var nodeDetails = _databaseService.ExecuteSqlFromFile<CmsTreeNode>(Scripts.GetTreeNodeDetails, new { IDs });
-
-            var treeNodeOriginals = new List<int>();
-            var treeNodeDuplicates = new List<int>();
-            foreach (var treeNodeDuplicateResult in treeNodeDuplicateResults)
-            {
-                if (!treeNodeDuplicates.Contains(treeNodeDuplicateResult.NodeID))
-                {
-                    treeNodeOriginals.Add(treeNodeDuplicateResult.NodeID);
-                    treeNodeDuplicates.Add(treeNodeDuplicateResult.DuplicateNodeID);
-                }
-            }
-
-            var rows = treeNodeDuplicateResults
-                .Where(x => treeNodeOriginals.Contains(x.NodeID))
-                .Select(x =>
-                {
-                    var originalNodeDetail = nodeDetails.First(y => y.NodeID == x.NodeID);
-                    var duplicateNodeDetail = nodeDetails.First(y => y.NodeID == x.DuplicateNodeID);
-                    return new
-                    {
-                        originalNodeDetail.NodeAliasPath,
-                        OriginalNodeId = originalNodeDetail.NodeID,
-                        DuplicateNodeId = duplicateNodeDetail.NodeID
-                    };
-                });
-
-
-            var data = new TableResult<dynamic>
-            {
-                Name = "Tree Node Duplicates",
-                Rows = rows
             };
 
             return new ReportResults
