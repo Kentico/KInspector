@@ -67,10 +67,8 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             var treeNodeWithLevelInconsistencyParentChildLevelTestResults = GetTreeNodeTestResult("Tree Nodes with level inconsistency (parent/child level test)", Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest);
             var treeNodeWithMissingDocumentResults = GetTreeNodeTestResult("Tree nodes with no document node", Scripts.GetTreeNodeIdsWithMissingDocument);
             var treeNodeWithDuplicateAliasPathResults = GetTreeNodeTestResult("Tree nodes with duplicated alias paths", Scripts.GetTreeNodeIdsWithDuplicatedAliasPath);
-
-            // TODO: Build report for Documents with missing Tree Node
-            //var documentIdsWithMissingTreeNode = _databaseService.ExecuteSqlFromFile<int>(Scripts.GetDocumentIdsWithMissingTreeNode);
-
+            var documentNodesWithMissingTreeNodeResults = GetDocumentNodeTestResult("Document nodes with no tree node", Scripts.GetDocumentIdsWithMissingTreeNode);
+            
             // TODO: Build report for Page Types Used without being assigned to Site
             //var pageTypeAssignmentResults = _databaseService.ExecuteSqlFromFile<PageTypeAssignmentResult>(Scripts.GetPageTypeAssignmentResults);
 
@@ -80,19 +78,31 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 treeNodeWithLevelInconsistencyAliasatPathTestResults,
                 treeNodeWithLevelInconsistencyParentChildLevelTestResults,
                 treeNodeWithMissingDocumentResults,
-                treeNodeWithDuplicateAliasPathResults
+                treeNodeWithDuplicateAliasPathResults,
+                documentNodesWithMissingTreeNodeResults
                 );
         }
 
         private ReportResults GetTreeNodeTestResult(string name, string script)
         {
-            var IDs = _databaseService.ExecuteSqlFromFile<int>(script).ToArray();
-            var nodeDetails = _databaseService.ExecuteSqlFromFile<CmsTreeNode>(Scripts.GetTreeNodeDetails, new { IDs });
+            return GetTestResult<CmsTreeNode>(name, script, Scripts.GetTreeNodeDetails);
+        }
 
-            var data = new TableResult<CmsTreeNode>
+        private ReportResults GetDocumentNodeTestResult(string name, string script)
+        {
+            return GetTestResult<CmsDocumentNode>(name, script, Scripts.GetDocumentNodeDetails);
+        }
+
+        private ReportResults GetTestResult<T>(string name, string script, string getDetailsScript)
+        {
+            var IDs = _databaseService.ExecuteSqlFromFile<int>(script).ToArray();
+
+            var details = _databaseService.ExecuteSqlFromFile<T>(getDetailsScript, new { IDs });
+
+            var data = new TableResult<T>
             {
                 Name = name,
-                Rows = nodeDetails
+                Rows = details
             };
 
             return new ReportResults

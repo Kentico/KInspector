@@ -8,8 +8,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
     {
         public string NodeAliasPath { get; set; }
         public int NodeID { get; set; }
+        public int NodeLevel { get; set; }
+        public string NodeName { get; set; }
         public int? NodeParentID { get; set; }
         public int NodeSiteID { get; set; }
-        public int NodeLevel { get; set; }
     }
 }

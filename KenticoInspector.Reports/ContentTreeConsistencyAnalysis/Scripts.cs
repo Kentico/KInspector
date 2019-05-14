@@ -5,6 +5,7 @@
         public const string BaseDirectory = "ContentTreeConsistencyAnalysis/Scripts/";
 
         public const string GetDocumentIdsWithMissingTreeNode = BaseDirectory + "GetDocumentIdsWithMissingTreeNode.sql";
+        public const string GetDocumentNodeDetails = BaseDirectory + "GetDocumentNodeDetails.sql";
         public const string GetPageTypeAssignmentResults = BaseDirectory + "GetPageTypeAssignmentResults.sql";
         public const string GetTreeNodeDetails = BaseDirectory + "GetTreeNodeDetails.sql";
         public const string GetTreeNodeIdsWithBadParentNodeId = BaseDirectory + "GetTreeNodeIdsWithBadParentNodeId.sql";
