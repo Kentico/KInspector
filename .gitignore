@@ -197,5 +197,3 @@ FakesAssemblies/
 
 # Kentico Inspector Specifics
 KenticoInspector.WebApplication/SavedInstances.json
-/KenticoInspector.Reports/RobotsConfigurationSummary
-/KenticoInspector.Reports.Tests/RobotsConfigurationSummaryTest.cs
