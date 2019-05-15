@@ -27,7 +27,7 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnTop25Databases_In_Size()
+        public void Should_ReturnInformationStatus()
         {
             // Arrange
             IEnumerable<DatabaseTableSizeResult> dbResults = GetCleanResults();
