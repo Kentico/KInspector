@@ -50,7 +50,7 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
             
             var top25LargestTables = _databaseService.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetTop25LargestTables);
 
-            return new ReportResults
+            var result = new ReportResults
             {
                 Type = ReportResultsType.Table.ToString(),
                 Status = ReportResultsStatus.Information.ToString(),
@@ -60,6 +60,8 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
                     Rows = top25LargestTables
                 }
             };
+
+            return result;
         }
     }
 }
