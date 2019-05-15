@@ -1,4 +1,5 @@
-﻿using KenticoInspector.Core.Models;
+﻿using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DatabaseTableSizeAnalysis;
 using KenticoInspector.Reports.Tests.MockHelpers;
@@ -40,7 +41,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.Rows.Count == 25);
-            Assert.That(results.Status == ReportResultsStatus.Information.ToString());
+            Assert.That(results.Status == ReportResultsStatus.Information);
         }
 
         private List<DatabaseTableSizeResult> GetCleanResults()

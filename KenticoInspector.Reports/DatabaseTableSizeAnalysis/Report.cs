@@ -52,8 +52,8 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
 
             var result = new ReportResults
             {
-                Type = ReportResultsType.Table.ToString(),
-                Status = ReportResultsStatus.Information.ToString(),
+                Type = ReportResultsType.Table,
+                Status = ReportResultsStatus.Information,
                 Summary = "Check results table for any issues",
                 Data = new TableResult<DatabaseTableSizeResult>() {
                     Name = "Top 25 Results",
