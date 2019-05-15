@@ -42,21 +42,13 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
             ReportTags.Health
         };
 
-        // Anything under here needs to be fixed.
         public ReportResults GetResults(Guid InstanceGuid)
         {
             var instance = _instanceService.GetInstance(InstanceGuid);
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
             _databaseService.ConfigureForInstance(instance);
             
-            var checkDbResults = _databaseService.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetDatabaseTableSize);
-
-            return CompileResults(checkDbResults);
-        }
-
-        private static ReportResults CompileResults(IEnumerable<DatabaseTableSizeResult> checkDbResults)
-        {
-            //var hasIssues = checkDbResults.Count() > 0;
+            var top25LargestTables = _databaseService.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetTop25LargestTables);
 
             return new ReportResults
             {
@@ -65,7 +57,7 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
                 Summary = "Check results table for any issues",
                 Data = new TableResult<DatabaseTableSizeResult>() {
                     Name = "Top 25 Results",
-                    Rows =  checkDbResults
+                    Rows = top25LargestTables
                 }
             };
         }

@@ -32,7 +32,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             IEnumerable<DatabaseTableSizeResult> dbResults = GetCleanResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetDatabaseTableSize))
+                .Setup(p => p.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetTop25LargestTables))
                 .Returns(dbResults);
 
             // Act
