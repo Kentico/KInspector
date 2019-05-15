@@ -1,3 +1,4 @@
+using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ApplicationRestartAnalysis;
@@ -40,7 +41,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Information.ToString());
+            Assert.That(results.Status == ReportResultsStatus.Information);
         }
 
         [Test]
@@ -72,7 +73,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.Rows.Count == 2);
-            Assert.That(results.Status == ReportResultsStatus.Information.ToString());
+            Assert.That(results.Status == ReportResultsStatus.Information);
         }
 
         [Test]
@@ -88,7 +89,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults(_mockInstance.Guid);
 
             // Assert
-            Assert.That(results.Type == ReportResultsType.Table.ToString());
+            Assert.That(results.Type == ReportResultsType.Table);
         }
         private void InitializeCommonMocks(int majorVersion)
         {

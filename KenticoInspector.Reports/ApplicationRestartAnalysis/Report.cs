@@ -74,8 +74,8 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
 
             var results = new ReportResults
             {
-                Type = ReportResultsType.Table.ToString(),
-                Status = ReportResultsStatus.Information.ToString(),
+                Type = ReportResultsType.Table,
+                Status = ReportResultsStatus.Information,
                 Summary = $"{totalEventsText} ({totalStartEventsText}, {totalEndEventsText}) {timeSpanText}",
                 Data = data
             };
