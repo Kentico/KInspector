@@ -71,8 +71,8 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
             {
                 return new ReportResults
                 {
-                    Type = ReportResultsType.Table.ToString(),
-                    Status = ReportResultsStatus.Error.ToString(),
+                    Type = ReportResultsType.Table,
+                    Status = ReportResultsStatus.Error,
                     Summary = "Check results table for any issues",
                     Data = checkDbResults
                 };
@@ -81,8 +81,8 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
             {
                 return new ReportResults
                 {
-                    Type = ReportResultsType.String.ToString(),
-                    Status = ReportResultsStatus.Good.ToString(),
+                    Type = ReportResultsType.String,
+                    Status = ReportResultsStatus.Good,
                     Summary = "No issues found",
                     Data = string.Empty
                 };

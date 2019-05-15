@@ -71,7 +71,7 @@ namespace KenticoInspector.Reports.ClassTableValidation
 
             var results = new ReportResults
             {
-                Type = ReportResultsType.TableList.ToString()
+                Type = ReportResultsType.TableList
             };
 
             results.Data.TableResults = tableResults;
@@ -80,15 +80,15 @@ namespace KenticoInspector.Reports.ClassTableValidation
             switch (totalErrors)
             {
                 case 0:
-                    results.Status = ReportResultsStatus.Good.ToString();
+                    results.Status = ReportResultsStatus.Good;
                     results.Summary = "No issues found.";
                     break;
                 case 1:
-                    results.Status = ReportResultsStatus.Error.ToString();
+                    results.Status = ReportResultsStatus.Error;
                     results.Summary = "1 issue found.";
                     break;
                 default:
-                    results.Status = ReportResultsStatus.Error.ToString();
+                    results.Status = ReportResultsStatus.Error;
                     results.Summary = $"{totalErrors} issues found.";
                     break;
             }

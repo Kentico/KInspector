@@ -1,12 +1,17 @@
-﻿using System.Dynamic;
+﻿using KenticoInspector.Core.Constants;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Dynamic;
 
 namespace KenticoInspector.Core.Models
 {
     public class ReportResults
     {
-        public string Status { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ReportResultsStatus Status { get; set; }
         public string Summary { get; set; }
-        public string Type { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ReportResultsType Type { get; set; }
         public dynamic Data { get; set; }
 
         public ReportResults()
