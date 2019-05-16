@@ -6,6 +6,7 @@ using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -31,7 +32,7 @@ namespace KenticoInspector.Reports.Tests
         {
             // Arrange
 
-            MockAllScriptsClean();
+            MockScriptsClean();
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -40,44 +41,79 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Information.ToString());
         }
 
-        private void MockAllScriptsClean()
+        [Test]
+        public void Should_ReturnErrorResult_When_ThereAreDocumentsWithMissingTreeNode()
         {
-            var CleanIdList = new List<int>();
+            // Arrange
+            var badCmsDocumentNodes = new List<CmsDocumentNode>() {
+                new CmsDocumentNode { DocumentID = 100, DocumentName = "Bad 100", DocumentNamePath = "/bad-100", DocumentNodeID = 100 },
+                new CmsDocumentNode { DocumentID = 150, DocumentName = "Bad 150", DocumentNamePath = "/bad-150", DocumentNodeID = 150 }
+            };
+
+            var badIds = badCmsDocumentNodes.Select(x => x.DocumentID);
 
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetDocumentIdsWithMissingTreeNode, null))
-                .Returns(CleanIdList);
+                .Returns(badIds);
+
+            SetupExecuteSqlFromFileWithListParameter(
+                Scripts.GetDocumentNodeDetails,
+                "IDs",
+                badIds,
+                badCmsDocumentNodes
+            );
+
+            MockScriptsClean(new string[] {
+                Scripts.GetTreeNodeIdsWithBadParentNodeId,
+                Scripts.GetTreeNodeIdsWithBadParentSiteId,
+                Scripts.GetTreeNodeIdsWithDuplicatedAliasPath,
+                Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest,
+                Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest,
+                Scripts.GetTreeNodeIdsWithMissingDocument,
+                Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite
+            });
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Error.ToString());
+        }
+
+        private void MockScriptsClean(string[] idScripts = null)
+        {
+            idScripts = idScripts ?? new string[] {
+                Scripts.GetDocumentIdsWithMissingTreeNode,
+                Scripts.GetTreeNodeIdsWithBadParentNodeId,
+                Scripts.GetTreeNodeIdsWithBadParentSiteId,
+                Scripts.GetTreeNodeIdsWithDuplicatedAliasPath,
+                Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest,
+                Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest,
+                Scripts.GetTreeNodeIdsWithMissingDocument,
+                Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite
+            };
+
+            var CleanIdList = new List<int>();
+
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetTreeNodeIdsWithBadParentNodeId, null))
-                .Returns(CleanIdList);
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetTreeNodeIdsWithBadParentSiteId, null))
-                .Returns(CleanIdList);
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetTreeNodeIdsWithDuplicatedAliasPath, null))
-                .Returns(CleanIdList);
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest, null))
-                .Returns(CleanIdList);
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest, null))
-                .Returns(CleanIdList);
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetTreeNodeIdsWithMissingDocument, null))
-                .Returns(CleanIdList);
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite, null))
+                .Setup(p => p.ExecuteSqlFromFile<int>(It.IsIn<string>(idScripts), null))
                 .Returns(CleanIdList);
 
             var CleanCmsDocumentNodeList = new List<CmsDocumentNode>();
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, It.IsAny<object>()))
-                .Returns(CleanCmsDocumentNodeList);
+            SetupExecuteSqlFromFileWithListParameter(
+                Scripts.GetDocumentNodeDetails,
+                "IDs",
+                CleanIdList,
+                CleanCmsDocumentNodeList
+            );
 
             var CleanCmsTreeNodeList = new List<CmsTreeNode>();
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<CmsTreeNode>(Scripts.GetTreeNodeDetails, It.IsAny<object>()))
-                .Returns(CleanCmsTreeNodeList);
+            SetupExecuteSqlFromFileWithListParameter(
+                Scripts.GetTreeNodeDetails,
+                "IDs",
+                CleanIdList,
+                CleanCmsTreeNodeList
+            );
         }
 
         private void InitializeCommonMocks(int majorVersion)
@@ -88,10 +124,11 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
         }
 
-        private void SetupExecuteSqlFromFile<T,U>(string script, U parameters, IEnumerable<T> returns)
+        private void SetupExecuteSqlFromFileWithListParameter<T, U>(string script, string parameterPropertyName, IEnumerable<U> parameterPropertyValue, IEnumerable<T> returnValue)
         {
-            _mockDatabaseService.Setup(p => p.ExecuteSqlFromFile<T>(script, parameters))
-                .Returns(returns);
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<T>(script, It.Is<object>(actual => ObjectHelpers.ObjectPropertyValueEqualsExpectedValue(actual, parameterPropertyName, parameterPropertyValue))))
+                .Returns(returnValue);
         }
     }
 }
