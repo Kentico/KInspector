@@ -35,10 +35,8 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts))
                 .Returns(identicalPageLayouts);
-
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
-
             // Assert
             Assert.That(results.Data.Rows.Count != 0);
             Assert.That(results.Status == ReportResultsStatus.Information);
@@ -51,10 +49,8 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts))
                 .Returns(identicalPageLayouts);
-
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
-
             // Assert
             Assert.That(results.Data.Rows.Count == 0);
             Assert.That(results.Status == ReportResultsStatus.Information);
