@@ -104,7 +104,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = ReportResultsStatus.Information,
+                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
                 Summary = string.Empty,
                 Type = ReportResultsType.Table,
             };
@@ -115,7 +115,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             var combinedResults = new ReportResults();
 
             combinedResults.Type = ReportResultsType.TableList;
-            combinedResults.Status = ReportResultsStatus.Information;
+            combinedResults.Status = ReportResultsStatus.Good;
 
             foreach (var reportResults in allReportResults)
             {
@@ -124,6 +124,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 // TODO: Make this WAY better
                 ((IDictionary<string, object>)combinedResults.Data).Add(reportResults.Data.Name, reportResults.Data);
                 // TODO: logic to determine final status
+                if (reportResults.Status == ReportResultsStatus.Error) {
+                    combinedResults.Status = ReportResultsStatus.Error;
+                }
             }
 
             return combinedResults;

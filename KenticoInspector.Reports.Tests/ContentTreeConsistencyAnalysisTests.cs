@@ -29,7 +29,7 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnCleanResult_When_DatabaseIsClean()
+        public void Should_ReturnGoodResult_When_DatabaseIsClean()
         {
             // Arrange
 
@@ -39,7 +39,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults(_mockInstance.Guid);
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Status == ReportResultsStatus.Good);
         }
 
         [Test]
