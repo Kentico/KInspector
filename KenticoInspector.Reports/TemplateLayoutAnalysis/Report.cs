@@ -36,7 +36,7 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
 
         public string Name => "Templates with identical layouts";
 
-        public string ShortDescription => throw new NotImplementedException();
+        public string ShortDescription => "Returns a list of identical page layouts.";
 
         public IList<string> Tags => new List<string>
         {
@@ -52,7 +52,37 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
 
             var identicalLayouts = _databaseService.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts);
 
-            return new ReportResults();
+            return CompileResults(identicalLayouts);
+        }
+
+        private static ReportResults CompileResults(IEnumerable<IdenticalPageLayouts> identicalPageLayouts)
+        {
+            var layoutResults = new TableResult<dynamic>()
+            {
+                Name = "Identical page layouts",
+                Rows = identicalPageLayouts
+            };
+
+            var results = new ReportResults
+            {
+                Status = ReportResultsStatus.Information
+            };
+            
+
+            if (layoutResults.Rows.Count() == 0)
+            {
+                results.Summary = "No Identical page layouts found.";
+                results.Data = layoutResults;
+                results.Type = ReportResultsType.Table;
+            }
+            else
+            {
+                results.Summary = "Identical page layouts found.";
+                results.Data = layoutResults;
+                results.Type = ReportResultsType.Table;
+            }
+
+            return results;
         }
     }
 }
