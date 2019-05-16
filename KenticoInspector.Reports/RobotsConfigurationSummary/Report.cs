@@ -42,8 +42,8 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
 
         public IList<string> Tags => new List<string>
         {
-            ReportTags.Database,
-            ReportTags.Health,
+            ReportTags.Information,
+            ReportTags.SEO,
         };
 
         public ReportResults GetResults(Guid InstanceGuid)
