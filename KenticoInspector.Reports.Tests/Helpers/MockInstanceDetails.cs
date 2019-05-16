@@ -1,7 +1,7 @@
 ﻿using KenticoInspector.Core.Models;
 using System;
 
-namespace KenticoInspector.Reports.Tests.MockHelpers
+namespace KenticoInspector.Reports.Tests.Helpers
 {
     static class MockInstanceDetails
     {
