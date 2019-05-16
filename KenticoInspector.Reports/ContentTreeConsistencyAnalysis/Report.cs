@@ -104,9 +104,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = ReportResultsStatus.Information.ToString(),
+                Status = ReportResultsStatus.Information,
                 Summary = string.Empty,
-                Type = ReportResultsType.Table.ToString(),
+                Type = ReportResultsType.Table,
             };
         }
 
@@ -114,8 +114,8 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
         {
             var combinedResults = new ReportResults();
 
-            combinedResults.Type = ReportResultsType.TableList.ToString();
-            combinedResults.Status = ReportResultsStatus.Information.ToString();
+            combinedResults.Type = ReportResultsType.TableList;
+            combinedResults.Status = ReportResultsStatus.Information;
 
             foreach (var reportResults in allReportResults)
             {

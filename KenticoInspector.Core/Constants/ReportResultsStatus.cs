@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KenticoInspector.Core.Models
+namespace KenticoInspector.Core.Constants
 {
     public enum ReportResultsStatus
     {

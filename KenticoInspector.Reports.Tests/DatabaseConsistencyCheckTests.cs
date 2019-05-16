@@ -1,4 +1,5 @@
-﻿using KenticoInspector.Core.Models;
+﻿using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DatabaseConsistencyCheck;
 using KenticoInspector.Reports.Tests.Helpers;
@@ -37,7 +38,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults(_mockInstance.Guid);
 
             //Assert
-            Assert.That(results.Status == ReportResultsStatus.Good.ToString());
+            Assert.That(results.Status == ReportResultsStatus.Good);
         }
 
         [Test]
@@ -56,7 +57,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults(_mockInstance.Guid);
 
             //Assert
-            Assert.That(results.Status == ReportResultsStatus.Error.ToString());
+            Assert.That(results.Status == ReportResultsStatus.Error);
         }
 
         private void InitializeCommonMocks(int majorVersion)
