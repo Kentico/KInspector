@@ -4,7 +4,6 @@ using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,16 +12,20 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
 {
     public class Report : IReport
     {
-        readonly IDatabaseService _databaseService;
-        readonly IInstanceService _instanceService;
+        private readonly IDatabaseService _databaseService;
+        private readonly IInstanceService _instanceService;
         private HttpClient _httpClient = new HttpClient();
 
         public Report(IDatabaseService databaseService, IInstanceService instanceService, HttpClient httpClient = null)
         {
             _databaseService = databaseService;
             _instanceService = instanceService;
-            if (httpClient != null) _httpClient = httpClient;
+            if (httpClient != null)
+            {
+                _httpClient = httpClient;
+            }
         }
+
         public string Codename => "Robots.txt";
 
         public IList<Version> CompatibleVersions => new List<Version>
