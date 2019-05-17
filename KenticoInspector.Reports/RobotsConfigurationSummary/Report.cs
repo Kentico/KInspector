@@ -26,7 +26,7 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
             }
         }
 
-        public string Codename => "Robots.txt";
+        public string Codename => "robots-txt";
 
         public IList<Version> CompatibleVersions => new List<Version>
         {
@@ -37,7 +37,7 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
 
         public IList<Version> IncompatibleVersions => new List<Version>();
 
-        public string LongDescription => @"Checks that the ~/robots.txt file is present and accessible. See http://www.robotstxt.org/robotstxt.html for more details";
+        public string LongDescription => @"<p><a href=""http://www.robotstxt.org/robotstxt.html"" target=""_blank"">See robotstxt.org</a> for more details.</p>";
 
         public string Name => "Robots.txt";
 
