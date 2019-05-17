@@ -25,6 +25,12 @@
     <None Update="ClassTableValidation\GetTablesWithNoClass.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+<<<<<<< HEAD
+=======
+    <None Update="TemplateLayoutAnalysis\GetIdenticalLayouts.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+>>>>>>> baa54f91545ec1b046fcff13f2506abb4442730e
     <None Update="DatabaseTableSizeAnalysis\GetTop25LargestTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
