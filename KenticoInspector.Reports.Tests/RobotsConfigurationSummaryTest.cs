@@ -6,9 +6,6 @@ using KenticoInspector.Reports.Tests.MockHelpers;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -31,6 +28,7 @@ namespace KenticoInspector.Reports.Tests
         {
             InitializeCommonMocks(majorVersion);
         }
+
         [Test]
         public void Should_ReturnGoodStatusResult_WhenRobotsTxtFound()
         {
@@ -56,6 +54,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Good);
         }
+
         [Test]
         public void Should_ReturnWarningStatusResult_WhenRobotsTxtNotFound()
         {
