@@ -11,5 +11,6 @@ namespace KenticoInspector.Core.Constants
         public const string Health = "Health";
         public const string Information = "Information";
         public const string PortalEngine = "Portal Engine";
+        public const string SEO = "SEO";
     }
 }
