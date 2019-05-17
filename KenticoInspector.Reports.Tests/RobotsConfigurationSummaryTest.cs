@@ -77,7 +77,7 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnGoodStatus_WhenSiteIsInSubDirectoryAndRobotsTxtFound()
         {
             // Arrange
-
+            var baseUrl = _mockInstance.Url;
             _mockInstance.Url += "/subdirectory";
 
             var mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
@@ -102,7 +102,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Good);
 
-            var expectedUri = UriHelper.CombineUrl(_mockInstance.Url, Constants.RobotsTxtRelativePath);
+            var expectedUri = new Uri($"{baseUrl}/{Constants.RobotsTxtRelativePath}");
             AssertUrlCalled(mockHttpMessageHandler, expectedUri);
         }
 

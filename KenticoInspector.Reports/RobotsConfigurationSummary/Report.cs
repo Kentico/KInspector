@@ -55,7 +55,9 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
             var instance = _instanceService.GetInstance(InstanceGuid);
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
 
-            Uri testUri = UriHelper.CombineUrl(instance.Url, Constants.RobotsTxtRelativePath);
+            var instanceUri = new Uri(instance.Url);
+            var testUri = new Uri(instanceUri,Constants.RobotsTxtRelativePath);
+
             var found = ConfirmUriStatusCode(testUri, HttpStatusCode.OK).Result;
 
             return new ReportResults
