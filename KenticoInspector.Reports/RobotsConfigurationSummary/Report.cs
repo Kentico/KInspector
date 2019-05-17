@@ -1,5 +1,6 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using System;
@@ -26,7 +27,7 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
             }
         }
 
-        public string Codename => "robots-txt";
+        public string Codename => "robots-txt-information-summary";
 
         public IList<Version> CompatibleVersions => new List<Version>
         {
@@ -37,9 +38,9 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
 
         public IList<Version> IncompatibleVersions => new List<Version>();
 
-        public string LongDescription => @"<p><a href=""http://www.robotstxt.org/robotstxt.html"" target=""_blank"">See robotstxt.org</a> for more details.</p>";
+        public string LongDescription => @"<p>See <a href=""http://www.robotstxt.org/robotstxt.html"" target=""_blank"">robotstxt.org</a> for more details.</p>";
 
-        public string Name => "Robots.txt";
+        public string Name => "Robots.txt Configuration Summary";
 
         public string ShortDescription => "Checks that the ~/robots.txt file is present and accessible.";
 
@@ -53,35 +54,23 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
         {
             var instance = _instanceService.GetInstance(InstanceGuid);
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
-            string filePath = "/robots.txt";
-            Uri siteDomain = new Uri(instance.Url);
-            var result = TestUrl(siteDomain, filePath).Result;
 
-            if (!result)
+            Uri testUri = UriHelper.CombineUrl(instance.Url, Constants.RobotsTxtRelativePath);
+            var found = ConfirmUriStatusCode(testUri, HttpStatusCode.OK).Result;
+
+            return new ReportResults
             {
-                return new ReportResults
-                {
-                    Status = ReportResultsStatus.Warning,
-                    Type = ReportResultsType.String,
-                    Summary = "robots.txt not found",
-                };
-            }
-            else
-            {
-                return new ReportResults
-                {
-                    Status = ReportResultsStatus.Good,
-                    Type = ReportResultsType.String,
-                    Summary = "robots.txt found",
-                };
-            }
+                Data = string.Empty,
+                Status = found ? ReportResultsStatus.Good : ReportResultsStatus.Warning,
+                Summary = found ? "robots.txt found" : "robots.txt not found",
+                Type = ReportResultsType.String
+            };
         }
 
-        private async Task<bool> TestUrl(Uri url, string file)
+        private async Task<bool> ConfirmUriStatusCode(Uri testUri, HttpStatusCode expectedStatusCode)
         {
-            Uri requestUrl = new Uri(url, file);
-            HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
-            return response.StatusCode == HttpStatusCode.OK;
+            HttpResponseMessage response = await _httpClient.GetAsync(testUri);
+            return response.StatusCode == expectedStatusCode;
         }
     }
 }

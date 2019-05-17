@@ -1,11 +1,13 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Reports.RobotsConfigurationSummary;
 using KenticoInspector.Reports.Tests.MockHelpers;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -30,33 +32,82 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnGoodStatusResult_WhenRobotsTxtFound()
+        public void Should_ReturnGoodStatus_WhenRobotsTxtFound()
         {
             // Arrange
-            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
-            handlerMock
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            mockHttpMessageHandler
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(new HttpResponseMessage() { StatusCode = HttpStatusCode.OK })
+                .Verifiable();
+
+            var httpClient = new HttpClient(mockHttpMessageHandler.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, httpClient);
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Good);
+
+            var baseUri = new Uri(_mockInstance.Url);
+            var expectedUri = new Uri(baseUri, Constants.RobotsTxtRelativePath);
+            AssertUrlCalled(mockHttpMessageHandler, expectedUri);
+        }
+
+        private static void AssertUrlCalled(Mock<HttpMessageHandler> handlerMock, Uri expectedUri)
+        {
+            handlerMock.Protected().Verify(
                 "SendAsync",
-                ItExpr.IsAny<HttpRequestMessage>(),
+                Times.Exactly(1),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.Method == HttpMethod.Get
+                    && req.RequestUri == expectedUri
+                ),
                 ItExpr.IsAny<CancellationToken>()
+            );
+        }
+
+        [Test]
+        public void Should_ReturnGoodStatus_WhenSiteIsInSubDirectoryAndRobotsTxtFound()
+        {
+            // Arrange
+
+            _mockInstance.Url += "/subdirectory";
+
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            mockHttpMessageHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync(new HttpResponseMessage()
                 {
                     StatusCode = HttpStatusCode.OK
                 })
                 .Verifiable();
-            var httpClient = new HttpClient(handlerMock.Object);
+
+            var httpClient = new HttpClient(mockHttpMessageHandler.Object);
             _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, httpClient);
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Good);
+
+            var expectedUri = UriHelper.CombineUrl(_mockInstance.Url, Constants.RobotsTxtRelativePath);
+            AssertUrlCalled(mockHttpMessageHandler, expectedUri);
         }
 
         [Test]
-        public void Should_ReturnWarningStatusResult_WhenRobotsTxtNotFound()
+        public void Should_ReturnWarningStatus_WhenRobotsTxtNotFound()
         {
             // Arrange
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
