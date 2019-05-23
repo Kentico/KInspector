@@ -6,7 +6,7 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
 {
     public static class Scripts
     {
-        public const string BaseDirectory = "ReplaceMe/";
-        public const string GetTop25LargestTables = BaseDirectory + "SQLFile.sql";
+        public const string BaseDirectory = "UnusedPageTypeSummary/";
+        public const string GetUnusedPageTypes = BaseDirectory + "GetUnusedPageTypes.sql";
     }
 }

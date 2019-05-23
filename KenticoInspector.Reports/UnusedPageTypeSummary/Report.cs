@@ -11,25 +11,58 @@ using System.Threading.Tasks;
 
 namespace KenticoInspector.Reports.UnusedPageTypeSummary
 {
-    class Report : IReport
+    public class Report : IReport
     {
-        public string Codename => "";
+        readonly IDatabaseService _databaseService;
+        readonly IInstanceService _instanceService;
 
-        public IList<Version> CompatibleVersions => new List<Version>();
+        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        {
+            _databaseService = databaseService;
+            _instanceService = instanceService;
+        }
+
+        public string Codename => "unused-page-type-summary";
+
+        public IList<Version> CompatibleVersions => new List<Version>
+        {
+            new Version("10.0"),
+            new Version("11.0"),
+            new Version("12.0")
+        };
 
         public IList<Version> IncompatibleVersions => new List<Version>();
 
-        public string LongDescription => "";
+        public string LongDescription => "This report checks for page types that are not in use.";
 
-        public string Name => "";
+        public string Name => "Unused Page Type Summary";
 
-        public string ShortDescription => "";
+        public string ShortDescription => "Checks for unused pages types.";
 
-        public IList<string> Tags => new List<string>();
+        public IList<string> Tags => new List<string>
+        {
+            ReportTags.Information
+        };
 
         public ReportResults GetResults(Guid InstanceGuid)
         {
-            return new ReportResults();
+            var instance = _instanceService.GetInstance(InstanceGuid);
+            var instanceDetails = _instanceService.GetInstanceDetails(instance);
+            _databaseService.ConfigureForInstance(instance);
+
+            var unusedPageTypes = _databaseService.ExecuteSqlFromFile<UnusedPageTypes>(Scripts.GetUnusedPageTypes);
+
+            return new ReportResults
+            {
+                Type = ReportResultsType.Table,
+                Status = ReportResultsStatus.Information,
+                Summary = "",
+                Data = new TableResult<UnusedPageTypes>()
+                {
+                    Name = "Unused page types",
+                    Rows = unusedPageTypes
+                }
+            };
         }
     }
 }
