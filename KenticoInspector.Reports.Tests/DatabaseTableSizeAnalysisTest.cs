@@ -2,7 +2,7 @@
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DatabaseTableSizeAnalysis;
-using KenticoInspector.Reports.Tests.MockHelpers;
+using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             IEnumerable<DatabaseTableSizeResult> dbResults = GetCleanResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetTop25LargestTables))
+                .Setup(p => p.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetTop25LargestTables, null))
                 .Returns(dbResults);
 
             // Act
