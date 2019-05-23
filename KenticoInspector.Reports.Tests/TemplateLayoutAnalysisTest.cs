@@ -28,7 +28,7 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnListOfIdenticalLayouts()
+        public void Should_ReturnListOfIdenticalLayouts_WhenSomeAreFound()
         {
             // Arrange
             var identicalPageLayouts = GetListOfLayouts();
@@ -38,11 +38,11 @@ namespace KenticoInspector.Reports.Tests
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
             // Assert
-            Assert.That(results.Data.Rows.Count != 0);
+            Assert.That(results.Data.Rows.Count == 5);
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
-
-        public void Should_ReturnEmptyListOfIdenticalLayouts()
+        [Test]
+        public void Should_ReturnEmptyListOfIdenticalLayouts_WhenNoneFound()
         {
             // Arrange
             var identicalPageLayouts = new List<IdenticalPageLayouts>();
