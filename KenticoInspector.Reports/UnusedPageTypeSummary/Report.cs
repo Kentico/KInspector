@@ -49,7 +49,6 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
             var instance = _instanceService.GetInstance(InstanceGuid);
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
             _databaseService.ConfigureForInstance(instance);
-
             var unusedPageTypes = _databaseService.ExecuteSqlFromFile<UnusedPageTypes>(Scripts.GetUnusedPageTypes);
 
             return new ReportResults
