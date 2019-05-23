@@ -6,6 +6,7 @@ using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,20 +30,6 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnGoodResult_When_DatabaseIsClean()
-        {
-            // Arrange
-
-            MockScriptsClean();
-
-            // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
-
-            // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
-        }
-
-        [Test]
         public void Should_ReturnErrorResult_When_ThereAreDocumentsWithMissingTreeNode()
         {
             // Arrange
@@ -50,29 +37,16 @@ namespace KenticoInspector.Reports.Tests
                 new CmsDocumentNode { DocumentID = 100, DocumentName = "Bad 100", DocumentNamePath = "/bad-100", DocumentNodeID = 100 },
                 new CmsDocumentNode { DocumentID = 150, DocumentName = "Bad 150", DocumentNamePath = "/bad-150", DocumentNodeID = 150 }
             };
+            SetupCmsDocumentNodeIdAndDetailsDatabaseQueries(Scripts.GetDocumentIdsWithMissingTreeNode, badCmsDocumentNodes);
 
-            var badIds = badCmsDocumentNodes.Select(x => x.DocumentID);
-
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<int>(Scripts.GetDocumentIdsWithMissingTreeNode, null))
-                .Returns(badIds);
-
-            SetupExecuteSqlFromFileWithListParameter(
-                Scripts.GetDocumentNodeDetails,
-                "IDs",
-                badIds,
-                badCmsDocumentNodes
-            );
-
-            MockScriptsClean(new string[] {
-                Scripts.GetTreeNodeIdsWithBadParentNodeId,
-                Scripts.GetTreeNodeIdsWithBadParentSiteId,
-                Scripts.GetTreeNodeIdsWithDuplicatedAliasPath,
-                Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest,
-                Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest,
-                Scripts.GetTreeNodeIdsWithMissingDocument,
-                Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite
-            });
+            var goodCmsTreeNodes = new List<CmsTreeNode>();
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentNodeId, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentSiteId, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithDuplicatedAliasPath, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithMissingDocument, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite, goodCmsTreeNodes);
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -81,40 +55,27 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Error);
         }
 
-        private void MockScriptsClean(string[] idScripts = null)
+        [Test]
+        public void Should_ReturnGoodResult_When_DatabaseIsClean()
         {
-            idScripts = idScripts ?? new string[] {
-                Scripts.GetDocumentIdsWithMissingTreeNode,
-                Scripts.GetTreeNodeIdsWithBadParentNodeId,
-                Scripts.GetTreeNodeIdsWithBadParentSiteId,
-                Scripts.GetTreeNodeIdsWithDuplicatedAliasPath,
-                Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest,
-                Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest,
-                Scripts.GetTreeNodeIdsWithMissingDocument,
-                Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite
-            };
+            // Arrange
+            var goodCmsDocumentNodes = new List<CmsDocumentNode>();
+            SetupCmsDocumentNodeIdAndDetailsDatabaseQueries(Scripts.GetDocumentIdsWithMissingTreeNode, goodCmsDocumentNodes);
 
-            var CleanIdList = new List<int>();
+            var goodCmsTreeNodes = new List<CmsTreeNode>();
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentNodeId, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentSiteId, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithDuplicatedAliasPath, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithMissingDocument, goodCmsTreeNodes);
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite, goodCmsTreeNodes);
 
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<int>(It.IsIn<string>(idScripts), null))
-                .Returns(CleanIdList);
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
 
-            var CleanCmsDocumentNodeList = new List<CmsDocumentNode>();
-            SetupExecuteSqlFromFileWithListParameter(
-                Scripts.GetDocumentNodeDetails,
-                "IDs",
-                CleanIdList,
-                CleanCmsDocumentNodeList
-            );
-
-            var CleanCmsTreeNodeList = new List<CmsTreeNode>();
-            SetupExecuteSqlFromFileWithListParameter(
-                Scripts.GetTreeNodeDetails,
-                "IDs",
-                CleanIdList,
-                CleanCmsTreeNodeList
-            );
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Good);
         }
 
         private void InitializeCommonMocks(int majorVersion)
@@ -125,11 +86,27 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
         }
 
-        private void SetupExecuteSqlFromFileWithListParameter<T, U>(string script, string parameterPropertyName, IEnumerable<U> parameterPropertyValue, IEnumerable<T> returnValue)
+        private void SetupCmsDocumentNodeIdAndDetailsDatabaseQueries(string idScript, IEnumerable<CmsDocumentNode> detailsValue = null)
         {
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<T>(script, It.Is<object>(actual => ObjectHelpers.ObjectPropertyValueEqualsExpectedValue(actual, parameterPropertyName, parameterPropertyValue))))
-                .Returns(returnValue);
+            if (detailsValue == null)
+            {
+                detailsValue = new List<CmsDocumentNode>();
+            }
+
+            var idValue = detailsValue.Select(x => x.DocumentID);
+            _mockDatabaseService.SetupExecuteSqlFromFile(idScript, idValue);
+            _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetDocumentNodeDetails, "IDs", idValue, detailsValue);
+        }
+
+        private void SetupCmsTreeNodeIdAndDetailsDatabaseQueries(string idScript, IEnumerable<CmsTreeNode> detailsValue = null)
+        {
+            if (detailsValue == null) {
+                detailsValue = new List<CmsTreeNode>();
+            }
+
+            var idValue = detailsValue.Select(x => x.NodeID);
+            _mockDatabaseService.SetupExecuteSqlFromFile(idScript, idValue);
+            _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetTreeNodeDetails, "IDs", idValue, detailsValue);
         }
     }
 }

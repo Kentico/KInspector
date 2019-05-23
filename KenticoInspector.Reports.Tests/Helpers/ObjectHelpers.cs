@@ -7,9 +7,9 @@ namespace KenticoInspector.Reports.Tests.Helpers
 {
     static class ObjectHelpers
     {
-        public static bool ObjectPropertyValueEqualsExpectedValue<T>(object objectWithProperty, string propertyName, IEnumerable<T> expectedValue)
+        public static bool ObjectHasPropertyWithExpectedValue<T>(object objectToCheck, string propertyName, IEnumerable<T> expectedValue)
         {
-            var objectPropertyValue = objectWithProperty.GetPropertyValue<IEnumerable<T>>(propertyName);
+            var objectPropertyValue = objectToCheck.GetPropertyValue<IEnumerable<T>>(propertyName);
             return objectPropertyValue.SequenceEqual(expectedValue);
         }
     }
