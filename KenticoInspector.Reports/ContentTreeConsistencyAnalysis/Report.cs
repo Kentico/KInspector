@@ -120,13 +120,16 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             foreach (var reportResults in allReportResults)
             {
                 var name = ((string)reportResults.Data.Name);
-                combinedResults.Summary += reportResults.Summary;
                 // TODO: Make this WAY better
                 ((IDictionary<string, object>)combinedResults.Data).Add(reportResults.Data.Name, reportResults.Data);
-                // TODO: logic to determine final status
                 if (reportResults.Status == ReportResultsStatus.Error) {
+                    combinedResults.Summary += $"{name} found. ";
                     combinedResults.Status = ReportResultsStatus.Error;
                 }
+            }
+
+            if (combinedResults.Status == ReportResultsStatus.Good) {
+                combinedResults.Summary = "No content tree consistency issues found.";
             }
 
             return combinedResults;
