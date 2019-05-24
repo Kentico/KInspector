@@ -68,7 +68,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             var treeNodeWithDuplicateAliasPathResults = GetTreeNodeTestResult("Tree nodes with duplicated alias paths", Scripts.GetTreeNodeIdsWithDuplicatedAliasPath);
             var treeNodeWithPageTypeNotAssignedToSiteResults = GetTreeNodeTestResult("Tree nodes with page type not assigned to site", Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite);
             var documentNodesWithMissingTreeNodeResults = GetDocumentNodeTestResult("Document nodes with no tree node", Scripts.GetDocumentIdsWithMissingTreeNode);
-            
+
+            var workflowInconsistencies = GetWorkflowInconsistencyResult();
+
             return CompileResults(
                 treeNodeWithBadParentSiteResults,
                 treeNodeWithBadParentNodeResults,
@@ -79,6 +81,20 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 treeNodeWithPageTypeNotAssignedToSiteResults,
                 documentNodesWithMissingTreeNodeResults
                 );
+        }
+
+        private ReportResults GetWorkflowInconsistencyResult()
+        {
+            var latestVersionHistoryIds = _databaseService.ExecuteSqlFromFile<int>(Scripts.GetLatestVersionHistoryIdForAllDocuments);
+
+            // TODO: Get version details
+            // TODO: Get document IDs from version details
+            // TODO: Get document data for documents
+            // TODO: Get class details for documents
+            // TODO: Get coupled data for all documents by class (as dictionary?)
+            // TODO: Compare version details with document data and couple data
+            // TODO: Aggregate any issues
+            return new ReportResults();
         }
 
         private ReportResults GetTreeNodeTestResult(string name, string script)
