@@ -33,20 +33,20 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnErrorResult_When_ThereAreDocumentsWithMissingTreeNode()
         {
             // Arrange
-            var badCmsDocumentNodes = new List<CmsDocumentNode>() {
-                new CmsDocumentNode { DocumentID = 100, DocumentName = "Bad 100", DocumentNamePath = "/bad-100", DocumentNodeID = 100 },
-                new CmsDocumentNode { DocumentID = 150, DocumentName = "Bad 150", DocumentNamePath = "/bad-150", DocumentNodeID = 150 }
-            };
-            SetupCmsDocumentNodeIdAndDetailsDatabaseQueries(Scripts.GetDocumentIdsWithMissingTreeNode, badCmsDocumentNodes);
+            SetupAllDatabaseQueries(documentsWithMissingTreeNode: GetBadDocumentNodes());
 
-            var goodCmsTreeNodes = new List<CmsTreeNode>();
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentNodeId, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentSiteId, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithDuplicatedAliasPath, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithMissingDocument, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite, goodCmsTreeNodes);
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Error);
+        }
+
+        [Test]
+        public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithBadParent()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(treeNodeIdsWithBadParentNodeId: GetBadTreeNodes());
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -59,17 +59,7 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnGoodResult_When_DatabaseIsClean()
         {
             // Arrange
-            var goodCmsDocumentNodes = new List<CmsDocumentNode>();
-            SetupCmsDocumentNodeIdAndDetailsDatabaseQueries(Scripts.GetDocumentIdsWithMissingTreeNode, goodCmsDocumentNodes);
-
-            var goodCmsTreeNodes = new List<CmsTreeNode>();
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentNodeId, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentSiteId, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithDuplicatedAliasPath, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithMissingDocument, goodCmsTreeNodes);
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite, goodCmsTreeNodes);
+            SetupAllDatabaseQueries();
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -78,12 +68,65 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Good);
         }
 
+        private List<CmsDocumentNode> GetBadDocumentNodes()
+        {
+            return new List<CmsDocumentNode>() {
+                new CmsDocumentNode { DocumentID = 100, DocumentName = "Bad 100", DocumentNamePath = "/bad-100", DocumentNodeID = 100 },
+                new CmsDocumentNode { DocumentID = 150, DocumentName = "Bad 150", DocumentNamePath = "/bad-150", DocumentNodeID = 150 }
+            };
+        }
+
+        private List<CmsTreeNode> GetBadTreeNodes()
+        {
+            return new List<CmsTreeNode>()
+            {
+                new CmsTreeNode { ClassDisplayName = "Bad Class", ClassName = "BadClass", NodeAliasPath = "/bad-1", NodeClassID = 1234, NodeID = 101, NodeLevel = 1, NodeName = "bad-1", NodeParentID = 0, NodeSiteID = 1 }
+            };
+        }
+
         private void InitializeCommonMocks(int majorVersion)
         {
             _mockInstance = MockInstances.Get(majorVersion);
             _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
             _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
             _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
+        }
+
+        private void SetupAllDatabaseQueries(
+            List<CmsDocumentNode> documentsWithMissingTreeNode = null,
+            List<CmsTreeNode> treeNodeIdsWithBadParentNodeId = null,
+            List<CmsTreeNode> treeNodeIdsWithBadParentSiteId = null,
+            List<CmsTreeNode> treeNodeIdsWithDuplicatedAliasPath = null,
+            List<CmsTreeNode> treeNodeIdsWithLevelMismatchByAliasPathTest = null,
+            List<CmsTreeNode> treeNodeIdsWithLevelMismatchByNodeLevelTest = null,
+            List<CmsTreeNode> treeNodeIdsWithMissingDocument = null,
+            List<CmsTreeNode> treeNodeIdsWithPageTypeNotAssignedToSite = null
+            )
+        {
+            documentsWithMissingTreeNode = documentsWithMissingTreeNode ?? new List<CmsDocumentNode>();
+            SetupCmsDocumentNodeIdAndDetailsDatabaseQueries(Scripts.GetDocumentIdsWithMissingTreeNode, documentsWithMissingTreeNode);
+
+            treeNodeIdsWithBadParentNodeId = treeNodeIdsWithBadParentNodeId ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentNodeId, treeNodeIdsWithBadParentNodeId);
+
+            treeNodeIdsWithBadParentSiteId = treeNodeIdsWithBadParentSiteId ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentSiteId, treeNodeIdsWithBadParentSiteId);
+
+            treeNodeIdsWithDuplicatedAliasPath = treeNodeIdsWithDuplicatedAliasPath ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithDuplicatedAliasPath, treeNodeIdsWithDuplicatedAliasPath);
+
+            treeNodeIdsWithLevelMismatchByAliasPathTest = treeNodeIdsWithLevelMismatchByAliasPathTest ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest, treeNodeIdsWithLevelMismatchByAliasPathTest);
+
+            treeNodeIdsWithLevelMismatchByNodeLevelTest = treeNodeIdsWithLevelMismatchByNodeLevelTest ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest, treeNodeIdsWithLevelMismatchByNodeLevelTest);
+
+            treeNodeIdsWithMissingDocument = treeNodeIdsWithMissingDocument ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithMissingDocument, treeNodeIdsWithMissingDocument);
+
+            treeNodeIdsWithPageTypeNotAssignedToSite = treeNodeIdsWithPageTypeNotAssignedToSite ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite, treeNodeIdsWithPageTypeNotAssignedToSite);
+
         }
 
         private void SetupCmsDocumentNodeIdAndDetailsDatabaseQueries(string idScript, IEnumerable<CmsDocumentNode> detailsValue = null)
