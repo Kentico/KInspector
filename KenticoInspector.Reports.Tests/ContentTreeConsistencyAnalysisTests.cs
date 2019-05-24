@@ -43,10 +43,88 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithBadParent()
+        public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithBadParentNode()
         {
             // Arrange
             SetupAllDatabaseQueries(treeNodeIdsWithBadParentNodeId: GetBadTreeNodes());
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Error);
+        }
+
+        [Test]
+        public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithBadParentSite()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(treeNodeIdsWithBadParentSiteId: GetBadTreeNodes());
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Error);
+        }
+
+        [Test]
+        public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithDuplicatedAliasPath()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(treeNodeIdsWithDuplicatedAliasPath: GetBadTreeNodes());
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Error);
+        }
+
+        [Test]
+        public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithLevelMismatchByAliasPathTest()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(treeNodeIdsWithLevelMismatchByAliasPathTest: GetBadTreeNodes());
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Error);
+        }
+
+        [Test]
+        public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithLevelMismatchByNodeLevelTest()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(treeNodeIdsWithLevelMismatchByNodeLevelTest: GetBadTreeNodes());
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Error);
+        }
+
+        [Test]
+        public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithMissingDocument()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(treeNodeIdsWithMissingDocument: GetBadTreeNodes());
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Error);
+        }
+
+        [Test]
+        public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithPageTypeNotAssignedToSite()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(treeNodeIdsWithPageTypeNotAssignedToSite: GetBadTreeNodes());
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
