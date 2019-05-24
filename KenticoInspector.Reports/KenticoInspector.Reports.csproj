@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetLatestVersionHistoryIdForAllDocuments.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetDocumentNodeDetails.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
