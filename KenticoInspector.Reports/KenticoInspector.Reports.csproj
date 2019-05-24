@@ -13,6 +13,36 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetDocumentNodeDetails.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeDetails.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithPageTypeNotAssignedToSite.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithDuplicatedAliasPath.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetDocumentIdsWithMissingTreeNode.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithLevelMismatchByAliasPathTest.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithMissingDocument.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithLevelMismatchByNodeLevelTest.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithBadParentNodeId.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithBadParentSiteId.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="DatabaseConsistencyCheck\GetCheckDbResults.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

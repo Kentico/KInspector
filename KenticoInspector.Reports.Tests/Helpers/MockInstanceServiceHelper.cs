@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace KenticoInspector.Reports.Tests.MockHelpers
+namespace KenticoInspector.Reports.Tests.Helpers
 {
     public static class MockInstanceServiceHelper
     {

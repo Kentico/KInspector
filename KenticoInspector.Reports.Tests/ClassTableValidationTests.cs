@@ -2,7 +2,7 @@ using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ClassTableValidation;
-using KenticoInspector.Reports.Tests.MockHelpers;
+using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -34,12 +34,12 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass, null))
                 .Returns(tableResults);
 
             var classResults = GetCleanClassResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable, null))
                 .Returns(classResults);
 
             // Act
@@ -57,7 +57,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass, null))
                 .Returns(tableResults);
 
             var classResults = GetCleanClassResults();
@@ -69,7 +69,7 @@ namespace KenticoInspector.Reports.Tests
             });
 
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable, null))
                 .Returns(classResults);
 
             // Act
@@ -91,12 +91,12 @@ namespace KenticoInspector.Reports.Tests
             });
 
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass, null))
                 .Returns(tableResults);
 
             var classResults = GetCleanClassResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable, null))
                 .Returns(classResults);
 
             // Act
