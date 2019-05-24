@@ -14,5 +14,6 @@
         public const string GetTreeNodeIdsWithLevelMismatchByNodeLevelTest = BaseDirectory + "GetTreeNodeIdsWithLevelMismatchByNodeLevelTest.sql";
         public const string GetTreeNodeIdsWithMissingDocument = BaseDirectory + "GetTreeNodeIdsWithMissingDocument.sql";
         public const string GetTreeNodeIdsWithPageTypeNotAssignedToSite = BaseDirectory + "GetTreeNodeIdsWithPageTypeNotAssignedToSite.sql";
+        public const string GetLatestVersionHistoryIdForAllDocuments = BaseDirectory + "GetLatestVersionHistoryIdForAllDocuments.sql";
     }
 }
