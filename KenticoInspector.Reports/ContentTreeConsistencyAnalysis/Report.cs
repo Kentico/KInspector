@@ -41,6 +41,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             <li>Tree nodes with no document node</li>
             <li>Tree nodes with page type not assigned to site</li>
             <li>Document nodes with no tree node</li>
+            <li>Validates that the published data and the data in the CMS_VersionHistory tables match</li>
         </ul>
         ";
 
