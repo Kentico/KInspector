@@ -2,7 +2,7 @@
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.TemplateLayoutAnalysis;
-using KenticoInspector.Reports.Tests.MockHelpers;
+using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -33,7 +33,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var identicalPageLayouts = GetListOfLayouts();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts))
+                .Setup(p => p.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts, null))
                 .Returns(identicalPageLayouts);
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -47,7 +47,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var identicalPageLayouts = new List<IdenticalPageLayouts>();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts))
+                .Setup(p => p.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts, null))
                 .Returns(identicalPageLayouts);
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
