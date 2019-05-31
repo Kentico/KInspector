@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KenticoInspector.Reports.UnusedPageTypeSummary
 {
-    public class UnusedPageTypes
+    public class PageType
     {
         public string ClassDisplayName { get; set; }
         public string ClassName { get; set; }

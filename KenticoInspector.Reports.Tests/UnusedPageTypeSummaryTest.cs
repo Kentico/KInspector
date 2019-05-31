@@ -2,11 +2,11 @@
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.UnusedPageTypeSummary;
-using KenticoInspector.Reports.Tests.MockHelpers;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using KenticoInspector.Reports.Tests.Helpers;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -28,12 +28,12 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnInformationStatus()
+        public void Should_ReturnInformationStatusAndAllUnusedPageTypes()
         {
             // Arrange
-            var unusedTypes = GetListOfPageTypes();
+            var unusedTypes = GetPages();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<UnusedPageTypes>(Scripts.GetUnusedPageTypes))
+                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypes, null))
                 .Returns(unusedTypes);
 
             // Act
@@ -44,16 +44,16 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
 
-        public IEnumerable<UnusedPageTypes> GetListOfPageTypes()
+        public IEnumerable<PageType> GetPages()
         {
-            return new List<UnusedPageTypes>
+            return new List<PageType>
             {
-                new UnusedPageTypes{ ClassDisplayName = "Blog", ClassName = "CMS.Blog" },
-                new UnusedPageTypes{ ClassDisplayName = "Blog month", ClassName = "CMS.BlogMonth" },
-                new UnusedPageTypes{ ClassDisplayName = "Blog post", ClassName = "CMS.BlogPost" },
-                new UnusedPageTypes{ ClassDisplayName = "Chat - Transformation", ClassName = "Chat.Transformations" },
-                new UnusedPageTypes{ ClassDisplayName = "Dancing Goat site - Transformations", ClassName = "DancingGoat.Transformations" },
-                new UnusedPageTypes{ ClassDisplayName = "E-commerce - Transformations", ClassName = "Ecommerce.Transformations" }
+                new PageType{ ClassDisplayName = "Blog", ClassName = "CMS.Blog" },
+                new PageType{ ClassDisplayName = "Blog month", ClassName = "CMS.BlogMonth" },
+                new PageType{ ClassDisplayName = "Blog post", ClassName = "CMS.BlogPost" },
+                new PageType{ ClassDisplayName = "Chat - Transformation", ClassName = "Chat.Transformations" },
+                new PageType{ ClassDisplayName = "Dancing Goat site - Transformations", ClassName = "DancingGoat.Transformations" },
+                new PageType{ ClassDisplayName = "E-commerce - Transformations", ClassName = "Ecommerce.Transformations" }
             };
         }
 
