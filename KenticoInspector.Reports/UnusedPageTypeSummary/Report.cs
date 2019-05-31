@@ -49,17 +49,17 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
             var instance = _instanceService.GetInstance(InstanceGuid);
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
             _databaseService.ConfigureForInstance(instance);
-            var pageTypes = new List<PageType>(_databaseService.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypes));
+            var unusedPageTypes = new List<PageType>(_databaseService.ExecuteSqlFromFile<PageType>(Scripts.GetUnusedPageTypes));
 
             return new ReportResults
             {
                 Type = ReportResultsType.Table,
                 Status = ReportResultsStatus.Information,
-                Summary = $"{pageTypes.Count} unused page type" + (pageTypes.Count != 1 ? "s." : "."),
+                Summary = $"{unusedPageTypes.Count} unused page type" + (unusedPageTypes.Count != 1 ? "s." : "."),
                 Data = new TableResult<PageType>()
                 {
                     Name = "Unused page types",
-                    Rows = pageTypes
+                    Rows = unusedPageTypes
                 }
             };
         }

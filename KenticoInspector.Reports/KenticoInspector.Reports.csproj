@@ -61,7 +61,7 @@
     <None Update="DatabaseTableSizeAnalysis\GetTop25LargestTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="UnusedPageTypeSummary\GetPageTypes.sql">
+    <None Update="UnusedPageTypeSummary\GetUnusedPageTypes.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

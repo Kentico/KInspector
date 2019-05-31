@@ -7,6 +7,6 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
     public static class Scripts
     {
         public const string BaseDirectory = "UnusedPageTypeSummary/";
-        public const string GetPageTypes = BaseDirectory + "GetPageTypes.sql";
+        public const string GetUnusedPageTypes = BaseDirectory + "GetUnusedPageTypes.sql";
     }
 }

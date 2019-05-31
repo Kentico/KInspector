@@ -31,10 +31,10 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnInformationStatusAndAllUnusedPageTypes()
         {
             // Arrange
-            var unusedTypes = GetPages();
+            var unusedPageTypes = GetUnusedPageTypes();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypes, null))
-                .Returns(unusedTypes);
+                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetUnusedPageTypes, null))
+                .Returns(unusedPageTypes);
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -44,7 +44,7 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
 
-        public IEnumerable<PageType> GetPages()
+        public IEnumerable<PageType> GetUnusedPageTypes()
         {
             return new List<PageType>
             {
