@@ -205,6 +205,7 @@ namespace KenticoInspector.Reports.Tests
             treeNodeIdsWithPageTypeNotAssignedToSite = treeNodeIdsWithPageTypeNotAssignedToSite ?? new List<CmsTreeNode>();
             SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite, treeNodeIdsWithPageTypeNotAssignedToSite);
 
+            _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetLatestVersionHistoryIdForAllDocuments, new List<int>());
         }
 
         private void SetupCmsDocumentNodeIdAndDetailsDatabaseQueries(string idScript, IEnumerable<CmsDocumentNode> detailsValue = null)
