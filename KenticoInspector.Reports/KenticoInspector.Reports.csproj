@@ -13,10 +13,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetCmsClassItems.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetLatestVersionHistoryIdForAllDocuments.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetDocumentNodeDetails.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetCmsTreeJoinedItems.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeDetails.sql">
@@ -44,6 +50,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithBadParentSiteId.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetVersionHistoryDetails.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="DatabaseConsistencyCheck\GetCheckDbResults.sql">
