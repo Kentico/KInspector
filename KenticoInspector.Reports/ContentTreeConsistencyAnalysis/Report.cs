@@ -6,6 +6,7 @@ using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
@@ -85,16 +86,59 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
         private ReportResults GetWorkflowInconsistencyResult()
         {
-            var latestVersionHistoryIds = _databaseService.ExecuteSqlFromFile<int>(Scripts.GetLatestVersionHistoryIdForAllDocuments);
+            var versionHistoryItems = GetVersionHistoryItems();
 
-            // TODO: Get version details
-            // TODO: Get document IDs from version details
-            // TODO: Get document data for documents
-            // TODO: Get class details for documents
-            // TODO: Get coupled data for all documents by class (as dictionary?)
-            // TODO: Compare version details with document data and couple data
+            // TODO: Get document data for documents (SQL + refactor to method)
+            var documentIDs = versionHistoryItems.Select(x => x.DocumentID);
+            var cmsTreeJoinedItems = _databaseService.ExecuteSqlFromFile<dynamic>(Scripts.GetCmsTreeJoinedItems, new { IDs = documentIDs.ToArray() });
+
+            // TODO: Get document class details  (SQL + refactor to method)
+            var cmsClassIds = versionHistoryItems.Select(x => x.VersionClassID);
+            var cmsClassItems = _databaseService.ExecuteSqlFromFile<CmsClassItem>(Scripts.GetCmsClassItems, new { IDs = cmsClassIds.ToArray() });
+
+            // TODO: create list of Tree node, Document node, and Class-specific properties to compare
+            var classFields = GetClassFieldsFromXml(cmsClassItems);
+
+            /*
+            select CAST (NodeXML as XML) NodeXml, * from CMS_VersionHistory where VersionHistoryID = 6
+            select * from CMS_Document where DocumentId = 13
+            select * from CMS_Tree where NodeId = 13
+            select * from View_CMS_Tree_Joined where DocumentID = 13
+            select CAST (ClassFormDefinition as XML) ClassFormDefinitionXml,* from CMS_Class where ClassID = 5483
+             */
+
+            // TODO: Compare version details with document data and joinedcouple data
             // TODO: Aggregate any issues
             return new ReportResults();
+        }
+
+        private List<KeyValuePair<int, CmsClassField>> GetClassFieldsFromXml(IEnumerable<CmsClassItem> cmsClassItems)
+        {
+            var result = new List<KeyValuePair<int, CmsClassField>>();
+            foreach (var cmsClassItem in cmsClassItems)
+            {
+                var fields = cmsClassItem.ClassFormDefinitionXml.SelectNodes("/form/field");
+
+                foreach (XmlNode field in fields)
+                {
+                    var classIdClassFieldPair = new KeyValuePair<int, CmsClassField>(cmsClassItem.ClassID, new CmsClassField {
+                        Caption = field.SelectSingleNode("/properties/fieldcaption")?.Value,
+                        Column = field.Attributes["column"].Value,
+                        ColumnType = field.Attributes["columntype"].Value,
+                        DefaultValue = field.SelectSingleNode("/properties/defaultvalue")?.Value
+                    });
+
+                    result.Add(classIdClassFieldPair);
+                }
+            }
+
+            return result;
+        }
+
+        private IEnumerable<CmsVersionHistoryItem> GetVersionHistoryItems()
+        {
+            var latestVersionHistoryIds = _databaseService.ExecuteSqlFromFile<int>(Scripts.GetLatestVersionHistoryIdForAllDocuments);
+            return _databaseService.ExecuteSqlFromFile<CmsVersionHistoryItem>(Scripts.GetVersionHistoryDetails, new { IDs = latestVersionHistoryIds.ToArray() });
         }
 
         private ReportResults GetTreeNodeTestResult(string name, string script)
@@ -139,13 +183,15 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 var name = ((string)reportResults.Data.Name);
                 // TODO: Make this WAY better
                 ((IDictionary<string, object>)combinedResults.Data).Add(reportResults.Data.Name, reportResults.Data);
-                if (reportResults.Status == ReportResultsStatus.Error) {
+                if (reportResults.Status == ReportResultsStatus.Error)
+                {
                     combinedResults.Summary += $"{name} found. ";
                     combinedResults.Status = ReportResultsStatus.Error;
                 }
             }
 
-            if (combinedResults.Status == ReportResultsStatus.Good) {
+            if (combinedResults.Status == ReportResultsStatus.Good)
+            {
                 combinedResults.Summary = "No content tree consistency issues found.";
             }
 
