@@ -70,7 +70,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             var treeNodeWithPageTypeNotAssignedToSiteResults = GetTreeNodeTestResult("Tree nodes with page type not assigned to site", Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite);
             var documentNodesWithMissingTreeNodeResults = GetDocumentNodeTestResult("Document nodes with no tree node", Scripts.GetDocumentIdsWithMissingTreeNode);
 
-            var workflowInconsistencies = GetWorkflowInconsistencyResult();
+            var workflowInconsistenciesResults = GetWorkflowInconsistencyResult();
 
             return CompileResults(
                 treeNodeWithBadParentSiteResults,
@@ -80,95 +80,62 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 treeNodeWithMissingDocumentResults,
                 treeNodeWithDuplicateAliasPathResults,
                 treeNodeWithPageTypeNotAssignedToSiteResults,
-                documentNodesWithMissingTreeNodeResults
+                documentNodesWithMissingTreeNodeResults,
+                workflowInconsistenciesResults
                 );
         }
 
-        private ReportResults GetWorkflowInconsistencyResult()
+        private IEnumerable<string> CompareVersionHistoryItemsWithPublishedItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems, Dictionary<int, int> documentIdToForeignKeyMapping, IEnumerable<IDictionary<string, object>> coupledData, IEnumerable<CmsClassField> cmsClassFields)
         {
-            var versionHistoryItems = GetVersionHistoryItems();
+            var issues = new List<string>();
+            var idColumnName = cmsClassFields.FirstOrDefault(x => x.IsIdColumn).Column;
 
-            // TODO: Get document data for documents (SQL + refactor to method)
-            var documentIDs = versionHistoryItems.Select(x => x.DocumentID);
-            var cmsTreeJoinedItems = _databaseService.ExecuteSqlFromFile<dynamic>(Scripts.GetCmsTreeJoinedItems, new { IDs = documentIDs.ToArray() });
-
-            // TODO: Get document class details  (SQL + refactor to method)
-            var cmsClassIds = versionHistoryItems.Select(x => x.VersionClassID);
-            var cmsClassItems = _databaseService.ExecuteSqlFromFile<CmsClassItem>(Scripts.GetCmsClassItems, new { IDs = cmsClassIds.ToArray() });
-
-            // TODO: create list of Tree node, Document node, and Class-specific properties to compare
-            var classFields = GetClassFieldsFromXml(cmsClassItems);
-
-            /*
-            select CAST (NodeXML as XML) NodeXml, * from CMS_VersionHistory where VersionHistoryID = 6
-            select * from CMS_Document where DocumentId = 13
-            select * from CMS_Tree where NodeId = 13
-            select * from View_CMS_Tree_Joined where DocumentID = 13
-            select CAST (ClassFormDefinition as XML) ClassFormDefinitionXml,* from CMS_Class where ClassID = 5483
-             */
-
-            // TODO: Compare version details with document data and joinedcouple data
-            // TODO: Aggregate any issues
-            return new ReportResults();
-        }
-
-        private List<KeyValuePair<int, CmsClassField>> GetClassFieldsFromXml(IEnumerable<CmsClassItem> cmsClassItems)
-        {
-            var result = new List<KeyValuePair<int, CmsClassField>>();
-            foreach (var cmsClassItem in cmsClassItems)
+            foreach (var versionHistoryItem in versionHistoryItems)
             {
-                var fields = cmsClassItem.ClassFormDefinitionXml.SelectNodes("/form/field");
+                var foreignKey = documentIdToForeignKeyMapping[versionHistoryItem.DocumentID];
+                var coupledDataItem = coupledData.FirstOrDefault(x => (int)x[idColumnName] == foreignKey);
 
-                foreach (XmlNode field in fields)
+                if (coupledDataItem != null)
                 {
-                    var classIdClassFieldPair = new KeyValuePair<int, CmsClassField>(cmsClassItem.ClassID, new CmsClassField {
-                        Caption = field.SelectSingleNode("/properties/fieldcaption")?.Value,
-                        Column = field.Attributes["column"].Value,
-                        ColumnType = field.Attributes["columntype"].Value,
-                        DefaultValue = field.SelectSingleNode("/properties/defaultvalue")?.Value
-                    });
+                    foreach (var cmsClassField in cmsClassFields)
+                    {
+                        var historyVersionValueRaw = versionHistoryItem.NodeXml.SelectSingleNode($"//{cmsClassField.Column}")?.InnerText ?? cmsClassField.DefaultValue;
+                        var coupledDataItemValue = coupledDataItem[cmsClassField.Column];
+                        var bothNull = historyVersionValueRaw == null && coupledDataItemValue == null;
+                        var bothMatch = bothNull || ItemValuesMatch(cmsClassField.ColumnType, historyVersionValueRaw, coupledDataItemValue);
 
-                    result.Add(classIdClassFieldPair);
+                        if (!bothMatch)
+                        {
+                            issues.Add($"Document {versionHistoryItem.DocumentID} version history data ({historyVersionValueRaw}) didn't match published data ({coupledDataItemValue})");
+                        }
+                    }
                 }
             }
 
-            return result;
+            return issues;
         }
 
-        private IEnumerable<CmsVersionHistoryItem> GetVersionHistoryItems()
+        private static bool ItemValuesMatch(string columnType, string xmlValue, object columnValue)
         {
-            var latestVersionHistoryIds = _databaseService.ExecuteSqlFromFile<int>(Scripts.GetLatestVersionHistoryIdForAllDocuments);
-            return _databaseService.ExecuteSqlFromFile<CmsVersionHistoryItem>(Scripts.GetVersionHistoryDetails, new { IDs = latestVersionHistoryIds.ToArray() });
-        }
-
-        private ReportResults GetTreeNodeTestResult(string name, string script)
-        {
-            return GetTestResult<CmsTreeNode>(name, script, Scripts.GetTreeNodeDetails);
-        }
-
-        private ReportResults GetDocumentNodeTestResult(string name, string script)
-        {
-            return GetTestResult<CmsDocumentNode>(name, script, Scripts.GetDocumentNodeDetails);
-        }
-
-        private ReportResults GetTestResult<T>(string name, string script, string getDetailsScript)
-        {
-            var nodeIds = _databaseService.ExecuteSqlFromFile<int>(script);
-            var details = _databaseService.ExecuteSqlFromFile<T>(getDetailsScript, new { IDs = nodeIds.ToArray() });
-
-            var data = new TableResult<T>
+            if (xmlValue == null || columnValue == null)
             {
-                Name = name,
-                Rows = details
-            };
+                return false;
+            }
 
-            return new ReportResults
+            switch (columnType)
             {
-                Data = data,
-                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
-                Summary = string.Empty,
-                Type = ReportResultsType.Table,
-            };
+                case FieldColumnTypes.Boolean:
+                    return bool.Parse(xmlValue) == (bool)columnValue;
+                case FieldColumnTypes.DateTime:
+                    var versionHistoryValue = DateTimeOffset.Parse(xmlValue);
+                    var columnValueAdjusted = new DateTimeOffset((DateTime)columnValue, versionHistoryValue.Offset);
+                    return versionHistoryValue == columnValueAdjusted;
+                //2019-06-06T11:37:22-04:00
+                case FieldColumnTypes.Decimal:
+                    return decimal.Parse(xmlValue) == (decimal)columnValue;
+                default:
+                    return xmlValue == columnValue.ToString();
+            }
         }
 
         private ReportResults CompileResults(params ReportResults[] allReportResults)
@@ -196,6 +163,131 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             }
 
             return combinedResults;
+        }
+
+        private List<KeyValuePair<int, CmsClassField>> GetCmsClassFieldsFromXml(IEnumerable<CmsClassItem> CmsClassItems)
+        {
+            var result = new List<KeyValuePair<int, CmsClassField>>();
+            foreach (var cmsClassItem in CmsClassItems)
+            {
+                var fields = cmsClassItem.ClassFormDefinitionXml.SelectNodes("/form/field");
+
+                foreach (XmlNode field in fields)
+                {
+                    var isIdColumnRaw = field.Attributes["isPK"]?.Value;
+                    var isIdColumn = !string.IsNullOrWhiteSpace(isIdColumnRaw) ? bool.Parse(isIdColumnRaw) : false;
+
+                    var classIdClassFieldPair = new KeyValuePair<int, CmsClassField>(cmsClassItem.ClassID, new CmsClassField
+                    {
+                        Caption = field.SelectSingleNode("/properties/fieldcaption")?.Value,
+                        Column = field.Attributes["column"].Value,
+                        ColumnType = field.Attributes["columntype"].Value,
+                        DefaultValue = field.SelectSingleNode("/properties/defaultvalue")?.InnerText,
+                        IsIdColumn = isIdColumn
+                    });
+
+                    result.Add(classIdClassFieldPair);
+                }
+            }
+
+            return result;
+        }
+
+        private IEnumerable<CmsClassItem> GetCmsClassItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems)
+        {
+            var cmsClassIds = versionHistoryItems.Select(vhi => vhi.VersionClassID);
+            return _databaseService.ExecuteSqlFromFile<CmsClassItem>(Scripts.GetCmsClassItems, new { IDs = cmsClassIds.ToArray() });
+        }
+
+        private ReportResults GetDocumentNodeTestResult(string name, string script)
+        {
+            return GetTestResult<CmsDocumentNode>(name, script, Scripts.GetDocumentNodeDetails);
+        }
+
+        private IEnumerable<IDictionary<string, object>> GetCoupledData(string tableName, string idColumnName, IEnumerable<int> Ids)
+        {
+            var replacements = new Dictionary<string, string>();
+            replacements.Add("TableName", tableName);
+            replacements.Add("IdColumnName", idColumnName);
+
+            return _databaseService.ExecuteSqlFromFileWithReplacements(Scripts.GetCmsDocumentCoupledDataItems, replacements, new { IDs = Ids.ToArray() });
+        }
+
+        private ReportResults GetTestResult<T>(string name, string script, string getDetailsScript)
+        {
+            var nodeIds = _databaseService.ExecuteSqlFromFile<int>(script);
+            var details = _databaseService.ExecuteSqlFromFile<T>(getDetailsScript, new { IDs = nodeIds.ToArray() });
+
+            var data = new TableResult<T>
+            {
+                Name = name,
+                Rows = details
+            };
+
+            return new ReportResults
+            {
+                Data = data,
+                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Summary = string.Empty,
+                Type = ReportResultsType.Table,
+            };
+        }
+
+        private ReportResults GetTreeNodeTestResult(string name, string script)
+        {
+            return GetTestResult<CmsTreeNode>(name, script, Scripts.GetTreeNodeDetails);
+        }
+
+        private IEnumerable<CmsVersionHistoryItem> GetVersionHistoryItems()
+        {
+            var latestVersionHistoryIds = _databaseService.ExecuteSqlFromFile<int>(Scripts.GetLatestVersionHistoryIdForAllDocuments);
+            return _databaseService.ExecuteSqlFromFile<CmsVersionHistoryItem>(Scripts.GetVersionHistoryDetails, new { IDs = latestVersionHistoryIds.ToArray() });
+        }
+
+        private ReportResults GetWorkflowInconsistencyResult()
+        {
+            var versionHistoryItems = GetVersionHistoryItems();
+            var versionHistoryDocumentIdToForeignKeyMapping = GetDocumentIdToForeignKeyMapping(versionHistoryItems);
+
+            var cmsClassItems = GetCmsClassItems(versionHistoryItems);
+            var allCmsClassFields = GetCmsClassFieldsFromXml(cmsClassItems);
+
+            var comparisonResults = new List<string>();
+            foreach (var cmsClass in cmsClassItems)
+            {
+                var cmsClassVersionHistoryItems = versionHistoryItems.Where(vhi => vhi.VersionClassID == cmsClass.ClassID);
+                var cmsClassFields = allCmsClassFields.Where(x => x.Key == cmsClass.ClassID).Select(x => x.Value);
+                var cmsClassIdColumn = cmsClassFields.Where(x => x.IsIdColumn).Select(x => x.Column).FirstOrDefault();
+                var documentIds = cmsClassVersionHistoryItems.Select(x => x.DocumentID);
+                var documentNodes = _databaseService.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, new { IDs = documentIds.ToArray() });
+                var coupledDataIds = documentNodes.Select(x => x.DocumentForeignKeyValue);
+                var coupledData = GetCoupledData(cmsClass.ClassTableName, cmsClassIdColumn, coupledDataIds);
+                comparisonResults.Concat(CompareVersionHistoryItemsWithPublishedItems(versionHistoryItems, versionHistoryDocumentIdToForeignKeyMapping, coupledData, cmsClassFields));
+            }
+
+            // TODO: Aggregate any issues
+            return new ReportResults() {
+                Data = comparisonResults,
+                Type = ReportResultsType.StringList
+            };
+        }
+
+        private Dictionary<int, int> GetDocumentIdToForeignKeyMapping(IEnumerable<CmsVersionHistoryItem> versionHistoryItems)
+        {
+            var mapping = new Dictionary<int, int>();
+
+            foreach (var versionHistoryItem in versionHistoryItems)
+            {
+                var foreignKeyRaw = versionHistoryItem.NodeXml.SelectSingleNode("//DocumentForeignKeyValue")?.InnerText;
+                int foreignKey;
+
+                if (int.TryParse(foreignKeyRaw, out foreignKey))
+                {
+                    mapping.Add(versionHistoryItem.DocumentID, foreignKey);
+                }
+            }
+
+            return mapping;
         }
     }
 }

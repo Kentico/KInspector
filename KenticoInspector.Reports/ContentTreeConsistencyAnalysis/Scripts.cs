@@ -5,7 +5,7 @@
         public const string BaseDirectory = "ContentTreeConsistencyAnalysis/Scripts/";
 
         public const string GetCmsClassItems = BaseDirectory + "GetCmsClassItems.sql";
-        public const string GetCmsTreeJoinedItems = BaseDirectory + "GetCmsTreeJoinedItems.sql";
+        public const string GetCmsDocumentCoupledDataItems = BaseDirectory + "GetCmsDocumentCoupledDataItems.sql";
         public const string GetDocumentIdsWithMissingTreeNode = BaseDirectory + "GetDocumentIdsWithMissingTreeNode.sql";
         public const string GetDocumentNodeDetails = BaseDirectory + "GetDocumentNodeDetails.sql";
         public const string GetTreeNodeDetails = BaseDirectory + "GetTreeNodeDetails.sql";

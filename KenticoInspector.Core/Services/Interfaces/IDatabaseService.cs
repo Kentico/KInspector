@@ -12,7 +12,10 @@ namespace KenticoInspector.Core.Services.Interfaces
 
         IEnumerable<T> ExecuteSqlFromFile<T>(string relativeFilePath, dynamic parameters = null);
 
+        IEnumerable<IDictionary<string, object>> ExecuteSqlFromFileWithReplacements(string relativeFilePath, IDictionary<string,string> replacements, dynamic parameters = null);
+
         [Obsolete("This should be a last resort when it is impossible to create a DTO")]
         DataTable ExecuteSqlFromFileAsDataTable(string relativeFilePath);
+        
     }
 }

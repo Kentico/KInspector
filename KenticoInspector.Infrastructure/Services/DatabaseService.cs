@@ -5,6 +5,7 @@ using KenticoInspector.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 
 namespace KenticoInspector.Infrastructure.Services
@@ -34,6 +35,17 @@ namespace KenticoInspector.Infrastructure.Services
         {
             var query = FileHelper.GetSqlQueryText(relativeFilePath);
             return Connection.Query<T>(query, (object)parameters);
+        }
+
+        public IEnumerable<IDictionary<string, object>> ExecuteSqlFromFileWithReplacements(string relativeFilePath, IDictionary<string, string> replacements, dynamic parameters = null)
+        {
+            var query = FileHelper.GetSqlQueryText(relativeFilePath);
+            foreach (var replacement in replacements)
+            {
+                query = query.Replace(replacement.Key, replacement.Value);
+            }
+            
+            return Connection.Query(query, (object)parameters).Select(x=>(IDictionary<string,object>)x);
         }
 
         public DataTable ExecuteSqlFromFileAsDataTable(string relativeFilePath)

@@ -23,7 +23,7 @@
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetDocumentNodeDetails.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetCmsTreeJoinedItems.sql">
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetCmsDocumentCoupledDataItems.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeDetails.sql">

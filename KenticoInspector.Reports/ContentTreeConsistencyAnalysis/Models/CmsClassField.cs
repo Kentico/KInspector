@@ -9,7 +9,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
         public string Caption { get; set; }
         public string Column { get; set; }
         public string ColumnType { get; set; }
-        public dynamic DefaultValue { get; set; }
-
+        public string DefaultValue { get; set; }
+        public bool IsIdColumn { get; set; }
     }
 }
