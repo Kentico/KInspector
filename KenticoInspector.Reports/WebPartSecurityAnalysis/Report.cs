@@ -6,6 +6,7 @@ using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -19,6 +20,7 @@ namespace KenticoInspector.Reports.WebPartSecurityAnalysis
     {
         readonly IDatabaseService _databaseService;
         readonly IInstanceService _instanceService;
+        public string LikePageTemplateDisplayName { get; set; } = "%";
 
         public Report(IDatabaseService databaseService, IInstanceService instanceService)
         {
@@ -57,5 +59,14 @@ namespace KenticoInspector.Reports.WebPartSecurityAnalysis
 
             return new ReportResults();
         }
+
+        #region "Methods"
+        private DataTable GetPageTemplateWebParts(string likePageTemplateDisplayName)
+        {
+            return _databaseService.ExecuteSqlFromFile(Scripts.GetWebParts,
+                new SqlParameter("PageTemplateDisplayName", likePageTemplateDisplayName));
+        }
+
+        #endregion
     }
 }
