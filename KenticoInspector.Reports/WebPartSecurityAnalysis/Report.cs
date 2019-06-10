@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
+using System.Linq;
 
 namespace KenticoInspector.Reports.WebPartSecurityAnalysis
 {
@@ -57,14 +58,170 @@ namespace KenticoInspector.Reports.WebPartSecurityAnalysis
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
             _databaseService.ConfigureForInstance(instance);
 
-            return new ReportResults();
+            List<string> report = new List<string>();
+            List<PageTemplate> webPartsInTransformationsTable = GetPageTemplateWebParts(LikePageTemplateDisplayName).ToList<PageTemplate>();
+            List<string> whereOrderResults = new List<string>();
+            List<string> whereOrderCustomMacroResults = new List<string>();
+            List<string> otherResults = new List<string>();
+            List<string> otherCustomMacroResults = new List<string>();
+
+            foreach (PageTemplate webPart in webPartsInTransformationsTable)
+            {
+                string pageTemplateDisplayName = webPart.PageTemplateDisplayName;
+                XmlDocument webPartsXmlDoc = new XmlDocument();
+                webPartsXmlDoc.LoadXml(webPart.PageTemplateWebParts);
+
+                whereOrderResults.AddRange(AnalyseWhereAndOrderByConditionsInPageTemplateWebParts(webPartsXmlDoc, pageTemplateDisplayName));
+                otherResults.AddRange(AnalysePageTemplateWebParts(webPartsXmlDoc, pageTemplateDisplayName));
+
+                if (MacroValidator.Current.CheckForCustomMacros(instanceDetails.AdministrationVersion))
+                {
+                    whereOrderCustomMacroResults.AddRange(AnalyseWhereAndOrderByConditionsInPageTemplateWebParts(webPartsXmlDoc, pageTemplateDisplayName, MacroValidator.MacroType.Custom));
+                    otherCustomMacroResults.AddRange(AnalysePageTemplateWebParts(webPartsXmlDoc, pageTemplateDisplayName, MacroValidator.MacroType.Custom));
+                }
+            }
+
+            if (whereOrderResults.Count > 0)
+            {
+                report.Add("------------------------ Web parts - Where and Order condition results - Potential SQL injections -----------------");
+                report.AddRange(whereOrderResults);
+                report.Add("<br /><br />");
+            }
+
+            if (whereOrderCustomMacroResults.Count > 0)
+            {
+                report.Add("------------------------ Web parts - Where and Order condition results - Using deprecated Custom Macro type -----------------");
+                report.AddRange(whereOrderCustomMacroResults);
+                report.Add("<br /><br />");
+            }
+
+
+            if (otherResults.Count > 0)
+            {
+                report.Add("------------------------ Macros in DB - Potential XSS -----------------");
+                report.AddRange(otherResults);
+                report.Add("<br /><br />");
+            }
+
+            if (otherCustomMacroResults.Count > 0)
+            {
+                report.Add("------------------------ Macros in DB - Using deprecated Custom Macro type -----------------");
+                report.AddRange(otherCustomMacroResults);
+                report.Add("<br /><br />");
+            }
+
+            if (report.Count == 0)
+            {
+                return new ReportResults
+                {
+                    Summary = "No problems in web parts found.",
+                    Status = ReportResultsStatus.Good
+                };
+            }
+
+            StringBuilder res = new StringBuilder();
+            report.ForEach(it => res.Append(it.Replace("\n", "<br />")));
+
+            return new ReportResults
+            {
+                Data = report,
+                Summary = "Web part is trusted",
+                Type = ReportResultsType.StringList
+
+            };
         }
 
         #region "Methods"
-        private DataTable GetPageTemplateWebParts(string likePageTemplateDisplayName)
+
+        private IEnumerable<PageTemplate> GetPageTemplateWebParts(string likePageTemplateDisplayName)
         {
-            return _databaseService.ExecuteSqlFromFile(Scripts.GetWebParts,
-                new SqlParameter("PageTemplateDisplayName", likePageTemplateDisplayName));
+            // A generic of the expected type is needed for this method to run, return a custom type
+            var result = _databaseService.ExecuteSqlFromFile<PageTemplate>(Scripts.GetPageTemplateWebParts,
+                new { PageTemplateDisplayName = likePageTemplateDisplayName });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Analyses page template web parts. Searches for <c>where</c> and <c>order</c> properites
+        /// of web parts, which have their value defined using macros of the type(s) defined in <paramref name="macroTypes"/>.
+        /// </summary>
+        /// <param name="pageTemplateWebParts">Page template web parts XML.</param>
+        /// <param name="pageTemplateName">Page template name.</param>
+        /// <param name="macroTypes">The macro types for search.</param>
+        /// <returns>Enumeration of analysis results.</returns>
+        private List<string> AnalyseWhereAndOrderByConditionsInPageTemplateWebParts(XmlDocument pageTemplateWebParts, string pageTemplateName, MacroValidator.MacroType macroTypes = MacroValidator.MacroType.All)
+        {
+            List<string> res = new List<string>();
+
+            foreach (XmlNode webPartNode in pageTemplateWebParts.SelectNodes("/page/webpartzone/webpart"))
+            {
+                foreach (XmlNode propertyNode in webPartNode.SelectNodes("property"))
+                {
+                    XmlAttribute nameAttribute = propertyNode.Attributes["name"];
+                    string innerText = propertyNode.InnerText;
+                    if ((nameAttribute != null) && (nameAttribute.Value.Contains("where") || nameAttribute.Value.Contains("order")) && (!string.IsNullOrEmpty(innerText) && (!innerText.Contains("ToInt"))))
+                    {
+                        bool containsMacros = MacroValidator.Current.ContainsMacros(innerText, macroTypes);
+                        if (containsMacros)
+                        {
+                            string report =
+                                $"Web part: {webPartNode.Attributes["controlid"].Value}/{webPartNode.Attributes["type"].Value}, property: {nameAttribute.Value} <br /> <strong>{MacroValidator.Current.HighlightMacros(HttpUtility.HtmlEncode(innerText), macroTypes)}</strong>.<br />";
+
+                            res.Add(report);
+                        }
+                    }
+                }
+            }
+            // The any method is not accessible for some reason now
+            if (res.Count != 0)
+            {
+                res.Insert(0, "<strong>Page template name: </strong>" + pageTemplateName);
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// Analyses page template web parts. Searches for all properties of web parts except
+        /// <c>where</c> and <c>order</c>, which have their value defined using macros of the type(s) defined in <paramref name="macroTypes"/>.
+        /// </summary>
+        /// <param name="pageTemplateWebParts">Page template web parts XML.</param>
+        /// <param name="pageTemplateName">Page template name.</param>
+        /// <param name="macroTypes">The macro types for search.</param>
+        /// <returns>Enumeration of analysis results.</returns>
+        private List<string> AnalysePageTemplateWebParts(XmlDocument pageTemplateWebParts, string pageTemplateName, MacroValidator.MacroType macroTypes = MacroValidator.MacroType.All)
+        {
+            List<string> res = new List<string>();
+            foreach (XmlNode webPartNode in pageTemplateWebParts.SelectNodes("/page/webpartzone/webpart"))
+            {
+                foreach (XmlNode propertyNode in webPartNode.SelectNodes("property"))
+                {
+                    XmlAttribute nameAttribute = propertyNode.Attributes["name"];
+                    string innerText = propertyNode.InnerText;
+                    if ((nameAttribute != null) && (nameAttribute.Value.Contains("text") || nameAttribute.Value.Contains("content")) && (!string.IsNullOrEmpty(innerText) && !innerText.Contains("|(encode)")))
+                    {
+                        bool containsMacros = MacroValidator.Current.ContainsMacros(innerText, macroTypes);
+                        if (containsMacros)
+                        {
+                            string report = string.Format("Web part: {0}/{1}, property: {2} <br /> <strong>{3}</strong>.<br />",
+                                    webPartNode.Attributes["controlid"].Value,
+                                    webPartNode.Attributes["type"].Value,
+                                    nameAttribute.Value,
+                                    MacroValidator.Current.HighlightMacros(HttpUtility.HtmlEncode(innerText)), macroTypes);
+
+                            res.Add(report);
+                        }
+                    }
+                }
+            }
+
+            if (res.Count != 0)
+            {
+                res.Insert(0, "<strong>Page template name: </strong>" + pageTemplateName);
+            }
+
+            return res;
         }
 
         #endregion

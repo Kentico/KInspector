@@ -6,7 +6,8 @@ namespace KenticoInspector.Reports.WebPartSecurityAnalysis
 {
     public static class Scripts
     {
-        public const string BaseDirectory = "ReplaceMe/";
-        public const string GetWebParts = BaseDirectory + "SQLFile.sql";
+        // This script name most likely needs changing
+        public const string BaseDirectory = "WebPartSecurityAnalysis/";
+        public const string GetPageTemplateWebParts = BaseDirectory + "GetPageTemplateWebParts.sql";
     }
 }
