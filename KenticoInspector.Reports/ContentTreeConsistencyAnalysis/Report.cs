@@ -85,9 +85,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 );
         }
 
-        private IEnumerable<string> CompareVersionHistoryItemsWithPublishedItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems, Dictionary<int, int> documentIdToForeignKeyMapping, IEnumerable<IDictionary<string, object>> coupledData, IEnumerable<CmsClassField> cmsClassFields)
+        private IEnumerable<VersionHistoryMismatchResult> CompareVersionHistoryItemsWithPublishedItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems, Dictionary<int, int> documentIdToForeignKeyMapping, IEnumerable<IDictionary<string, object>> coupledData, IEnumerable<CmsClassField> cmsClassFields)
         {
-            var issues = new List<string>();
+            var issues = new List<VersionHistoryMismatchResult>();
             var idColumnName = cmsClassFields.FirstOrDefault(x => x.IsIdColumn).Column;
 
             foreach (var versionHistoryItem in versionHistoryItems)
@@ -101,41 +101,18 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                     {
                         var historyVersionValueRaw = versionHistoryItem.NodeXml.SelectSingleNode($"//{cmsClassField.Column}")?.InnerText ?? cmsClassField.DefaultValue;
                         var coupledDataItemValue = coupledDataItem[cmsClassField.Column];
-                        var bothNull = historyVersionValueRaw == null && coupledDataItemValue == null;
-                        var bothMatch = bothNull || ItemValuesMatch(cmsClassField.ColumnType, historyVersionValueRaw, coupledDataItemValue);
+                        var columnName = cmsClassField.Caption ?? cmsClassField.Column;
+                        var versionHistoryMismatchResult = new VersionHistoryMismatchResult(versionHistoryItem.DocumentID, columnName, cmsClassField.ColumnType, historyVersionValueRaw, coupledDataItemValue);
 
-                        if (!bothMatch)
+                        if (!versionHistoryMismatchResult.FieldValuesMatch)
                         {
-                            issues.Add($"Document {versionHistoryItem.DocumentID} version history data ({historyVersionValueRaw}) didn't match published data ({coupledDataItemValue})");
+                            issues.Add(versionHistoryMismatchResult);
                         }
                     }
                 }
             }
 
             return issues;
-        }
-
-        private static bool ItemValuesMatch(string columnType, string xmlValue, object columnValue)
-        {
-            if (xmlValue == null || columnValue == null)
-            {
-                return false;
-            }
-
-            switch (columnType)
-            {
-                case FieldColumnTypes.Boolean:
-                    return bool.Parse(xmlValue) == (bool)columnValue;
-                case FieldColumnTypes.DateTime:
-                    var versionHistoryValue = DateTimeOffset.Parse(xmlValue);
-                    var columnValueAdjusted = new DateTimeOffset((DateTime)columnValue, versionHistoryValue.Offset);
-                    return versionHistoryValue == columnValueAdjusted;
-                //2019-06-06T11:37:22-04:00
-                case FieldColumnTypes.Decimal:
-                    return decimal.Parse(xmlValue) == (decimal)columnValue;
-                default:
-                    return xmlValue == columnValue.ToString();
-            }
         }
 
         private ReportResults CompileResults(params ReportResults[] allReportResults)
@@ -179,10 +156,10 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
                     var classIdClassFieldPair = new KeyValuePair<int, CmsClassField>(cmsClassItem.ClassID, new CmsClassField
                     {
-                        Caption = field.SelectSingleNode("/properties/fieldcaption")?.Value,
+                        Caption = field.SelectSingleNode("properties/fieldcaption")?.InnerText,
                         Column = field.Attributes["column"].Value,
                         ColumnType = field.Attributes["columntype"].Value,
-                        DefaultValue = field.SelectSingleNode("/properties/defaultvalue")?.InnerText,
+                        DefaultValue = field.SelectSingleNode("properties/defaultvalue")?.InnerText,
                         IsIdColumn = isIdColumn
                     });
 
@@ -252,7 +229,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             var cmsClassItems = GetCmsClassItems(versionHistoryItems);
             var allCmsClassFields = GetCmsClassFieldsFromXml(cmsClassItems);
 
-            var comparisonResults = new List<string>();
+            var comparisonResults = new List<VersionHistoryMismatchResult>();
             foreach (var cmsClass in cmsClassItems)
             {
                 var cmsClassVersionHistoryItems = versionHistoryItems.Where(vhi => vhi.VersionClassID == cmsClass.ClassID);
@@ -262,13 +239,22 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 var documentNodes = _databaseService.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, new { IDs = documentIds.ToArray() });
                 var coupledDataIds = documentNodes.Select(x => x.DocumentForeignKeyValue);
                 var coupledData = GetCoupledData(cmsClass.ClassTableName, cmsClassIdColumn, coupledDataIds);
-                comparisonResults.Concat(CompareVersionHistoryItemsWithPublishedItems(versionHistoryItems, versionHistoryDocumentIdToForeignKeyMapping, coupledData, cmsClassFields));
+                var classComparisionResults = CompareVersionHistoryItemsWithPublishedItems(versionHistoryItems, versionHistoryDocumentIdToForeignKeyMapping, coupledData, cmsClassFields);
+                comparisonResults.AddRange(classComparisionResults);
             }
 
-            // TODO: Aggregate any issues
-            return new ReportResults() {
-                Data = comparisonResults,
-                Type = ReportResultsType.StringList
+            var data = new TableResult<VersionHistoryMismatchResult>
+            {
+                Name = "Workflow Inconsistencies",
+                Rows = comparisonResults
+            };
+
+            return new ReportResults
+            {
+                Data = data,
+                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Summary = string.Empty,
+                Type = ReportResultsType.Table,
             };
         }
 
