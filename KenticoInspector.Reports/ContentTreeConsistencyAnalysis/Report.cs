@@ -183,11 +183,8 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
         private IEnumerable<IDictionary<string, object>> GetCoupledData(string tableName, string idColumnName, IEnumerable<int> Ids)
         {
-            var replacements = new Dictionary<string, string>();
-            replacements.Add("TableName", tableName);
-            replacements.Add("IdColumnName", idColumnName);
-
-            return _databaseService.ExecuteSqlFromFileWithReplacements(Scripts.GetCmsDocumentCoupledDataItems, replacements, new { IDs = Ids.ToArray() });
+            var replacements = new CoupledDataScriptReplacements(tableName, idColumnName);
+            return _databaseService.ExecuteSqlFromFileGeneric(Scripts.GetCmsDocumentCoupledDataItems, replacements.Dictionary, new { IDs = Ids.ToArray() });
         }
 
         private ReportResults GetTestResult<T>(string name, string script, string getDetailsScript)

@@ -7,6 +7,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
 {
     public class CmsVersionHistoryItem
     {
+        public int VersionHistoryID { get; set; }
         public int DocumentID { get; set; }
         public XmlDocument NodeXml { get; set; }
         public int VersionClassID { get; set; }

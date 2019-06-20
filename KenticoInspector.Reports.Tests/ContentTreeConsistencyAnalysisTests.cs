@@ -46,7 +46,7 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithBadParentNode()
         {
             // Arrange
-            SetupAllDatabaseQueries(treeNodeIdsWithBadParentNodeId: GetBadTreeNodes());
+            SetupAllDatabaseQueries(treeNodesWithBadParentNodeId: GetBadTreeNodes());
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -59,7 +59,7 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithBadParentSite()
         {
             // Arrange
-            SetupAllDatabaseQueries(treeNodeIdsWithBadParentSiteId: GetBadTreeNodes());
+            SetupAllDatabaseQueries(treeNodesWithBadParentSiteId: GetBadTreeNodes());
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -72,7 +72,7 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithDuplicatedAliasPath()
         {
             // Arrange
-            SetupAllDatabaseQueries(treeNodeIdsWithDuplicatedAliasPath: GetBadTreeNodes());
+            SetupAllDatabaseQueries(treeNodesWithDuplicatedAliasPath: GetBadTreeNodes());
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -85,7 +85,7 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithLevelMismatchByAliasPathTest()
         {
             // Arrange
-            SetupAllDatabaseQueries(treeNodeIdsWithLevelMismatchByAliasPathTest: GetBadTreeNodes());
+            SetupAllDatabaseQueries(treeNodesWithLevelMismatchByAliasPathTest: GetBadTreeNodes());
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -98,7 +98,7 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithLevelMismatchByNodeLevelTest()
         {
             // Arrange
-            SetupAllDatabaseQueries(treeNodeIdsWithLevelMismatchByNodeLevelTest: GetBadTreeNodes());
+            SetupAllDatabaseQueries(treeNodesWithLevelMismatchByNodeLevelTest: GetBadTreeNodes());
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -111,7 +111,7 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithMissingDocument()
         {
             // Arrange
-            SetupAllDatabaseQueries(treeNodeIdsWithMissingDocument: GetBadTreeNodes());
+            SetupAllDatabaseQueries(treeNodesWithMissingDocument: GetBadTreeNodes());
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -124,7 +124,7 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnErrorResult_When_ThereAreTreeNodesWithPageTypeNotAssignedToSite()
         {
             // Arrange
-            SetupAllDatabaseQueries(treeNodeIdsWithPageTypeNotAssignedToSite: GetBadTreeNodes());
+            SetupAllDatabaseQueries(treeNodesWithPageTypeNotAssignedToSite: GetBadTreeNodes());
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
@@ -172,63 +172,100 @@ namespace KenticoInspector.Reports.Tests
 
         private void SetupAllDatabaseQueries(
             List<CmsDocumentNode> documentsWithMissingTreeNode = null,
-            List<CmsTreeNode> treeNodeIdsWithBadParentNodeId = null,
-            List<CmsTreeNode> treeNodeIdsWithBadParentSiteId = null,
-            List<CmsTreeNode> treeNodeIdsWithDuplicatedAliasPath = null,
-            List<CmsTreeNode> treeNodeIdsWithLevelMismatchByAliasPathTest = null,
-            List<CmsTreeNode> treeNodeIdsWithLevelMismatchByNodeLevelTest = null,
-            List<CmsTreeNode> treeNodeIdsWithMissingDocument = null,
-            List<CmsTreeNode> treeNodeIdsWithPageTypeNotAssignedToSite = null
+            List<CmsTreeNode> treeNodesWithBadParentNodeId = null,
+            List<CmsTreeNode> treeNodesWithBadParentSiteId = null,
+            List<CmsTreeNode> treeNodesWithDuplicatedAliasPath = null,
+            List<CmsTreeNode> treeNodesWithLevelMismatchByAliasPathTest = null,
+            List<CmsTreeNode> treeNodesWithLevelMismatchByNodeLevelTest = null,
+            List<CmsTreeNode> treeNodesWithMissingDocument = null,
+            List<CmsTreeNode> treeNodesWithPageTypeNotAssignedToSite = null,
+            List<CmsVersionHistoryItem> versionHistoryItems = null,
+            List<CmsClassItem> versionHistoryCmsClassItems = null,
+            List<CmsDocumentNode> versionHistoryTreeNodes = null
             )
         {
             documentsWithMissingTreeNode = documentsWithMissingTreeNode ?? new List<CmsDocumentNode>();
-            SetupCmsDocumentNodeIdAndDetailsDatabaseQueries(Scripts.GetDocumentIdsWithMissingTreeNode, documentsWithMissingTreeNode);
+            SetupCmsDocumentNodeQueries(documentsWithMissingTreeNode, Scripts.GetDocumentIdsWithMissingTreeNode);
 
-            treeNodeIdsWithBadParentNodeId = treeNodeIdsWithBadParentNodeId ?? new List<CmsTreeNode>();
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentNodeId, treeNodeIdsWithBadParentNodeId);
+            treeNodesWithBadParentNodeId = treeNodesWithBadParentNodeId ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeQueries(treeNodesWithBadParentNodeId, Scripts.GetTreeNodeIdsWithBadParentNodeId);
 
-            treeNodeIdsWithBadParentSiteId = treeNodeIdsWithBadParentSiteId ?? new List<CmsTreeNode>();
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithBadParentSiteId, treeNodeIdsWithBadParentSiteId);
+            treeNodesWithBadParentSiteId = treeNodesWithBadParentSiteId ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeQueries(treeNodesWithBadParentSiteId, Scripts.GetTreeNodeIdsWithBadParentSiteId);
 
-            treeNodeIdsWithDuplicatedAliasPath = treeNodeIdsWithDuplicatedAliasPath ?? new List<CmsTreeNode>();
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithDuplicatedAliasPath, treeNodeIdsWithDuplicatedAliasPath);
+            treeNodesWithDuplicatedAliasPath = treeNodesWithDuplicatedAliasPath ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeQueries(treeNodesWithDuplicatedAliasPath, Scripts.GetTreeNodeIdsWithDuplicatedAliasPath);
 
-            treeNodeIdsWithLevelMismatchByAliasPathTest = treeNodeIdsWithLevelMismatchByAliasPathTest ?? new List<CmsTreeNode>();
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest, treeNodeIdsWithLevelMismatchByAliasPathTest);
+            treeNodesWithLevelMismatchByAliasPathTest = treeNodesWithLevelMismatchByAliasPathTest ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeQueries(treeNodesWithLevelMismatchByAliasPathTest, Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest);
 
-            treeNodeIdsWithLevelMismatchByNodeLevelTest = treeNodeIdsWithLevelMismatchByNodeLevelTest ?? new List<CmsTreeNode>();
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest, treeNodeIdsWithLevelMismatchByNodeLevelTest);
+            treeNodesWithLevelMismatchByNodeLevelTest = treeNodesWithLevelMismatchByNodeLevelTest ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeQueries(treeNodesWithLevelMismatchByNodeLevelTest, Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest);
 
-            treeNodeIdsWithMissingDocument = treeNodeIdsWithMissingDocument ?? new List<CmsTreeNode>();
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithMissingDocument, treeNodeIdsWithMissingDocument);
+            treeNodesWithMissingDocument = treeNodesWithMissingDocument ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeQueries(treeNodesWithMissingDocument, Scripts.GetTreeNodeIdsWithMissingDocument);
 
-            treeNodeIdsWithPageTypeNotAssignedToSite = treeNodeIdsWithPageTypeNotAssignedToSite ?? new List<CmsTreeNode>();
-            SetupCmsTreeNodeIdAndDetailsDatabaseQueries(Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite, treeNodeIdsWithPageTypeNotAssignedToSite);
+            treeNodesWithPageTypeNotAssignedToSite = treeNodesWithPageTypeNotAssignedToSite ?? new List<CmsTreeNode>();
+            SetupCmsTreeNodeQueries(treeNodesWithPageTypeNotAssignedToSite, Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite);
 
-            _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetLatestVersionHistoryIdForAllDocuments, new List<int>());
-        }
+            versionHistoryItems = versionHistoryItems ?? new List<CmsVersionHistoryItem>();
+            SetupCmsVersionHistoryQueries(versionHistoryItems, Scripts.GetLatestVersionHistoryIdForAllDocuments);
 
-        private void SetupCmsDocumentNodeIdAndDetailsDatabaseQueries(string idScript, IEnumerable<CmsDocumentNode> detailsValue = null)
-        {
-            if (detailsValue == null)
+            versionHistoryCmsClassItems = versionHistoryCmsClassItems ?? new List<CmsClassItem>();
+            SetupCmsClassItemsQueries(versionHistoryCmsClassItems);
+
+            // TODO: Setup GetDocumentDetails for ALL classes
+            versionHistoryTreeNodes = versionHistoryTreeNodes ?? new List<CmsDocumentNode>();
+            foreach (var classItem in versionHistoryCmsClassItems)
             {
-                detailsValue = new List<CmsDocumentNode>();
+                //var classDocuments = versionHistoryTreeNodes.Where(x => x. == classItem.ClassID);
+                //SetupCmsDocumentNodeQueries(classDocuments)
             }
-
-            var idValue = detailsValue.Select(x => x.DocumentID);
-            _mockDatabaseService.SetupExecuteSqlFromFile(idScript, idValue);
-            _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetDocumentNodeDetails, "IDs", idValue, detailsValue);
+            
+            // TODO: Setup document coupled data 
+            //_databaseService.ExecuteSqlFromFileWithReplacements(Scripts.GetCmsDocumentCoupledDataItems, replacements, new { IDs = Ids.ToArray() });
         }
 
-        private void SetupCmsTreeNodeIdAndDetailsDatabaseQueries(string idScript, IEnumerable<CmsTreeNode> detailsValue = null)
+        private void SetupCmsClassItemsQueries(IEnumerable<CmsClassItem> returnedItems, string idScript = null)
         {
-            if (detailsValue == null) {
-                detailsValue = new List<CmsTreeNode>();
+            var idValues = returnedItems.Select(x => x.ClassID);
+            SetupDetailsAndIdQueries(idValues, returnedItems, idScript, Scripts.GetCmsClassItems);
+        }
+
+        private void SetupCmsDocumentNodeQueries(IEnumerable<CmsDocumentNode> returnedItems, string idScript = null)
+        {
+            var idValues = returnedItems.Select(x => x.DocumentID);
+            SetupDetailsAndIdQueries(idValues, returnedItems, idScript, Scripts.GetDocumentNodeDetails);
+        }
+
+        private void SetupCmsTreeNodeQueries(IEnumerable<CmsTreeNode> returnedItems, string idScript = null)
+        {
+            var idValues = returnedItems.Select(x => x.NodeID);
+            SetupDetailsAndIdQueries(idValues, returnedItems, idScript, Scripts.GetTreeNodeDetails);
+        }
+
+        private void SetupCmsVersionHistoryQueries(IEnumerable<CmsVersionHistoryItem> returnedItems, string idScript = null)
+        {
+            var idValues = returnedItems.Select(x => x.VersionHistoryID);
+            SetupDetailsAndIdQueries(idValues, returnedItems, idScript, Scripts.GetVersionHistoryDetails);
+        }
+
+        private void SetupDetailsAndIdQueries<T>(IEnumerable<int> idValues, IEnumerable<T> returnedItems, string idScript, string detailsScript)
+        {
+            if (idValues == null)
+            {
+                throw new ArgumentNullException("idValues");
             }
 
-            var idValue = detailsValue.Select(x => x.NodeID);
-            _mockDatabaseService.SetupExecuteSqlFromFile(idScript, idValue);
-            _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetTreeNodeDetails, "IDs", idValue, detailsValue);
+            if (!string.IsNullOrWhiteSpace(idScript))
+            {
+                _mockDatabaseService.SetupExecuteSqlFromFile(idScript, idValues);
+            }
+
+            if (!string.IsNullOrWhiteSpace(detailsScript) && returnedItems != null)
+            {
+                _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(detailsScript, "IDs", idValues, returnedItems);
+            }
         }
     }
 }
