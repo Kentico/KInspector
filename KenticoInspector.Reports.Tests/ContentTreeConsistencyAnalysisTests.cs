@@ -135,6 +135,24 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
+        public void Should_ReturnErrorResult_When_ThereAreVersionHistoryErrors()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(isVersionHistoryDataSetClean: false);
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Error, $"Status was '{results.Status}' instead of 'Error'");
+            var resultsData = (IDictionary<string, object>)results.Data;
+            var workflowData = (TableResult<VersionHistoryMismatchResult>)resultsData["Workflow Inconsistencies"];
+
+            var rowCount = workflowData.Rows.Count();
+            Assert.That(rowCount == 4, $"There were {rowCount} rows instead 4 as expected");
+        }
+
+        [Test]
         public void Should_ReturnGoodResult_When_DatabaseIsClean()
         {
             // Arrange
@@ -334,7 +352,7 @@ namespace KenticoInspector.Reports.Tests
                 else
                 {
                     var versionHistoryXml = new XmlDocument();
-                    versionHistoryXml.Load("VersionHistoryItem_Corrupt_519.xml");
+                    versionHistoryXml.Load("TestData/VersionHistoryItem_Corrupt_519.xml");
 
                     CmsVersionHistoryItems.Add(new CmsVersionHistoryItem
                     {
@@ -356,7 +374,7 @@ namespace KenticoInspector.Reports.Tests
                     coupledData.Add("TextNoDefault", "Text 1 (corrupted)");
                     coupledData.Add("TextHardDefault", "Text 2");
                     coupledData.Add("DecimalNoDefault", 1.0150m);
-                    coupledData.Add("DecimalHardDefault", 1.7500m);
+                    coupledData.Add("DecimalHardDefault", 1.0200m);
 
                     VersionHistoryCoupledData.Add(coupledData);
                 }
