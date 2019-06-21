@@ -9,6 +9,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -179,9 +180,7 @@ namespace KenticoInspector.Reports.Tests
             List<CmsTreeNode> treeNodesWithLevelMismatchByNodeLevelTest = null,
             List<CmsTreeNode> treeNodesWithMissingDocument = null,
             List<CmsTreeNode> treeNodesWithPageTypeNotAssignedToSite = null,
-            List<CmsVersionHistoryItem> versionHistoryItems = null,
-            List<CmsClassItem> versionHistoryCmsClassItems = null,
-            List<CmsDocumentNode> versionHistoryTreeNodes = null
+            bool isVersionHistoryDataSetClean = true
             )
         {
             documentsWithMissingTreeNode = documentsWithMissingTreeNode ?? new List<CmsDocumentNode>();
@@ -208,22 +207,33 @@ namespace KenticoInspector.Reports.Tests
             treeNodesWithPageTypeNotAssignedToSite = treeNodesWithPageTypeNotAssignedToSite ?? new List<CmsTreeNode>();
             SetupCmsTreeNodeQueries(treeNodesWithPageTypeNotAssignedToSite, Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite);
 
-            versionHistoryItems = versionHistoryItems ?? new List<CmsVersionHistoryItem>();
-            SetupCmsVersionHistoryQueries(versionHistoryItems, Scripts.GetLatestVersionHistoryIdForAllDocuments);
+            var versionHistoryDataSet = new VersionHistoryDataSet(isVersionHistoryDataSetClean);
 
-            versionHistoryCmsClassItems = versionHistoryCmsClassItems ?? new List<CmsClassItem>();
-            SetupCmsClassItemsQueries(versionHistoryCmsClassItems);
+            SetupCmsVersionHistoryQueries(versionHistoryDataSet.CmsVersionHistoryItems, Scripts.GetLatestVersionHistoryIdForAllDocuments);
 
-            // TODO: Setup GetDocumentDetails for ALL classes
-            versionHistoryTreeNodes = versionHistoryTreeNodes ?? new List<CmsDocumentNode>();
-            foreach (var classItem in versionHistoryCmsClassItems)
+            SetupCmsClassItemsQueries(versionHistoryDataSet.CmsClassItems);
+
+            SetupVersionHistoryCoupledDataQueries(versionHistoryDataSet.CmsVersionHistoryItems, versionHistoryDataSet.CmsClassItems, versionHistoryDataSet.VersionHistoryCoupledData);
+        }
+
+        private void SetupVersionHistoryCoupledDataQueries(List<CmsVersionHistoryItem> versionHistoryItems, List<CmsClassItem> versionHistoryCmsClassItems, List<IDictionary<string, object>> versionHistoryCoupledData)
+        {
+            foreach (var cmsClassItem in versionHistoryCmsClassItems)
             {
-                //var classDocuments = versionHistoryTreeNodes.Where(x => x. == classItem.ClassID);
-                //SetupCmsDocumentNodeQueries(classDocuments)
+                var coupledDataIds = versionHistoryItems
+                    .Where(x => x.VersionClassID == cmsClassItem.ClassID)
+                    .Select(x => x.CoupledDataID);
+                var returnedItems = versionHistoryCoupledData
+                    .Where(x => coupledDataIds.Contains((int)x[cmsClassItem.ClassIDColumn]));
+                var literalReplacements = new CoupledDataScriptReplacements(cmsClassItem.ClassTableName, cmsClassItem.ClassIDColumn);
+
+                _mockDatabaseService.SetupExecuteSqlFromFileGenericWithListParameter(
+                    Scripts.GetCmsDocumentCoupledDataItems,
+                    literalReplacements.Dictionary,
+                    "IDs",
+                    coupledDataIds,
+                    returnedItems);
             }
-            
-            // TODO: Setup document coupled data 
-            //_databaseService.ExecuteSqlFromFileWithReplacements(Scripts.GetCmsDocumentCoupledDataItems, replacements, new { IDs = Ids.ToArray() });
         }
 
         private void SetupCmsClassItemsQueries(IEnumerable<CmsClassItem> returnedItems, string idScript = null)
@@ -265,6 +275,91 @@ namespace KenticoInspector.Reports.Tests
             if (!string.IsNullOrWhiteSpace(detailsScript) && returnedItems != null)
             {
                 _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(detailsScript, "IDs", idValues, returnedItems);
+            }
+        }
+
+        private class VersionHistoryDataSet
+        {
+            public List<CmsVersionHistoryItem> CmsVersionHistoryItems { get; set; }
+            public List<CmsClassItem> CmsClassItems { get; set; }
+            public List<IDictionary<string, object>> VersionHistoryCoupledData { get; set; }
+
+            public VersionHistoryDataSet(bool clean = true)
+            {
+                CmsClassItems = new List<CmsClassItem>();
+                var classFormDefinitionXml5512 = new XmlDocument();
+                classFormDefinitionXml5512.Load("TestData/classFormDefinitionXml_Clean_5512.xml");
+
+                CmsClassItems.Add(new CmsClassItem
+                {
+                    ClassDisplayName = "",
+                    ClassFormDefinitionXml = classFormDefinitionXml5512,
+                    ClassID = 5512,
+                    ClassName = "KIN.VersioningDataTest",
+                    ClassTableName = "KIN_VersioningDataTest"
+                });
+
+                CmsVersionHistoryItems = new List<CmsVersionHistoryItem>();
+                VersionHistoryCoupledData = new List<IDictionary<string, object>>();
+
+                if (clean)
+                {
+                    var versionHistoryXml = new XmlDocument();
+                    versionHistoryXml.Load("TestData/VersionHistoryItem_Clean_518.xml");
+
+                    CmsVersionHistoryItems.Add(new CmsVersionHistoryItem
+                    {
+                        DocumentID = 518,
+                        NodeXml = versionHistoryXml,
+                        VersionClassID = 5512,
+                        VersionHistoryID = 17,
+                        WasPublishedFrom = DateTime.Parse("2019-06-06 11:58:49.2430968")
+                    });
+
+                    var coupledData = new Dictionary<string, object>();
+                    coupledData.Add("VersioningDataTestID", 5);
+                    coupledData.Add("BoolNoDefault", false);
+                    coupledData.Add("BoolDefaultTrue", true);
+                    coupledData.Add("BoolDefaultFalse", false);
+                    coupledData.Add("DateTimeNoDefault", null);
+                    coupledData.Add("DateTimeHardDefault", DateTime.Parse("2019-06-06 11:31:17.0000000"));
+                    coupledData.Add("DateTimeMacroDefault", DateTime.Parse("2019-06-06 11:58:33.0000000"));
+                    coupledData.Add("TextNoDefault", null);
+                    coupledData.Add("TextHardDefault", "This is the default");
+                    coupledData.Add("DecimalNoDefault", null);
+                    coupledData.Add("DecimalHardDefault", 1.7500m);
+
+                    VersionHistoryCoupledData.Add(coupledData);
+                }
+                else
+                {
+                    var versionHistoryXml = new XmlDocument();
+                    versionHistoryXml.Load("VersionHistoryItem_Corrupt_519.xml");
+
+                    CmsVersionHistoryItems.Add(new CmsVersionHistoryItem
+                    {
+                        DocumentID = 519,
+                        NodeXml = versionHistoryXml,
+                        VersionClassID = 5512,
+                        VersionHistoryID = 18,
+                        WasPublishedFrom = DateTime.Parse("2019-06-14 10:46:18.4493088")
+                    });
+
+                    var coupledData = new Dictionary<string, object>();
+                    coupledData.Add("VersioningDataTestID", 6);
+                    coupledData.Add("BoolNoDefault", true);
+                    coupledData.Add("BoolDefaultTrue", false);
+                    coupledData.Add("BoolDefaultFalse", false);
+                    coupledData.Add("DateTimeNoDefault", DateTime.Parse("2019-06-14 10:54:35.0000000"));
+                    coupledData.Add("DateTimeHardDefault", DateTime.Parse("2019-06-14 10:45:36.0000000"));
+                    coupledData.Add("DateTimeMacroDefault", DateTime.Parse("2019-06-14 10:45:37.0000000"));
+                    coupledData.Add("TextNoDefault", "Text 1 (corrupted)");
+                    coupledData.Add("TextHardDefault", "Text 2");
+                    coupledData.Add("DecimalNoDefault", 1.0150m);
+                    coupledData.Add("DecimalHardDefault", 1.7500m);
+
+                    VersionHistoryCoupledData.Add(coupledData);
+                }
             }
         }
     }

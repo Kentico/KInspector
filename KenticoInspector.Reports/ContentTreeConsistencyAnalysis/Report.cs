@@ -85,15 +85,14 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 );
         }
 
-        private IEnumerable<VersionHistoryMismatchResult> CompareVersionHistoryItemsWithPublishedItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems, Dictionary<int, int> documentIdToForeignKeyMapping, IEnumerable<IDictionary<string, object>> coupledData, IEnumerable<CmsClassField> cmsClassFields)
+        private IEnumerable<VersionHistoryMismatchResult> CompareVersionHistoryItemsWithPublishedItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems, IEnumerable<IDictionary<string, object>> coupledData, IEnumerable<CmsClassField> cmsClassFields)
         {
             var issues = new List<VersionHistoryMismatchResult>();
             var idColumnName = cmsClassFields.FirstOrDefault(x => x.IsIdColumn).Column;
 
             foreach (var versionHistoryItem in versionHistoryItems)
             {
-                var foreignKey = documentIdToForeignKeyMapping[versionHistoryItem.DocumentID];
-                var coupledDataItem = coupledData.FirstOrDefault(x => (int)x[idColumnName] == foreignKey);
+                var coupledDataItem = coupledData.FirstOrDefault(x => (int)x[idColumnName] == versionHistoryItem.CoupledDataID);
 
                 if (coupledDataItem != null)
                 {
@@ -141,35 +140,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
             return combinedResults;
         }
-
-        private List<KeyValuePair<int, CmsClassField>> GetCmsClassFieldsFromXml(IEnumerable<CmsClassItem> CmsClassItems)
-        {
-            var result = new List<KeyValuePair<int, CmsClassField>>();
-            foreach (var cmsClassItem in CmsClassItems)
-            {
-                var fields = cmsClassItem.ClassFormDefinitionXml.SelectNodes("/form/field");
-
-                foreach (XmlNode field in fields)
-                {
-                    var isIdColumnRaw = field.Attributes["isPK"]?.Value;
-                    var isIdColumn = !string.IsNullOrWhiteSpace(isIdColumnRaw) ? bool.Parse(isIdColumnRaw) : false;
-
-                    var classIdClassFieldPair = new KeyValuePair<int, CmsClassField>(cmsClassItem.ClassID, new CmsClassField
-                    {
-                        Caption = field.SelectSingleNode("properties/fieldcaption")?.InnerText,
-                        Column = field.Attributes["column"].Value,
-                        ColumnType = field.Attributes["columntype"].Value,
-                        DefaultValue = field.SelectSingleNode("properties/defaultvalue")?.InnerText,
-                        IsIdColumn = isIdColumn
-                    });
-
-                    result.Add(classIdClassFieldPair);
-                }
-            }
-
-            return result;
-        }
-
+        
         private IEnumerable<CmsClassItem> GetCmsClassItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems)
         {
             var cmsClassIds = versionHistoryItems.Select(vhi => vhi.VersionClassID);
@@ -181,9 +152,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return GetTestResult<CmsDocumentNode>(name, script, Scripts.GetDocumentNodeDetails);
         }
 
-        private IEnumerable<IDictionary<string, object>> GetCoupledData(string tableName, string idColumnName, IEnumerable<int> Ids)
+        private IEnumerable<IDictionary<string, object>> GetCoupledData(CmsClassItem cmsClassItem, IEnumerable<int> Ids)
         {
-            var replacements = new CoupledDataScriptReplacements(tableName, idColumnName);
+            var replacements = new CoupledDataScriptReplacements(cmsClassItem.ClassTableName, cmsClassItem.ClassIDColumn);
             return _databaseService.ExecuteSqlFromFileGeneric(Scripts.GetCmsDocumentCoupledDataItems, replacements.Dictionary, new { IDs = Ids.ToArray() });
         }
 
@@ -221,22 +192,18 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
         private ReportResults GetWorkflowInconsistencyResult()
         {
             var versionHistoryItems = GetVersionHistoryItems();
-            var versionHistoryDocumentIdToForeignKeyMapping = GetDocumentIdToForeignKeyMapping(versionHistoryItems);
-
             var cmsClassItems = GetCmsClassItems(versionHistoryItems);
-            var allCmsClassFields = GetCmsClassFieldsFromXml(cmsClassItems);
-
+            // TODO: Use later?
+            // var allDocumentNodeIds = versionHistoryItems.Select(x => x.DocumentID);
+            // var allDocumentNodes = _databaseService.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, new { IDs = allDocumentNodeIds.ToArray() });
+            
             var comparisonResults = new List<VersionHistoryMismatchResult>();
             foreach (var cmsClass in cmsClassItems)
             {
                 var cmsClassVersionHistoryItems = versionHistoryItems.Where(vhi => vhi.VersionClassID == cmsClass.ClassID);
-                var cmsClassFields = allCmsClassFields.Where(x => x.Key == cmsClass.ClassID).Select(x => x.Value);
-                var cmsClassIdColumn = cmsClassFields.Where(x => x.IsIdColumn).Select(x => x.Column).FirstOrDefault();
-                var documentIds = cmsClassVersionHistoryItems.Select(x => x.DocumentID);
-                var documentNodes = _databaseService.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, new { IDs = documentIds.ToArray() });
-                var coupledDataIds = documentNodes.Select(x => x.DocumentForeignKeyValue);
-                var coupledData = GetCoupledData(cmsClass.ClassTableName, cmsClassIdColumn, coupledDataIds);
-                var classComparisionResults = CompareVersionHistoryItemsWithPublishedItems(versionHistoryItems, versionHistoryDocumentIdToForeignKeyMapping, coupledData, cmsClassFields);
+                var coupledDataIds = cmsClassVersionHistoryItems.Select(x => x.CoupledDataID);
+                var coupledData = GetCoupledData(cmsClass, coupledDataIds);
+                var classComparisionResults = CompareVersionHistoryItemsWithPublishedItems(versionHistoryItems, coupledData, cmsClass.ClassFields);
                 comparisonResults.AddRange(classComparisionResults);
             }
 
@@ -253,24 +220,6 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 Summary = string.Empty,
                 Type = ReportResultsType.Table,
             };
-        }
-
-        private Dictionary<int, int> GetDocumentIdToForeignKeyMapping(IEnumerable<CmsVersionHistoryItem> versionHistoryItems)
-        {
-            var mapping = new Dictionary<int, int>();
-
-            foreach (var versionHistoryItem in versionHistoryItems)
-            {
-                var foreignKeyRaw = versionHistoryItem.NodeXml.SelectSingleNode("//DocumentForeignKeyValue")?.InnerText;
-                int foreignKey;
-
-                if (int.TryParse(foreignKeyRaw, out foreignKey))
-                {
-                    mapping.Add(versionHistoryItem.DocumentID, foreignKey);
-                }
-            }
-
-            return mapping;
         }
     }
 }

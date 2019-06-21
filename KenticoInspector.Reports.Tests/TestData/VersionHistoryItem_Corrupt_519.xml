@@ -1,0 +1,60 @@
+﻿<NewDataSet>
+  <KIN_VersioningDataTest>
+    <NodeID>518</NodeID>
+    <NodeAliasPath>/VDT-Published-Corrupted</NodeAliasPath>
+    <NodeName>VDT - Published Corrupted</NodeName>
+    <NodeAlias>VDT-Published-Corrupted</NodeAlias>
+    <NodeClassID>5512</NodeClassID>
+    <NodeParentID>1</NodeParentID>
+    <NodeLevel>1</NodeLevel>
+    <NodeACLID>1</NodeACLID>
+    <NodeSiteID>1</NodeSiteID>
+    <NodeGUID>187d03cd-f72c-456d-894d-ce5164157dce</NodeGUID>
+    <NodeOrder>18</NodeOrder>
+    <NodeInheritPageLevels />
+    <NodeOwner>53</NodeOwner>
+    <NodeTemplateForAllCultures>true</NodeTemplateForAllCultures>
+    <NodeHasChildren>false</NodeHasChildren>
+    <NodeHasLinks>false</NodeHasLinks>
+    <NodeOriginalNodeID>518</NodeOriginalNodeID>
+    <NodeIsContentOnly>false</NodeIsContentOnly>
+    <NodeIsACLOwner>false</NodeIsACLOwner>
+    <DocumentID>519</DocumentID>
+    <DocumentName>VDT - Published Corrupted</DocumentName>
+    <DocumentNamePath>/VDT - Published Corrupted</DocumentNamePath>
+    <DocumentModifiedWhen>2019-06-14T10:46:05.7914508-04:00</DocumentModifiedWhen>
+    <DocumentModifiedByUserID>53</DocumentModifiedByUserID>
+    <DocumentForeignKeyValue>6</DocumentForeignKeyValue>
+    <DocumentCreatedByUserID>53</DocumentCreatedByUserID>
+    <DocumentCreatedWhen>2019-06-14T10:46:05.7914508-04:00</DocumentCreatedWhen>
+    <DocumentCheckedOutVersionHistoryID>18</DocumentCheckedOutVersionHistoryID>
+    <DocumentWorkflowStepID>254</DocumentWorkflowStepID>
+    <DocumentUrlPath />
+    <DocumentCulture>en-US</DocumentCulture>
+    <DocumentNodeID>518</DocumentNodeID>
+    <DocumentShowInSiteMap>true</DocumentShowInSiteMap>
+    <DocumentMenuItemHideInNavigation>false</DocumentMenuItemHideInNavigation>
+    <DocumentUseNamePathForUrlPath>false</DocumentUseNamePathForUrlPath>
+    <DocumentContent />
+    <DocumentWildcardRule />
+    <DocumentPriority>0</DocumentPriority>
+    <DocumentLastVersionNumber>0.1</DocumentLastVersionNumber>
+    <DocumentIsArchived>false</DocumentIsArchived>
+    <DocumentGUID>2ac3eb53-8ac5-4d04-8a34-79aa98e08df8</DocumentGUID>
+    <DocumentWorkflowCycleGUID>c2b0a2b2-915a-4c32-805d-23692f378f7b</DocumentWorkflowCycleGUID>
+    <DocumentCanBePublished>false</DocumentCanBePublished>
+    <DocumentInheritsStylesheet>true</DocumentInheritsStylesheet>
+    <VersioningDataTestID>6</VersioningDataTestID>
+    <BoolNoDefault>true</BoolNoDefault>
+    <BoolDefaultTrue>false</BoolDefaultTrue>
+    <BoolDefaultFalse>true</BoolDefaultFalse>
+    <DateTimeNoDefault>2019-06-14T10:45:35-04:00</DateTimeNoDefault>
+    <DateTimeHardDefault>2019-06-14T10:45:36-04:00</DateTimeHardDefault>
+    <DateTimeMacroDefault>2019-06-14T10:45:37-04:00</DateTimeMacroDefault>
+    <TextNoDefault>Text 1</TextNoDefault>
+    <TextHardDefault>Text 2</TextHardDefault>
+    <DecimalNoDefault>1.01</DecimalNoDefault>
+    <DecimalHardDefault>1.02</DecimalHardDefault>
+    <ClassName>KIN.VersioningDataTest</ClassName>
+  </KIN_VersioningDataTest>
+</NewDataSet>
