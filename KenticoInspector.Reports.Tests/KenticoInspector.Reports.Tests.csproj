@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +18,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KenticoInspector.Reports\KenticoInspector.Reports.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestData\classFormDefinitionXml_Clean_5512.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\VersionHistoryItem_Clean_518.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\VersionHistoryItem_Corrupt_519.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

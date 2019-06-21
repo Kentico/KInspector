@@ -33,7 +33,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var unusedPageTypes = GetUnusedPageTypes();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetUnusedPageTypes, null))
+                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetUnusedPageTypes))
                 .Returns(unusedPageTypes);
 
             // Act

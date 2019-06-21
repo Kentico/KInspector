@@ -28,13 +28,34 @@ namespace KenticoInspector.Reports.Tests.Helpers
                 .Returns(returnValue);
         }
 
+        public static void SetupExecuteSqlFromFileGenericWithListParameter<T>(
+            this Mock<IDatabaseService> mockDatabaseService,
+            string script,
+            IDictionary<string,string> literalReplacements,
+            string parameterPropertyName,
+            IEnumerable<T> parameterPropertyValue,
+            IEnumerable<IDictionary<string,object>> returnValue)
+        {
+            mockDatabaseService
+                .Setup(
+                    p => p.ExecuteSqlFromFileGeneric(
+                        script,
+                        literalReplacements,
+                        It.Is<object>(
+                            objectToCheck => ObjectHelpers.ObjectHasPropertyWithExpectedValue(objectToCheck, parameterPropertyName, parameterPropertyValue)
+                        )
+                    )
+                )
+                .Returns(returnValue);
+        }
+
         public static void SetupExecuteSqlFromFile<T>(
             this Mock<IDatabaseService> mockDatabaseService,
             string script,
             IEnumerable<T> returnValue)
         {
             mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<T>(script, null))
+                .Setup(p => p.ExecuteSqlFromFile<T>(script))
                 .Returns(returnValue);
         }
 

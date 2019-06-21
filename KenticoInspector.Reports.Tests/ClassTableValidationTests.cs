@@ -34,12 +34,12 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass, null))
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
                 .Returns(tableResults);
 
             var classResults = GetCleanClassResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable, null))
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
                 .Returns(classResults);
 
             // Act
@@ -57,7 +57,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass, null))
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
                 .Returns(tableResults);
 
             var classResults = GetCleanClassResults();
@@ -69,7 +69,7 @@ namespace KenticoInspector.Reports.Tests
             });
 
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable, null))
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
                 .Returns(classResults);
 
             // Act
@@ -91,12 +91,12 @@ namespace KenticoInspector.Reports.Tests
             });
 
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass, null))
+                .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
                 .Returns(tableResults);
 
             var classResults = GetCleanClassResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable, null))
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
                 .Returns(classResults);
 
             // Act

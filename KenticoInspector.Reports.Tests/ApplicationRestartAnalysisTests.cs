@@ -33,7 +33,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var applicationRestartEvents = new List<ApplicationRestartEvent>();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents, null))
+                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents))
                 .Returns(applicationRestartEvents);
             
             // Act
@@ -65,7 +65,7 @@ namespace KenticoInspector.Reports.Tests
             });
 
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents, null))
+                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents))
                 .Returns(applicationRestartEvents);
 
             // Act
@@ -82,7 +82,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var applicationRestartEvents = new List<ApplicationRestartEvent>();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents, null))
+                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents))
                 .Returns(applicationRestartEvents);
             
             // Act

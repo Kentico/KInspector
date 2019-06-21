@@ -6,6 +6,7 @@ using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
@@ -41,6 +42,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             <li>Tree nodes with no document node</li>
             <li>Tree nodes with page type not assigned to site</li>
             <li>Document nodes with no tree node</li>
+            <li>Validates that the published data and the data in the CMS_VersionHistory tables match</li>
         </ul>
         ";
 
@@ -67,7 +69,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             var treeNodeWithDuplicateAliasPathResults = GetTreeNodeTestResult("Tree nodes with duplicated alias paths", Scripts.GetTreeNodeIdsWithDuplicatedAliasPath);
             var treeNodeWithPageTypeNotAssignedToSiteResults = GetTreeNodeTestResult("Tree nodes with page type not assigned to site", Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite);
             var documentNodesWithMissingTreeNodeResults = GetDocumentNodeTestResult("Document nodes with no tree node", Scripts.GetDocumentIdsWithMissingTreeNode);
-            
+
+            var workflowInconsistenciesResults = GetWorkflowInconsistencyResult();
+
             return CompileResults(
                 treeNodeWithBadParentSiteResults,
                 treeNodeWithBadParentNodeResults,
@@ -76,18 +80,82 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 treeNodeWithMissingDocumentResults,
                 treeNodeWithDuplicateAliasPathResults,
                 treeNodeWithPageTypeNotAssignedToSiteResults,
-                documentNodesWithMissingTreeNodeResults
+                documentNodesWithMissingTreeNodeResults,
+                workflowInconsistenciesResults
                 );
         }
 
-        private ReportResults GetTreeNodeTestResult(string name, string script)
+        private IEnumerable<VersionHistoryMismatchResult> CompareVersionHistoryItemsWithPublishedItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems, IEnumerable<IDictionary<string, object>> coupledData, IEnumerable<CmsClassField> cmsClassFields)
         {
-            return GetTestResult<CmsTreeNode>(name, script, Scripts.GetTreeNodeDetails);
+            var issues = new List<VersionHistoryMismatchResult>();
+            var idColumnName = cmsClassFields.FirstOrDefault(x => x.IsIdColumn).Column;
+
+            foreach (var versionHistoryItem in versionHistoryItems)
+            {
+                var coupledDataItem = coupledData.FirstOrDefault(x => (int)x[idColumnName] == versionHistoryItem.CoupledDataID);
+
+                if (coupledDataItem != null)
+                {
+                    foreach (var cmsClassField in cmsClassFields)
+                    {
+                        var historyVersionValueRaw = versionHistoryItem.NodeXml.SelectSingleNode($"//{cmsClassField.Column}")?.InnerText ?? cmsClassField.DefaultValue;
+                        var coupledDataItemValue = coupledDataItem[cmsClassField.Column];
+                        var columnName = cmsClassField.Caption ?? cmsClassField.Column;
+                        var versionHistoryMismatchResult = new VersionHistoryMismatchResult(versionHistoryItem.DocumentID, columnName, cmsClassField.ColumnType, historyVersionValueRaw, coupledDataItemValue);
+
+                        if (!versionHistoryMismatchResult.FieldValuesMatch)
+                        {
+                            issues.Add(versionHistoryMismatchResult);
+                        }
+                    }
+                }
+            }
+
+            return issues;
+        }
+
+        private ReportResults CompileResults(params ReportResults[] allReportResults)
+        {
+            var combinedResults = new ReportResults();
+
+            combinedResults.Type = ReportResultsType.TableList;
+            combinedResults.Status = ReportResultsStatus.Good;
+
+            foreach (var reportResults in allReportResults)
+            {
+                var name = ((string)reportResults.Data.Name);
+                // TODO: Make this WAY better
+                ((IDictionary<string, object>)combinedResults.Data).Add(reportResults.Data.Name, reportResults.Data);
+                if (reportResults.Status == ReportResultsStatus.Error)
+                {
+                    combinedResults.Summary += $"{name} found. ";
+                    combinedResults.Status = ReportResultsStatus.Error;
+                }
+            }
+
+            if (combinedResults.Status == ReportResultsStatus.Good)
+            {
+                combinedResults.Summary = "No content tree consistency issues found.";
+            }
+
+            return combinedResults;
+        }
+        
+        private IEnumerable<CmsClassItem> GetCmsClassItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems)
+        {
+            var cmsClassIds = versionHistoryItems.Select(vhi => vhi.VersionClassID);
+            return _databaseService.ExecuteSqlFromFile<CmsClassItem>(Scripts.GetCmsClassItems, new { IDs = cmsClassIds.ToArray() });
         }
 
         private ReportResults GetDocumentNodeTestResult(string name, string script)
         {
             return GetTestResult<CmsDocumentNode>(name, script, Scripts.GetDocumentNodeDetails);
+        }
+
+        private IEnumerable<IDictionary<string, object>> GetCoupledData(CmsClassItem cmsClassItem, IEnumerable<int> Ids)
+        {
+            var replacements = new CoupledDataScriptReplacements(cmsClassItem.ClassTableName, cmsClassItem.ClassIDColumn);
+            return _databaseService.ExecuteSqlFromFileGeneric(Scripts.GetCmsDocumentCoupledDataItems, replacements.Dictionary, new { IDs = Ids.ToArray() });
         }
 
         private ReportResults GetTestResult<T>(string name, string script, string getDetailsScript)
@@ -110,29 +178,48 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             };
         }
 
-        private ReportResults CompileResults(params ReportResults[] allReportResults)
+        private ReportResults GetTreeNodeTestResult(string name, string script)
         {
-            var combinedResults = new ReportResults();
+            return GetTestResult<CmsTreeNode>(name, script, Scripts.GetTreeNodeDetails);
+        }
 
-            combinedResults.Type = ReportResultsType.TableList;
-            combinedResults.Status = ReportResultsStatus.Good;
+        private IEnumerable<CmsVersionHistoryItem> GetVersionHistoryItems()
+        {
+            var latestVersionHistoryIds = _databaseService.ExecuteSqlFromFile<int>(Scripts.GetLatestVersionHistoryIdForAllDocuments);
+            return _databaseService.ExecuteSqlFromFile<CmsVersionHistoryItem>(Scripts.GetVersionHistoryDetails, new { IDs = latestVersionHistoryIds.ToArray() });
+        }
 
-            foreach (var reportResults in allReportResults)
+        private ReportResults GetWorkflowInconsistencyResult()
+        {
+            var versionHistoryItems = GetVersionHistoryItems();
+            var cmsClassItems = GetCmsClassItems(versionHistoryItems);
+            // TODO: Use later?
+            // var allDocumentNodeIds = versionHistoryItems.Select(x => x.DocumentID);
+            // var allDocumentNodes = _databaseService.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, new { IDs = allDocumentNodeIds.ToArray() });
+            
+            var comparisonResults = new List<VersionHistoryMismatchResult>();
+            foreach (var cmsClass in cmsClassItems)
             {
-                var name = ((string)reportResults.Data.Name);
-                // TODO: Make this WAY better
-                ((IDictionary<string, object>)combinedResults.Data).Add(reportResults.Data.Name, reportResults.Data);
-                if (reportResults.Status == ReportResultsStatus.Error) {
-                    combinedResults.Summary += $"{name} found. ";
-                    combinedResults.Status = ReportResultsStatus.Error;
-                }
+                var cmsClassVersionHistoryItems = versionHistoryItems.Where(vhi => vhi.VersionClassID == cmsClass.ClassID);
+                var coupledDataIds = cmsClassVersionHistoryItems.Select(x => x.CoupledDataID);
+                var coupledData = GetCoupledData(cmsClass, coupledDataIds);
+                var classComparisionResults = CompareVersionHistoryItemsWithPublishedItems(versionHistoryItems, coupledData, cmsClass.ClassFields);
+                comparisonResults.AddRange(classComparisionResults);
             }
 
-            if (combinedResults.Status == ReportResultsStatus.Good) {
-                combinedResults.Summary = "No content tree consistency issues found.";
-            }
+            var data = new TableResult<VersionHistoryMismatchResult>
+            {
+                Name = "Workflow Inconsistencies",
+                Rows = comparisonResults
+            };
 
-            return combinedResults;
+            return new ReportResults
+            {
+                Data = data,
+                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Summary = string.Empty,
+                Type = ReportResultsType.Table,
+            };
         }
     }
 }
