@@ -53,7 +53,35 @@ namespace KenticoInspector.Reports.TaskProcessingAnalysis
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
             _databaseService.ConfigureForInstance(instance);
 
-            throw new NotImplementedException();
+            var unprocessedIntegrationBusTasks = _databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedIntegrationBusTasks);
+            var unprocessedScheduledTasks = _databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedScheduledTasks);
+            var unprocessedSearchTasks = _databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedSearchTasks);
+            var unprocessedStagingTasks = _databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedStagingTasks);
+            var unprocessedWebFarmTasks = _databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedWebFarmTasks);
+
+            var rawResults = new Dictionary<string, int>();
+            rawResults.Add(TaskTypes.IntegrationBusTasks, unprocessedIntegrationBusTasks);
+            rawResults.Add(TaskTypes.ScheduledTasks, unprocessedScheduledTasks);
+            rawResults.Add(TaskTypes.SearchTasks, unprocessedSearchTasks);
+            rawResults.Add(TaskTypes.StagingTasks, unprocessedStagingTasks);
+            rawResults.Add(TaskTypes.WebFarmTasks, unprocessedWebFarmTasks);
+
+            return CompileResults(rawResults);
+        }
+
+        private ReportResults CompileResults(Dictionary<string, int> taskResults)
+        {
+            var totalUnprocessedTasks = taskResults.Sum(x => x.Value);
+            return new ReportResults()
+            {
+                TableResult<int>
+                Data = taskResults
+                    .Where(x => x.Value > 0)
+                    .Select(x => $"{x.Value} {x.Key}{(x.Value == 1 ? "" : "s")}"),
+                Status = totalUnprocessedTasks > 0 ? ReportResultsStatus.Warning : ReportResultsStatus.Good,
+                Summary = $"There are {totalUnprocessedTasks} unprocessed task{(totalUnprocessedTasks == 1 ? "" : "s")}",
+                Type = ReportResultsType.StringList
+            };
         }
     }
 }
