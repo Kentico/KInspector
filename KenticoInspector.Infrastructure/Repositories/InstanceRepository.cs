@@ -11,7 +11,7 @@ namespace KenticoInspector.Infrastructure.Repositories
     public class InstanceRepository : IInstanceRepository
     {
         private readonly string _saveFileLocation = $"{Directory.GetCurrentDirectory()}\\SavedInstances.json";
-                
+
         public bool DeleteInstance(Guid guid)
         {
             var currentInstances = LoadSavedInstances();
@@ -24,7 +24,7 @@ namespace KenticoInspector.Infrastructure.Repositories
         {
             var instances = GetInstances();
             var selectedInstance = instances.FirstOrDefault(i => i.Guid == guid);
-            
+
             return selectedInstance;
         }
 

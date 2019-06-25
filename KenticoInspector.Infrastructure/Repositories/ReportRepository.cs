@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace KenticoInspector.Infrastructure.Repositories
 {
-    class ReportRepository : IReportRepository
+    public class ReportRepository : IReportRepository
     {
         public IReport GetReport(string codename)
         {
@@ -21,7 +21,8 @@ namespace KenticoInspector.Infrastructure.Repositories
             return LoadReports();
         }
 
-        private IList<IReport> LoadReports() {
+        private IList<IReport> LoadReports()
+        {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule(new CoreModule());
             containerBuilder.RegisterModule(new InfrastructureModule());

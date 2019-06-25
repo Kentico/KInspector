@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace KenticoInspector.Infrastructure.Services
 {
-    class DatabaseService : IDatabaseService
+    public class DatabaseService : IDatabaseService
     {
         private IDbConnection _connection;
 
@@ -59,7 +59,7 @@ namespace KenticoInspector.Infrastructure.Services
             result.Load(Connection.ExecuteReader(query));
             return result;
         }
-        
+
         public IEnumerable<IDictionary<string, object>> ExecuteSqlFromFileGeneric(string relativeFilePath)
         {
             return ExecuteSqlFromFileGeneric(relativeFilePath, null, null);
