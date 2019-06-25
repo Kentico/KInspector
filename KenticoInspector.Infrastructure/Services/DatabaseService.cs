@@ -81,5 +81,25 @@ namespace KenticoInspector.Infrastructure.Services
             return Connection.Query(query, (object)parameters).Select(x => (IDictionary<string, object>)x);
         }
 
+        public T ExecuteSqlFromFileScalar<T>(string relativeFilePath)
+        {
+            return ExecuteSqlFromFileScalar<T>(relativeFilePath, null, null);
+        }
+
+        public T ExecuteSqlFromFileScalar<T>(string relativeFilePath, dynamic parameters)
+        {
+            return ExecuteSqlFromFileScalar<T>(relativeFilePath, null, parameters);
+        }
+
+        public T ExecuteSqlFromFileScalar<T>(string relativeFilePath, IDictionary<string, string> literalReplacements)
+        {
+            return ExecuteSqlFromFileScalar<T>(relativeFilePath, literalReplacements, null);
+        }
+
+        public T ExecuteSqlFromFileScalar<T>(string relativeFilePath, IDictionary<string, string> literalReplacements, dynamic parameters)
+        {
+            var query = FileHelper.GetSqlQueryText(relativeFilePath, literalReplacements);
+            return Connection.QueryFirst<T>(query, (object)parameters);
+        }
     }
 }
