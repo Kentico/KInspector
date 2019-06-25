@@ -68,6 +68,9 @@
     <None Update="ClassTableValidation\GetTablesWithNoClass.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="DebugConfigurationAnalysis\Scripts\GetDebugSettingsValues.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedIntegrationBusTasks.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
