@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
@@ -11,12 +9,16 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
 
         public int VersionHistoryID { get; set; }
         public int DocumentID { get; set; }
-        public XmlDocument NodeXml { get;set; }
+        public XmlDocument NodeXml { get; set; }
         public int VersionClassID { get; set; }
         public DateTime WasPublishedFrom { get; set; }
-        public int CoupledDataID {
-            get {
-                if (_coupledDataId == -1 && NodeXml != null) {
+
+        public int CoupledDataID
+        {
+            get
+            {
+                if (_coupledDataId == -1 && NodeXml != null)
+                {
                     _coupledDataId = GetCoupledDataId();
                 }
 

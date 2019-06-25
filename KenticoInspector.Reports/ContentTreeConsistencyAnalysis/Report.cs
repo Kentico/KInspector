@@ -6,14 +6,13 @@ using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
     public class Report : IReport
     {
-        readonly IDatabaseService _databaseService;
-        readonly IInstanceService _instanceService;
+        private readonly IDatabaseService _databaseService;
+        private readonly IInstanceService _instanceService;
 
         public Report(IDatabaseService databaseService, IInstanceService instanceService)
         {
@@ -140,7 +139,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
             return combinedResults;
         }
-        
+
         private IEnumerable<CmsClassItem> GetCmsClassItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems)
         {
             var cmsClassIds = versionHistoryItems.Select(vhi => vhi.VersionClassID);
@@ -196,7 +195,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             // TODO: Use later?
             // var allDocumentNodeIds = versionHistoryItems.Select(x => x.DocumentID);
             // var allDocumentNodes = _databaseService.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, new { IDs = allDocumentNodeIds.ToArray() });
-            
+
             var comparisonResults = new List<VersionHistoryMismatchResult>();
             foreach (var cmsClass in cmsClassItems)
             {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Reports.ClassTableValidation
+﻿namespace KenticoInspector.Reports.ClassTableValidation
 {
     public static class Scripts
     {

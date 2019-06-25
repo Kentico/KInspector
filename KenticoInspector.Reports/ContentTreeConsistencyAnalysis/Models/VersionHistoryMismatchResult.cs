@@ -44,12 +44,15 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
                     case FieldTypes.Boolean:
                         ProcessBoolValues(versionHistoryXmlValue, coupledDataColumnValue);
                         break;
+
                     case FieldTypes.DateTime:
                         ProcessDateTimeValues(versionHistoryXmlValue, coupledDataColumnValue);
                         break;
+
                     case FieldTypes.Decimal:
                         ProcessDecimalValues(versionHistoryXmlValue, coupledDataColumnValue);
                         break;
+
                     default:
                         DocumentValue = coupledDataColumnValue.ToString();
                         VersionHistoryValue = versionHistoryXmlValue;
