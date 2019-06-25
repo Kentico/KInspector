@@ -1,8 +1,7 @@
 ﻿using Dapper;
-using Dapper.FluentMap;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
-using KenticoInspector.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

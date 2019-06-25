@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
-namespace KenticoInspector.Infrastructure.Helpers
+namespace KenticoInspector.Core.Helpers
 {
     public class DatabaseHelper
     {

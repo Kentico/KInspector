@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace KenticoInspector.Infrastructure.Helpers
+namespace KenticoInspector.Core.Helpers
 {
     public static class FileHelper
     {

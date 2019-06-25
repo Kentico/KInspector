@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace KenticoInspector.Infrastructure.Helpers
+namespace KenticoInspector.Core.Helpers
 {
     public class DirectoryHelper
     {

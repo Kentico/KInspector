@@ -1,7 +1,7 @@
 ﻿using Dapper;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
-using KenticoInspector.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
