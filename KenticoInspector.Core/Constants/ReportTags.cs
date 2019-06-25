@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Core.Constants
+﻿namespace KenticoInspector.Core.Constants
 {
     public class ReportTags
     {

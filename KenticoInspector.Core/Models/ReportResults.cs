@@ -9,9 +9,12 @@ namespace KenticoInspector.Core.Models
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public ReportResultsStatus Status { get; set; }
+
         public string Summary { get; set; }
+
         [JsonConverter(typeof(StringEnumConverter))]
         public ReportResultsType Type { get; set; }
+
         public dynamic Data { get; set; }
 
         public ReportResults()

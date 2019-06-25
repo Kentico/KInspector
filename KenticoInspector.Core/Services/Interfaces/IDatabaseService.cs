@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 
 namespace KenticoInspector.Core.Services.Interfaces
 {
@@ -30,8 +29,11 @@ namespace KenticoInspector.Core.Services.Interfaces
         IEnumerable<IDictionary<string, object>> ExecuteSqlFromFileGeneric(string relativeFilePath, IDictionary<string, string> literalReplacements, dynamic parameters);
 
         T ExecuteSqlFromFileScalar<T>(string relativeFilePath);
+
         T ExecuteSqlFromFileScalar<T>(string relativeFilePath, dynamic parameters);
+
         T ExecuteSqlFromFileScalar<T>(string relativeFilePath, IDictionary<string, string> literalReplacements);
+
         T ExecuteSqlFromFileScalar<T>(string relativeFilePath, IDictionary<string, string> literalReplacements, dynamic parameters);
     }
 }

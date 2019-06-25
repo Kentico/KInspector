@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace KenticoInspector.Core.Models
-{ 
+{
     public class Site
     {
         public bool ContentOnly { get; set; }
