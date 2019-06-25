@@ -74,12 +74,11 @@ namespace KenticoInspector.Reports.TaskProcessingAnalysis
             var totalUnprocessedTasks = taskResults.Sum(x => x.Value);
             return new ReportResults()
             {
-                TableResult<int>
                 Data = taskResults
                     .Where(x => x.Value > 0)
                     .Select(x => $"{x.Value} {x.Key}{(x.Value == 1 ? "" : "s")}"),
                 Status = totalUnprocessedTasks > 0 ? ReportResultsStatus.Warning : ReportResultsStatus.Good,
-                Summary = $"There are {totalUnprocessedTasks} unprocessed task{(totalUnprocessedTasks == 1 ? "" : "s")}",
+                Summary = $"{totalUnprocessedTasks} unprocessed task{(totalUnprocessedTasks == 1 ? "" : "s")}",
                 Type = ReportResultsType.StringList
             };
         }
