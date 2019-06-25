@@ -35,7 +35,6 @@ namespace KenticoInspector.Reports.ClassTableValidation
         public string ShortDescription => "Validates that Kentico classes and Database tables are properly connected.";
 
         public IList<string> Tags => new List<string> {
-            ReportTags.Database,
             ReportTags.Health,
         };
 

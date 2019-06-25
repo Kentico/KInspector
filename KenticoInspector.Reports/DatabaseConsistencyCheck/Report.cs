@@ -46,7 +46,6 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
         public string ShortDescription => "Runs `DBCC CHECKDB` against the database to identify consistency issues.";
 
         public IList<string> Tags => new List<string> {
-            ReportTags.Database,
             ReportTags.Health
         };
 
