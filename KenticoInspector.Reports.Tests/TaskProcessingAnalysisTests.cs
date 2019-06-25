@@ -5,6 +5,8 @@ using KenticoInspector.Reports.TaskProcessingAnalysis;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -35,6 +37,83 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Good);
+        }
+
+        [Test]
+        public void Should_ReturnWarningResult_When_ThereAreUnprocessedIntegrationBusTasks()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(unprocessedIntegrationBusTasks: 1);
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskTypes.IntegrationBusTasks);
+            Assert.That(results.Status == ReportResultsStatus.Warning);
+        }
+
+        [Test]
+        public void Should_ReturnWarningResult_When_ThereAreUnprocessedScheduledTasks()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(unprocessedScheduledTasks: 1);
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskTypes.ScheduledTasks);
+            Assert.That(results.Status == ReportResultsStatus.Warning);
+        }
+
+        [Test]
+        public void Should_ReturnWarningResult_When_ThereAreUnprocessedSearchTasks()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(unprocessedSearchTasks: 1);
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskTypes.SearchTasks);
+            Assert.That(results.Status == ReportResultsStatus.Warning);
+        }
+
+        [Test]
+        public void Should_ReturnWarningResult_When_ThereAreUnprocessedStagingTasks()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(unprocessedStagingTasks: 1);
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskTypes.StagingTasks);
+            Assert.That(results.Status == ReportResultsStatus.Warning);
+        }
+
+        [Test]
+        public void Should_ReturnWarningResult_When_ThereAreUnprocessedWebFarmTasks()
+        {
+            // Arrange
+            SetupAllDatabaseQueries(unprocessedWebFarmTasks: 1);
+
+            // Act
+            var results = _mockReport.GetResults(_mockInstance.Guid);
+
+            // Assert
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskTypes.WebFarmTasks);
+            Assert.That(results.Status == ReportResultsStatus.Warning);
+        }
+
+        private static void AssertThatResultsDataIncludesTaskTypeDetails(dynamic data, string taskType)
+        {
+            var resultsData = (IEnumerable<string>)data;
+            var hasTasksListedInResults = resultsData.Where(x => x.Contains(taskType)).Count() > 0;
+            Assert.That(hasTasksListedInResults, $"'{taskType}' not found in data.");
         }
 
         private void InitializeCommonMocks(int majorVersion)
