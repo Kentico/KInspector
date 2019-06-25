@@ -68,6 +68,21 @@
     <None Update="ClassTableValidation\GetTablesWithNoClass.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedIntegrationBusTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedScheduledTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedSearchTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedStagingTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedWebFarmTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TemplateLayoutAnalysis\GetIdenticalLayouts.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
