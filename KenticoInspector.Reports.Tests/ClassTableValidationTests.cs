@@ -5,9 +5,7 @@ using KenticoInspector.Reports.ClassTableValidation;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Dynamic;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -86,7 +84,8 @@ namespace KenticoInspector.Reports.Tests
         {
             // Arrange
             var tableResults = GetCleanTableResults(false);
-            tableResults.Add(new TableWithNoClass {
+            tableResults.Add(new TableWithNoClass
+            {
                 TableName = "HasNoClass"
             });
 
