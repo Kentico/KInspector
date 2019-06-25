@@ -5,8 +5,6 @@ using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 
 namespace KenticoInspector.Reports.DatabaseConsistencyCheck
 {
@@ -48,7 +46,6 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
         public string ShortDescription => "Runs `DBCC CHECKDB` against the database to identify consistency issues.";
 
         public IList<string> Tags => new List<string> {
-            ReportTags.Database,
             ReportTags.Health
         };
 
@@ -58,7 +55,9 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
             _databaseService.ConfigureForInstance(instance);
 
+#pragma warning disable 0618 // This is a special exemption as the results of CheckDB are unknown
             var checkDbResults = _databaseService.ExecuteSqlFromFileAsDataTable(Scripts.GetCheckDbResults);
+#pragma warning restore 0618
 
             return CompileResults(checkDbResults);
         }

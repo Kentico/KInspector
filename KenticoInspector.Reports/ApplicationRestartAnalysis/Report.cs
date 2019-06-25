@@ -37,7 +37,6 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
         public string ShortDescription => "Shows application restart events from event log";
 
         public IList<string> Tags => new List<string> {
-            ReportTags.Database,
             ReportTags.EventLog,
             ReportTags.Health
         };
