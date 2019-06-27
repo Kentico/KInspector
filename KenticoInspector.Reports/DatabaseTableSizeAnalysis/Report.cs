@@ -4,17 +4,13 @@ using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-
 
 namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
 {
-    public class Report: IReport
+    public class Report : IReport
     {
-        readonly IDatabaseService _databaseService;
-        readonly IInstanceService _instanceService;
+        private readonly IDatabaseService _databaseService;
+        private readonly IInstanceService _instanceService;
 
         public Report(IDatabaseService databaseService, IInstanceService instanceService)
         {
@@ -47,7 +43,7 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
             var instance = _instanceService.GetInstance(InstanceGuid);
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
             _databaseService.ConfigureForInstance(instance);
-            
+
             var top25LargestTables = _databaseService.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetTop25LargestTables);
 
             return new ReportResults
@@ -55,7 +51,8 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
                 Type = ReportResultsType.Table,
                 Status = ReportResultsStatus.Information,
                 Summary = "Check results table for any issues",
-                Data = new TableResult<DatabaseTableSizeResult>() {
+                Data = new TableResult<DatabaseTableSizeResult>()
+                {
                     Name = "Top 25 Results",
                     Rows = top25LargestTables
                 }

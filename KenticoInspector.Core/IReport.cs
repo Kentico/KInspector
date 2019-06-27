@@ -1,7 +1,6 @@
 ﻿using KenticoInspector.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace KenticoInspector.Core
 {
@@ -14,6 +13,7 @@ namespace KenticoInspector.Core
         string Name { get; }
         string ShortDescription { get; }
         IList<string> Tags { get; }
+
         ReportResults GetResults(Guid InstanceGuid);
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
+﻿namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
 {
     public static class Scripts
     {

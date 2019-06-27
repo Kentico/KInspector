@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
-namespace KenticoInspector.Infrastructure.Helpers
+namespace KenticoInspector.Core.Helpers
 {
-    static class FileHelper
+    public static class FileHelper
     {
-        public static string GetSqlQueryText(string relativeFilePath, IDictionary<string,string> literalReplacements = null)
+        public static string GetSqlQueryText(string relativeFilePath, IDictionary<string, string> literalReplacements = null)
         {
             var executingDirectory = DirectoryHelper.GetExecutingDirectory();
             var fullPathToScript = $"{executingDirectory}/{relativeFilePath}";
             var query = File.ReadAllText(fullPathToScript);
 
-            if(literalReplacements != null)
+            if (literalReplacements != null)
             {
                 foreach (var replacement in literalReplacements)
                 {

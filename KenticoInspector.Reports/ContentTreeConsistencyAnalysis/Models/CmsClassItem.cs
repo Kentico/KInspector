@@ -14,6 +14,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
         public int ClassID { get; set; }
         public string ClassName { get; set; }
         public string ClassTableName { get; set; }
+
         public List<CmsClassField> ClassFields
         {
             get

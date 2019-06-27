@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Reports.DatabaseConsistencyCheck
+﻿namespace KenticoInspector.Reports.DatabaseConsistencyCheck
 {
     public static class Scripts
     {

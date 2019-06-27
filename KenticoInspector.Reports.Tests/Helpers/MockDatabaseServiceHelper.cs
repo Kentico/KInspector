@@ -1,9 +1,7 @@
 ﻿using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace KenticoInspector.Reports.Tests.Helpers
 {
@@ -31,10 +29,10 @@ namespace KenticoInspector.Reports.Tests.Helpers
         public static void SetupExecuteSqlFromFileGenericWithListParameter<T>(
             this Mock<IDatabaseService> mockDatabaseService,
             string script,
-            IDictionary<string,string> literalReplacements,
+            IDictionary<string, string> literalReplacements,
             string parameterPropertyName,
             IEnumerable<T> parameterPropertyValue,
-            IEnumerable<IDictionary<string,object>> returnValue)
+            IEnumerable<IDictionary<string, object>> returnValue)
         {
             mockDatabaseService
                 .Setup(

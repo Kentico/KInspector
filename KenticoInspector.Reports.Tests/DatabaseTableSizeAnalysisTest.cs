@@ -6,7 +6,6 @@ using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Data;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -47,9 +46,9 @@ namespace KenticoInspector.Reports.Tests
         private List<DatabaseTableSizeResult> GetCleanResults()
         {
             var results = new List<DatabaseTableSizeResult>();
-            for(var i = 0; i < 25; i++)
+            for (var i = 0; i < 25; i++)
             {
-                results.Add(new DatabaseTableSizeResult() { TableName = $"table {i}", Rows =  i, BytesPerRow = i, SizeInMB = i });
+                results.Add(new DatabaseTableSizeResult() { TableName = $"table {i}", Rows = i, BytesPerRow = i, SizeInMB = i });
             }
 
             return results;

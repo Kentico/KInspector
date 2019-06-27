@@ -41,15 +41,19 @@ namespace KenticoInspector.Reports.Tests.Helpers
             DatabaseSettings = null
         };
 
-        public static Instance Get(int majorVersion) {
+        public static Instance Get(int majorVersion)
+        {
             switch (majorVersion)
             {
                 case 9:
                     return Kentico9;
+
                 case 10:
                     return Kentico10;
+
                 case 11:
                     return Kentico11;
+
                 case 12:
                     return Kentico12;
             }

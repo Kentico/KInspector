@@ -1,6 +1,5 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using System;
@@ -56,7 +55,7 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
 
             var instanceUri = new Uri(instance.Url);
-            var testUri = new Uri(instanceUri,Constants.RobotsTxtRelativePath);
+            var testUri = new Uri(instanceUri, Constants.RobotsTxtRelativePath);
 
             var found = ConfirmUriStatusCode(testUri, HttpStatusCode.OK).Result;
 

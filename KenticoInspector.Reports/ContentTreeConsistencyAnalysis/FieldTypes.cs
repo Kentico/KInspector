@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
+﻿namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
     public class FieldTypes
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
+﻿namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
 {
     public class CmsClassField
     {

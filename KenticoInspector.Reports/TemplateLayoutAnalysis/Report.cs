@@ -1,19 +1,17 @@
 ﻿using KenticoInspector.Core;
-using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
 
 namespace KenticoInspector.Reports.TemplateLayoutAnalysis
 {
     public class Report : IReport
     {
-        readonly IDatabaseService _databaseService;
-        readonly IInstanceService _instanceService;
+        private readonly IDatabaseService _databaseService;
+        private readonly IInstanceService _instanceService;
 
         public Report(IDatabaseService databaseService, IInstanceService instanceService)
         {
@@ -67,7 +65,6 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
             {
                 Status = ReportResultsStatus.Information
             };
-            
 
             if (layoutResults.Rows.Count() == 0)
             {

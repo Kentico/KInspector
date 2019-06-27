@@ -1,12 +1,11 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.Tests.Helpers;
 using KenticoInspector.Reports.UnusedPageTypeSummary;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using KenticoInspector.Reports.Tests.Helpers;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -64,6 +63,5 @@ namespace KenticoInspector.Reports.Tests
             _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
             _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
         }
-
     }
 }

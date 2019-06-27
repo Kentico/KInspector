@@ -5,7 +5,6 @@ using KenticoInspector.Reports.TemplateLayoutAnalysis;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.Tests
@@ -41,6 +40,7 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Data.Rows.Count == 5);
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
+
         [Test]
         public void Should_ReturnEmptyListOfIdenticalLayouts_WhenNoneFound()
         {

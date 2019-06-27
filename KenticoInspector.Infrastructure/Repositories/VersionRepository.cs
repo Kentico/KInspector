@@ -1,7 +1,7 @@
 ﻿using Dapper;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
-using KenticoInspector.Infrastructure.Helpers;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -10,10 +10,10 @@ namespace KenticoInspector.Infrastructure.Services
 {
     public class VersionRepository : IVersionRepository
     {
-        const string _administrationDllToCheck = "CMS.DataEngine.dll";
-        const string _relativeAdministrationDllPath = "bin";
-        const string _relativeHotfixFileFolderPath = "App_Data\\Install";
-        const string _hotfixFile = "Hotfix.txt";
+        private const string _administrationDllToCheck = "CMS.DataEngine.dll";
+        private const string _relativeAdministrationDllPath = "bin";
+        private const string _relativeHotfixFileFolderPath = "App_Data\\Install";
+        private const string _hotfixFile = "Hotfix.txt";
 
         public Version GetKenticoAdministrationVersion(Instance instance)
         {
@@ -76,5 +76,4 @@ namespace KenticoInspector.Infrastructure.Services
             }
         }
     }
-
 }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KenticoInspector.Core;
+﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.WebApplication.Controllers
 {
@@ -18,7 +16,7 @@ namespace KenticoInspector.WebApplication.Controllers
 
         public ReportsController(IReportService reportService)
         {
-            _reportService= reportService;
+            _reportService = reportService;
         }
 
         [HttpGet]

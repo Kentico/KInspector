@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Reports.TaskProcessingAnalysis
+﻿namespace KenticoInspector.Reports.TaskProcessingAnalysis
 {
     public static class Scripts
     {

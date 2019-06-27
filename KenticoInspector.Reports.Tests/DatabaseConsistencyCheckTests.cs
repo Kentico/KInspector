@@ -55,7 +55,7 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFileAsDataTable(Scripts.GetCheckDbResults))
                 .Returns(result);
-# pragma warning restore 0618 
+# pragma warning restore 0618
 
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);

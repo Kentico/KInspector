@@ -10,8 +10,8 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
 {
     public class Report : IReport
     {
-        readonly IDatabaseService _databaseService;
-        readonly IInstanceService _instanceService;
+        private readonly IDatabaseService _databaseService;
+        private readonly IInstanceService _instanceService;
 
         public Report(IDatabaseService databaseService, IInstanceService instanceService)
         {
