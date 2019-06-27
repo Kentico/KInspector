@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Reports.Tests.Helpers
+﻿namespace KenticoInspector.Reports.Tests.Helpers
 {
-    static class ReflectionExtensions
+    public static class ReflectionExtensions
     {
         public static T GetPropertyValue<T>(this object obj, string propertyName)
         {

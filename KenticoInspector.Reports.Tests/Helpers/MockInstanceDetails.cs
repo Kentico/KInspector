@@ -3,7 +3,7 @@ using System;
 
 namespace KenticoInspector.Reports.Tests.Helpers
 {
-    static class MockInstanceDetails
+    public static class MockInstanceDetails
     {
         public static InstanceDetails Kentico9 = new InstanceDetails
         {
@@ -38,12 +38,15 @@ namespace KenticoInspector.Reports.Tests.Helpers
                 case 9:
                     instanceDetails = Kentico9;
                     break;
+
                 case 10:
                     instanceDetails = Kentico10;
                     break;
+
                 case 11:
                     instanceDetails = Kentico11;
                     break;
+
                 case 12:
                     instanceDetails = Kentico12;
                     break;

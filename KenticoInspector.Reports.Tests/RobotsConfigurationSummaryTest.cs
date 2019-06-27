@@ -1,7 +1,6 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
-using KenticoInspector.Core.Helpers;
 using KenticoInspector.Reports.RobotsConfigurationSummary;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;

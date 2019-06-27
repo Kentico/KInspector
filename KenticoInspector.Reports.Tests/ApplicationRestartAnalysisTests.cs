@@ -35,7 +35,7 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents))
                 .Returns(applicationRestartEvents);
-            
+
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
 
@@ -84,13 +84,14 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents))
                 .Returns(applicationRestartEvents);
-            
+
             // Act
             var results = _mockReport.GetResults(_mockInstance.Guid);
 
             // Assert
             Assert.That(results.Type == ReportResultsType.Table);
         }
+
         private void InitializeCommonMocks(int majorVersion)
         {
             _mockInstance = MockInstances.Get(majorVersion);

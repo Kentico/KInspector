@@ -1,25 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using KenticoInspector.Core;
-using KenticoInspector.Core.Repositories.Interfaces;
-using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Infrastructure;
 using KenticoInspector.Reports;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using VueCliMiddleware;
+using System;
+using System.Linq;
+using System.Reflection;
 
 namespace KenticoInspector.WebApplication
 {
@@ -37,7 +28,8 @@ namespace KenticoInspector.WebApplication
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSpaStaticFiles(configuration => {
+            services.AddSpaStaticFiles(configuration =>
+            {
                 configuration.RootPath = "ClientApp/dist";
             });
 
@@ -49,7 +41,7 @@ namespace KenticoInspector.WebApplication
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.Populate(services);
-            
+
             containerBuilder.RegisterModule(new CoreModule());
             containerBuilder.RegisterModule(new InfrastructureModule());
             containerBuilder.RegisterModule(new ReportsModule());
@@ -84,7 +76,8 @@ namespace KenticoInspector.WebApplication
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseMvc();
-            app.UseSpa(spa => {
+            app.UseSpa(spa =>
+            {
                 spa.Options.SourcePath = "ClientApp/dist";
 
                 if (env.IsDevelopment())

@@ -4,9 +4,8 @@ using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace KenticoInspector.Core.Services
+namespace KenticoInspector.Infrastructure.Services
 {
     public class InstanceService : IInstanceService
     {

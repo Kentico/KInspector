@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
     public class CoupledDataScriptReplacements
     {
-        public Dictionary<string,string> Dictionary { get; set; }
+        public Dictionary<string, string> Dictionary { get; set; }
 
         public CoupledDataScriptReplacements(string tableName, string idColumnName)
         {

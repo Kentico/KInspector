@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Reports.UnusedPageTypeSummary
+﻿namespace KenticoInspector.Reports.UnusedPageTypeSummary
 {
     public class PageType
     {

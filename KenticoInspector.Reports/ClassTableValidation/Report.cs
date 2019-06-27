@@ -10,8 +10,8 @@ namespace KenticoInspector.Reports.ClassTableValidation
 {
     public class Report : IReport
     {
-        readonly IDatabaseService _databaseService;
-        readonly IInstanceService _instanceService;
+        private readonly IDatabaseService _databaseService;
+        private readonly IInstanceService _instanceService;
 
         public Report(IDatabaseService databaseService, IInstanceService instanceService)
         {
@@ -82,10 +82,12 @@ namespace KenticoInspector.Reports.ClassTableValidation
                     results.Status = ReportResultsStatus.Good;
                     results.Summary = "No issues found.";
                     break;
+
                 case 1:
                     results.Status = ReportResultsStatus.Error;
                     results.Summary = "1 issue found.";
                     break;
+
                 default:
                     results.Status = ReportResultsStatus.Error;
                     results.Summary = $"{totalErrors} issues found.";

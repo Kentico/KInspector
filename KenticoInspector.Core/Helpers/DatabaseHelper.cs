@@ -1,16 +1,13 @@
-﻿using Dapper;
-using KenticoInspector.Core.Models;
-using System;
-using System.Collections.Generic;
+﻿using KenticoInspector.Core.Models;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 
-namespace KenticoInspector.Infrastructure.Helpers
+namespace KenticoInspector.Core.Helpers
 {
     public class DatabaseHelper
     {
-        public static string GetConnectionString(Instance instance) {
+        public static string GetConnectionString(Instance instance)
+        {
             return GetConnectionString(instance.DatabaseSettings);
         }
 
@@ -46,7 +43,8 @@ namespace KenticoInspector.Infrastructure.Helpers
             return GetSqlConnection(connectionString);
         }
 
-        public static IDbConnection GetSqlConnection(string connectionString) {
+        public static IDbConnection GetSqlConnection(string connectionString)
+        {
             return new SqlConnection(connectionString);
         }
     }
