@@ -1,5 +1,5 @@
 ﻿SELECT 
-	KeyName, KeyDisplayName, KeyValue
+	KeyName, KeyDisplayName, KeyValue, KeyDefaultValue
 FROM
 	CMS_SettingsKey 
 WHERE

@@ -12,11 +12,13 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
     {
         readonly IDatabaseService _databaseService;
         readonly IInstanceService _instanceService;
+        readonly ICmsFileService _cmsFileService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        public Report(IDatabaseService databaseService, IInstanceService instanceService, ICmsFileService cmsFileService)
         {
             _databaseService = databaseService;
             _instanceService = instanceService;
+            _cmsFileService = cmsFileService;
         }
 
         public string Codename => "debug-configuration-analysis";
@@ -45,13 +47,33 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             var instanceDetails = _instanceService.GetInstanceDetails(instance);
             _databaseService.ConfigureForInstance(instance);
 
-            var databaseSettingsKeys = _databaseService.ExecuteSqlFromFile<SettingsKey>(Scripts.GetDebugSettingsValues);
-            var compilationDebugSetting = false;
+            var databaseSettingsValues = _databaseService.ExecuteSqlFromFile<SettingsKey>(Scripts.GetDebugSettingsValues);
+            ResolveSettingsDisplayNames(instance, databaseSettingsValues);
 
-            return CompileResults(databaseSettingsKeys, compilationDebugSetting);
+            // TODO: Check web.config values (compilation debug & trace)
+
+            return CompileResults(databaseSettingsValues);
         }
 
-        private ReportResults CompileResults(IEnumerable<SettingsKey> databaseSettingsKeys, bool compilationDebugSetting)
+        private void ResolveSettingsDisplayNames(Instance instance, IEnumerable<SettingsKey> databaseSettingsValues)
+        {
+            var resxValues = _cmsFileService.GetResourceStringsFromResx(instance.Path);
+
+            foreach (var databaseSettingsValue in databaseSettingsValues)
+            {
+                var key = databaseSettingsValue.KeyDisplayName
+                    .Replace("{$", string.Empty)
+                    .Replace("$}", string.Empty)
+                    .ToLowerInvariant();
+
+                if (resxValues.ContainsKey(key))
+                {
+                    databaseSettingsValue.KeyDisplayName = resxValues[key];
+                }
+            }
+        }
+
+        private ReportResults CompileResults(IEnumerable<SettingsKey> databaseSettingsKeys)
         {
 
             return new ReportResults()
