@@ -9,13 +9,10 @@ namespace KenticoInspector.Core.Helpers
     {
         public Dictionary<string, string> GetResourceStringsFromResx(string instanceRoot, string relativeResxFilePath = DefaultKenticoPaths.PrimaryResxFile)
         {
-            var results = new Dictionary<string, string>();
-
-            var resourceXml = new XmlDocument();
-            resourceXml.Load(instanceRoot + relativeResxFilePath);
-
+            var resourceXml = GetXmlDocument(instanceRoot, relativeResxFilePath);
             var resourceStringNodes = resourceXml?.SelectNodes("/root/data");
 
+            var results = new Dictionary<string, string>();
             foreach (XmlNode resourceStringNode in resourceStringNodes)
             {
                 var key = resourceStringNode.Attributes["name"].InnerText.ToLowerInvariant();
@@ -24,6 +21,13 @@ namespace KenticoInspector.Core.Helpers
             }
 
             return results;
+        }
+
+        public XmlDocument GetXmlDocument(string instanceRoot, string relativeFilePath)
+        {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(instanceRoot + relativeFilePath);
+            return xmlDocument;
         }
     }
 }

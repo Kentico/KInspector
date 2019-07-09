@@ -50,9 +50,22 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             var databaseSettingsValues = _databaseService.ExecuteSqlFromFile<SettingsKey>(Scripts.GetDebugSettingsValues);
             ResolveSettingsDisplayNames(instance, databaseSettingsValues);
 
-            // TODO: Check web.config values (compilation debug & trace)
+            var webConfig = _cmsFileService.GetXmlDocument(instance.Path, DefaultKenticoPaths.WebConfigFile);
+            var isCompilationDebugEnabled = GetBooleanValueofSectionAttribute(webConfig, "/configuration/system.web/compilation", "debug");
+            var isTraceEnabled = GetBooleanValueofSectionAttribute(webConfig, "/configuration/system.web/trace", "enabled");
 
-            return CompileResults(databaseSettingsValues);
+            return CompileResults(databaseSettingsValues, isCompilationDebugEnabled, isTraceEnabled);
+        }
+
+        private static bool GetBooleanValueofSectionAttribute(System.Xml.XmlDocument webConfig, string xpath, string attributeName)
+        {
+            var valueRaw = webConfig
+                .SelectSingleNode(xpath)?
+                .Attributes[attributeName]?
+                .InnerText;
+            var value = false;
+            bool.TryParse(valueRaw, out value);
+            return value;
         }
 
         private void ResolveSettingsDisplayNames(Instance instance, IEnumerable<SettingsKey> databaseSettingsValues)
@@ -73,20 +86,48 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             }
         }
 
-        private ReportResults CompileResults(IEnumerable<SettingsKey> databaseSettingsKeys)
+        private ReportResults CompileResults(IEnumerable<SettingsKey> databaseSettingsKeys, bool isCompilationDebugEnabled, bool isTraceEnabled)
         {
-
-            return new ReportResults()
+            var results = new ReportResults()
             {
-                Data = new TableResult<SettingsKey>()
-                {
-                    Name = "Settings Key Values",
-                    Rows = databaseSettingsKeys
-                },
                 Status = ReportResultsStatus.Information,
                 Summary = String.Empty,
-                Type = ReportResultsType.Table
+                Type = ReportResultsType.TableList
             };
+
+            var databaseSettingsResults = new TableResult<SettingsKey>()
+            {
+                Name = "Database Settings",
+                Rows = databaseSettingsKeys
+            };
+            results.Data.DatabaseSettingsResults = databaseSettingsResults;
+
+            var webconfigSettingsValues = new List<SettingsKey>();
+            webconfigSettingsValues.Add(new SettingsKey()
+            {
+                KeyName = "Debug",
+                KeyDisplayName = "Compilation Debug",
+                KeyDefaultValue = false,
+                KeyValue = isCompilationDebugEnabled
+            });
+
+            webconfigSettingsValues.Add(new SettingsKey()
+            {
+                KeyName = "Trace",
+                KeyDisplayName = "Trace Enabled",
+                KeyDefaultValue = false,
+                KeyValue = isTraceEnabled
+            });
+
+            var webConfigSettingsResults = new TableResult<SettingsKey>()
+            {
+                Name = "Web.Config Settings",
+                Rows = webconfigSettingsValues
+            };
+
+            results.Data.WebConfigSettingsResults = webConfigSettingsResults;
+
+            return results;
         }
     }
 }
