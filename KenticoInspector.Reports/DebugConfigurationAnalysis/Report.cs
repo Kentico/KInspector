@@ -5,6 +5,7 @@ using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DebugConfigurationAnalysis.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.DebugConfigurationAnalysis
 {
@@ -91,43 +92,65 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             var results = new ReportResults()
             {
                 Status = ReportResultsStatus.Information,
-                Summary = String.Empty,
+                Summary = string.Empty,
                 Type = ReportResultsType.TableList
             };
 
-            var databaseSettingsResults = new TableResult<SettingsKey>()
-            {
-                Name = "Database Settings",
-                Rows = databaseSettingsKeys
-            };
-            results.Data.DatabaseSettingsResults = databaseSettingsResults;
-
-            var webconfigSettingsValues = new List<SettingsKey>();
-            webconfigSettingsValues.Add(new SettingsKey()
-            {
-                KeyName = "Debug",
-                KeyDisplayName = "Compilation Debug",
-                KeyDefaultValue = false,
-                KeyValue = isCompilationDebugEnabled
-            });
-
-            webconfigSettingsValues.Add(new SettingsKey()
-            {
-                KeyName = "Trace",
-                KeyDisplayName = "Trace Enabled",
-                KeyDefaultValue = false,
-                KeyValue = isTraceEnabled
-            });
-
-            var webConfigSettingsResults = new TableResult<SettingsKey>()
-            {
-                Name = "Web.Config Settings",
-                Rows = webconfigSettingsValues
-            };
-
-            results.Data.WebConfigSettingsResults = webConfigSettingsResults;
+            AnalyzeDatabaseSettingsResults(results, databaseSettingsKeys);
+            AnalyzeWebConfigSettings(results, isCompilationDebugEnabled, isTraceEnabled);
 
             return results;
+        }
+
+        private static void AnalyzeWebConfigSettings(ReportResults results, bool isCompilationDebugEnabled, bool isTraceEnabled)
+        {
+            var isDebugOrTraceEnabledInWebConfig = isCompilationDebugEnabled || isTraceEnabled;
+            if (isDebugOrTraceEnabledInWebConfig)
+            {
+                results.Status = ReportResultsStatus.Error;
+
+                var enabledSettingsText = isCompilationDebugEnabled ? "'Debug'" : string.Empty;
+                enabledSettingsText += isCompilationDebugEnabled && isTraceEnabled ? " &amp; " : string.Empty;
+                enabledSettingsText += isTraceEnabled ? "'Trace'" : string.Empty;
+                results.Summary += $"{enabledSettingsText} enabled in web.config. ";
+            }
+
+            var webconfigSettingsValues = new List<SettingsKey>();
+            webconfigSettingsValues.Add(new SettingsKey("Debug", "Compilation Debug", false, isCompilationDebugEnabled));
+            webconfigSettingsValues.Add(new SettingsKey("Trace", "Trace Enabled", false, isTraceEnabled));
+
+            results.Data.WebConfigSettingsResults = new TableResult<SettingsKey>()
+            {
+                Name = "All Web.Config Settings",
+                Rows = webconfigSettingsValues
+            };
+        }
+
+        private static void AnalyzeDatabaseSettingsResults(ReportResults results, IEnumerable<SettingsKey> databaseSettingsKeys)
+        {
+            var databaseSettingsEnabledNotByDefault = databaseSettingsKeys.Where(x => x.KeyValue == true && x.KeyDefaultValue == false);
+            var totalDatabaseSettingsEnabledNotByDefault = databaseSettingsEnabledNotByDefault.Count();
+            if (totalDatabaseSettingsEnabledNotByDefault > 0)
+            {
+                if (results.Status != ReportResultsStatus.Error)
+                {
+                    results.Status = ReportResultsStatus.Warning;
+                }
+
+                results.Summary += $"{totalDatabaseSettingsEnabledNotByDefault} database setting{(totalDatabaseSettingsEnabledNotByDefault > 1 ? "s" : string.Empty)} enabled (not by default). ";
+
+                results.Data.DatabaseSettingsEnabledNotByDefaultResults = new TableResult<SettingsKey>()
+                {
+                    Name = "Database settings enabled (not by default)",
+                    Rows = databaseSettingsEnabledNotByDefault
+                };
+            }
+
+            results.Data.AllDatabaseSettings = new TableResult<SettingsKey>()
+            {
+                Name = "All Database Settings",
+                Rows = databaseSettingsKeys
+            };
         }
     }
 }
