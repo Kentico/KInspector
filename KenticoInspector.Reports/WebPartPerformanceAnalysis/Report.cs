@@ -1,13 +1,23 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
 {
-    class Report : IReport
+    public class Report : IReport
     {
+        private readonly IDatabaseService _databaseService;
+        private readonly IInstanceService _instanceService;
+
+        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        {
+            _databaseService = databaseService;
+            _instanceService = instanceService;
+        }
+
         public string Codename => nameof(WebPartPerformanceAnalysis);
 
         public IList<Version> CompatibleVersions => new List<Version>
@@ -35,7 +45,11 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
 
         public ReportResults GetResults(Guid InstanceGuid)
         {
-            throw new NotImplementedException();
+
+
+            return new ReportResults {
+                Status = ReportResultsStatus.Good
+            };
         }
     }
 }
