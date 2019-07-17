@@ -1,68 +1,53 @@
-﻿using KenticoInspector.Core;
-using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 
+using KenticoInspector.Core;
+using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.DatabaseConsistencyCheck.Models;
+
 namespace KenticoInspector.Reports.DatabaseConsistencyCheck
 {
-    public class Report : IReport
+    public class Report : IReport, IWithMetadata<Labels>
     {
-        private readonly IDatabaseService _databaseService;
-        private readonly IInstanceService _instanceService;
+        private readonly IDatabaseService databaseService;
+        private readonly ILabelService labelService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        public Report(IDatabaseService databaseService, ILabelService labelService)
         {
-            _databaseService = databaseService;
-            _instanceService = instanceService;
+            this.databaseService = databaseService;
+            this.labelService = labelService;
         }
 
-        public string Codename => "database-consistency-check";
+        public string Codename => nameof(DatabaseConsistencyCheck);
 
-        public IList<Version> CompatibleVersions => new List<Version> {
-            new Version("10.0"),
-            new Version("11.0"),
-            new Version("12.0")
+        public IList<Version> CompatibleVersions => new List<Version>
+        {
+            new Version(10, 0),
+            new Version(11, 0),
+            new Version(12, 0)
         };
 
         public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public string LongDescription => @"
-            <p>As noted on <a href=""https://msdn.microsoft.com/en-us/library/ms176064.aspx"" target=""_blank"">MSDN</a>:</p>
-            <p>Checks the logical and physical integrity of all the objects in the specified database by performing the following operations:</p>
-            <ul>
-                <li>Runs DBCC CHECKALLOC on the database.</li>
-                <li>Runs DBCC CHECKTABLE on every table and view in the database.</li>
-                <li>Runs DBCC CHECKCATALOG</a> on the database.</li>
-                <li>Validates the contents of every indexed view in the database.</li>
-                <li>Validates link-level consistency between table metadata and file system directories and files when storing<strong> varbinary(max)</strong> data in the file system using FILESTREAM.</li>
-                <li class="">Validates the Service Broker data in the database.</li>
-            </ul>";
-
-        public string Name => "Database consistency check";
-
-        public string ShortDescription => "Runs `DBCC CHECKDB` against the database to identify consistency issues.";
 
         public IList<string> Tags => new List<string> {
             ReportTags.Health
         };
 
-        public ReportResults GetResults(Guid InstanceGuid)
-        {
-            var instance = _instanceService.GetInstance(InstanceGuid);
-            var instanceDetails = _instanceService.GetInstanceDetails(instance);
-            _databaseService.ConfigureForInstance(instance);
+        public Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
 
+        public ReportResults GetResults()
+        {
 #pragma warning disable 0618 // This is a special exemption as the results of CheckDB are unknown
-            var checkDbResults = _databaseService.ExecuteSqlFromFileAsDataTable(Scripts.GetCheckDbResults);
+            var checkDbResults = databaseService.ExecuteSqlFromFileAsDataTable(Scripts.GetCheckDbResults);
 #pragma warning restore 0618
 
             return CompileResults(checkDbResults);
         }
 
-        private static ReportResults CompileResults(DataTable checkDbResults)
+        private ReportResults CompileResults(DataTable checkDbResults)
         {
             var hasIssues = checkDbResults.Rows.Count > 0;
 
@@ -72,7 +57,7 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
                 {
                     Type = ReportResultsType.Table,
                     Status = ReportResultsStatus.Error,
-                    Summary = "Check results table for any issues",
+                    Summary = Metadata.Labels.CheckResultsTableForAnyIssues,
                     Data = checkDbResults
                 };
             }
@@ -82,7 +67,7 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
                 {
                     Type = ReportResultsType.String,
                     Status = ReportResultsStatus.Good,
-                    Summary = "No issues found",
+                    Summary = Metadata.Labels.NoIssuesFound,
                     Data = string.Empty
                 };
             }

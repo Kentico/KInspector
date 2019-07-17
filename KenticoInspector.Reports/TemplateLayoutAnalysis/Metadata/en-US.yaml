@@ -1,0 +1,10 @@
+﻿names:
+  short: Templates with identical layouts
+descriptions:
+  short: Returns a list of identical page layouts.
+  long: |
+    Returns the list of templates with identical custom layouts (whitespace sensitive).
+labels:
+  identicalPageLayouts: Identical page layouts
+  countIdenticalPageLayoutFound: <count> identical page <count:layout|layouts> found.
+  noIdenticalPageLayoutsFound: No identical page layouts found.

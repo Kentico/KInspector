@@ -19,15 +19,18 @@ namespace KenticoInspector.Reports.Tests
     public class ContentTreeConsistencyAnalysisTests
     {
         private Mock<IDatabaseService> _mockDatabaseService;
-        private Instance _mockInstance;
-        private InstanceDetails _mockInstanceDetails;
-        private Mock<IInstanceService> _mockInstanceService;
+        private Mock<ILabelService> _mockLabelService;
         private Report _mockReport;
 
         public ContentTreeConsistencyAnalysisTests(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object);
+
+            _mockLabelService = MockLabelServiceHelper.GetlabelService();
+
+            _mockReport = new Report(_mockDatabaseService.Object, _mockLabelService.Object);
+
+            MockLabelServiceHelper.SetuplabelService<Labels>(_mockLabelService, _mockReport);
         }
 
         [Test]
@@ -37,7 +40,7 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(documentsWithMissingTreeNode: GetBadDocumentNodes());
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error);
@@ -50,7 +53,7 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(treeNodesWithBadParentNodeId: GetBadTreeNodes());
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error);
@@ -63,7 +66,7 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(treeNodesWithBadParentSiteId: GetBadTreeNodes());
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error);
@@ -76,7 +79,7 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(treeNodesWithDuplicatedAliasPath: GetBadTreeNodes());
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error);
@@ -89,7 +92,7 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(treeNodesWithLevelMismatchByAliasPathTest: GetBadTreeNodes());
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error);
@@ -102,7 +105,7 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(treeNodesWithLevelMismatchByNodeLevelTest: GetBadTreeNodes());
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error);
@@ -115,7 +118,7 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(treeNodesWithMissingDocument: GetBadTreeNodes());
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error);
@@ -128,7 +131,7 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(treeNodesWithPageTypeNotAssignedToSite: GetBadTreeNodes());
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error);
@@ -141,12 +144,13 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(isVersionHistoryDataSetClean: false);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error, $"Status was '{results.Status}' instead of 'Error'");
+
             var resultsData = (IDictionary<string, object>)results.Data;
-            var workflowData = (TableResult<VersionHistoryMismatchResult>)resultsData["Workflow Inconsistencies"];
+            var workflowData = resultsData.First(t => t.Value.GetType() == typeof(TableResult<VersionHistoryMismatchResult>)).Value as TableResult<VersionHistoryMismatchResult>;
 
             var rowCount = workflowData.Rows.Count();
             Assert.That(rowCount == 4, $"There were {rowCount} rows instead 4 as expected");
@@ -159,7 +163,7 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries();
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Good);
@@ -183,10 +187,8 @@ namespace KenticoInspector.Reports.Tests
 
         private void InitializeCommonMocks(int majorVersion)
         {
-            _mockInstance = MockInstances.Get(majorVersion);
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
-            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
+            var mockInstance = MockInstances.Get(majorVersion);
+            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
 
         private void SetupAllDatabaseQueries(
@@ -299,7 +301,9 @@ namespace KenticoInspector.Reports.Tests
         private class VersionHistoryDataSet
         {
             public List<CmsVersionHistoryItem> CmsVersionHistoryItems { get; set; }
+
             public List<CmsClassItem> CmsClassItems { get; set; }
+
             public List<IDictionary<string, object>> VersionHistoryCoupledData { get; set; }
 
             public VersionHistoryDataSet(bool clean = true)

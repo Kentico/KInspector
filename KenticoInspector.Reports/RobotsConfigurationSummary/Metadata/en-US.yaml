@@ -1,0 +1,9 @@
+﻿names:
+  short: Robots.txt configuration summary
+descriptions:
+  short: Checks that the *~/robots.txt* file is present and accessible.
+  long: |
+    See [robotstxt.org](http://www.robotstxt.org/robotstxt.html) for more details.
+labels:
+  robotsTxtFound: robots.txt found.
+  robotsTxtNotFound: robots.txt not found.

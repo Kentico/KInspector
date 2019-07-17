@@ -1,48 +1,49 @@
-﻿using KenticoInspector.Core;
-using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using KenticoInspector.Core;
+using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.ClassTableValidation.Models;
+
 namespace KenticoInspector.Reports.ClassTableValidation
 {
-    public class Report : IReport
+    public class Report : IReport, IWithMetadata<Labels>
     {
-        private readonly IDatabaseService _databaseService;
-        private readonly IInstanceService _instanceService;
+        private readonly IDatabaseService databaseService;
+        private readonly IInstanceService instanceService;
+        private readonly ILabelService labelService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        public Report(IDatabaseService databaseService, IInstanceService instanceService, ILabelService labelService)
         {
-            _databaseService = databaseService;
-            _instanceService = instanceService;
+            this.databaseService = databaseService;
+            this.instanceService = instanceService;
+            this.labelService = labelService;
         }
 
-        public string Codename => "class-table-validation";
+        public string Codename => nameof(ClassTableValidation);
 
-        public IList<Version> CompatibleVersions => new List<Version> {
-            new Version("10.0"),
-            new Version("11.0")
+        public IList<Version> CompatibleVersions => new List<Version>
+        {
+            new Version(10, 0),
+            new Version(11, 0)
         };
 
         public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public string LongDescription => "Compares Kentico Classes against tables in database, and displays non-matching entries. Lists tables without Class, Classes without specified table, and missing Class tables. Excludes those classes, which are not meant to have a table.";
-
-        public string Name => "Class/Table Validation";
-
-        public string ShortDescription => "Validates that Kentico classes and Database tables are properly connected.";
 
         public IList<string> Tags => new List<string> {
             ReportTags.Health,
         };
 
-        public ReportResults GetResults(Guid InstanceGuid)
+        public Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
+
+        public ReportResults GetResults()
         {
-            var instance = _instanceService.GetInstance(InstanceGuid);
-            var instanceDetails = _instanceService.GetInstanceDetails(instance);
-            _databaseService.ConfigureForInstance(instance);
+            var instance = instanceService.Instance;
+
+            var instanceDetails = instanceService.GetInstanceDetails(instance);
 
             var tablesWithMissingClass = GetResultsForTables(instanceDetails);
             var classesWithMissingTable = GetResultsForClasses();
@@ -50,19 +51,19 @@ namespace KenticoInspector.Reports.ClassTableValidation
             return CompileResults(tablesWithMissingClass, classesWithMissingTable);
         }
 
-        private static ReportResults CompileResults(IEnumerable<TableWithNoClass> tablesWithMissingClass, IEnumerable<ClassWithNoTable> classesWithMissingTable)
+        private ReportResults CompileResults(IEnumerable<TableWithNoClass> tablesWithMissingClass, IEnumerable<ClassWithNoTable> classesWithMissingTable)
         {
             var tableErrors = tablesWithMissingClass.Count();
             var tableResults = new TableResult<dynamic>()
             {
-                Name = "Database tables with missing Kentico classes",
+                Name = Metadata.Labels.DatabaseTablesWithMissingKenticoClasses,
                 Rows = tablesWithMissingClass
             };
 
             var classErrors = classesWithMissingTable.Count();
             var classResults = new TableResult<dynamic>()
             {
-                Name = "Kentico classes with missing database tables",
+                Name = Metadata.Labels.KenticoClassesWithMissingDatabaseTables,
                 Rows = classesWithMissingTable
             };
 
@@ -80,17 +81,12 @@ namespace KenticoInspector.Reports.ClassTableValidation
             {
                 case 0:
                     results.Status = ReportResultsStatus.Good;
-                    results.Summary = "No issues found.";
-                    break;
-
-                case 1:
-                    results.Status = ReportResultsStatus.Error;
-                    results.Summary = "1 issue found.";
+                    results.Summary = Metadata.Labels.NoIssuesFound;
                     break;
 
                 default:
                     results.Status = ReportResultsStatus.Error;
-                    results.Summary = $"{totalErrors} issues found.";
+                    results.Summary = Metadata.Labels.CountIssueFound.With(new { count = totalErrors });
                     break;
             }
 
@@ -99,13 +95,13 @@ namespace KenticoInspector.Reports.ClassTableValidation
 
         private IEnumerable<ClassWithNoTable> GetResultsForClasses()
         {
-            var classesWithMissingTable = _databaseService.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable);
+            var classesWithMissingTable = databaseService.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable);
             return classesWithMissingTable;
         }
 
         private IEnumerable<TableWithNoClass> GetResultsForTables(InstanceDetails instanceDetails)
         {
-            var tablesWithMissingClass = _databaseService.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass);
+            var tablesWithMissingClass = databaseService.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass);
 
             var tableWhitelist = GetTableWhitelist(instanceDetails.DatabaseVersion);
             if (tableWhitelist.Count > 0)

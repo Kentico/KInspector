@@ -1,0 +1,12 @@
+﻿names:
+  short: Application restart event analysis
+descriptions:
+  short: Shows application restart events from event log.
+  long: |
+    Frequent restarts may mean that there are issues to resolve.
+labels:
+  applicationRestartEvents: Application restart events
+  countTotalEvent: <count> total <count:event|events>
+  countStartEvent: <count> <count:start|starts>
+  countEndEvent: <count> <count:end|ends>
+  spanningEarliestLatest: spanning <earliestTime> - <latestTime>.

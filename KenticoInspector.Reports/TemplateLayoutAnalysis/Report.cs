@@ -1,40 +1,36 @@
-﻿using KenticoInspector.Core;
-using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using KenticoInspector.Core;
+using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.TemplateLayoutAnalysis.Models;
+
 namespace KenticoInspector.Reports.TemplateLayoutAnalysis
 {
-    public class Report : IReport
+    public class TemplateLayoutAnalysisReport : IReport, IWithMetadata<Labels>
     {
-        private readonly IDatabaseService _databaseService;
-        private readonly IInstanceService _instanceService;
+        private readonly IDatabaseService databaseService;
+        private readonly ILabelService labelService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        public TemplateLayoutAnalysisReport(IDatabaseService databaseService, ILabelService labelService)
         {
-            _databaseService = databaseService;
-            _instanceService = instanceService;
+            this.databaseService = databaseService;
+            this.labelService = labelService;
         }
 
-        public string Codename => "TemplateLayoutAnalysis";
+        public string Codename => nameof(TemplateLayoutAnalysis);
 
         public IList<Version> CompatibleVersions => new List<Version>
         {
-            new Version("10.0"),
-            new Version("11.0"),
-            new Version("12.0")
+            new Version(10, 0),
+            new Version(11, 0),
+            new Version(12, 0)
         };
 
         public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public string LongDescription => "Returns the list of templates with identical custom layouts (whitespace sensitive).";
-
-        public string Name => "Templates with identical layouts";
-
-        public string ShortDescription => "Returns a list of identical page layouts.";
 
         public IList<string> Tags => new List<string>
         {
@@ -42,41 +38,37 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
             ReportTags.PortalEngine
         };
 
-        public ReportResults GetResults(Guid InstanceGuid)
-        {
-            var instance = _instanceService.GetInstance(InstanceGuid);
-            var instanceDetails = _instanceService.GetInstanceDetails(instance);
-            _databaseService.ConfigureForInstance(instance);
+        public Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
 
-            var identicalLayouts = _databaseService.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts);
+        public ReportResults GetResults()
+        {
+            var identicalLayouts = databaseService.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts);
 
             return CompileResults(identicalLayouts);
         }
 
-        private static ReportResults CompileResults(IEnumerable<IdenticalPageLayouts> identicalPageLayouts)
+        private ReportResults CompileResults(IEnumerable<IdenticalPageLayouts> identicalPageLayouts)
         {
-            var layoutResults = new TableResult<dynamic>()
-            {
-                Name = "Identical page layouts",
-                Rows = identicalPageLayouts
-            };
+            var countIdenticalPageLayouts = identicalPageLayouts.Count();
 
             var results = new ReportResults
             {
-                Status = ReportResultsStatus.Information
+                Status = ReportResultsStatus.Information,
+                Type = ReportResultsType.Table,
+                Data = new TableResult<dynamic>()
+                {
+                    Name = Metadata.Labels.IdenticalPageLayouts,
+                    Rows = identicalPageLayouts
+                }
             };
 
-            if (layoutResults.Rows.Count() == 0)
+            if (countIdenticalPageLayouts == 0)
             {
-                results.Summary = "No Identical page layouts found.";
-                results.Data = layoutResults;
-                results.Type = ReportResultsType.Table;
+                results.Summary = Metadata.Labels.NoIdenticalPageLayoutsFound;
             }
             else
             {
-                results.Summary = "Identical page layouts found.";
-                results.Data = layoutResults;
-                results.Type = ReportResultsType.Table;
+                results.Summary = Metadata.Labels.CountIdenticalPageLayoutFound.With(new { count = countIdenticalPageLayouts });
             }
 
             return results;

@@ -14,37 +14,40 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ApplicationRestartAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ApplicationRestartAnalysis\Scripts\ApplicationRestartEvents.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ClassTableValidation\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ClassTableValidation\Scripts\ClassesWithNoTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ClassTableValidation\Scripts\TablesWithNoClass.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetCmsClassItems.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetLatestVersionHistoryIdForAllDocuments.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetDocumentNodeDetails.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetCmsDocumentCoupledDataItems.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeDetails.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithPageTypeNotAssignedToSite.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithDuplicatedAliasPath.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetDocumentIdsWithMissingTreeNode.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithLevelMismatchByAliasPathTest.sql">
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetDocumentNodeDetails.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithMissingDocument.sql">
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetLatestVersionHistoryIdForAllDocuments.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithLevelMismatchByNodeLevelTest.sql">
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeDetails.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithBadParentNodeId.sql">
@@ -53,19 +56,40 @@
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithBadParentSiteId.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithDuplicatedAliasPath.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithLevelMismatchByAliasPathTest.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithLevelMismatchByNodeLevelTest.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithMissingDocument.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithPageTypeNotAssignedToSite.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ContentTreeConsistencyAnalysis\Scripts\GetVersionHistoryDetails.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="DatabaseConsistencyCheck\GetCheckDbResults.sql">
+    <None Update="DatabaseConsistencyCheck\Scripts\GetCheckDbResults.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ApplicationRestartAnalysis\GetApplicationRestartEvents.sql">
+    <None Update="DatabaseConsistencyCheck\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ClassTableValidation\GetClassesWithNoTable.sql">
+    <None Update="DatabaseTableSizeAnalysis\Scripts\GetTop25LargestTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ClassTableValidation\GetTablesWithNoClass.sql">
+    <None Update="DatabaseTableSizeAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RobotsConfigurationSummary\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedIntegrationBusTasks.sql">
@@ -83,13 +107,16 @@
     <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedWebFarmTasks.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TemplateLayoutAnalysis\GetIdenticalLayouts.sql">
+    <None Update="TemplateLayoutAnalysis\Scripts\GetIdenticalLayouts.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="DatabaseTableSizeAnalysis\GetTop25LargestTables.sql">
+    <None Update="TemplateLayoutAnalysis\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="UnusedPageTypeSummary\GetUnusedPageTypes.sql">
+    <None Update="UnusedPageTypeSummary\Scripts\GetUnusedPageTypes.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="UnusedPageTypeSummary\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

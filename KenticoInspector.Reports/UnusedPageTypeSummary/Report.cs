@@ -1,60 +1,58 @@
-﻿using KenticoInspector.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
-using System;
-using System.Collections.Generic;
+using KenticoInspector.Reports.UnusedPageTypeSummary.Models;
 
 namespace KenticoInspector.Reports.UnusedPageTypeSummary
 {
-    public class Report : IReport
+    public class UnusedPageTypeSummaryReport : IReport
     {
-        private readonly IDatabaseService _databaseService;
-        private readonly IInstanceService _instanceService;
+        private readonly IDatabaseService databaseService;
+        private readonly ILabelService labelService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        public UnusedPageTypeSummaryReport(IDatabaseService databaseService, ILabelService labelService)
         {
-            _databaseService = databaseService;
-            _instanceService = instanceService;
+            this.databaseService = databaseService;
+            this.labelService = labelService;
         }
 
-        public string Codename => "unused-page-type-summary";
+        public string Codename => nameof(UnusedPageTypeSummary);
 
         public IList<Version> CompatibleVersions => new List<Version>
         {
-            new Version("10.0"),
-            new Version("11.0"),
-            new Version("12.0")
+            new Version(10, 0),
+            new Version(11, 0),
+            new Version(12, 0)
         };
 
         public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public string LongDescription => "This report checks for page types that are not in use.";
-
-        public string Name => "Unused Page Type Summary";
-
-        public string ShortDescription => "Checks for unused pages types.";
 
         public IList<string> Tags => new List<string>
         {
             ReportTags.Information
         };
 
-        public ReportResults GetResults(Guid InstanceGuid)
+        public Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
+
+        public ReportResults GetResults()
         {
-            var instance = _instanceService.GetInstance(InstanceGuid);
-            var instanceDetails = _instanceService.GetInstanceDetails(instance);
-            _databaseService.ConfigureForInstance(instance);
-            var unusedPageTypes = new List<PageType>(_databaseService.ExecuteSqlFromFile<PageType>(Scripts.GetUnusedPageTypes));
+            var unusedPageTypes = databaseService.ExecuteSqlFromFile<PageType>(Scripts.GetUnusedPageTypes);
+
+            var countOfUnusedPageTypes = unusedPageTypes.Count();
 
             return new ReportResults
             {
                 Type = ReportResultsType.Table,
                 Status = ReportResultsStatus.Information,
-                Summary = $"{unusedPageTypes.Count} unused page type" + (unusedPageTypes.Count != 1 ? "s." : "."),
+                Summary = Metadata.Labels.CountUnusedPageType.With(new { count = countOfUnusedPageTypes }),
                 Data = new TableResult<PageType>()
                 {
-                    Name = "Unused page types",
+                    Name = Metadata.Labels.UnusedPageTypes,
                     Rows = unusedPageTypes
                 }
             };

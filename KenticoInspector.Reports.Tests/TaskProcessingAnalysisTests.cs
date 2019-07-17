@@ -15,15 +15,19 @@ namespace KenticoInspector.Reports.Tests
     public class TaskProcessingAnalysisTests
     {
         private Mock<IDatabaseService> _mockDatabaseService;
-        private Instance _mockInstance;
         private InstanceDetails _mockInstanceDetails;
-        private Mock<IInstanceService> _mockInstanceService;
-        private Report _mockReport;
+        private Mock<ILabelService> _mockLabelService;
+        private TaskProcessingAnalysisReport _mockReport;
 
         public TaskProcessingAnalysisTests(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object);
+
+            _mockLabelService = MockLabelServiceHelper.GetlabelService();
+
+            _mockReport = new TaskProcessingAnalysisReport(_mockDatabaseService.Object, _mockLabelService.Object);
+
+            MockLabelServiceHelper.SetuplabelService<Labels>(_mockLabelService, _mockReport);
         }
 
         [Test]
@@ -33,7 +37,7 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries();
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Good);
@@ -46,10 +50,10 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(unprocessedIntegrationBusTasks: 1);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskTypes.IntegrationBusTasks);
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.IntegrationBusTask);
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
@@ -60,10 +64,10 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(unprocessedScheduledTasks: 1);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskTypes.ScheduledTasks);
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.ScheduledTask);
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
@@ -74,10 +78,10 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(unprocessedSearchTasks: 1);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskTypes.SearchTasks);
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.SearchTask);
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
@@ -88,10 +92,10 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(unprocessedStagingTasks: 1);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskTypes.StagingTasks);
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.StagingTask);
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
@@ -102,26 +106,27 @@ namespace KenticoInspector.Reports.Tests
             SetupAllDatabaseQueries(unprocessedWebFarmTasks: 1);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskTypes.WebFarmTasks);
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.WebFarmTask);
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
-        private static void AssertThatResultsDataIncludesTaskTypeDetails(dynamic data, string taskType)
+        private static void AssertThatResultsDataIncludesTaskTypeDetails(dynamic data, TaskType taskType)
         {
             var resultsData = (IEnumerable<string>)data;
-            var hasTasksListedInResults = resultsData.Where(x => x.Contains(taskType)).Count() > 0;
+            var hasTasksListedInResults = resultsData.Any(x => x.Contains(taskType.ToString(), System.StringComparison.InvariantCultureIgnoreCase));
+
             Assert.That(hasTasksListedInResults, $"'{taskType}' not found in data.");
         }
 
         private void InitializeCommonMocks(int majorVersion)
         {
-            _mockInstance = MockInstances.Get(majorVersion);
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
-            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
+            var mockInstance = MockInstances.Get(majorVersion);
+
+            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
+            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
 
         private void SetupAllDatabaseQueries(

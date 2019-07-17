@@ -14,16 +14,20 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(12)]
     public class UnusedPageTypeSummaryTest
     {
-        private Instance _mockInstance;
         private InstanceDetails _mockInstanceDetails;
         private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IInstanceService> _mockInstanceService;
-        private Report _mockReport;
+        private Mock<ILabelService> _mockLabelService;
+        private UnusedPageTypeSummaryReport _mockReport;
 
         public UnusedPageTypeSummaryTest(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object);
+
+            _mockLabelService = MockLabelServiceHelper.GetlabelService();
+
+            _mockReport = new UnusedPageTypeSummaryReport(_mockDatabaseService.Object, _mockLabelService.Object);
+
+            MockLabelServiceHelper.SetuplabelService<Labels>(_mockLabelService, _mockReport);
         }
 
         [Test]
@@ -36,7 +40,7 @@ namespace KenticoInspector.Reports.Tests
                 .Returns(unusedPageTypes);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Data.Rows.Count == 6);
@@ -58,10 +62,10 @@ namespace KenticoInspector.Reports.Tests
 
         private void InitializeCommonMocks(int majorVersion)
         {
-            _mockInstance = MockInstances.Get(majorVersion);
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
-            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
+            var mockInstance = MockInstances.Get(majorVersion);
+
+            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
+            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
     }
 }

@@ -1,34 +1,35 @@
-﻿using Autofac;
+﻿using System.Collections.Generic;
+using System.Linq;
+
 using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
-using KenticoInspector.Reports;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace KenticoInspector.Infrastructure.Repositories
 {
     public class ReportRepository : IReportRepository
     {
+        private readonly IEnumerable<IReport> reports;
+
+        public ReportRepository(IEnumerable<IReport> reports)
+        {
+            this.reports = reports;
+        }
+
         public IReport GetReport(string codename)
         {
             var allReports = LoadReports();
             return allReports.FirstOrDefault(x => x.Codename.ToLower() == codename.ToLower());
         }
 
-        public IList<IReport> GetReports(ReportFilter filterSettings = null)
+        public IEnumerable<IReport> GetReports(ReportFilter filterSettings = null)
         {
             return LoadReports();
         }
 
-        private IList<IReport> LoadReports()
+        private IEnumerable<IReport> LoadReports()
         {
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule(new CoreModule());
-            containerBuilder.RegisterModule(new InfrastructureModule());
-            containerBuilder.RegisterModule(new ReportsModule());
-            var container = containerBuilder.Build();
-            return container.Resolve<IList<IReport>>();
+            return reports;
         }
     }
 }

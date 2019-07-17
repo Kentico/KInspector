@@ -5,7 +5,7 @@
       dense
       >
       <v-toolbar-title>
-        {{ report.name }}
+                <VueShowdown :markdown="report.metadata.names.short" />
       </v-toolbar-title>
       <v-spacer />
       <div class="d-flex">
@@ -40,7 +40,7 @@
           v-ripple="{ class: `grey--text` }"
           >
           <v-flex>
-            {{ report.shortDescription }}
+                    <VueShowdown :markdown="report.metadata.descriptions.short" />
           </v-flex>
           <v-spacer></v-spacer>
           <v-chip
@@ -73,7 +73,7 @@
 
     <v-slide-y-transition>
       <v-card-text v-show="showDescription">
-        <div v-html="report.longDescription" />
+                <VueShowdown :markdown="report.metadata.descriptions.long" />
       </v-card-text>
     </v-slide-y-transition>
 

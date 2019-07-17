@@ -68,9 +68,10 @@ namespace KenticoInspector.Infrastructure.Repositories
             return new List<Instance>();
         }
 
-        private void SaveInstances(List<Instance> instance)
+        private void SaveInstances(IList<Instance> instances)
         {
-            var jsonText = JsonConvert.SerializeObject(instance, Formatting.Indented);
+            var jsonText = JsonConvert.SerializeObject(instances, Formatting.Indented);
+
             File.WriteAllText(_saveFileLocation, jsonText);
         }
     }

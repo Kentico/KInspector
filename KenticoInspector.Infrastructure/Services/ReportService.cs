@@ -1,35 +1,45 @@
-﻿using KenticoInspector.Core;
+﻿using System;
+using System.Collections.Generic;
+
+using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
 using KenticoInspector.Core.Services.Interfaces;
-using System;
-using System.Collections.Generic;
 
 namespace KenticoInspector.Infrastructure.Services
 {
     public class ReportService : IReportService
     {
-        private readonly IReportRepository _reportRepository;
+        private readonly IReportRepository reportRepository;
+        private readonly IInstanceService instanceService;
+        private readonly IDatabaseService databaseService;
 
-        public ReportService(IReportRepository reportRepository)
+        public ReportService(IReportRepository reportRepository, IInstanceService instanceService, IDatabaseService databaseService)
         {
-            _reportRepository = reportRepository;
+            this.reportRepository = reportRepository;
+            this.instanceService = instanceService;
+            this.databaseService = databaseService;
         }
 
         public IReport GetReport(string codename)
         {
-            return _reportRepository.GetReport(codename);
+            return reportRepository.GetReport(codename);
         }
 
         public ReportResults GetReportResults(string reportCodename, Guid instanceGuid)
         {
-            var report = _reportRepository.GetReport(reportCodename);
-            return report.GetResults(instanceGuid);
+            var report = reportRepository.GetReport(reportCodename);
+
+            var instance = instanceService.SetInstance(instanceGuid);
+
+            databaseService.ConfigureForInstance(instance);
+
+            return report.GetResults();
         }
 
         public IEnumerable<IReport> GetReports(ReportFilter reportFilter = null)
         {
-            return _reportRepository.GetReports(reportFilter);
+            return reportRepository.GetReports(reportFilter);
         }
     }
 }
