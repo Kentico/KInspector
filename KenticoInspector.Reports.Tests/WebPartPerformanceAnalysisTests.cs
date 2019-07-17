@@ -10,7 +10,7 @@ namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
-    public class WebPartPerformanceAnalysisTest : ReportTest
+    public class WebPartPerformanceAnalysisTest : AbstractReportTest
     {
         private Report _mockReport;
 

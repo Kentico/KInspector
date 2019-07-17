@@ -5,14 +5,14 @@ using Moq;
 
 namespace KenticoInspector.Reports.Tests
 {
-    public abstract class ReportTest
+    public abstract class AbstractReportTest
     {
         protected Instance _mockInstance;
         protected InstanceDetails _mockInstanceDetails;
         protected Mock<IDatabaseService> _mockDatabaseService;
         protected Mock<IInstanceService> _mockInstanceService;
 
-        public ReportTest(int majorVersion)
+        public AbstractReportTest(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
         }
