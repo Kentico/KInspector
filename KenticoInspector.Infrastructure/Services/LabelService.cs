@@ -1,29 +1,30 @@
-﻿using System.Threading;
-
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Repositories.Interfaces;
+﻿using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using System.IO;
+using System.Threading;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace KenticoInspector.Core.Helpers
 {
     public class LabelService : ILabelService
     {
-        private readonly IYamlRepository yamlRepository;
-
         public string CurrentCultureName => Thread.CurrentThread.CurrentCulture.Name;
-
-        public LabelService(IYamlRepository yamlRepository)
-        {
-            this.yamlRepository = yamlRepository;
-        }
 
         public Metadata<TLabels> GetMetadata<TLabels>(string baseDirectory) where TLabels : new()
         {
             var yamlPath = $"{DirectoryHelper.GetExecutingDirectory()}\\{baseDirectory}\\Metadata\\{CurrentCultureName}.yaml";
+            return DeserializeYaml<Metadata<TLabels>>(yamlPath);
+        }
 
-            var labels = yamlRepository.Deserialize<Metadata<TLabels>>(yamlPath);
+        public T DeserializeYaml<T>(string path)
+        {
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(new CamelCaseNamingConvention())
+                .Build();
 
-            return labels;
+            var yamlFile = File.ReadAllText(path);
+            return deserializer.Deserialize<T>(yamlFile);
         }
     }
 }
