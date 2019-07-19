@@ -2,6 +2,7 @@
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.TemplateLayoutAnalysis;
+using KenticoInspector.Reports.TemplateLayoutAnalysis.Models;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;

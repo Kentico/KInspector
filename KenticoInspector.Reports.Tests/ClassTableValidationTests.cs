@@ -2,6 +2,7 @@ using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ClassTableValidation;
+using KenticoInspector.Reports.ClassTableValidation.Models;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;

@@ -1,6 +1,7 @@
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.ApplicationRestartAnalysis.Models;
 using KenticoInspector.Reports.TaskProcessingAnalysis;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
