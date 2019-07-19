@@ -5,20 +5,20 @@
       dense
       >
       <v-toolbar-title>
-                <VueShowdown :markdown="report.metadata.names.short" />
+        <vue-showdown :markdown="report.metadata.names.short" />
       </v-toolbar-title>
       <v-spacer />
       <div class="d-flex">
         <v-chip
-              v-for="tag in report.tags"
-              :key="tag"
-              small
-              disabled
-              text-color="black"
-              class="hidden-xs-only"
-              >
-              {{ tag }}
-            </v-chip>
+          v-for="tag in report.tags"
+          :key="tag"
+          small
+          disabled
+          text-color="black"
+          class="hidden-xs-only"
+          >
+          {{ tag }}
+        </v-chip>
       </div>
 
       <v-btn icon :disabled="incompatible" @click="runReport(runConfiguration)">
@@ -40,7 +40,7 @@
           v-ripple="{ class: `grey--text` }"
           >
           <v-flex>
-                    <VueShowdown :markdown="report.metadata.descriptions.short" />
+            <vue-showdown :markdown="report.metadata.descriptions.short" />
           </v-flex>
           <v-spacer></v-spacer>
           <v-chip
@@ -64,7 +64,7 @@
 
           </v-flex>
           <v-flex shrink>
-              <v-icon>{{ showDescription ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            <v-icon>{{ showDescription ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
           </v-flex>
         </v-layout>
     </v-card-text>
@@ -73,7 +73,7 @@
 
     <v-slide-y-transition>
       <v-card-text v-show="showDescription">
-                <VueShowdown :markdown="report.metadata.descriptions.long" />
+        <vue-showdown :markdown="report.metadata.descriptions.long" />
       </v-card-text>
     </v-slide-y-transition>
 
