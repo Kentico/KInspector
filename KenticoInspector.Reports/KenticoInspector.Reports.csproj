@@ -92,6 +92,12 @@
     <None Update="UnusedPageTypeSummary\GetUnusedPageTypes.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WebPartPerformanceAnalysis\Scripts\GetAffectedTemplates.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WebPartPerformanceAnalysis\Scripts\GetDocumentsByPageTemplateIDs.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

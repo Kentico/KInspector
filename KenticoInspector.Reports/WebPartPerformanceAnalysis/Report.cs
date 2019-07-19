@@ -2,8 +2,11 @@
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.WebPartPerformanceAnalysis.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
 {
@@ -45,10 +48,103 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
 
         public ReportResults GetResults(Guid InstanceGuid)
         {
+            var instance = _instanceService.GetInstance(InstanceGuid);
+            _databaseService.ConfigureForInstance(instance);
+
+            var affectedTemplates = _databaseService.ExecuteSqlFromFile<PageTemplate>(Scripts.GetAffectedTemplates);
+            var affectedTemplateIds = affectedTemplates.Select(x => x.PageTemplateID).ToArray();
+            var affectedDocuments = _databaseService.ExecuteSqlFromFile<Document>(Scripts.GetDocumentsByPageTemplateIds, new { IDs = affectedTemplateIds });
+
+            var templateAnalysisResults = GetTemplateAnalysisResults(affectedTemplates, affectedDocuments);
+
+            return CompileResults(templateAnalysisResults);
+        }
+
+        private IEnumerable<TemplateSummary> GetTemplateAnalysisResults(IEnumerable<PageTemplate> affectedTemplates, IEnumerable<Document> affectedDocuments)
+        {
+            var results = new List<TemplateSummary>();
+
+            foreach (var template in affectedTemplates)
+            {
+                var documents = affectedDocuments.Where(x => x.DocumentPageTemplateID == template.PageTemplateID);
+                var affectedWebParts = ExtractWebPartsWithEmptyColumnsProperty(template, documents);
+
+                results.Add(new TemplateSummary()
+                {
+                    TemplateID = template.PageTemplateID,
+                    TemplateName = template.PageTemplateDisplayName,
+                    TemplateCodename = template.PageTemplateCodeName,
+                    AffectedDocuments = documents,
+                    AffectedWebParts = affectedWebParts
+                });
+            }
+
+            return results;
+        }
+
+        private IEnumerable<WebPartSummary> ExtractWebPartsWithEmptyColumnsProperty(PageTemplate template, IEnumerable<Document> documents)
+        {
+            var emptyColumnsWebPartProperties = template.PageTemplateWebParts
+                .Descendants("property")
+                .Where(x => x.Attribute("name").Value == "columns")
+                .Where(x => string.IsNullOrWhiteSpace(x.Value));
+
+            var affectedWebPartsXml = emptyColumnsWebPartProperties.Ancestors("webpart");
+
+            return affectedWebPartsXml.Select(x => new WebPartSummary
+            {
+                ID = x.Attribute("controlid").Value,
+                Name = x.Elements("property").FirstOrDefault(p => p.Name == "webparttitle")?.Value,
+                Type = x.Attribute("type").Value,
+                TemplateId = template.PageTemplateID,
+                Documents = documents
+            });
+        }
 
 
-            return new ReportResults {
-                Status = ReportResultsStatus.Good
+        private ReportResults CompileResults(IEnumerable<TemplateSummary> templateSummaries)
+        {
+            var templateSummaryTable = new TableResult<TemplateSummary>()
+            {
+                Name = "Template Summary",
+                Rows = templateSummaries
+            };
+
+            var webPartSummaries = templateSummaries.SelectMany(x => x.AffectedWebParts);
+            var webPartSummaryTable = new TableResult<WebPartSummary>()
+            {
+                Name = "Web Part Summary",
+                Rows = webPartSummaries
+            };
+
+            var documentSummaries = templateSummaries.SelectMany(x => x.AffectedDocuments);
+            var documentSummaryTable = new TableResult<Document>()
+            {
+                Name = "Document Summary",
+                Rows = documentSummaries
+            };
+
+            var data = new
+            {
+                TemplateSummaryTable = templateSummaryTable,
+                WebPartSummaryTable = webPartSummaryTable,
+                DocumentSummaryTable = documentSummaryTable
+            };
+
+            var totalAffectedTemplates = templateSummaries.Count();
+            var totalAffectedWebParts = webPartSummaries.Count();
+            var totalAffectedDocuments = documentSummaries.Count();
+
+            var summary = $"{totalAffectedWebParts} web part{(totalAffectedWebParts!=1 ? "s" : string.Empty )} on {totalAffectedTemplates} template{(totalAffectedTemplates != 1 ? "s" : string.Empty)} affecting {totalAffectedDocuments} document{(totalAffectedDocuments != 1 ? "s" : string.Empty)}";
+
+            var status = templateSummaries.Count() > 0 ? ReportResultsStatus.Warning : ReportResultsStatus.Good;
+
+            return new ReportResults
+            {
+                Status = status,
+                Summary = summary,
+                Data = data,
+                Type = ReportResultsType.TableList
             };
         }
     }
