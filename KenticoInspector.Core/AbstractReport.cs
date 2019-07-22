@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace KenticoInspector.Core
 {
-    public abstract class AbstractReport : IReport
+    public abstract class AbstractReport<T> : IReport, IWithMetadata<T> where T : new()
     {
         public string Codename => GetCodename(this.GetType());
 
@@ -17,6 +17,8 @@ namespace KenticoInspector.Core
         public virtual IList<Version> IncompatibleVersions => new List<Version>();
 
         public abstract IList<string> Tags { get; }
+
+        public abstract Metadata<T> Metadata { get; }
 
         public abstract ReportResults GetResults();
 
