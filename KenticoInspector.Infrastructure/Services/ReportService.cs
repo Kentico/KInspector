@@ -29,10 +29,9 @@ namespace KenticoInspector.Infrastructure.Services
         public ReportResults GetReportResults(string reportCodename, Guid instanceGuid)
         {
             var report = reportRepository.GetReport(reportCodename);
-
             var instance = instanceService.SetCurrentInstance(instanceGuid);
 
-            databaseService.ConfigureForInstance(instance);
+            databaseService.Configure(instance.DatabaseSettings);
 
             return report.GetResults();
         }
