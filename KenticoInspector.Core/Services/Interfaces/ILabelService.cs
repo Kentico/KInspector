@@ -6,6 +6,6 @@ namespace KenticoInspector.Core.Services.Interfaces
     {
         string CurrentCultureName { get; }
 
-        Metadata<TLabels> GetMetadata<TLabels>(string codename) where TLabels : new();
+        Metadata<TLabels> GetMetadata<TLabels>(string reportCodename) where TLabels : new();
     }
 }

@@ -11,9 +11,9 @@ namespace KenticoInspector.Core.Helpers
     {
         public string CurrentCultureName => Thread.CurrentThread.CurrentCulture.Name;
 
-        public Metadata<TLabels> GetMetadata<TLabels>(string baseDirectory) where TLabels : new()
+        public Metadata<TLabels> GetMetadata<TLabels>(string reportCodename) where TLabels : new()
         {
-            var yamlPath = $"{DirectoryHelper.GetExecutingDirectory()}\\{baseDirectory}\\Metadata\\{CurrentCultureName}.yaml";
+            var yamlPath = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\{CurrentCultureName}.yaml";
             return DeserializeYaml<Metadata<TLabels>>(yamlPath);
         }
 
