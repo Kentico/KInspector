@@ -41,7 +41,7 @@ namespace KenticoInspector.Reports.ClassTableValidation
 
         public ReportResults GetResults()
         {
-            var instance = instanceService.Instance;
+            var instance = instanceService.CurrentInstance;
 
             var instanceDetails = instanceService.GetInstanceDetails(instance);
 

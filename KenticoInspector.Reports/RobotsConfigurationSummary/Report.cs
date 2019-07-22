@@ -52,7 +52,7 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
 
         public ReportResults GetResults()
         {
-            var instance = instanceService.Instance;
+            var instance = instanceService.CurrentInstance;
 
             var instanceUri = new Uri(instance.Url);
             var testUri = new Uri(instanceUri, Constants.RobotsTxtRelativePath);

@@ -30,7 +30,7 @@ namespace KenticoInspector.Infrastructure.Services
         {
             var report = reportRepository.GetReport(reportCodename);
 
-            var instance = instanceService.SetInstance(instanceGuid);
+            var instance = instanceService.SetCurrentInstance(instanceGuid);
 
             databaseService.ConfigureForInstance(instance);
 

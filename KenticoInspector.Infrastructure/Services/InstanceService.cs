@@ -14,7 +14,7 @@ namespace KenticoInspector.Infrastructure.Services
         private readonly ISiteRepository _siteRepository;
         private readonly IVersionRepository _versionRepository;
 
-        public Instance Instance { get; private set; }
+        public Instance CurrentInstance { get; private set; }
 
         public InstanceService(IInstanceRepository instanceRepository, IVersionRepository versionRepository, ISiteRepository siteRepository)
         {
@@ -33,11 +33,11 @@ namespace KenticoInspector.Infrastructure.Services
             return _instanceRepository.GetInstance(instanceGuid);
         }
 
-        public Instance SetInstance(Guid instanceGuid)
+        public Instance SetCurrentInstance(Guid instanceGuid)
         {
-            Instance = _instanceRepository.GetInstance(instanceGuid);
+            CurrentInstance = _instanceRepository.GetInstance(instanceGuid);
 
-            return Instance;
+            return CurrentInstance;
         }
 
         public InstanceDetails GetInstanceDetails(Guid instanceGuid)

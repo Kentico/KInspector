@@ -39,7 +39,7 @@ namespace KenticoInspector.Reports.Tests
         {
             // Arrange
             _mockReport = ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode.OK, out Mock<HttpMessageHandler> mockHttpMessageHandler);
-            var mockInstance = _mockInstanceService.Object.Instance;
+            var mockInstance = _mockInstanceService.Object.CurrentInstance;
 
             // Act
             var results = _mockReport.GetResults();
@@ -72,7 +72,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
 
             _mockReport = ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode.OK, out Mock<HttpMessageHandler> mockHttpMessageHandler);
-            var mockInstance = _mockInstanceService.Object.Instance;
+            var mockInstance = _mockInstanceService.Object.CurrentInstance;
 
             var baseUrl = mockInstance.Url;
             mockInstance.Url += "/subdirectory";
