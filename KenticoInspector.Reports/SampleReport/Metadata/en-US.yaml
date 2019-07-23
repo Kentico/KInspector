@@ -8,6 +8,6 @@
     
     Some reference materials:
       * [YAML/Markdown Cheatsheet](https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/)
-labels:
+terms:
   detailedResult: <name> reported `<problem>`.
   summary: <issueCount> <issueCount:issue|issues> found.
