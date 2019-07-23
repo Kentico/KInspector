@@ -1,11 +1,14 @@
-﻿using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
+﻿using System.Data;
+
+using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DatabaseConsistencyCheck;
+using KenticoInspector.Reports.DatabaseConsistencyCheck.Models;
 using KenticoInspector.Reports.Tests.Helpers;
+
 using Moq;
+
 using NUnit.Framework;
-using System.Data;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -14,16 +17,19 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(12)]
     public class DatabaseConsistencyCheckTests
     {
-        private Instance _mockInstance;
-        private InstanceDetails _mockInstanceDetails;
         private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IInstanceService> _mockInstanceService;
+        private Mock<IReportMetadataService> _mockReportMetadataService;
         private Report _mockReport;
 
         public DatabaseConsistencyCheckTests(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object);
+
+            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
+
+            _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
+
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
         }
 
         [Test]
@@ -37,7 +43,7 @@ namespace KenticoInspector.Reports.Tests
                 .Returns(emptyResult);
 #pragma warning restore 0618
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             //Assert
             Assert.That(results.Status == ReportResultsStatus.Good);
@@ -58,7 +64,7 @@ namespace KenticoInspector.Reports.Tests
 # pragma warning restore 0618
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             //Assert
             Assert.That(results.Status == ReportResultsStatus.Error);
@@ -66,10 +72,9 @@ namespace KenticoInspector.Reports.Tests
 
         private void InitializeCommonMocks(int majorVersion)
         {
-            _mockInstance = MockInstances.Get(majorVersion);
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
-            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
+            var mockInstance = MockInstances.Get(majorVersion);
+
+            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
     }
 }

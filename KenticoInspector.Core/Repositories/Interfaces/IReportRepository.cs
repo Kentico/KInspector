@@ -1,11 +1,12 @@
-﻿using KenticoInspector.Core.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using KenticoInspector.Core.Models;
 
 namespace KenticoInspector.Core.Repositories.Interfaces
 {
     public interface IReportRepository : IRepository
     {
-        IList<IReport> GetReports(ReportFilter filterSettings = null);
+        IEnumerable<IReport> GetReports(ReportFilter filterSettings = null);
 
         IReport GetReport(string codename);
     }

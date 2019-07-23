@@ -2,7 +2,8 @@
 {
     public static class Scripts
     {
-        public const string BaseDirectory = "UnusedPageTypeSummary/";
-        public const string GetUnusedPageTypes = BaseDirectory + "GetUnusedPageTypes.sql";
+        public static string BaseDirectory = $"{nameof(UnusedPageTypeSummary)}/Scripts";
+
+        public static string GetUnusedPageTypes = $"{BaseDirectory}/{nameof(GetUnusedPageTypes)}.sql";
     }
 }

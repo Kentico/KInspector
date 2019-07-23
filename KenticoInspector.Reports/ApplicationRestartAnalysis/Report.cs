@@ -1,60 +1,43 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.ApplicationRestartAnalysis.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace KenticoInspector.Reports.ApplicationRestartAnalysis
 {
-    public class Report : IReport
+    public class Report : AbstractReport<Terms>
     {
-        private readonly IDatabaseService _databaseService;
-        private readonly IInstanceService _instanceService;
+        private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
-            _databaseService = databaseService;
-            _instanceService = instanceService;
+            this.databaseService = databaseService;
         }
 
-        public string Codename => "application-restarts";
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11");
 
-        public IList<Version> CompatibleVersions => new List<Version> {
-            new Version("10.0"),
-            new Version("11.0")
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public string LongDescription => "<p>Frequent restarts may that there are issues to resolve</p>";
-
-        public string Name => "Application Restart Event Analysis";
-
-        public string ShortDescription => "Shows application restart events from event log";
-
-        public IList<string> Tags => new List<string> {
+        public override IList<string> Tags => new List<string> {
             ReportTags.EventLog,
             ReportTags.Health
         };
 
-        public ReportResults GetResults(Guid InstanceGuid)
+        public override ReportResults GetResults()
         {
-            var instance = _instanceService.GetInstance(InstanceGuid);
-            var instanceDetails = _instanceService.GetInstanceDetails(instance);
-            _databaseService.ConfigureForInstance(instance);
-
-            var applicationRestartEvents = _databaseService.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents);
+            var applicationRestartEvents = databaseService.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.ApplicationRestartEvents);
 
             return CompileResults(applicationRestartEvents);
         }
 
-        private static ReportResults CompileResults(IEnumerable<ApplicationRestartEvent> applicationRestartEvents)
+        private ReportResults CompileResults(IEnumerable<ApplicationRestartEvent> applicationRestartEvents)
         {
             var data = new TableResult<dynamic>()
             {
-                Name = "Application Restart Events",
+                Name = Metadata.Terms.ApplicationRestartEvents,
                 Rows = applicationRestartEvents
             };
 
@@ -64,10 +47,18 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             var earliestTime = totalEvents > 0 ? applicationRestartEvents.Min(e => e.EventTime) : new DateTime();
             var latestTime = totalEvents > 0 ? applicationRestartEvents.Max(e => e.EventTime) : new DateTime();
 
-            var totalEventsText = $"{totalEvents} event {(totalEvents == 1 ? string.Empty : "s")}";
-            var totalStartEventsText = $"{totalStartEvents} start{(totalStartEvents == 1 ? string.Empty : "s")}";
-            var totalEndEventsText = $"{totalEndEvents} end{(totalEndEvents == 1 ? string.Empty : "s")}";
-            var timeSpanText = earliestTime.Year > 1 ? $"spanning {earliestTime.ToString()} - {latestTime.ToString()}" : string.Empty;
+            var totalEventsText = Metadata.Terms.CountTotalEvent.With(new { count = totalEvents });
+
+            var totalStartEventsText = Metadata.Terms.CountStartEvent.With(new { count = totalStartEvents });
+
+            var totalEndEventsText = Metadata.Terms.CountEndEvent.With(new { count = totalEndEvents });
+
+            string timeSpanText = string.Empty;
+
+            if (earliestTime.Year > 1)
+            {
+                timeSpanText = Metadata.Terms.SpanningEarliestLatest.With(new { earliestTime, latestTime });
+            }
 
             var results = new ReportResults
             {

@@ -7,7 +7,7 @@ namespace KenticoInspector.Core.Services.Interfaces
 {
     public interface IDatabaseService : IService
     {
-        void ConfigureForInstance(Instance instance);
+        void Configure(DatabaseSettings databaseSettings);
 
         IEnumerable<T> ExecuteSqlFromFile<T>(string relativeFilePath);
 

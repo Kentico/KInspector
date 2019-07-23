@@ -1,4 +1,4 @@
-﻿namespace KenticoInspector.Reports.ClassTableValidation
+﻿namespace KenticoInspector.Reports.ClassTableValidation.Models
 {
     public class TableWithNoClass
     {

@@ -60,7 +60,7 @@ namespace KenticoInspector.Reports.Tests.Helpers
         public static Mock<IDatabaseService> SetupMockDatabaseService(Instance instance)
         {
             var mockDatabaseService = new Mock<IDatabaseService>(MockBehavior.Strict);
-            mockDatabaseService.Setup(p => p.ConfigureForInstance(instance));
+            mockDatabaseService.Setup(p => p.Configure(instance.DatabaseSettings));
             return mockDatabaseService;
         }
     }

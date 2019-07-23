@@ -6,15 +6,19 @@ namespace KenticoInspector.Core.Services.Interfaces
 {
     public interface IInstanceService : IService
     {
-        bool DeleteInstance(Guid guid);
+        Instance CurrentInstance { get; }
 
-        Instance GetInstance(Guid guid);
+        bool DeleteInstance(Guid instanceGuid);
 
-        InstanceDetails GetInstanceDetails(Guid guid);
+        Instance GetInstance(Guid instanceGuid);
+
+        InstanceDetails GetInstanceDetails(Guid instanceGuid);
 
         InstanceDetails GetInstanceDetails(Instance instance);
 
         IList<Instance> GetInstances();
+
+        Instance SetCurrentInstance(Guid instanceGuid);
 
         Instance UpsertInstance(Instance instance);
     }

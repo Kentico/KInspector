@@ -2,7 +2,8 @@
 {
     public static class Scripts
     {
-        public const string BaseDirectory = "DatabaseConsistencyCheck/";
-        public const string GetCheckDbResults = BaseDirectory + "GetCheckDbResults.sql";
+        public static string BaseDirectory = $"{nameof(DatabaseConsistencyCheck)}/Scripts";
+
+        public static string GetCheckDbResults = $"{BaseDirectory}/{nameof(GetCheckDbResults)}.sql";
     }
 }

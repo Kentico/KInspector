@@ -1,0 +1,26 @@
+﻿details:
+  name: Content tree consistency analysis
+  shortDescription: Performs consistency analysis for items in the content tree.
+  longDescription: |
+    This report checks for the following consistency issues:
+      * Tree nodes with a bad parent site
+      * Tree nodes with a bad parent node
+      * Tree nodes with level inconsistency based on the number of `/` in the alias path compared to it’s level
+      * Tree nodes with level inconsistency based on the whether it’s parent node has a level one higher than it does
+      * Tree node duplicates based on alias path
+      * Tree nodes with no document node
+      * Tree nodes with page type not assigned to site
+      * Document nodes with no tree node
+      * Validates that the published data and the data in the **CMS_VersionHistory** tables match
+terms:
+  documentNodesWithNoTreeNode: Document nodes with no tree node
+  nameFound: <name> found.
+  noContentTreeConsistencyIssuesFound: No content tree consistency issues found.
+  treeNodesWithABadParentNode: Tree nodes with a bad parent node
+  treeNodesWithABadParentSite: Tree nodes with a bad parent site
+  treeNodesWithDuplicatedAliasPath: Tree nodes with duplicated alias paths
+  treeNodesWithLevelInconsistencyAliasPath: Tree nodes with level inconsistency (alias path test)
+  treeNodesWithLevelInconsistencyParent: Tree Nodes with level inconsistency (parent/child level test)
+  treeNodesWithNoDocumentNode: Tree nodes with no document node
+  treeNodesWithPageTypeNotAssignedToSite: Tree nodes with page type not assigned to site
+  workflowInconsistencies: Workflow inconsistencies
