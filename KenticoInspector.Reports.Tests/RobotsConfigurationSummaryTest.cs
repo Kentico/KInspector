@@ -129,7 +129,7 @@ namespace KenticoInspector.Reports.Tests
 
             var report = new RobotsConfigurationSummaryReport(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object, httpClient);
 
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Labels>(_mockReportMetadataService, report);
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, report);
 
             return report;
         }

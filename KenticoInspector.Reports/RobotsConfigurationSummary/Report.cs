@@ -6,24 +6,29 @@ using System.Threading.Tasks;
 
 using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.RobotsConfigurationSummary.Models;
 
 namespace KenticoInspector.Reports.RobotsConfigurationSummary
 {
-    public class RobotsConfigurationSummaryReport : IReport, IWithMetadata<Labels>
+    public class RobotsConfigurationSummaryReport : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
         private readonly IInstanceService instanceService;
-        private readonly ILabelService labelService;
         private HttpClient _httpClient = new HttpClient();
 
-        public RobotsConfigurationSummaryReport(IDatabaseService databaseService, IInstanceService instanceService, ILabelService labelService, HttpClient httpClient = null)
+        public RobotsConfigurationSummaryReport(
+            IDatabaseService databaseService,
+            IInstanceService instanceService,
+            IReportMetadataService reportMetadataService,
+            HttpClient httpClient = null
+        ) : base(reportMetadataService)
+
         {
             this.databaseService = databaseService;
             this.instanceService = instanceService;
-            this.labelService = labelService;
 
             if (httpClient != null)
             {
@@ -31,26 +36,15 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
             }
         }
 
-        public string Codename => nameof(RobotsConfigurationSummary);
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
-        public IList<Version> CompatibleVersions => new List<Version>
-        {
-            new Version(10, 0),
-            new Version(11, 0),
-            new Version(12, 0)
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public IList<string> Tags => new List<string>
+        public override IList<string> Tags => new List<string>
         {
             ReportTags.Information,
             ReportTags.SEO,
         };
 
-        public Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
-
-        public ReportResults GetResults()
+        public override ReportResults GetResults()
         {
             var instance = instanceService.CurrentInstance;
 
@@ -63,7 +57,7 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
             {
                 Data = string.Empty,
                 Status = found ? ReportResultsStatus.Good : ReportResultsStatus.Warning,
-                Summary = found ? Metadata.Labels.RobotsTxtFound : Metadata.Labels.RobotsTxtNotFound,
+                Summary = found ? Metadata.Terms.RobotsTxtFound : Metadata.Terms.RobotsTxtNotFound,
                 Type = ReportResultsType.String
             };
         }
