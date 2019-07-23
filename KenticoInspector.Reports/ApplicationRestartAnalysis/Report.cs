@@ -13,12 +13,10 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
     public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
-        private readonly IReportMetadataService reportMetadataService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
-            this.reportMetadataService = reportMetadataService;
         }
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11");
@@ -27,8 +25,6 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             ReportTags.EventLog,
             ReportTags.Health
         };
-
-        public override ReportMetadata<Terms> Metadata => reportMetadataService.GetReportMetadata<Terms>(Codename);
 
         public override ReportResults GetResults()
         {
