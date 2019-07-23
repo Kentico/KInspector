@@ -1,43 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-
-using KenticoInspector.Core;
+﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DatabaseTableSizeAnalysis.Models;
+using System;
+using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
 {
-    public class Report : IReport, IWithMetadata<Labels>
+    public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
-        private readonly ILabelService labelService;
 
-        public Report(IDatabaseService databaseService, ILabelService labelService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
-            this.labelService = labelService;
         }
 
-        public string Codename => nameof(DatabaseTableSizeAnalysis);
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
-        public IList<Version> CompatibleVersions => new List<Version>
-        {
-            new Version(10, 0),
-            new Version(11, 0),
-            new Version(12, 0)
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public IList<string> Tags => new List<string> {
+        public override IList<string> Tags => new List<string> {
             ReportTags.Health
         };
 
-        public Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
-
-        public ReportResults GetResults()
+        public override ReportResults GetResults()
         {
             var top25LargestTables = databaseService.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetTop25LargestTables);
 
@@ -45,10 +32,10 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
             {
                 Type = ReportResultsType.Table,
                 Status = ReportResultsStatus.Information,
-                Summary = Metadata.Labels.CheckResultsTableForAnyIssues,
+                Summary = Metadata.Terms.CheckResultsTableForAnyIssues,
                 Data = new TableResult<DatabaseTableSizeResult>()
                 {
-                    Name = Metadata.Labels.Top25Results,
+                    Name = Metadata.Terms.Top25Results,
                     Rows = top25LargestTables
                 }
             };

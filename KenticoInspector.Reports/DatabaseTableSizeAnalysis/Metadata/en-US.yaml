@@ -1,9 +1,8 @@
-﻿names:
-  short: Database table size analysis
-descriptions:
-  short: Displays top 25 biggest tables from the database.
-  long: |
+﻿details:
+  name: Database table size analysis
+  shortDescription: Displays top 25 biggest tables from the database.
+  longDescription: |
     This report shows information on the rows, size in megabytes, and bytes per row.
-labels:
+terms:
   checkResultsTableForAnyIssues: Check results table for any issues.
   top25Results: Top 25 results
