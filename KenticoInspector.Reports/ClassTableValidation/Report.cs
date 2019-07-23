@@ -4,42 +4,31 @@ using System.Linq;
 
 using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ClassTableValidation.Models;
 
 namespace KenticoInspector.Reports.ClassTableValidation
 {
-    public class Report : IReport, IWithMetadata<Labels>
+    public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
         private readonly IInstanceService instanceService;
-        private readonly ILabelService labelService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService, ILabelService labelService)
+        public Report(IDatabaseService databaseService, IInstanceService instanceService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
             this.instanceService = instanceService;
-            this.labelService = labelService;
         }
 
-        public string Codename => nameof(ClassTableValidation);
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11");
 
-        public IList<Version> CompatibleVersions => new List<Version>
-        {
-            new Version(10, 0),
-            new Version(11, 0)
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public IList<string> Tags => new List<string> {
+        public override IList<string> Tags => new List<string> {
             ReportTags.Health,
         };
 
-        public Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
-
-        public ReportResults GetResults()
+        public override ReportResults GetResults()
         {
             var instance = instanceService.CurrentInstance;
 
@@ -56,14 +45,14 @@ namespace KenticoInspector.Reports.ClassTableValidation
             var tableErrors = tablesWithMissingClass.Count();
             var tableResults = new TableResult<dynamic>()
             {
-                Name = Metadata.Labels.DatabaseTablesWithMissingKenticoClasses,
+                Name = Metadata.Terms.DatabaseTablesWithMissingKenticoClasses,
                 Rows = tablesWithMissingClass
             };
 
             var classErrors = classesWithMissingTable.Count();
             var classResults = new TableResult<dynamic>()
             {
-                Name = Metadata.Labels.KenticoClassesWithMissingDatabaseTables,
+                Name = Metadata.Terms.KenticoClassesWithMissingDatabaseTables,
                 Rows = classesWithMissingTable
             };
 
@@ -81,12 +70,12 @@ namespace KenticoInspector.Reports.ClassTableValidation
             {
                 case 0:
                     results.Status = ReportResultsStatus.Good;
-                    results.Summary = Metadata.Labels.NoIssuesFound;
+                    results.Summary = Metadata.Terms.NoIssuesFound;
                     break;
 
                 default:
                     results.Status = ReportResultsStatus.Error;
-                    results.Summary = Metadata.Labels.CountIssueFound.With(new { count = totalErrors });
+                    results.Summary = Metadata.Terms.CountIssueFound.With(new { count = totalErrors });
                     break;
             }
 
