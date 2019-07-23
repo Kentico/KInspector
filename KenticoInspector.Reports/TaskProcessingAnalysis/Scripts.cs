@@ -2,11 +2,12 @@
 {
     public static class Scripts
     {
-        public const string BaseDirectory = "TaskProcessingAnalysis/Scripts/";
-        public const string GetCountOfUnprocessedIntegrationBusTasks = BaseDirectory + "GetCountOfUnprocessedIntegrationBusTasks.sql";
-        public const string GetCountOfUnprocessedScheduledTasks = BaseDirectory + "GetCountOfUnprocessedScheduledTasks.sql";
-        public const string GetCountOfUnprocessedSearchTasks = BaseDirectory + "GetCountOfUnprocessedSearchTasks.sql";
-        public const string GetCountOfUnprocessedStagingTasks = BaseDirectory + "GetCountOfUnprocessedStagingTasks.sql";
-        public const string GetCountOfUnprocessedWebFarmTasks = BaseDirectory + "GetCountOfUnprocessedWebFarmTasks.sql";
+        public static string BaseDirectory = $"{nameof(TaskProcessingAnalysis)}/Scripts";
+
+        public static string GetCountOfUnprocessedIntegrationBusTasks = $"{BaseDirectory}/{nameof(GetCountOfUnprocessedIntegrationBusTasks)}.sql";
+        public static string GetCountOfUnprocessedScheduledTasks = $"{BaseDirectory}/{nameof(GetCountOfUnprocessedScheduledTasks)}.sql";
+        public static string GetCountOfUnprocessedSearchTasks = $"{BaseDirectory}/{nameof(GetCountOfUnprocessedSearchTasks)}.sql";
+        public static string GetCountOfUnprocessedStagingTasks = $"{BaseDirectory}/{nameof(GetCountOfUnprocessedStagingTasks)}.sql";
+        public static string GetCountOfUnprocessedWebFarmTasks = $"{BaseDirectory}/{nameof(GetCountOfUnprocessedWebFarmTasks)}.sql";
     }
 }

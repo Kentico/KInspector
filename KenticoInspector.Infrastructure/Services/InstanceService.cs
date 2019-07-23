@@ -1,9 +1,10 @@
-﻿using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Repositories.Interfaces;
-using KenticoInspector.Core.Services.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Repositories.Interfaces;
+using KenticoInspector.Core.Services.Interfaces;
 
 namespace KenticoInspector.Infrastructure.Services
 {
@@ -13,6 +14,8 @@ namespace KenticoInspector.Infrastructure.Services
         private readonly ISiteRepository _siteRepository;
         private readonly IVersionRepository _versionRepository;
 
+        public Instance CurrentInstance { get; private set; }
+
         public InstanceService(IInstanceRepository instanceRepository, IVersionRepository versionRepository, ISiteRepository siteRepository)
         {
             _instanceRepository = instanceRepository;
@@ -20,19 +23,26 @@ namespace KenticoInspector.Infrastructure.Services
             _siteRepository = siteRepository;
         }
 
-        public bool DeleteInstance(Guid guid)
+        public bool DeleteInstance(Guid instanceGuid)
         {
-            return _instanceRepository.DeleteInstance(guid);
+            return _instanceRepository.DeleteInstance(instanceGuid);
         }
 
-        public Instance GetInstance(Guid guid)
+        public Instance GetInstance(Guid instanceGuid)
         {
-            return _instanceRepository.GetInstance(guid);
+            return _instanceRepository.GetInstance(instanceGuid);
         }
 
-        public InstanceDetails GetInstanceDetails(Guid guid)
+        public Instance SetCurrentInstance(Guid instanceGuid)
         {
-            var instance = _instanceRepository.GetInstance(guid);
+            CurrentInstance = _instanceRepository.GetInstance(instanceGuid);
+
+            return CurrentInstance;
+        }
+
+        public InstanceDetails GetInstanceDetails(Guid instanceGuid)
+        {
+            var instance = _instanceRepository.GetInstance(instanceGuid);
             return GetInstanceDetails(instance);
         }
 

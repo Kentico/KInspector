@@ -2,8 +2,9 @@
 {
     public static class Scripts
     {
-        public const string BaseDirectory = "ClassTableValidation/";
-        public const string ClassesWithNoTable = BaseDirectory + "GetClassesWithNoTable.sql";
-        public const string TablesWithNoClass = BaseDirectory + "GetTablesWithNoClass.sql";
+        public static string BaseDirectory = $"{nameof(ClassTableValidation)}/Scripts";
+
+        public static string ClassesWithNoTable = $"{BaseDirectory}/{nameof(ClassesWithNoTable)}.sql";
+        public static string TablesWithNoClass = $"{BaseDirectory}/{nameof(TablesWithNoClass)}.sql";
     }
 }

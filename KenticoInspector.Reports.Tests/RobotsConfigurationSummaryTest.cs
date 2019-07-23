@@ -1,16 +1,19 @@
-﻿using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
-using KenticoInspector.Reports.RobotsConfigurationSummary;
-using KenticoInspector.Reports.Tests.Helpers;
-using Moq;
-using Moq.Protected;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+
+using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.RobotsConfigurationSummary;
+using KenticoInspector.Reports.RobotsConfigurationSummary.Models;
+using KenticoInspector.Reports.Tests.Helpers;
+
+using Moq;
+using Moq.Protected;
+
+using NUnit.Framework;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -20,42 +23,33 @@ namespace KenticoInspector.Reports.Tests
     public class RobotsConfigurationSummaryTest
     {
         private Mock<IDatabaseService> _mockDatabaseService;
-        private Instance _mockInstance;
-        private InstanceDetails _mockInstanceDetails;
         private Mock<IInstanceService> _mockInstanceService;
-        private Report _mockReport;
+        private Mock<IReportMetadataService> _mockReportMetadataService;
+        private RobotsConfigurationSummaryReport _mockReport;
 
         public RobotsConfigurationSummaryTest(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
+
+            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
         }
 
         [Test]
         public void Should_ReturnGoodStatus_WhenRobotsTxtFound()
         {
             // Arrange
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
-            mockHttpMessageHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage() { StatusCode = HttpStatusCode.OK })
-                .Verifiable();
-
-            var httpClient = new HttpClient(mockHttpMessageHandler.Object);
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, httpClient);
+            _mockReport = ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode.OK, out Mock<HttpMessageHandler> mockHttpMessageHandler);
+            var mockInstance = _mockInstanceService.Object.CurrentInstance;
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Good);
 
-            var baseUri = new Uri(_mockInstance.Url);
+            var baseUri = new Uri(mockInstance.Url);
             var expectedUri = new Uri(baseUri, Constants.RobotsTxtRelativePath);
+
             AssertUrlCalled(mockHttpMessageHandler, expectedUri);
         }
 
@@ -76,32 +70,21 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnGoodStatus_WhenSiteIsInSubDirectoryAndRobotsTxtFound()
         {
             // Arrange
-            var baseUrl = _mockInstance.Url;
-            _mockInstance.Url += "/subdirectory";
 
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
-            mockHttpMessageHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK
-                })
-                .Verifiable();
+            _mockReport = ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode.OK, out Mock<HttpMessageHandler> mockHttpMessageHandler);
+            var mockInstance = _mockInstanceService.Object.CurrentInstance;
 
-            var httpClient = new HttpClient(mockHttpMessageHandler.Object);
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, httpClient);
+            var baseUrl = mockInstance.Url;
+            mockInstance.Url += "/subdirectory";
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
+
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Good);
 
             var expectedUri = new Uri($"{baseUrl}/{Constants.RobotsTxtRelativePath}");
+
             AssertUrlCalled(mockHttpMessageHandler, expectedUri);
         }
 
@@ -109,33 +92,46 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnWarningStatus_WhenRobotsTxtNotFound()
         {
             // Arrange
-            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
-            handlerMock
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                "SendAsync",
-                ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.NotFound
-                })
-                .Verifiable();
-            var httpClient = new HttpClient(handlerMock.Object);
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, httpClient);
+            _mockReport = ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode.NotFound, out Mock<HttpMessageHandler> mockHttpMessageHandler);
+
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
+
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
         private void InitializeCommonMocks(int majorVersion)
         {
-            _mockInstance = MockInstances.Get(majorVersion);
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
-            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
+            var mockInstance = MockInstances.Get(majorVersion);
+
+            var mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
+
+            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(mockInstance, mockInstanceDetails);
+            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
+        }
+
+        private RobotsConfigurationSummaryReport ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode httpStatusCode, out Mock<HttpMessageHandler> mockHttpMessageHandler)
+        {
+            mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+
+            mockHttpMessageHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(new HttpResponseMessage() { StatusCode = httpStatusCode })
+                .Verifiable();
+
+            var httpClient = new HttpClient(mockHttpMessageHandler.Object);
+
+            var report = new RobotsConfigurationSummaryReport(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object, httpClient);
+
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, report);
+
+            return report;
         }
     }
 }

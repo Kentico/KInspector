@@ -26,9 +26,9 @@ namespace KenticoInspector.Infrastructure.Services
             }
         }
 
-        public void ConfigureForInstance(Instance instance)
+        public void Configure(DatabaseSettings databaseSettings)
         {
-            _connection = DatabaseHelper.GetSqlConnection(instance);
+            _connection = DatabaseHelper.GetSqlConnection(databaseSettings);
         }
 
         public IEnumerable<T> ExecuteSqlFromFile<T>(string relativeFilePath)

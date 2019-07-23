@@ -1,5 +1,6 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
@@ -9,65 +10,33 @@ using System.Linq;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
-    public class Report : IReport
+    public class Report : AbstractReport<Terms>
     {
-        private readonly IDatabaseService _databaseService;
-        private readonly IInstanceService _instanceService;
+        private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
-            _databaseService = databaseService;
-            _instanceService = instanceService;
+            this.databaseService = databaseService;
         }
 
-        public string Codename => "Content-Tree-Consistency-Analysis";
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
-        public IList<Version> CompatibleVersions => new List<Version> {
-            new Version("10.0"),
-            new Version("11.0"),
-            new Version("12.0")
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public string LongDescription => @"
-        <p>This report checks for the following consistency issues:</p>
-        <ul>
-            <li>Tree nodes with a bad parent site</li>
-            <li>Tree nodes with a bad parent node</li>
-            <li>Tree nodes with level inconsistency based on the number of <code>/</code> in the alias path compared to it’s level</li>
-            <li>Tree nodes with level inconsistency based on the whether it’s parent node has a level one higher than it does</li>
-            <li>Tree node duplicates based on alias path</li>
-            <li>Tree nodes with no document node</li>
-            <li>Tree nodes with page type not assigned to site</li>
-            <li>Document nodes with no tree node</li>
-            <li>Validates that the published data and the data in the CMS_VersionHistory tables match</li>
-        </ul>
-        ";
-
-        public string Name => "Content Tree Consistency Analysis";
-
-        public string ShortDescription => "Performs consistency analysis for items in the content tree";
-
-        public IList<string> Tags => new List<string>()
+        public override IList<string> Tags => new List<string>()
         {
             ReportTags.Health,
             ReportTags.Consistency
         };
 
-        public ReportResults GetResults(Guid InstanceGuid)
+        public override ReportResults GetResults()
         {
-            var instance = _instanceService.GetInstance(InstanceGuid);
-            _databaseService.ConfigureForInstance(instance);
-
-            var treeNodeWithBadParentSiteResults = GetTreeNodeTestResult("Tree nodes with a bad parent site", Scripts.GetTreeNodeIdsWithBadParentSiteId);
-            var treeNodeWithBadParentNodeResults = GetTreeNodeTestResult("Tree nodes with a bad parent node", Scripts.GetTreeNodeIdsWithBadParentNodeId);
-            var treeNodeWithLevelInconsistencyAliasatPathTestResults = GetTreeNodeTestResult("Tree nodes with level inconsistency (alias path test)", Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest);
-            var treeNodeWithLevelInconsistencyParentChildLevelTestResults = GetTreeNodeTestResult("Tree Nodes with level inconsistency (parent/child level test)", Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest);
-            var treeNodeWithMissingDocumentResults = GetTreeNodeTestResult("Tree nodes with no document node", Scripts.GetTreeNodeIdsWithMissingDocument);
-            var treeNodeWithDuplicateAliasPathResults = GetTreeNodeTestResult("Tree nodes with duplicated alias paths", Scripts.GetTreeNodeIdsWithDuplicatedAliasPath);
-            var treeNodeWithPageTypeNotAssignedToSiteResults = GetTreeNodeTestResult("Tree nodes with page type not assigned to site", Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite);
-            var documentNodesWithMissingTreeNodeResults = GetDocumentNodeTestResult("Document nodes with no tree node", Scripts.GetDocumentIdsWithMissingTreeNode);
+            var treeNodeWithBadParentSiteResults = GetTreeNodeTestResult(Metadata.Terms.TreeNodesWithABadParentSite, Scripts.GetTreeNodeIdsWithBadParentSiteId);
+            var treeNodeWithBadParentNodeResults = GetTreeNodeTestResult(Metadata.Terms.TreeNodesWithABadParentNode, Scripts.GetTreeNodeIdsWithBadParentNodeId);
+            var treeNodeWithLevelInconsistencyAliasatPathTestResults = GetTreeNodeTestResult(Metadata.Terms.TreeNodesWithLevelInconsistencyAliasPath, Scripts.GetTreeNodeIdsWithLevelMismatchByAliasPathTest);
+            var treeNodeWithLevelInconsistencyParentChildLevelTestResults = GetTreeNodeTestResult(Metadata.Terms.TreeNodesWithLevelInconsistencyParent, Scripts.GetTreeNodeIdsWithLevelMismatchByNodeLevelTest);
+            var treeNodeWithMissingDocumentResults = GetTreeNodeTestResult(Metadata.Terms.TreeNodesWithNoDocumentNode, Scripts.GetTreeNodeIdsWithMissingDocument);
+            var treeNodeWithDuplicateAliasPathResults = GetTreeNodeTestResult(Metadata.Terms.TreeNodesWithDuplicatedAliasPath, Scripts.GetTreeNodeIdsWithDuplicatedAliasPath);
+            var treeNodeWithPageTypeNotAssignedToSiteResults = GetTreeNodeTestResult(Metadata.Terms.TreeNodesWithPageTypeNotAssignedToSite, Scripts.GetTreeNodeIdsWithPageTypeNotAssignedToSite);
+            var documentNodesWithMissingTreeNodeResults = GetDocumentNodeTestResult(Metadata.Terms.DocumentNodesWithNoTreeNode, Scripts.GetDocumentIdsWithMissingTreeNode);
 
             var workflowInconsistenciesResults = GetWorkflowInconsistencyResult();
 
@@ -127,14 +96,14 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 ((IDictionary<string, object>)combinedResults.Data).Add(reportResults.Data.Name, reportResults.Data);
                 if (reportResults.Status == ReportResultsStatus.Error)
                 {
-                    combinedResults.Summary += $"{name} found. ";
+                    combinedResults.Summary += Metadata.Terms.NameFound.With(new { name });
                     combinedResults.Status = ReportResultsStatus.Error;
                 }
             }
 
             if (combinedResults.Status == ReportResultsStatus.Good)
             {
-                combinedResults.Summary = "No content tree consistency issues found.";
+                combinedResults.Summary = Metadata.Terms.NoContentTreeConsistencyIssuesFound;
             }
 
             return combinedResults;
@@ -143,7 +112,13 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
         private IEnumerable<CmsClassItem> GetCmsClassItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems)
         {
             var cmsClassIds = versionHistoryItems.Select(vhi => vhi.VersionClassID);
-            return _databaseService.ExecuteSqlFromFile<CmsClassItem>(Scripts.GetCmsClassItems, new { IDs = cmsClassIds.ToArray() });
+            return databaseService.ExecuteSqlFromFile<CmsClassItem>(Scripts.GetCmsClassItems, new { IDs = cmsClassIds.ToArray() });
+        }
+
+        private IEnumerable<IDictionary<string, object>> GetCoupledData(CmsClassItem cmsClassItem, IEnumerable<int> Ids)
+        {
+            var replacements = new CoupledDataScriptReplacements(cmsClassItem.ClassTableName, cmsClassItem.ClassIDColumn);
+            return databaseService.ExecuteSqlFromFileGeneric(Scripts.GetCmsDocumentCoupledDataItems, replacements.Dictionary, new { IDs = Ids.ToArray() });
         }
 
         private ReportResults GetDocumentNodeTestResult(string name, string script)
@@ -151,16 +126,10 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return GetTestResult<CmsDocumentNode>(name, script, Scripts.GetDocumentNodeDetails);
         }
 
-        private IEnumerable<IDictionary<string, object>> GetCoupledData(CmsClassItem cmsClassItem, IEnumerable<int> Ids)
-        {
-            var replacements = new CoupledDataScriptReplacements(cmsClassItem.ClassTableName, cmsClassItem.ClassIDColumn);
-            return _databaseService.ExecuteSqlFromFileGeneric(Scripts.GetCmsDocumentCoupledDataItems, replacements.Dictionary, new { IDs = Ids.ToArray() });
-        }
-
         private ReportResults GetTestResult<T>(string name, string script, string getDetailsScript)
         {
-            var nodeIds = _databaseService.ExecuteSqlFromFile<int>(script);
-            var details = _databaseService.ExecuteSqlFromFile<T>(getDetailsScript, new { IDs = nodeIds.ToArray() });
+            var nodeIds = databaseService.ExecuteSqlFromFile<int>(script);
+            var details = databaseService.ExecuteSqlFromFile<T>(getDetailsScript, new { IDs = nodeIds.ToArray() });
 
             var data = new TableResult<T>
             {
@@ -184,8 +153,8 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
         private IEnumerable<CmsVersionHistoryItem> GetVersionHistoryItems()
         {
-            var latestVersionHistoryIds = _databaseService.ExecuteSqlFromFile<int>(Scripts.GetLatestVersionHistoryIdForAllDocuments);
-            return _databaseService.ExecuteSqlFromFile<CmsVersionHistoryItem>(Scripts.GetVersionHistoryDetails, new { IDs = latestVersionHistoryIds.ToArray() });
+            var latestVersionHistoryIds = databaseService.ExecuteSqlFromFile<int>(Scripts.GetLatestVersionHistoryIdForAllDocuments);
+            return databaseService.ExecuteSqlFromFile<CmsVersionHistoryItem>(Scripts.GetVersionHistoryDetails, new { IDs = latestVersionHistoryIds.ToArray() });
         }
 
         private ReportResults GetWorkflowInconsistencyResult()
@@ -208,7 +177,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
             var data = new TableResult<VersionHistoryMismatchResult>
             {
-                Name = "Workflow Inconsistencies",
+                Name = Metadata.Terms.WorkflowInconsistencies,
                 Rows = comparisonResults
             };
 
