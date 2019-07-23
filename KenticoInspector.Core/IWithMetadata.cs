@@ -2,8 +2,8 @@
 
 namespace KenticoInspector.Core
 {
-    public interface IWithMetadata<TLabels> where TLabels : new()
+    public interface IWithMetadata<T> where T : new()
     {
-        Metadata<TLabels> Metadata { get; }
+        ReportMetadata<T> Metadata { get; }
     }
 }

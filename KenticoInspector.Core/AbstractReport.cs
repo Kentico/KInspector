@@ -18,7 +18,7 @@ namespace KenticoInspector.Core
 
         public abstract IList<string> Tags { get; }
 
-        public abstract Metadata<T> Metadata { get; }
+        public abstract ReportMetadata<T> Metadata { get; }
 
         public abstract ReportResults GetResults();
 

@@ -2,10 +2,10 @@
 
 namespace KenticoInspector.Core.Services.Interfaces
 {
-    public interface ILabelService : IService
+    public interface IReportMetadataService : IService
     {
         string CurrentCultureName { get; }
 
-        Metadata<TLabels> GetMetadata<TLabels>(string reportCodename) where TLabels : new();
+        ReportMetadata<T> GetReportMetadata<T>(string reportCodename) where T : new();
     }
 }

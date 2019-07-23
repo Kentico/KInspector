@@ -7,14 +7,14 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace KenticoInspector.Core.Helpers
 {
-    public class LabelService : ILabelService
+    public class ReportMetadataService : IReportMetadataService
     {
         public string CurrentCultureName => Thread.CurrentThread.CurrentCulture.Name;
 
-        public Metadata<TLabels> GetMetadata<TLabels>(string reportCodename) where TLabels : new()
+        public ReportMetadata<T> GetReportMetadata<T>(string reportCodename) where T : new()
         {
             var yamlPath = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\{CurrentCultureName}.yaml";
-            return DeserializeYaml<Metadata<TLabels>>(yamlPath);
+            return DeserializeYaml<ReportMetadata<T>>(yamlPath);
         }
 
         public T DeserializeYaml<T>(string path)
