@@ -1,21 +1,21 @@
 <template>
   <div>
-    <div
+    <vue-showdown
       v-if="type === 'String'"
       key="string-result"
-      v-html="data"
+      :markdown="data"
       >
-    </div>
+    </vue-showdown>
     <div
       v-else-if="type === 'StringList'"
       key="string-list-result"
       >
-      <span
+      <vue-showdown
         v-for="(item, index) in data"
         :key="`result-${index}`"
-        v-html="`${item}<br />`"
+        :markdown="item"
         >
-      </span>
+      </vue-showdown>
     </div>
     <div
       v-else-if="type === 'Table'"
