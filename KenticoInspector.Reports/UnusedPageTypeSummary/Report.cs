@@ -1,45 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using KenticoInspector.Core;
+﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.UnusedPageTypeSummary.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.UnusedPageTypeSummary
 {
-    public class UnusedPageTypeSummaryReport : IReport
+    public class UnusedPageTypeSummaryReport : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
-        private readonly ILabelService labelService;
 
-        public UnusedPageTypeSummaryReport(IDatabaseService databaseService, ILabelService labelService)
+        public UnusedPageTypeSummaryReport(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
-            this.labelService = labelService;
         }
 
-        public string Codename => nameof(UnusedPageTypeSummary);
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
-        public IList<Version> CompatibleVersions => new List<Version>
-        {
-            new Version(10, 0),
-            new Version(11, 0),
-            new Version(12, 0)
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public IList<string> Tags => new List<string>
+        public override IList<string> Tags => new List<string>
         {
             ReportTags.Information
         };
 
-        public Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
-
-        public ReportResults GetResults()
+        public override ReportResults GetResults()
         {
             var unusedPageTypes = databaseService.ExecuteSqlFromFile<PageType>(Scripts.GetUnusedPageTypes);
 
@@ -49,10 +36,10 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
             {
                 Type = ReportResultsType.Table,
                 Status = ReportResultsStatus.Information,
-                Summary = Metadata.Labels.CountUnusedPageType.With(new { count = countOfUnusedPageTypes }),
+                Summary = Metadata.Terms.CountUnusedPageType.With(new { count = countOfUnusedPageTypes }),
                 Data = new TableResult<PageType>()
                 {
-                    Name = Metadata.Labels.UnusedPageTypes,
+                    Name = Metadata.Terms.UnusedPageTypes,
                     Rows = unusedPageTypes
                 }
             };
