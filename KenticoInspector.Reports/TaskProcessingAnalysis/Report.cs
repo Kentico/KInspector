@@ -1,42 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using KenticoInspector.Core;
+﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.TaskProcessingAnalysis.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.TaskProcessingAnalysis
 {
-    public class TaskProcessingAnalysisReport : IReport, IWithMetadata<Labels>
+    public class TaskProcessingAnalysisReport : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
-        private readonly ILabelService labelService;
 
-        public TaskProcessingAnalysisReport(IDatabaseService databaseService, ILabelService labelService)
+        public TaskProcessingAnalysisReport(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
-            this.labelService = labelService;
         }
 
-        public string Codename => nameof(TaskProcessingAnalysis);
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11");
 
-        public IList<Version> CompatibleVersions => new List<Version> {
-            new Version(10, 0),
-            new Version(11, 0)
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public IList<string> Tags => new List<string> {
+        public override IList<string> Tags => new List<string> {
            ReportTags.Health
         };
 
-        public Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
-
-        public ReportResults GetResults()
+        public override ReportResults GetResults()
         {
             var unprocessedIntegrationBusTasks = databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedIntegrationBusTasks);
             var unprocessedScheduledTasks = databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedScheduledTasks);
@@ -56,6 +45,37 @@ namespace KenticoInspector.Reports.TaskProcessingAnalysis
             return CompileResults(rawResults);
         }
 
+        private string AsTaskCountLabel(KeyValuePair<TaskType, int> taskTypeCount)
+        {
+            Term label = string.Empty;
+            var count = taskTypeCount.Value;
+
+            switch (taskTypeCount.Key)
+            {
+                case TaskType.IntegrationBusTask:
+                    label = Metadata.Terms.CountIntegrationBusTask.With(new { count });
+                    break;
+
+                case TaskType.ScheduledTask:
+                    label = Metadata.Terms.CountScheduledTask.With(new { count });
+                    break;
+
+                case TaskType.SearchTask:
+                    label = Metadata.Terms.CountSearchTask.With(new { count });
+                    break;
+
+                case TaskType.StagingTask:
+                    label = Metadata.Terms.CountStagingTask.With(new { count });
+                    break;
+
+                case TaskType.WebFarmTask:
+                    label = Metadata.Terms.CountWebFarmTask.With(new { count });
+                    break;
+            }
+
+            return label.With(new { count });
+        }
+
         private ReportResults CompileResults(Dictionary<TaskType, int> taskResults)
         {
             var totalUnprocessedTasks = taskResults.Sum(x => x.Value);
@@ -65,40 +85,9 @@ namespace KenticoInspector.Reports.TaskProcessingAnalysis
                     .Where(x => x.Value > 0)
                     .Select(AsTaskCountLabel),
                 Status = totalUnprocessedTasks > 0 ? ReportResultsStatus.Warning : ReportResultsStatus.Good,
-                Summary = Metadata.Labels.CountUnprocessedTask.With(new { count = totalUnprocessedTasks }),
+                Summary = Metadata.Terms.CountUnprocessedTask.With(new { count = totalUnprocessedTasks }),
                 Type = ReportResultsType.StringList
             };
-        }
-
-        private string AsTaskCountLabel(KeyValuePair<TaskType, int> taskTypeCount)
-        {
-            Label label = string.Empty;
-            var count = taskTypeCount.Value;
-
-            switch (taskTypeCount.Key)
-            {
-                case TaskType.IntegrationBusTask:
-                    label = Metadata.Labels.CountIntegrationBusTask.With(new { count });
-                    break;
-
-                case TaskType.ScheduledTask:
-                    label = Metadata.Labels.CountScheduledTask.With(new { count });
-                    break;
-
-                case TaskType.SearchTask:
-                    label = Metadata.Labels.CountSearchTask.With(new { count });
-                    break;
-
-                case TaskType.StagingTask:
-                    label = Metadata.Labels.CountStagingTask.With(new { count });
-                    break;
-
-                case TaskType.WebFarmTask:
-                    label = Metadata.Labels.CountWebFarmTask.With(new { count });
-                    break;
-            }
-
-            return label.With(new { count });
         }
     }
 }
