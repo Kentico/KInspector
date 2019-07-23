@@ -10,20 +10,16 @@ using System.Text;
 
 namespace KenticoInspector.Reports.SampleReport
 {
-    public class Report : AbstractReport<Labels>
+    public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
-        private readonly ILabelService labelService;
 
-        public Report(IDatabaseService databaseService, ILabelService labelService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
-            this.labelService = labelService;
         }
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
-
-        public override Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
 
         public override IList<string> Tags => new List<string> {
             ReportTags.Consistency
@@ -40,7 +36,7 @@ namespace KenticoInspector.Reports.SampleReport
             {
                 var name = $"test-{i}";
                 var problem = GetRandomString(10);
-                data.Add(Metadata.Labels.DetailedResult.With(new { name, problem }).ToString());
+                data.Add(Metadata.Terms.DetailedResult.With(new { name, problem }).ToString());
             }
 
             return new ReportResults()
@@ -48,7 +44,7 @@ namespace KenticoInspector.Reports.SampleReport
                 Data = data,
                 Type = ReportResultsType.StringList,
                 Status = ReportResultsStatus.Information,
-                Summary = Metadata.Labels.Summary.With(new { issueCount }).ToString()
+                Summary = Metadata.Terms.Summary.With(new { issueCount }).ToString()
             };
         }
 
