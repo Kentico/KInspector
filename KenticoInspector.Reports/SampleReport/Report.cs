@@ -1,0 +1,69 @@
+﻿using KenticoInspector.Core;
+using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
+using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.SampleReport.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace KenticoInspector.Reports.SampleReport
+{
+    public class Report : AbstractReport<Labels>
+    {
+        private readonly IDatabaseService databaseService;
+        private readonly ILabelService labelService;
+
+        public Report(IDatabaseService databaseService, ILabelService labelService)
+        {
+            this.databaseService = databaseService;
+            this.labelService = labelService;
+        }
+
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+
+        public override Metadata<Labels> Metadata => labelService.GetMetadata<Labels>(Codename);
+
+        public override IList<string> Tags => new List<string> {
+            ReportTags.Consistency
+        };
+
+        public override ReportResults GetResults()
+        {
+            var random = new Random();
+            var issueCount = random.Next(0, 3);
+
+            var data = new List<string>();
+
+            for (int i = 0; i < issueCount; i++)
+            {
+                var name = $"test-{i}";
+                var problem = GetRandomString(10);
+                data.Add(Metadata.Labels.DetailedResult.With(new { name, problem }).ToString());
+            }
+
+            return new ReportResults()
+            {
+                Data = data,
+                Type = ReportResultsType.StringList,
+                Status = ReportResultsStatus.Information,
+                Summary = Metadata.Labels.Summary.With(new { issueCount }).ToString()
+            };
+        }
+
+        private string GetRandomString(int size)
+        {
+            var builder = new StringBuilder();
+            var random = new Random();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            
+            return builder.ToString();
+        }
+    }
+}
