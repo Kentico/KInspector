@@ -5,7 +5,7 @@
       dense
       >
       <v-toolbar-title>
-        <vue-showdown :markdown="report.metadata.names.short" />
+        <vue-showdown :markdown="report.metadata.details.name" />
       </v-toolbar-title>
       <v-spacer />
       <div class="d-flex">
@@ -40,7 +40,7 @@
           v-ripple="{ class: `grey--text` }"
           >
           <v-flex>
-            <vue-showdown :markdown="report.metadata.descriptions.short" />
+            <vue-showdown :markdown="report.metadata.details.shortDescription" />
           </v-flex>
           <v-spacer></v-spacer>
           <v-chip
@@ -73,7 +73,7 @@
 
     <v-slide-y-transition>
       <v-card-text v-show="showDescription">
-        <vue-showdown :markdown="report.metadata.descriptions.long" />
+        <vue-showdown :markdown="report.metadata.details.longDescription" />
       </v-card-text>
     </v-slide-y-transition>
 
