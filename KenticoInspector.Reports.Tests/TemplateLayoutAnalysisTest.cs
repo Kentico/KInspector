@@ -28,7 +28,7 @@ namespace KenticoInspector.Reports.Tests
 
             _mockReport = new TemplateLayoutAnalysisReport(_mockDatabaseService.Object, _mockReportMetadataService.Object);
 
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Labels>(_mockReportMetadataService, _mockReport);
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
         }
 
         [Test]
