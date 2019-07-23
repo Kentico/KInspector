@@ -17,7 +17,7 @@ namespace KenticoInspector.Reports.Tests
     {
         private Mock<IDatabaseService> _mockDatabaseService;
         private Mock<IInstanceService> _mockInstanceService;
-        private Mock<ILabelService> _mockLabelService;
+        private Mock<IReportMetadataService> _mockReportMetadataService;
         private InstanceDetails _mockInstanceDetails;
         private Report _mockReport;
 
@@ -25,11 +25,11 @@ namespace KenticoInspector.Reports.Tests
         {
             InitializeCommonMocks(majorVersion);
 
-            _mockLabelService = MockLabelServiceHelper.GetlabelService();
+            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
 
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockLabelService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object);
 
-            MockLabelServiceHelper.SetuplabelService<Labels>(_mockLabelService, _mockReport);
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
         }
 
         [Test]

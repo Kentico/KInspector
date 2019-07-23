@@ -24,14 +24,14 @@ namespace KenticoInspector.Reports.Tests
     {
         private Mock<IDatabaseService> _mockDatabaseService;
         private Mock<IInstanceService> _mockInstanceService;
-        private Mock<ILabelService> _mockLabelService;
+        private Mock<IReportMetadataService> _mockReportMetadataService;
         private RobotsConfigurationSummaryReport _mockReport;
 
         public RobotsConfigurationSummaryTest(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
 
-            _mockLabelService = MockLabelServiceHelper.GetlabelService();
+            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
         }
 
         [Test]
@@ -127,9 +127,9 @@ namespace KenticoInspector.Reports.Tests
 
             var httpClient = new HttpClient(mockHttpMessageHandler.Object);
 
-            var report = new RobotsConfigurationSummaryReport(_mockDatabaseService.Object, _mockInstanceService.Object, _mockLabelService.Object, httpClient);
+            var report = new RobotsConfigurationSummaryReport(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object, httpClient);
 
-            MockLabelServiceHelper.SetuplabelService<Labels>(_mockLabelService, report);
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Labels>(_mockReportMetadataService, report);
 
             return report;
         }

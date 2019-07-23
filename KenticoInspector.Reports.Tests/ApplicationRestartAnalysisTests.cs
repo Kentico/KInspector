@@ -18,18 +18,18 @@ namespace KenticoInspector.Reports.Tests
     {
         private InstanceDetails _mockInstanceDetails;
         private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<ILabelService> _mockLabelService;
+        private Mock<IReportMetadataService> _reportMetadataService;
         private Report _mockReport;
 
         public ApplicationRestartAnalysisTests(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
 
-            _mockLabelService = MockLabelServiceHelper.GetlabelService();
+            _reportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
 
-            _mockReport = new Report(_mockDatabaseService.Object, _mockLabelService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _reportMetadataService.Object);
 
-            MockLabelServiceHelper.SetuplabelService<Labels>(_mockLabelService, _mockReport);
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_reportMetadataService, _mockReport);
         }
 
         [Test]
