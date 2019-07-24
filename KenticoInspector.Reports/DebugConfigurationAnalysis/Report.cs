@@ -12,9 +12,9 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
 {
     public class Report : AbstractReport<Terms>
     {
-        readonly IDatabaseService _databaseService;
-        readonly IInstanceService _instanceService;
-        readonly ICmsFileService _cmsFileService;
+        private readonly IDatabaseService _databaseService;
+        private readonly IInstanceService _instanceService;
+        private readonly ICmsFileService _cmsFileService;
 
         public Report(
             IDatabaseService databaseService,
@@ -29,7 +29,7 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
         }
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
-        
+
         public override IList<string> Tags => new List<string> {
            ReportTags.Health
         };

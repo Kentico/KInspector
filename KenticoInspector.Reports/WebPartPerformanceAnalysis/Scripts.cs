@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
+﻿namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
 {
     public static class Scripts
     {
