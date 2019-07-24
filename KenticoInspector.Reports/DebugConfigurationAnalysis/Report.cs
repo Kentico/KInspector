@@ -1,5 +1,6 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DebugConfigurationAnalysis.Models;
@@ -9,45 +10,33 @@ using System.Linq;
 
 namespace KenticoInspector.Reports.DebugConfigurationAnalysis
 {
-    public class Report : IReport
+    public class Report : AbstractReport<Terms>
     {
         readonly IDatabaseService _databaseService;
         readonly IInstanceService _instanceService;
         readonly ICmsFileService _cmsFileService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService, ICmsFileService cmsFileService)
+        public Report(
+            IDatabaseService databaseService,
+            IInstanceService instanceService,
+            ICmsFileService cmsFileService,
+            IReportMetadataService reportMetadataService
+        ) : base(reportMetadataService)
         {
             _databaseService = databaseService;
             _instanceService = instanceService;
             _cmsFileService = cmsFileService;
         }
 
-        public string Codename => "debug-configuration-analysis";
-
-        public IList<Version> CompatibleVersions => new List<Version> {
-            new Version("10.0"),
-            new Version("11.0"),
-            new Version("12.0"),
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public string LongDescription => @"";
-
-        public string Name => "Debug Configuration Analysis";
-
-        public string ShortDescription => "Shows status of debug settings in the database and web.config file.";
-
-        public IList<string> Tags => new List<string> {
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        
+        public override IList<string> Tags => new List<string> {
            ReportTags.Health
         };
 
-        public ReportResults GetResults(Guid InstanceGuid)
+        public override ReportResults GetResults()
         {
-            var instance = _instanceService.GetInstance(InstanceGuid);
-            var instanceDetails = _instanceService.GetInstanceDetails(instance);
-            _databaseService.ConfigureForInstance(instance);
-
+            var instance = _instanceService.CurrentInstance;
             var databaseSettingsValues = _databaseService.ExecuteSqlFromFile<SettingsKey>(Scripts.GetDebugSettingsValues);
             ResolveSettingsDisplayNames(instance, databaseSettingsValues);
 
@@ -102,53 +91,53 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             return results;
         }
 
-        private static void AnalyzeWebConfigSettings(ReportResults results, bool isCompilationDebugEnabled, bool isTraceEnabled)
+        private void AnalyzeWebConfigSettings(ReportResults results, bool isCompilationDebugEnabled, bool isTraceEnabled)
         {
             var isDebugOrTraceEnabledInWebConfig = isCompilationDebugEnabled || isTraceEnabled;
             if (isDebugOrTraceEnabledInWebConfig)
             {
                 results.Status = ReportResultsStatus.Error;
 
-                var enabledSettingsText = isCompilationDebugEnabled ? "'Debug'" : string.Empty;
+                var enabledSettingsText = isCompilationDebugEnabled ? "`Debug`" : string.Empty;
                 enabledSettingsText += isCompilationDebugEnabled && isTraceEnabled ? " &amp; " : string.Empty;
-                enabledSettingsText += isTraceEnabled ? "'Trace'" : string.Empty;
-                results.Summary += $"{enabledSettingsText} enabled in web.config. ";
+                enabledSettingsText += isTraceEnabled ? "`Trace`" : string.Empty;
+                results.Summary += Metadata.Terms.WebConfig.Summary.With(new { enabledSettingsText });
             }
 
             var webconfigSettingsValues = new List<SettingsKey>();
-            webconfigSettingsValues.Add(new SettingsKey("Debug", "Compilation Debug", false, isCompilationDebugEnabled));
-            webconfigSettingsValues.Add(new SettingsKey("Trace", "Trace Enabled", false, isTraceEnabled));
+            webconfigSettingsValues.Add(new SettingsKey("Debug", Metadata.Terms.WebConfig.DebugKeyDisplayName, isCompilationDebugEnabled, false));
+            webconfigSettingsValues.Add(new SettingsKey("Trace", Metadata.Terms.WebConfig.TraceKeyDisplayName, isTraceEnabled, false));
 
             results.Data.WebConfigSettingsResults = new TableResult<SettingsKey>()
             {
-                Name = "All Web.Config Settings",
+                Name = Metadata.Terms.WebConfig.OverviewTableHeader,
                 Rows = webconfigSettingsValues
             };
         }
 
-        private static void AnalyzeDatabaseSettingsResults(ReportResults results, IEnumerable<SettingsKey> databaseSettingsKeys)
+        private void AnalyzeDatabaseSettingsResults(ReportResults results, IEnumerable<SettingsKey> databaseSettingsKeys)
         {
-            var databaseSettingsEnabledNotByDefault = databaseSettingsKeys.Where(x => x.KeyValue == true && x.KeyDefaultValue == false);
-            var totalDatabaseSettingsEnabledNotByDefault = databaseSettingsEnabledNotByDefault.Count();
-            if (totalDatabaseSettingsEnabledNotByDefault > 0)
+            var explicitlyEnabledSettings = databaseSettingsKeys.Where(x => x.KeyValue == true && x.KeyDefaultValue == false);
+            var explicitlyEnabledSettingsCount = explicitlyEnabledSettings.Count();
+            if (explicitlyEnabledSettingsCount > 0)
             {
                 if (results.Status != ReportResultsStatus.Error)
                 {
                     results.Status = ReportResultsStatus.Warning;
                 }
 
-                results.Summary += $"{totalDatabaseSettingsEnabledNotByDefault} database setting{(totalDatabaseSettingsEnabledNotByDefault > 1 ? "s" : string.Empty)} enabled (not by default). ";
+                results.Summary += Metadata.Terms.Database.Summary.With(new { explicitlyEnabledSettingsCount });
 
                 results.Data.DatabaseSettingsEnabledNotByDefaultResults = new TableResult<SettingsKey>()
                 {
-                    Name = "Database settings enabled (not by default)",
-                    Rows = databaseSettingsEnabledNotByDefault
+                    Name = Metadata.Terms.Database.ExplicitlyEnabledSettingsTableHeader,
+                    Rows = explicitlyEnabledSettings
                 };
             }
 
             results.Data.AllDatabaseSettings = new TableResult<SettingsKey>()
             {
-                Name = "All Database Settings",
+                Name = Metadata.Terms.Database.OverviewTableHeader,
                 Rows = databaseSettingsKeys
             };
         }
