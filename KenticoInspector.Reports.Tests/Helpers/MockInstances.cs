@@ -16,7 +16,7 @@ namespace KenticoInspector.Reports.Tests.Helpers
 
         public static Instance Kentico10 = new Instance
         {
-            Name = "K11 Test Instance",
+            Name = "K10 Test Instance",
             Guid = Guid.NewGuid(),
             Path = "C:\\inetpub\\wwwroot\\Kentico10",
             Url = "http://kentico10.com",
