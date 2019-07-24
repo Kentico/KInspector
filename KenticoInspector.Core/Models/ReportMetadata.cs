@@ -1,6 +1,6 @@
 ﻿namespace KenticoInspector.Core.Models
 {
-    public class ReportMetadata<T> where T: new()
+    public class ReportMetadata<T> where T : new()
     {
         public ReportDetails Details { get; set; }
 

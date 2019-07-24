@@ -8,6 +8,7 @@ namespace KenticoInspector.Core
     public abstract class AbstractReport<T> : IReport, IWithMetadata<T> where T : new()
     {
         protected readonly IReportMetadataService reportMetadataService;
+
         public AbstractReport(IReportMetadataService reportMetadataService)
         {
             this.reportMetadataService = reportMetadataService;
@@ -15,7 +16,8 @@ namespace KenticoInspector.Core
 
         public string Codename => GetCodename(this.GetType());
 
-        public static string GetCodename(Type reportType) {
+        public static string GetCodename(Type reportType)
+        {
             return GetDirectParentNamespace(reportType);
         }
 
