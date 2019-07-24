@@ -2,6 +2,7 @@ using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ApplicationRestartAnalysis;
+using KenticoInspector.Reports.ApplicationRestartAnalysis.Models;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using NUnit.Framework;
@@ -15,16 +16,20 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(12)]
     public class ApplicationRestartAnalysisTests
     {
-        private Instance _mockInstance;
         private InstanceDetails _mockInstanceDetails;
         private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IInstanceService> _mockInstanceService;
+        private Mock<IReportMetadataService> _reportMetadataService;
         private Report _mockReport;
 
         public ApplicationRestartAnalysisTests(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object);
+
+            _reportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
+
+            _mockReport = new Report(_mockDatabaseService.Object, _reportMetadataService.Object);
+
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_reportMetadataService, _mockReport);
         }
 
         [Test]
@@ -33,11 +38,11 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var applicationRestartEvents = new List<ApplicationRestartEvent>();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents))
+                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.ApplicationRestartEvents))
                 .Returns(applicationRestartEvents);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Data.Rows.Count == 0);
@@ -65,11 +70,11 @@ namespace KenticoInspector.Reports.Tests
             });
 
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents))
+                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.ApplicationRestartEvents))
                 .Returns(applicationRestartEvents);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Data.Rows.Count == 2);
@@ -82,11 +87,11 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var applicationRestartEvents = new List<ApplicationRestartEvent>();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.GetApplicationRestartEvents))
+                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.ApplicationRestartEvents))
                 .Returns(applicationRestartEvents);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Type == ReportResultsType.Table);
@@ -94,10 +99,10 @@ namespace KenticoInspector.Reports.Tests
 
         private void InitializeCommonMocks(int majorVersion)
         {
-            _mockInstance = MockInstances.Get(majorVersion);
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
-            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
+            var mockInstance = MockInstances.Get(majorVersion);
+
+            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
+            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
     }
 }

@@ -1,58 +1,52 @@
-﻿using KenticoInspector.Core;
-using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using KenticoInspector.Core;
+using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
+using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.RobotsConfigurationSummary.Models;
+
 namespace KenticoInspector.Reports.RobotsConfigurationSummary
 {
-    public class Report : IReport
+    public class RobotsConfigurationSummaryReport : AbstractReport<Terms>
     {
-        private readonly IDatabaseService _databaseService;
-        private readonly IInstanceService _instanceService;
+        private readonly IDatabaseService databaseService;
+        private readonly IInstanceService instanceService;
         private HttpClient _httpClient = new HttpClient();
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService, HttpClient httpClient = null)
+        public RobotsConfigurationSummaryReport(
+            IDatabaseService databaseService,
+            IInstanceService instanceService,
+            IReportMetadataService reportMetadataService,
+            HttpClient httpClient = null
+        ) : base(reportMetadataService)
+
         {
-            _databaseService = databaseService;
-            _instanceService = instanceService;
+            this.databaseService = databaseService;
+            this.instanceService = instanceService;
+
             if (httpClient != null)
             {
                 _httpClient = httpClient;
             }
         }
 
-        public string Codename => "robots-txt-information-summary";
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
-        public IList<Version> CompatibleVersions => new List<Version>
-        {
-            new Version("10.0"),
-            new Version("11.0"),
-            new Version("12.0")
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public string LongDescription => @"<p>See <a href=""http://www.robotstxt.org/robotstxt.html"" target=""_blank"">robotstxt.org</a> for more details.</p>";
-
-        public string Name => "Robots.txt Configuration Summary";
-
-        public string ShortDescription => "Checks that the ~/robots.txt file is present and accessible.";
-
-        public IList<string> Tags => new List<string>
+        public override IList<string> Tags => new List<string>
         {
             ReportTags.Information,
             ReportTags.SEO,
         };
 
-        public ReportResults GetResults(Guid InstanceGuid)
+        public override ReportResults GetResults()
         {
-            var instance = _instanceService.GetInstance(InstanceGuid);
-            var instanceDetails = _instanceService.GetInstanceDetails(instance);
+            var instance = instanceService.CurrentInstance;
 
             var instanceUri = new Uri(instance.Url);
             var testUri = new Uri(instanceUri, Constants.RobotsTxtRelativePath);
@@ -63,7 +57,7 @@ namespace KenticoInspector.Reports.RobotsConfigurationSummary
             {
                 Data = string.Empty,
                 Status = found ? ReportResultsStatus.Good : ReportResultsStatus.Warning,
-                Summary = found ? "robots.txt found" : "robots.txt not found",
+                Summary = found ? Metadata.Terms.RobotsTxtFound : Metadata.Terms.RobotsTxtNotFound,
                 Type = ReportResultsType.String
             };
         }

@@ -1,59 +1,41 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.DatabaseTableSizeAnalysis.Models;
 using System;
 using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
 {
-    public class Report : IReport
+    public class Report : AbstractReport<Terms>
     {
-        private readonly IDatabaseService _databaseService;
-        private readonly IInstanceService _instanceService;
+        private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
-            _databaseService = databaseService;
-            _instanceService = instanceService;
+            this.databaseService = databaseService;
         }
 
-        public string Codename => "database-table-size-analysis";
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
-        public IList<Version> CompatibleVersions => new List<Version> {
-            new Version("10.0"),
-            new Version("11.0"),
-            new Version("12.0")
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public string LongDescription => @"";
-
-        public string Name => "Database table size analysis";
-
-        public string ShortDescription => "Displays top 25 biggest tables from the database.";
-
-        public IList<string> Tags => new List<string> {
+        public override IList<string> Tags => new List<string> {
             ReportTags.Health
         };
 
-        public ReportResults GetResults(Guid InstanceGuid)
+        public override ReportResults GetResults()
         {
-            var instance = _instanceService.GetInstance(InstanceGuid);
-            var instanceDetails = _instanceService.GetInstanceDetails(instance);
-            _databaseService.ConfigureForInstance(instance);
-
-            var top25LargestTables = _databaseService.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetTop25LargestTables);
+            var top25LargestTables = databaseService.ExecuteSqlFromFile<DatabaseTableSizeResult>(Scripts.GetTop25LargestTables);
 
             return new ReportResults
             {
                 Type = ReportResultsType.Table,
                 Status = ReportResultsStatus.Information,
-                Summary = "Check results table for any issues",
+                Summary = Metadata.Terms.CheckResultsTableForAnyIssues,
                 Data = new TableResult<DatabaseTableSizeResult>()
                 {
-                    Name = "Top 25 Results",
+                    Name = Metadata.Terms.Top25Results,
                     Rows = top25LargestTables
                 }
             };

@@ -6,11 +6,6 @@ namespace KenticoInspector.Core.Helpers
 {
     public class DatabaseHelper
     {
-        public static string GetConnectionString(Instance instance)
-        {
-            return GetConnectionString(instance.DatabaseSettings);
-        }
-
         public static string GetConnectionString(DatabaseSettings databaseSettings)
         {
             SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder();
@@ -29,12 +24,6 @@ namespace KenticoInspector.Core.Helpers
             sb["Database"] = databaseSettings.Database;
 
             return sb.ConnectionString;
-        }
-
-        public static IDbConnection GetSqlConnection(Instance instance)
-        {
-            var connectionString = GetConnectionString(instance);
-            return GetSqlConnection(connectionString);
         }
 
         public static IDbConnection GetSqlConnection(DatabaseSettings databaseSettings)

@@ -1,8 +1,9 @@
 ﻿namespace KenticoInspector.Reports.ApplicationRestartAnalysis
 {
-    public static class Scripts
+    public class Scripts
     {
-        public const string BaseDirectory = "ApplicationRestartAnalysis/";
-        public const string GetApplicationRestartEvents = BaseDirectory + "GetApplicationRestartEvents.sql";
+        public static string BaseDirectory = $"{nameof(ApplicationRestartAnalysis)}/Scripts";
+
+        public static string ApplicationRestartEvents = $"{BaseDirectory}/{nameof(ApplicationRestartEvents)}.sql";
     }
 }

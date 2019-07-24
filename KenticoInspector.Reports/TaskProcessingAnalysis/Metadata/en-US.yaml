@@ -1,0 +1,17 @@
+﻿details:
+  name: Task processing analysis
+  shortDescription: Checks system queues for tasks that appear stuck for more than 24 hours.
+  longDescription: |
+    The following queues are reviewed for stuck tasks:
+      * Scheduled tasks (ignores recurring)
+      * Web Farm tasks
+      * Integration Bus tasks
+      * Staging tasks
+      * Search tasks
+terms:
+  countIntegrationBusTask: <count> Integration Bus <count:task|tasks>.
+  countScheduledTask: <count> Scheduled <count:task|tasks>.
+  countSearchTask: <count> Search <count:task|tasks>.
+  countStagingTask: <count> Staging <count:task|tasks>.
+  countUnprocessedTask: <count> unprocessed <count:task|tasks>.
+  countWebFarmTask: <count> Web farm <count:task|tasks>.

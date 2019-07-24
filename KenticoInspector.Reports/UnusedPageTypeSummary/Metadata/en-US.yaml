@@ -1,0 +1,8 @@
+﻿details:
+  name: Unused page type summary
+  shortDescription: Checks for unused pages types.
+  longDescription: |
+    This report checks for page types that are not in use by any page on any site.
+terms:
+  countUnusedPageType: <count> unused page <count:type|types>.
+  unusedPageTypes: Unused page types

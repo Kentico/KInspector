@@ -2,7 +2,8 @@
 {
     public class Scripts
     {
-        public const string BaseDirectory = "TemplateLayoutAnalysis/";
-        public const string GetIdenticalLayouts = BaseDirectory + "GetIdenticalLayouts.sql";
+        public static string BaseDirectory = $"{nameof(TemplateLayoutAnalysis)}/Scripts";
+
+        public static string GetIdenticalLayouts = $"{BaseDirectory}/{nameof(GetIdenticalLayouts)}.sql";
     }
 }
