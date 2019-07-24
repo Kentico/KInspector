@@ -1,9 +1,12 @@
-﻿namespace KenticoInspector.Core.Models
+﻿using Newtonsoft.Json;
+
+namespace KenticoInspector.Core.Models
 {
-    public class ReportMetadata<T> where T: new()
+    public class ReportMetadata<TTerms> where TTerms : new()
     {
         public ReportDetails Details { get; set; }
 
-        public T Terms { get; set; }
+        [JsonIgnore]
+        public TTerms Terms { get; set; }
     }
 }

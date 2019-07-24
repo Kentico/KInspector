@@ -1,11 +1,16 @@
-﻿namespace KenticoInspector.Core.Models
+﻿using Newtonsoft.Json;
+
+namespace KenticoInspector.Core.Models
 {
     public class ReportDetails
     {
-        public string LongDescription { get; set; }
+        [JsonConverter(typeof(TermConverter))]
+        public Term Name { get; set; }
 
-        public string Name { get; set; }
+        [JsonConverter(typeof(TermConverter))]
+        public Term ShortDescription { get; set; }
 
-        public string ShortDescription { get; set; }
+        [JsonConverter(typeof(TermConverter))]
+        public Term LongDescription { get; set; }
     }
 }
