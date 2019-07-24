@@ -1,7 +1,6 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
-using KenticoInspector.Reports.Tests.Helpers;
 using KenticoInspector.Reports.UnusedPageTypeSummary;
 using KenticoInspector.Reports.UnusedPageTypeSummary.Models;
 using Moq;
@@ -13,22 +12,13 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class UnusedPageTypeSummaryTest
+    public class UnusedPageTypeSummaryTest : AbstractReportTest<Report, Terms>
     {
-        private InstanceDetails _mockInstanceDetails;
-        private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IReportMetadataService> _mockReportMetadataService;
-        private UnusedPageTypeSummaryReport _mockReport;
+        private Report _mockReport;
 
-        public UnusedPageTypeSummaryTest(int majorVersion)
+        public UnusedPageTypeSummaryTest(int majorVersion) : base(majorVersion)
         {
-            InitializeCommonMocks(majorVersion);
-
-            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
-
-            _mockReport = new UnusedPageTypeSummaryReport(_mockDatabaseService.Object, _mockReportMetadataService.Object);
-
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
         }
 
         [Test]
@@ -59,14 +49,6 @@ namespace KenticoInspector.Reports.Tests
                 new PageType{ ClassDisplayName = "Dancing Goat site - Transformations", ClassName = "DancingGoat.Transformations" },
                 new PageType{ ClassDisplayName = "E-commerce - Transformations", ClassName = "Ecommerce.Transformations" }
             };
-        }
-
-        private void InitializeCommonMocks(int majorVersion)
-        {
-            var mockInstance = MockInstances.Get(majorVersion);
-
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
     }
 }
