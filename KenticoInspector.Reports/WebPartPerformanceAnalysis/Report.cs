@@ -1,5 +1,6 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis.Models;
@@ -10,47 +11,27 @@ using System.Xml.Linq;
 
 namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
 {
-    public class Report : IReport
+    public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService _databaseService;
         private readonly IInstanceService _instanceService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService)
+        public Report(IDatabaseService databaseService, IInstanceService instanceService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
             _databaseService = databaseService;
             _instanceService = instanceService;
         }
 
-        public string Codename => nameof(WebPartPerformanceAnalysis);
-
-        public IList<Version> CompatibleVersions => new List<Version>
-        {
-            new Version("10.0"),
-            new Version("11.0")
-        };
-
-        public IList<Version> IncompatibleVersions => new List<Version>();
-
-        public string LongDescription => @"<p>Displays list of web parts where 'columns' property is not specified.</p>
-<p>Web parts without specified 'columns' property must load all field from the database.</p>
-<p>By specifying this property, you can significantly lower the data transmission from database to the server and improve the load times.</p>
-<p>For more information, <a href=""https://docs.kentico.com/k12sp/configuring-kentico/optimizing-performance-of-portal-engine-sites/loading-data-efficiently"">see documentation</a>.";
-
-        public string Name => "Web Part Performance Analysis";
-
-        public string ShortDescription => "Shows potential optimization opportunities.";
-
-        public IList<string> Tags => new List<string> {
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10","11");
+        
+        public override IList<string> Tags => new List<string> {
             ReportTags.PortalEngine,
             ReportTags.Performance,
             ReportTags.WebParts,
         };
 
-        public ReportResults GetResults(Guid InstanceGuid)
+        public override ReportResults GetResults()
         {
-            var instance = _instanceService.GetInstance(InstanceGuid);
-            _databaseService.ConfigureForInstance(instance);
-
             var affectedTemplates = _databaseService.ExecuteSqlFromFile<PageTemplate>(Scripts.GetAffectedTemplates);
             var affectedTemplateIds = affectedTemplates.Select(x => x.PageTemplateID).ToArray();
             var affectedDocuments = _databaseService.ExecuteSqlFromFile<Document>(Scripts.GetDocumentsByPageTemplateIds, new { IDs = affectedTemplateIds });
@@ -131,11 +112,11 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
                 DocumentSummaryTable = documentSummaryTable
             };
 
-            var totalAffectedTemplates = templateSummaries.Count();
-            var totalAffectedWebParts = webPartSummaries.Count();
-            var totalAffectedDocuments = documentSummaries.Count();
+            var affectedDocumentCount = documentSummaries.Count();
+            var affectedTemplateCount = templateSummaries.Count();
+            var affectedWebPartCount = webPartSummaries.Count();
 
-            var summary = $"{totalAffectedWebParts} web part{(totalAffectedWebParts!=1 ? "s" : string.Empty )} on {totalAffectedTemplates} template{(totalAffectedTemplates != 1 ? "s" : string.Empty)} affecting {totalAffectedDocuments} document{(totalAffectedDocuments != 1 ? "s" : string.Empty)}";
+            var summary = Metadata.Terms.Summary.With(new { affectedDocumentCount, affectedTemplateCount, affectedWebPartCount });
 
             var status = templateSummaries.Count() > 0 ? ReportResultsStatus.Warning : ReportResultsStatus.Good;
 

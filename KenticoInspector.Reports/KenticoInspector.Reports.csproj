@@ -128,6 +128,9 @@
     <None Update="UnusedPageTypeSummary\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WebPartPerformanceAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="WebPartPerformanceAnalysis\Scripts\GetAffectedTemplates.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
