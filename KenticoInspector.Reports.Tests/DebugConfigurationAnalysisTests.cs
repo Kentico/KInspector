@@ -23,24 +23,16 @@ namespace KenticoInspector.Reports.Tests
         private InstanceDetails _mockInstanceDetails;
         private Mock<IInstanceService> _mockInstanceService;
         private Report _mockReport;
-
+        private Mock<IReportMetadataService> _mockReportMetadataService;
         public DebugConfigurationAnalysisTests(int majorVersion)
         {
             InitializeCommonMocks(majorVersion);
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockCmsFileService.Object);
-        }
 
-        [Test]
-        public void Should_ReturnInformationStatus_When_ResultsAreClean()
-        {
-            // Arrange
-            ArrangeServices();
+            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
 
-            // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockCmsFileService.Object, _mockReportMetadataService.Object);
 
-            // Assert
-            Assert.That(results.Status == ReportResultsStatus.Information, "When the results are clean, the report status should be 'information'");
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
         }
 
         [Test]
@@ -51,7 +43,7 @@ namespace KenticoInspector.Reports.Tests
             ArrangeServices(customWebconfigXml: customWebConfigXml);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error, "When debug is enabled in the web.config, the report status should be 'error'");
@@ -65,10 +57,23 @@ namespace KenticoInspector.Reports.Tests
             ArrangeServices(customWebconfigXml: customWebConfigXml);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error, "When trace is enabled in the web.config, the report status should be 'error'");
+        }
+
+        [Test]
+        public void Should_ReturnInformationStatus_When_ResultsAreClean()
+        {
+            // Arrange
+            ArrangeServices();
+
+            // Act
+            var results = _mockReport.GetResults();
+
+            // Assert
+            Assert.That(results.Status == ReportResultsStatus.Information, "When the results are clean, the report status should be 'information'");
         }
 
         [Test]
@@ -79,7 +84,7 @@ namespace KenticoInspector.Reports.Tests
             ArrangeServices(customDatabaseSettingsValues: new SettingsKey[] { settingsKey });
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Warning, "When any database setting is set to true and that isn't the default value, the report status should be 'warning'");
