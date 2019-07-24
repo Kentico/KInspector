@@ -13,13 +13,13 @@ using KenticoInspector.Reports.RobotsConfigurationSummary.Models;
 
 namespace KenticoInspector.Reports.RobotsConfigurationSummary
 {
-    public class RobotsConfigurationSummaryReport : AbstractReport<Terms>
+    public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
         private readonly IInstanceService instanceService;
         private HttpClient _httpClient = new HttpClient();
 
-        public RobotsConfigurationSummaryReport(
+        public Report(
             IDatabaseService databaseService,
             IInstanceService instanceService,
             IReportMetadataService reportMetadataService,
