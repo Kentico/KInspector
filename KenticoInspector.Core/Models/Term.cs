@@ -1,17 +1,25 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace KenticoInspector.Core.Models
 {
     public class Term
     {
-        private Term(string value)
+        private string RawMarkdown { get; set; }
+
+        private IEnumerable<Token> Tokens
         {
-            Markdown = value;
+            get
+            {
+                return Token.ToTokens(RawMarkdown);
+            }
         }
 
-        public string Markdown { get; set; }
+        private Term(string value)
+        {
+            RawMarkdown = value;
+        }
 
         public static implicit operator Term(string value)
         {
@@ -20,45 +28,44 @@ namespace KenticoInspector.Core.Models
 
         public static implicit operator string(Term term)
         {
-            return term.Markdown;
+            return term.RawMarkdown;
         }
 
         public override string ToString()
         {
-            return Markdown;
+            return RawMarkdown;
         }
 
         /// <summary>
         /// Replaces tokens in strings based on the <paramref name="tokenValues"/> object.
         /// </summary>
         /// <param name="tokenValues">Object with property names that map to token names and property values that map to the token value.</param>
-        /// <returns>Phrase with  string.</returns>
-        /// <remarks>
-        /// Replacement is done using simple <see cref="string.Replace"/> and <see cref="object.ToString()"/>.
-        /// </remarks>
-        public Term With(object tokenValues)
+        /// <returns>Phrase with string.</returns>
+        public string With(object tokenValues)
         {
             var term = this;
 
-            if (tokenValues == null)
+            if (tokenValues == null || !Tokens.Any())
             {
                 return term;
             }
 
-            var properties = tokenValues
+            var valuesDictionary = GetValuesDictionary(tokenValues);
+
+            var filledTerm = Tokens
+                .Select(token => token.FillFrom(valuesDictionary))
+                .Aggregate(MergeStrings);
+
+            return filledTerm;
+        }
+
+        private static IDictionary<string, object> GetValuesDictionary(object tokenValues)
+        {
+            return tokenValues
                 .GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(PropertyIsNotIndexableAndHasGetter);
-
-            foreach (var property in properties)
-            {
-                var name = property.Name;
-                var value = property.GetValue(tokenValues);
-
-                term = ResolvePluralizationExpressions(name, value);
-            }
-
-            return term;
+                .Where(PropertyIsNotIndexableAndHasGetter)
+                .ToDictionary(PropertyName, p => PropertyValue(p, tokenValues));
         }
 
         private static bool PropertyIsNotIndexableAndHasGetter(PropertyInfo prop)
@@ -67,36 +74,19 @@ namespace KenticoInspector.Core.Models
                     && prop.GetMethod != null;
         }
 
-        private string ResolvePluralizationExpressions(string tokenName, object tokenValue)
+        private static string PropertyName(PropertyInfo property)
         {
-            var pluralizationRegex = new Regex($"<({tokenName}):?(\\w*)\\|?(\\w*)>");
-            var resolvedMarkdown = pluralizationRegex.Replace(Markdown, match => ResolvePluralizationMatches(match, tokenValue));
-
-            return resolvedMarkdown;
+            return property.Name;
         }
 
-        private string ResolvePluralizationMatches(Match match, object tokenValue)
+        private static object PropertyValue(PropertyInfo property, object tokenValues)
         {
+            return property.GetValue(tokenValues);
+        }
 
-            var singular = match.Groups[2].Value;
-            var plural = match.Groups[3].Value;
-
-            if (string.IsNullOrEmpty(singular))
-            {
-                return tokenValue.ToString();
-            }
-
-            if (tokenValue is int intValue)
-            {
-                if (intValue == 1)
-                {
-                    return singular;
-                }
-
-                return plural;
-            }
-
-            return match.Value;
+        private static string MergeStrings(string left, string right)
+        {
+            return $"{left}{right}";
         }
     }
 }
