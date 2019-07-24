@@ -1,7 +1,6 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.DatabaseTableSizeAnalysis;
 using KenticoInspector.Reports.DatabaseTableSizeAnalysis.Models;
-using KenticoInspector.Reports.Tests.Helpers;
 using NUnit.Framework;
 using System.Collections.Generic;
 

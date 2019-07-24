@@ -3,7 +3,6 @@ using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
-using System;
 
 namespace KenticoInspector.Reports.Tests
 {

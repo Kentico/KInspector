@@ -1,14 +1,8 @@
-﻿using System.Data;
-
-using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Services.Interfaces;
+﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.DatabaseConsistencyCheck;
 using KenticoInspector.Reports.DatabaseConsistencyCheck.Models;
-using KenticoInspector.Reports.Tests.Helpers;
-
-using Moq;
-
 using NUnit.Framework;
+using System.Data;
 
 namespace KenticoInspector.Reports.Tests
 {

@@ -1,10 +1,6 @@
 ﻿using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DebugConfigurationAnalysis;
 using KenticoInspector.Reports.DebugConfigurationAnalysis.Models;
-using KenticoInspector.Reports.Tests.Helpers;
-using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +11,10 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class DebugConfigurationAnalysisTests : AbstractReportTest<Report,Terms>
+    public class DebugConfigurationAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        
         private Report _mockReport;
-        
+
         public DebugConfigurationAnalysisTests(int majorVersion) : base(majorVersion)
         {
             _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockCmsFileService.Object, _mockReportMetadataService.Object);
