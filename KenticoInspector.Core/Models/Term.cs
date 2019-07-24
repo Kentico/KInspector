@@ -55,7 +55,7 @@ namespace KenticoInspector.Core.Models
                 var name = property.Name;
                 var value = property.GetValue(tokenValues);
 
-                term = ResolvePluralizationExpressions(name, value);
+                term = ResolvePluralizationExpressions(term.Markdown, name, value);
             }
 
             return term;
@@ -67,10 +67,10 @@ namespace KenticoInspector.Core.Models
                     && prop.GetMethod != null;
         }
 
-        private string ResolvePluralizationExpressions(string tokenName, object tokenValue)
+        private string ResolvePluralizationExpressions(string markdown, string tokenName, object tokenValue)
         {
-            var pluralizationRegex = new Regex($"<({tokenName}):?(\\w*)\\|?(\\w*)>");
-            var resolvedMarkdown = pluralizationRegex.Replace(Markdown, match => ResolvePluralizationMatches(match, tokenValue));
+            var pluralizationRegex = new Regex($"<({tokenName}):?([^\\|]*?)?\\|?([^\\|]*?)?>");
+            var resolvedMarkdown = pluralizationRegex.Replace(markdown, match => ResolvePluralizationMatches(match, tokenValue));
 
             return resolvedMarkdown;
         }
