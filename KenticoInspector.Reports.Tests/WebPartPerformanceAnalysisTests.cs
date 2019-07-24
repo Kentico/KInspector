@@ -15,13 +15,13 @@ namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
-    public class WebPartPerformanceAnalysisTest : AbstractReportTest
+    public class WebPartPerformanceAnalysisTest : AbstractReportTest<Report,Terms>
     {
         private Report _mockReport;
 
         public WebPartPerformanceAnalysisTest(int majorVersion) : base(majorVersion)
         {
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace KenticoInspector.Reports.Tests
             ArrangeAllQueries();
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Good, $"Expected status when no web parts have unspecified columns is 'Good' not '{results.Status}'.");
@@ -52,7 +52,7 @@ namespace KenticoInspector.Reports.Tests
             ArrangeAllQueries(affectedTemplates);
 
             // Act
-            var results = _mockReport.GetResults(_mockInstance.Guid);
+            var results = _mockReport.GetResults();
 
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Warning, $"Expected status when web parts have unspecified columns is 'Warning' not '{results.Status}'.");
