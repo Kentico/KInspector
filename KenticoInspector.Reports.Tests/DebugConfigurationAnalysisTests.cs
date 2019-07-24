@@ -15,24 +15,14 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class DebugConfigurationAnalysisTests
+    public class DebugConfigurationAnalysisTests : AbstractReportTest<Report,Terms>
     {
-        private Mock<ICmsFileService> _mockCmsFileService;
-        private Mock<IDatabaseService> _mockDatabaseService;
-        private Instance _mockInstance;
-        private InstanceDetails _mockInstanceDetails;
-        private Mock<IInstanceService> _mockInstanceService;
+        
         private Report _mockReport;
-        private Mock<IReportMetadataService> _mockReportMetadataService;
-        public DebugConfigurationAnalysisTests(int majorVersion)
+        
+        public DebugConfigurationAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            InitializeCommonMocks(majorVersion);
-
-            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
-
             _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockCmsFileService.Object, _mockReportMetadataService.Object);
-
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
         }
 
         [Test]
@@ -168,15 +158,6 @@ namespace KenticoInspector.Reports.Tests
             AddDefaultDatabaseSettingsKeyValues(results);
 
             return results;
-        }
-
-        private void InitializeCommonMocks(int majorVersion)
-        {
-            _mockInstance = MockInstances.Get(majorVersion);
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
-            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
-            _mockCmsFileService = MockCmsFileServiceHelper.SetupMockCmsFileService();
         }
     }
 }
