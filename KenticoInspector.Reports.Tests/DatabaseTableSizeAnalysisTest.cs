@@ -1,10 +1,7 @@
 ﻿using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DatabaseTableSizeAnalysis;
 using KenticoInspector.Reports.DatabaseTableSizeAnalysis.Models;
 using KenticoInspector.Reports.Tests.Helpers;
-using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 
@@ -13,22 +10,13 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class DatabaseTableSizeAnalysisTest
+    public class DatabaseTableSizeAnalysisTest : AbstractReportTest<Report, Terms>
     {
-        private InstanceDetails _mockInstanceDetails;
-        private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IReportMetadataService> _mockReportMetadataService;
         private Report _mockReport;
 
-        public DatabaseTableSizeAnalysisTest(int majorVersion)
+        public DatabaseTableSizeAnalysisTest(int majorVersion) : base(majorVersion)
         {
-            InitializeCommonMocks(majorVersion);
-
-            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
-
             _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
-
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
         }
 
         [Test]
@@ -57,13 +45,6 @@ namespace KenticoInspector.Reports.Tests
             }
 
             return results;
-        }
-
-        private void InitializeCommonMocks(int majorVersion)
-        {
-            var mockInstance = MockInstances.Get(majorVersion);
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
     }
 }
