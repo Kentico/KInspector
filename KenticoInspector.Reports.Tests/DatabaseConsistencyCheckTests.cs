@@ -15,21 +15,13 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class DatabaseConsistencyCheckTests
+    public class DatabaseConsistencyCheckTests : AbstractReportTest<Report, Terms>
     {
-        private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IReportMetadataService> _mockReportMetadataService;
         private Report _mockReport;
 
-        public DatabaseConsistencyCheckTests(int majorVersion)
+        public DatabaseConsistencyCheckTests(int majorVersion) : base(majorVersion)
         {
-            InitializeCommonMocks(majorVersion);
-
-            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
-
             _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
-
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
         }
 
         [Test]
@@ -68,13 +60,6 @@ namespace KenticoInspector.Reports.Tests
 
             //Assert
             Assert.That(results.Status == ReportResultsStatus.Error);
-        }
-
-        private void InitializeCommonMocks(int majorVersion)
-        {
-            var mockInstance = MockInstances.Get(majorVersion);
-
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
     }
 }
