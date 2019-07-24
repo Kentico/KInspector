@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace KenticoInspector.Reports.DebugConfigurationAnalysis
+﻿namespace KenticoInspector.Reports.DebugConfigurationAnalysis
 {
     public static class Scripts
     {

@@ -10,8 +10,10 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis.Models
         public string Name { get; set; }
         public string Type { get; set; }
         public int TemplateId { get; set; }
+
         [JsonIgnore]
         public IEnumerable<Document> Documents { get; set; }
+
         public int DocumentCount => Documents.Count();
     }
 }

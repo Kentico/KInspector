@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using KenticoInspector.Core.Models;
+﻿using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
 using KenticoInspector.Core.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Infrastructure.Services
 {

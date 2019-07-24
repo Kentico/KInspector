@@ -10,11 +10,11 @@ using System.Linq;
 
 namespace KenticoInspector.Reports.TaskProcessingAnalysis
 {
-    public class TaskProcessingAnalysisReport : AbstractReport<Terms>
+    public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
 
-        public TaskProcessingAnalysisReport(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }

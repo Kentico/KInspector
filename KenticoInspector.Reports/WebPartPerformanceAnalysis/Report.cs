@@ -22,8 +22,8 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
             _instanceService = instanceService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10","11");
-        
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11");
+
         public override IList<string> Tags => new List<string> {
             ReportTags.PortalEngine,
             ReportTags.Performance,
@@ -81,7 +81,6 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
                 Documents = documents
             });
         }
-
 
         private ReportResults CompileResults(IEnumerable<TemplateSummary> templateSummaries)
         {

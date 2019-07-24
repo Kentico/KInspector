@@ -1,37 +1,27 @@
-﻿using System;
+﻿using KenticoInspector.Core.Constants;
+using KenticoInspector.Reports.RobotsConfigurationSummary;
+using KenticoInspector.Reports.RobotsConfigurationSummary.Models;
+using KenticoInspector.Reports.Tests.Helpers;
+using Moq;
+using Moq.Protected;
+using NUnit.Framework;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-
-using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Services.Interfaces;
-using KenticoInspector.Reports.RobotsConfigurationSummary;
-using KenticoInspector.Reports.RobotsConfigurationSummary.Models;
-using KenticoInspector.Reports.Tests.Helpers;
-
-using Moq;
-using Moq.Protected;
-
-using NUnit.Framework;
 
 namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class RobotsConfigurationSummaryTest
+    public class RobotsTxtConfigurationSummaryTest : AbstractReportTest<Report, Terms>
     {
-        private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IInstanceService> _mockInstanceService;
-        private Mock<IReportMetadataService> _mockReportMetadataService;
-        private RobotsConfigurationSummaryReport _mockReport;
+        private Report _mockReport;
 
-        public RobotsConfigurationSummaryTest(int majorVersion)
+        public RobotsTxtConfigurationSummaryTest(int majorVersion) : base(majorVersion)
         {
-            InitializeCommonMocks(majorVersion);
-
-            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
         }
 
         [Test]
@@ -101,17 +91,7 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
-        private void InitializeCommonMocks(int majorVersion)
-        {
-            var mockInstance = MockInstances.Get(majorVersion);
-
-            var mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
-
-            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(mockInstance, mockInstanceDetails);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
-        }
-
-        private RobotsConfigurationSummaryReport ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode httpStatusCode, out Mock<HttpMessageHandler> mockHttpMessageHandler)
+        private Report ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode httpStatusCode, out Mock<HttpMessageHandler> mockHttpMessageHandler)
         {
             mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
 
@@ -127,7 +107,7 @@ namespace KenticoInspector.Reports.Tests
 
             var httpClient = new HttpClient(mockHttpMessageHandler.Object);
 
-            var report = new RobotsConfigurationSummaryReport(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object, httpClient);
+            var report = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object, httpClient);
 
             MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, report);
 

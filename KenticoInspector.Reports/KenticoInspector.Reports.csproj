@@ -92,7 +92,7 @@
     <None Update="DatabaseTableSizeAnalysis\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="RobotsConfigurationSummary\Metadata\en-US.yaml">
+    <None Update="RobotsTxtConfigurationSummary\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TaskProcessingAnalysis\Metadata\en-US.yaml">

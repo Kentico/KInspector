@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
+﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.Tests.Helpers;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis.Models;
-using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
-    public class WebPartPerformanceAnalysisTest : AbstractReportTest<Report,Terms>
+    public class WebPartPerformanceAnalysisTest : AbstractReportTest<Report, Terms>
     {
         private Report _mockReport;
 
@@ -42,7 +38,8 @@ namespace KenticoInspector.Reports.Tests
         {
             // Arrange
             var affectedTemplates = new List<PageTemplate>();
-            affectedTemplates.Add(new PageTemplate() {
+            affectedTemplates.Add(new PageTemplate()
+            {
                 PageTemplateCodeName = "cms.blog",
                 PageTemplateDisplayName = "Blog",
                 PageTemplateID = 25807,
@@ -66,7 +63,6 @@ namespace KenticoInspector.Reports.Tests
             var affectedTemplateIds = affectedTemplates.Select(x => x.PageTemplateID);
             var affectedDocuments = new List<Document>();
             _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetDocumentsByPageTemplateIds, "IDs", affectedTemplateIds, affectedDocuments);
-
         }
     }
 }

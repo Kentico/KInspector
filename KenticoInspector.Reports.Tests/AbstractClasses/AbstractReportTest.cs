@@ -3,7 +3,6 @@ using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
-using System;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -16,7 +15,8 @@ namespace KenticoInspector.Reports.Tests
         protected Mock<IDatabaseService> _mockDatabaseService;
         protected Mock<IInstanceService> _mockInstanceService;
         protected Mock<IReportMetadataService> _mockReportMetadataService;
-        
+        protected Mock<ICmsFileService> _mockCmsFileService;
+
         public AbstractReportTest(int majorVersion)
         {
             var reportCodename = AbstractReport<TermsType>.GetCodename(typeof(ReportType));
@@ -29,6 +29,7 @@ namespace KenticoInspector.Reports.Tests
             _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
             _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
             _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
+            _mockCmsFileService = MockCmsFileServiceHelper.SetupMockCmsFileService();
             _mockReportMetadataService = MockReportMetadataServiceHelper.GetBasicReportMetadataService<TermsType>(reportCodename);
         }
     }

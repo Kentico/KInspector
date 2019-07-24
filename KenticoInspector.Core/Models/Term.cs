@@ -77,7 +77,6 @@ namespace KenticoInspector.Core.Models
 
         private string ResolvePluralizationMatches(Match match, object tokenValue)
         {
-
             var singular = match.Groups[2].Value;
             var plural = match.Groups[3].Value;
 

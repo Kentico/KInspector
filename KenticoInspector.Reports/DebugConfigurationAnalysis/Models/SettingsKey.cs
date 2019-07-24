@@ -7,7 +7,9 @@
         public bool KeyValue { get; set; }
         public bool KeyDefaultValue { get; set; }
 
-        public SettingsKey() { }
+        public SettingsKey()
+        {
+        }
 
         public SettingsKey(string keyName, string keyDisplayName, bool keyValue, bool keyDefaultValue)
         {
