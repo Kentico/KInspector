@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 
 using KenticoInspector.Core.Models;
@@ -36,9 +35,14 @@ namespace KenticoInspector.Core.Helpers
                 databaseVersion = instanceDetails.DatabaseVersion
             };
 
-            deserializedMetadata.Details.Name = deserializedMetadata.Details.Name.With(commonData);
-            deserializedMetadata.Details.ShortDescription = deserializedMetadata.Details.ShortDescription.With(commonData);
-            deserializedMetadata.Details.LongDescription = deserializedMetadata.Details.LongDescription.With(commonData);
+            Term name = deserializedMetadata.Details.Name;
+            deserializedMetadata.Details.Name = name.With(commonData);
+
+            Term shortDescription = deserializedMetadata.Details.ShortDescription;
+            deserializedMetadata.Details.ShortDescription = shortDescription.With(commonData);
+
+            Term longDescription = deserializedMetadata.Details.LongDescription;
+            deserializedMetadata.Details.LongDescription = longDescription.With(commonData);
 
             return deserializedMetadata;
         }

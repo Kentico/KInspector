@@ -4,13 +4,10 @@ namespace KenticoInspector.Core.Models
 {
     public class ReportDetails
     {
-        [JsonConverter(typeof(TermConverter))]
-        public Term Name { get; set; }
+        public string Name { get; set; }
 
-        [JsonConverter(typeof(TermConverter))]
-        public Term ShortDescription { get; set; }
+        public string ShortDescription { get; set; }
 
-        [JsonConverter(typeof(TermConverter))]
-        public Term LongDescription { get; set; }
+        public string LongDescription { get; set; }
     }
 }
