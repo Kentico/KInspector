@@ -1,6 +1,7 @@
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Core.Tokens;
 using KenticoInspector.Reports.ApplicationRestartAnalysis;
 using KenticoInspector.Reports.ApplicationRestartAnalysis.Models;
 using KenticoInspector.Reports.Tests.Helpers;
@@ -99,6 +100,9 @@ namespace KenticoInspector.Reports.Tests
 
         private void InitializeCommonMocks(int majorVersion)
         {
+            // Handle this line in the future AbstractReportTest
+            TokenProcessor.RegisterTokens(typeof(Term).Assembly);
+
             var mockInstance = MockInstances.Get(majorVersion);
 
             _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
