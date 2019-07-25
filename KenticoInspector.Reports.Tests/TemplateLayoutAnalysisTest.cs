@@ -1,10 +1,6 @@
 ﻿using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.TemplateLayoutAnalysis;
 using KenticoInspector.Reports.TemplateLayoutAnalysis.Models;
-using KenticoInspector.Reports.Tests.Helpers;
-using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 
@@ -13,22 +9,13 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class TemplateLayoutAnalysisTests
+    public class TemplateLayoutAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private InstanceDetails _mockInstanceDetails;
-        private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IReportMetadataService> _mockReportMetadataService;
-        private TemplateLayoutAnalysisReport _mockReport;
+        private Report _mockReport;
 
-        public TemplateLayoutAnalysisTests(int majorVersion)
+        public TemplateLayoutAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            InitializeCommonMocks(majorVersion);
-
-            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
-
-            _mockReport = new TemplateLayoutAnalysisReport(_mockDatabaseService.Object, _mockReportMetadataService.Object);
-
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
         }
 
         [Test]
@@ -59,14 +46,6 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Data.Rows.Count == 0);
             Assert.That(results.Status == ReportResultsStatus.Information);
-        }
-
-        private void InitializeCommonMocks(int majorVersion)
-        {
-            var mockInstance = MockInstances.Get(majorVersion);
-
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
 
         private IEnumerable<IdenticalPageLayouts> GetListOfLayouts()

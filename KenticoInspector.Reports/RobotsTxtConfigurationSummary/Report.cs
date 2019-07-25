@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-
-using KenticoInspector.Core;
+﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.RobotsConfigurationSummary.Models;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace KenticoInspector.Reports.RobotsConfigurationSummary
 {
-    public class RobotsConfigurationSummaryReport : AbstractReport<Terms>
+    public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
         private readonly IInstanceService instanceService;
         private HttpClient _httpClient = new HttpClient();
 
-        public RobotsConfigurationSummaryReport(
+        public Report(
             IDatabaseService databaseService,
             IInstanceService instanceService,
             IReportMetadataService reportMetadataService,

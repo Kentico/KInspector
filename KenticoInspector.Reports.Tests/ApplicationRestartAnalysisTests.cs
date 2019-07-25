@@ -1,11 +1,6 @@
 using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
-using KenticoInspector.Core.Tokens;
 using KenticoInspector.Reports.ApplicationRestartAnalysis;
 using KenticoInspector.Reports.ApplicationRestartAnalysis.Models;
-using KenticoInspector.Reports.Tests.Helpers;
-using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -15,22 +10,13 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class ApplicationRestartAnalysisTests
+    public class ApplicationRestartAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private InstanceDetails _mockInstanceDetails;
-        private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IReportMetadataService> _reportMetadataService;
         private Report _mockReport;
 
-        public ApplicationRestartAnalysisTests(int majorVersion)
+        public ApplicationRestartAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            InitializeCommonMocks(majorVersion);
-
-            _reportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
-
-            _mockReport = new Report(_mockDatabaseService.Object, _reportMetadataService.Object);
-
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_reportMetadataService, _mockReport);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
         }
 
         [Test]
@@ -96,17 +82,6 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Type == ReportResultsType.Table);
-        }
-
-        private void InitializeCommonMocks(int majorVersion)
-        {
-            // Handle this line in the future AbstractReportTest
-            TokenProcessor.RegisterTokens(typeof(Term).Assembly);
-
-            var mockInstance = MockInstances.Get(majorVersion);
-
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
     }
 }

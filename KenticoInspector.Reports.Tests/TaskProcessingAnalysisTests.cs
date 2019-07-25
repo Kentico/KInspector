@@ -1,10 +1,6 @@
 using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.TaskProcessingAnalysis;
 using KenticoInspector.Reports.TaskProcessingAnalysis.Models;
-using KenticoInspector.Reports.Tests.Helpers;
-using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +9,13 @@ namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
-    public class TaskProcessingAnalysisTests
+    public class TaskProcessingAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private Mock<IDatabaseService> _mockDatabaseService;
-        private InstanceDetails _mockInstanceDetails;
-        private Mock<IReportMetadataService> _mockReportMetadataService;
-        private TaskProcessingAnalysisReport _mockReport;
+        private Report _mockReport;
 
-        public TaskProcessingAnalysisTests(int majorVersion)
+        public TaskProcessingAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            InitializeCommonMocks(majorVersion);
-
-            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
-
-            _mockReport = new TaskProcessingAnalysisReport(_mockDatabaseService.Object, _mockReportMetadataService.Object);
-
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
         }
 
         [Test]
@@ -120,14 +107,6 @@ namespace KenticoInspector.Reports.Tests
             var hasTasksListedInResults = resultsData.Any(x => x.Contains(taskType.ToString(), System.StringComparison.InvariantCultureIgnoreCase));
 
             Assert.That(hasTasksListedInResults, $"'{taskType}' not found in data.");
-        }
-
-        private void InitializeCommonMocks(int majorVersion)
-        {
-            var mockInstance = MockInstances.Get(majorVersion);
-
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
 
         private void SetupAllDatabaseQueries(
