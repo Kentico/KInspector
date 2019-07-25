@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Dynamic;
+
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Tokens;
+
 using NUnit.Framework;
 
 namespace KenticoInspector.Core.Tests
@@ -9,133 +14,65 @@ namespace KenticoInspector.Core.Tests
     {
         public TermTests()
         {
+            TokenProcessor.RegisterTokens(typeof(Term).Assembly);
         }
 
         [Test]
-        public void ShouldResolveWithInt()
+        [TestCase("<int32token> results", "5 results", 5)]
+        [TestCase("<int32token|5:Many> results", "Many results", 5)]
+        [TestCase("<int32token|One|Many> results", "One results", 1)]
+        [TestCase("<int32token|One|Many> results", "Many results", 5)]
+        [TestCase("<stringtoken|value:Correct> results", "Correct results", "value")]
+        [TestCase("<stringtoken|value:wrong|defaultvalue:Correct> result", "Correct result", "defaultvalue")]
+        [TestCase("<stringtoken|value:wrong|defaultvalue:Really correct> result", "Really correct result", "defaultvalue")]
+        [TestCase("Is <stringtoken|value:not >true", "Is true", "defaultvalue")]
+        [TestCase("<stringtoken1> and <stringtoken2|nothing:nothing wrong|something wrong>", "No results and nothing wrong", "No results", "nothing")]
+        public void ShouldResolve(string term, string result, params object[] tokenValues)
         {
             TestValidResult(
-                "<intToken> results",
-                new { intToken = 5 },
-                "5 results"
-                );
+                term,
+                AsDynamic(tokenValues),
+                result
+            );
         }
 
         [Test]
-        public void ShouldResolveWithIntSingleCase()
-        {
-            TestValidResult(
-                "<intToken|5:Many> results",
-                new { intToken = 5 },
-                "Many results"
-                );
-        }
+        public void ShouldResolveWithVersion() => ShouldResolve("The version is <versiontoken|12.0.4:supported>", "The version is supported", new Version(12, 0, 4));
 
         [Test]
-        public void ShouldResolveWithIntPluralizationSingle()
+        [TestCase("This is wrong: <>", typeof(ArgumentException), "value")]
+        [TestCase("This is <stringtoken|a failure|a success>", typeof(FormatException), "value")]
+        [TestCase("This is <stringtoken|string:failure:wrong|a success>", typeof(FormatException), "value")]
+        public void ShouldNotResolve(string term, Type exceptionType, params object[] tokenValues)
         {
-            TestValidResult(
-                "<intToken|One|Many> results",
-                new { intToken = 1 },
-                "One results"
-                );
+            TestInvalidThrows(
+                term,
+                exceptionType,
+                AsDynamic(tokenValues)
+            );
         }
 
-        [Test]
-        public void ShouldResolveWithIntPluralizationPlural()
+        private static dynamic AsDynamic(object[] tokenValues)
         {
-            TestValidResult(
-                "<intToken|One|Many> results",
-                new { intToken = 5 },
-                "Many results"
-                );
-        }
+            var expandoObject = new ExpandoObject();
 
-        [Test]
-        public void ShouldResolveWithStringSingleCase()
-        {
-            TestValidResult(
-                "<stringToken|value:Correct> result",
-                new { stringToken = "value" },
-                "Correct result"
-                );
-        }
+            var dictionary = (IDictionary<string, object>)expandoObject;
 
-        [Test]
-        public void ShouldResolveWithStringSingleCaseDefault()
-        {
-            TestValidResult(
-                "<stringToken|value:wrong|defaultvalue:Correct> result",
-                new { stringToken = "defaultvalue" },
-                "Correct result"
-                );
-        }
+            var i = 1;
 
-        [Test]
-        public void ShouldResolveWithStringSingleCaseDefaultWithSpaces()
-        {
-            TestValidResult(
-                "<stringToken|value:wrong|defaultvalue:Really correct> result",
-                new { stringToken = "defaultvalue" },
-                "Really correct result"
-                );
-        }
+            foreach (var tokenValue in tokenValues)
+            {
+                var key = $"{tokenValue.GetType().Name}token".ToLower();
 
-        [Test]
-        public void ShouldResolveWithStringSingleCaseNoDefault()
-        {
-            TestValidResult(
-                "Is <stringToken|value:not >true",
-                new { stringToken = "defaultvalue" },
-                "Is true"
-                );
-        }
+                if (tokenValues.Length > 1)
+                {
+                    key += i++;
+                }
 
-        [Test]
-        public void ShouldResolveWithMultipleStringsWithSpaces()
-        {
-            TestValidResult(
-                "<stringToken> and <stringToken2|nothing:nothing wrong|something wrong>",
-                new { stringToken = "No results", stringToken2 = "nothing" },
-                "No results and nothing wrong"
-                );
-        }
+                dictionary.Add(key, tokenValue);
+            }
 
-        [Test]
-        public void ShouldResolveWithVersion()
-        {
-            TestValidResult(
-                "The version is <version|12.0.4:supported>",
-                new { version = new Version(12, 0, 4) },
-                "The version is supported"
-                );
-        }
-
-        [Test]
-        public void ShouldNotResolveInvalidToken()
-        {
-            TestInvalidThrows<ArgumentException>(
-                "This is wrong: <>",
-                new { stringToken = "value" }
-                );
-        }
-
-        [Test]
-        public void ShouldNotResolveInvalidImpliedCase()
-        {
-            TestInvalidThrows<FormatException>(
-                "This is <notInt|a failure|a success>",
-                new { notInt = "string" }
-                );
-        }
-
-        [Test]
-        public void ShouldNotResolveInvalidCase()
-        {
-            TestInvalidThrows<FormatException>(
-                "This is <stringToken|string:failure:wrong|a success>",
-                new { stringToken = "value" }
-                );
+            return expandoObject;
         }
 
         public void TestValidResult(Term term, object tokenValues, string result)
@@ -144,13 +81,13 @@ namespace KenticoInspector.Core.Tests
             var resolvedTerm = term.With(tokenValues);
 
             // Assert
-            Assert.That(resolvedTerm, Is.EqualTo(result));
+            Assert.That(resolvedTerm.ToString(), Is.EqualTo(result));
         }
 
-        public void TestInvalidThrows<TException>(Term term, object tokenValues) where TException : Exception
+        public void TestInvalidThrows(Term term, Type exceptionType, object tokenValues)
         {
             // Assert
-            Assert.That(() => term.With(tokenValues), Throws.TypeOf<TException>());
+            Assert.That(() => term.With(tokenValues).ToString(), Throws.TypeOf(exceptionType));
         }
     }
 }
