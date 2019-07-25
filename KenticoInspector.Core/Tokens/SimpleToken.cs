@@ -2,21 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace KenticoInspector.Core.Models
+namespace KenticoInspector.Core.Tokens
 {
     /// <summary>
     /// Represents tokens using a single key and having N cases and an optional default.
     /// </summary>
-    internal class SimpleToken : Token
+    [Token("(<.*?>)")]
+    internal class SimpleToken : IToken
     {
         private static readonly char SimpleDelimiter = '|';
         private static readonly char CaseSeparator = ':';
 
-        private string Key { get; set; }
-
-        internal SimpleToken(string tokenExpression) : base(tokenExpression)
+        public string FillFrom(string rawToken, IDictionary<string, object> valuesDictionary)
         {
-            Key = ExtractKey(tokenExpression);
+            var trimmedToken = rawToken.Trim(new[] { '<', '>' });
+
+            var key = ExtractKey(trimmedToken);
+
+            if (valuesDictionary.TryGetValue(key, out object value))
+            {
+                return ResolveToken(trimmedToken, value);
+            }
+
+            return rawToken;
         }
 
         private string ExtractKey(string tokenExpression)
@@ -36,24 +44,9 @@ namespace KenticoInspector.Core.Models
             return tokenExpression;
         }
 
-        internal override string FillFrom(IDictionary<string, object> valuesDictionary)
+        private string ResolveToken(string token, object value)
         {
-            if (string.IsNullOrEmpty(Key))
-            {
-                return TokenExpression;
-            }
-
-            if (valuesDictionary.TryGetValue(Key, out object value))
-            {
-                return ResolveToken(value);
-            }
-
-            return TokenExpression;
-        }
-
-        private string ResolveToken(object value)
-        {
-            var splitExpression = TokenExpression.Split(new[] { SimpleDelimiter }, StringSplitOptions.RemoveEmptyEntries);
+            var splitExpression = token.Split(new[] { SimpleDelimiter }, StringSplitOptions.RemoveEmptyEntries);
 
             if (splitExpression.Length == 1)
             {
@@ -70,7 +63,7 @@ namespace KenticoInspector.Core.Models
 
                 var isDefault = i + 1 == totalCases;
 
-                (string caseKey, string caseValue) = GetCaseKeyAndValue(expressionCase);
+                (string caseKey, string caseValue) = GetCaseKeyAndValue(token, expressionCase);
 
                 if (string.IsNullOrEmpty(caseKey))
                 {
@@ -88,7 +81,7 @@ namespace KenticoInspector.Core.Models
                         return caseValue;
                     }
 
-                    throw new FormatException($"'{expressionCase}' inside '{TokenExpression}' looks like a default but does not come last.");
+                    throw new FormatException($"'{expressionCase}' inside '{token}' looks like a default but does not come last.");
                 }
 
                 if (value.ToString().Equals(caseKey, StringComparison.InvariantCultureIgnoreCase))
@@ -102,7 +95,7 @@ namespace KenticoInspector.Core.Models
             return string.Empty;
         }
 
-        private (string key, string value) GetCaseKeyAndValue(string expressionCase)
+        private (string key, string value) GetCaseKeyAndValue(string token, string expressionCase)
         {
             var splitExpressionCase = expressionCase.Split(new[] { CaseSeparator }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -115,8 +108,9 @@ namespace KenticoInspector.Core.Models
                     return (null, splitExpressionCase[0]);
 
                 default:
-                    throw new FormatException($"'{expressionCase}' inside '{TokenExpression}' looks like a case but contains more than one {CaseSeparator}.");
+                    throw new FormatException($"'{expressionCase}' inside '{token}' looks like a case but contains more than one {CaseSeparator}.");
             }
         }
+
     }
 }

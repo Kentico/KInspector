@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using KenticoInspector.Core.Tokens;
 
 namespace KenticoInspector.Core.Models
 {
@@ -8,13 +6,7 @@ namespace KenticoInspector.Core.Models
     {
         private string RawMarkdown { get; set; }
 
-        private IEnumerable<Token> Tokens
-        {
-            get
-            {
-                return Token.ToTokens(RawMarkdown);
-            }
-        }
+        private object TokenValues { get; set; }
 
         private Term(string value)
         {
@@ -33,60 +25,24 @@ namespace KenticoInspector.Core.Models
 
         public override string ToString()
         {
+            if (TokenValues != null)
+            {
+                return TokenProcessor.ParseTokens(this, TokenValues);
+            }
+
             return RawMarkdown;
         }
 
         /// <summary>
-        /// Replaces tokens in strings based on the <paramref name="tokenValues"/> object.
+        /// Prepares for token replacement based on the <paramref name="tokenValues"/> object.
         /// </summary>
-        /// <param name="tokenValues">Object with property names that map to token names and property values that map to the token value.</param>
+        /// <param name="tokenValues">Object with property names that map to token names and property values that map to token values.</param>
         /// <returns>Phrase with string.</returns>
-        public string With(object tokenValues)
+        public Term With(object tokenValues)
         {
-            var term = this;
+            TokenValues = tokenValues;
 
-            if (tokenValues == null || !Tokens.Any())
-            {
-                return term;
-            }
-
-            var valuesDictionary = GetValuesDictionary(tokenValues);
-
-            var filledTerm = Tokens
-                .Select(token => token.FillFrom(valuesDictionary))
-                .Aggregate(MergeStrings);
-
-            return filledTerm;
-        }
-
-        private static IDictionary<string, object> GetValuesDictionary(object tokenValues)
-        {
-            return tokenValues
-                .GetType()
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(PropertyIsNotIndexableAndHasGetter)
-                .ToDictionary(PropertyName, p => PropertyValue(p, tokenValues));
-        }
-
-        private static bool PropertyIsNotIndexableAndHasGetter(PropertyInfo prop)
-        {
-            return prop.GetIndexParameters().Length == 0
-                    && prop.GetMethod != null;
-        }
-
-        private static string PropertyName(PropertyInfo property)
-        {
-            return property.Name;
-        }
-
-        private static object PropertyValue(PropertyInfo property, object tokenValues)
-        {
-            return property.GetValue(tokenValues);
-        }
-
-        private static string MergeStrings(string left, string right)
-        {
-            return $"{left}{right}";
+            return this;
         }
     }
 }
