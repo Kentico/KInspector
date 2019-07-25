@@ -1,10 +1,6 @@
 using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ClassTableValidation;
 using KenticoInspector.Reports.ClassTableValidation.Models;
-using KenticoInspector.Reports.Tests.Helpers;
-using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 
@@ -13,23 +9,13 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class ClassTableValidationTests
+    public class ClassTableValidationTests : AbstractReportTest<Report, Terms>
     {
-        private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IInstanceService> _mockInstanceService;
-        private Mock<IReportMetadataService> _mockReportMetadataService;
-        private InstanceDetails _mockInstanceDetails;
         private Report _mockReport;
 
-        public ClassTableValidationTests(int majorVersion)
+        public ClassTableValidationTests(int majorVersion) : base(majorVersion)
         {
-            InitializeCommonMocks(majorVersion);
-
-            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
-
             _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object);
-
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
         }
 
         [Test]
@@ -127,15 +113,6 @@ namespace KenticoInspector.Reports.Tests
             }
 
             return tableResults;
-        }
-
-        private void InitializeCommonMocks(int majorVersion)
-        {
-            var mockInstance = MockInstances.Get(majorVersion);
-
-            _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
-            _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(mockInstance, _mockInstanceDetails);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
     }
 }

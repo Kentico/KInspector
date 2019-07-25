@@ -10,11 +10,11 @@ using System.Linq;
 
 namespace KenticoInspector.Reports.UnusedPageTypeSummary
 {
-    public class UnusedPageTypeSummaryReport : AbstractReport<Terms>
+    public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
 
-        public UnusedPageTypeSummaryReport(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }

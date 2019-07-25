@@ -1,10 +1,8 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using KenticoInspector.Reports.Tests.Helpers;
-using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -16,21 +14,13 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class ContentTreeConsistencyAnalysisTests
+    public class ContentTreeConsistencyAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private Mock<IDatabaseService> _mockDatabaseService;
-        private Mock<IReportMetadataService> _mockReportMetadataService;
         private Report _mockReport;
 
-        public ContentTreeConsistencyAnalysisTests(int majorVersion)
+        public ContentTreeConsistencyAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            InitializeCommonMocks(majorVersion);
-
-            _mockReportMetadataService = MockReportMetadataServiceHelper.GetReportMetadataService();
-
             _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
-
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, _mockReport);
         }
 
         [Test]
@@ -183,12 +173,6 @@ namespace KenticoInspector.Reports.Tests
             {
                 new CmsTreeNode { ClassDisplayName = "Bad Class", ClassName = "BadClass", NodeAliasPath = "/bad-1", NodeClassID = 1234, NodeID = 101, NodeLevel = 1, NodeName = "bad-1", NodeParentID = 0, NodeSiteID = 1 }
             };
-        }
-
-        private void InitializeCommonMocks(int majorVersion)
-        {
-            var mockInstance = MockInstances.Get(majorVersion);
-            _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(mockInstance);
         }
 
         private void SetupAllDatabaseQueries(
