@@ -1,6 +1,6 @@
 ﻿using KenticoInspector.Core.Constants;
-using KenticoInspector.Reports.RobotsConfigurationSummary;
-using KenticoInspector.Reports.RobotsConfigurationSummary.Models;
+using KenticoInspector.Reports.RobotsTxtConfigurationSummary;
+using KenticoInspector.Reports.RobotsTxtConfigurationSummary.Models;
 using KenticoInspector.Reports.Tests.Helpers;
 using Moq;
 using Moq.Protected;

@@ -3,14 +3,14 @@ using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
-using KenticoInspector.Reports.RobotsConfigurationSummary.Models;
+using KenticoInspector.Reports.RobotsTxtConfigurationSummary.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace KenticoInspector.Reports.RobotsConfigurationSummary
+namespace KenticoInspector.Reports.RobotsTxtConfigurationSummary
 {
     public class Report : AbstractReport<Terms>
     {
