@@ -1,20 +1,13 @@
-version: 1.0.{build}
-branches:
-  only:
-  - v4-dev
+version: 4.0.0.{build}
+pull_requests:
+  do_not_increment_build_number: true
 image: Visual Studio 2017
 configuration: Release
 before_build:
 - cmd: dotnet restore
 build:
-  project: KInspector.sln
   publish_wap_xcopy: true
   verbosity: minimal
-# deploy:
-#  - provider: GitHub
-#     artifact: /.*\.nupkg/           # upload all NuGet packages to release assets
-#     draft: false
-#     prerelease: false
-#     on:
-#       branch: master                # release from master branch only
-#       APPVEYOR_REPO_TAG: true
+artifacts:
+- path: publish/*
+  name: Published
