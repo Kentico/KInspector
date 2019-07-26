@@ -3,8 +3,43 @@ pull_requests:
   do_not_increment_build_number: true
 image: Visual Studio 2017
 configuration: Release
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
 before_build:
-- cmd: dotnet restore
+- cmd: >-
+    dotnet restore
+
+    cd KenticoInspector.WebApplication\ClientApp
+
+    npm i
+
+    npm run build
+
+    cd ..\..\
 build:
-  publish_wap_xcopy: true
+  project: KInspector.sln
   verbosity: minimal
+before_package:
+- ps: >-
+    Write-Output ---Creating Artifacts---
+    # Build web application
+    Set-Location .\KenticoInspector.WebApplication
+    dotnet publish KenticoInspector.WebApplication.csproj /p:PublishDir=..\publish -c Release -r win-x64 --self-contained true
+
+    # Copy compiled front-end to publish folder
+    Set-Location .\ClientApp
+    mkdir ..\..\publish\ClientApp\dist
+    Copy-Item ".\dist\*" -Recurse -Destination "..\..\publish\ClientApp\dist"
+
+    # Go back to root
+    Set-Location ..\..\
+
+    # Create archive & push to Appveyor
+    7z a KenticoInspector-$Env:APPVEYOR_BUILD_VERSION.zip .\publish\*
+    appveyor PushArtifact KenticoInspector-$Env:APPVEYOR_BUILD_VERSION.zip
