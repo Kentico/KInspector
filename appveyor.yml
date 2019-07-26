@@ -7,4 +7,14 @@ configuration: Release
 before_build:
 - cmd: dotnet restore
 build:
+  project: KInspector.sln
+  publish_wap_xcopy: true
   verbosity: minimal
+# deploy:
+#  - provider: GitHub
+#     artifact: /.*\.nupkg/           # upload all NuGet packages to release assets
+#     draft: false
+#     prerelease: false
+#     on:
+#       branch: master                # release from master branch only
+#       APPVEYOR_REPO_TAG: true
