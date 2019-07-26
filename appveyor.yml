@@ -8,6 +8,3 @@ before_build:
 build:
   publish_wap_xcopy: true
   verbosity: minimal
-artifacts:
-- path: publish/*
-  name: Published
