@@ -10,6 +10,6 @@ namespace KenticoInspector.Core.Services.Interfaces
 
         ReportResults GetReportResults(string reportCodename, Guid instanceGuid);
 
-        IEnumerable<IReport> GetReports(ReportFilter reportFilter = null);
+        IEnumerable<IReport> GetReports(Guid instanceGuid, ReportFilter reportFilter = null);
     }
 }

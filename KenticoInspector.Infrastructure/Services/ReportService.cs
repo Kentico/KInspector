@@ -35,8 +35,10 @@ namespace KenticoInspector.Infrastructure.Services
             return report.GetResults();
         }
 
-        public IEnumerable<IReport> GetReports(ReportFilter reportFilter = null)
+        public IEnumerable<IReport> GetReports(Guid instanceGuid, ReportFilter reportFilter = null)
         {
+            instanceService.SetCurrentInstance(instanceGuid);
+
             return reportRepository.GetReports(reportFilter);
         }
     }
