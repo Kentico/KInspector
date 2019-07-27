@@ -27,7 +27,7 @@ namespace KenticoInspector.Core.Models
         {
             if (TokenValues != null)
             {
-                return TokenProcessor.ParseTokens(this, TokenValues);
+                return TokenExpressionResolver.ResolveTokenExpressions(this, TokenValues);
             }
 
             return RawMarkdown;

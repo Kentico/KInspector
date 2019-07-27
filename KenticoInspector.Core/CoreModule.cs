@@ -31,7 +31,7 @@ namespace KenticoInspector.Core
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
-            TokenProcessor.RegisterTokens(assemblies);
+            TokenExpressionResolver.RegisterTokenExpressions(assemblies);
         }
     }
 }
