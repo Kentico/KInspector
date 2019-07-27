@@ -23,7 +23,7 @@ namespace KenticoInspector.Reports.Tests
         {
             var reportCodename = AbstractReport<TermsType>.GetCodename(typeof(ReportType));
 
-            TokenProcessor.RegisterTokens(typeof(TokenProcessor).Assembly);
+            TokenExpressionResolver.RegisterTokenExpressions(typeof(TokenExpressionResolver).Assembly);
 
             InitializeCommonMocks(majorVersion, reportCodename);
         }

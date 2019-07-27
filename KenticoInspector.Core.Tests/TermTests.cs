@@ -14,19 +14,26 @@ namespace KenticoInspector.Core.Tests
     {
         public TermTests()
         {
-            TokenProcessor.RegisterTokens(typeof(Term).Assembly);
+            TokenExpressionResolver.RegisterTokenExpressions(typeof(Term).Assembly);
         }
 
         [Test]
-        [TestCase("<int32token> results", "5 results", 5)]
-        [TestCase("<int32token|5:Many> results", "Many results", 5)]
-        [TestCase("<int32token|One|Many> results", "One results", 1)]
-        [TestCase("<int32token|One|Many> results", "Many results", 5)]
-        [TestCase("<stringtoken|value:Correct> results", "Correct results", "value")]
-        [TestCase("<stringtoken|value:wrong|defaultvalue:Correct> result", "Correct result", "defaultvalue")]
-        [TestCase("<stringtoken|value:wrong|defaultvalue:Really correct> result", "Really correct result", "defaultvalue")]
-        [TestCase("Is <stringtoken|value:not >true", "Is true", "defaultvalue")]
-        [TestCase("<stringtoken1> and <stringtoken2|nothing:nothing wrong|something wrong>", "No results and nothing wrong", "No results", "nothing")]
+        [TestCase("<int32token> cars", "5 cars", 5)]
+        [TestCase("<int32token|5:Many> cars", "Many cars", 5)]
+        [TestCase("<int32token|One|Many> car", "One car", 1)]
+        [TestCase("<int32token|One|Many> cars", "Many cars", 5)]
+        [TestCase("<stringtoken|value:The> cars", "The cars", "value")]
+        [TestCase("<stringtoken|value:wrong|defaultvalue:The> car", "The car", "defaultvalue")]
+        [TestCase("<stringtoken|value:wrong|defaultvalue:The red> car", "The red car", "defaultvalue")]
+        [TestCase("The < stringtoken|value:red >car", "The car", "blue")]
+        [TestCase("The <wrongtoken>car", "The car", "red")]
+        [TestCase("<stringtoken1> and <stringtoken2|nothing:an empty|a burning> truck", "No cars and an empty truck", "No cars", "nothing")]
+        [TestCase("This is <stringtoken|a truck|a car>", "This is a car", "blue")]
+        [TestCase("The /stringtoken1=truck:Red|stringtoken2=car:Blue/ vehicle is going very fast", "The Red vehicle is going very fast", "truck", "van")]
+        [TestCase("The /stringtoken1=truck:Red|stringtoken2=car:Blue|light green/ vehicle is going very fast", "The light green vehicle is going very fast", "moped", "van")]
+        [TestCase("The /stringtoken1=truck:Red|stringtoken1=car:Blue/ vehicle is going very fast", "The Red vehicle is going very fast", "truck", "car")]
+        [TestCase("The /stringtoken2=car:Red|wrongtoken=car:Blue/ vehicle is going very fast", "The Red vehicle is going very fast", "truck", "car")]
+        [TestCase("The /wrongtoken=car:Blue /vehicle is going very fast", "The vehicle is going very fast", "truck", "car")]
         public void ShouldResolve(string term, string result, params object[] tokenValues)
         {
             TestValidResult(
@@ -41,8 +48,9 @@ namespace KenticoInspector.Core.Tests
 
         [Test]
         [TestCase("This is wrong: <>", typeof(ArgumentException), "value")]
-        [TestCase("This is <stringtoken|a failure|a success>", typeof(FormatException), "value")]
-        [TestCase("This is <stringtoken|string:failure:wrong|a success>", typeof(FormatException), "value")]
+        [TestCase("This is wrong: //", typeof(ArgumentException), "value")]
+        [TestCase("This is <stringtoken|string:failure:wrong|a success>", typeof(ArgumentException), "value")]
+        [TestCase("This is /stringtoken|string=failure=value:wrong|a success/", typeof(ArgumentException), "value")]
         public void ShouldNotResolve(string term, Type exceptionType, params object[] tokenValues)
         {
             TestInvalidThrows(
