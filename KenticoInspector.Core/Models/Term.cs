@@ -20,7 +20,7 @@ namespace KenticoInspector.Core.Models
 
         public static implicit operator string(Term term)
         {
-            return term.ToString();
+            return term.RawMarkdown;
         }
 
         public override string ToString()

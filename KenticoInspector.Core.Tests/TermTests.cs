@@ -74,7 +74,7 @@ namespace KenticoInspector.Core.Tests
         public void TestValidResult(Term term, object tokenValues, string result)
         {
             // Act
-            string resolvedTerm = term.With(tokenValues);
+            string resolvedTerm = term.With(tokenValues).ToString();
 
             // Assert
             Assert.That(resolvedTerm, Is.EqualTo(result));
@@ -83,7 +83,7 @@ namespace KenticoInspector.Core.Tests
         public void TestInvalidThrows(Term term, object tokenValues, Type exceptionType)
         {
             // Act
-            string resolvedTermMethod() => term.With(tokenValues);
+            string resolvedTermMethod() => term.With(tokenValues).ToString();
 
             // Assert
             Assert.That(resolvedTermMethod, Throws.TypeOf(exceptionType));
