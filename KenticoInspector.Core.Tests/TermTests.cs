@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Tokens;
@@ -36,66 +35,58 @@ namespace KenticoInspector.Core.Tests
         [TestCase("The /wrongtoken=car:Blue /vehicle is going very fast", "The vehicle is going very fast", "truck", "car")]
         public void ShouldResolve(string term, string result, params object[] tokenValues)
         {
-            TestValidResult(
-                term,
-                AsDynamic(tokenValues),
-                result
-            );
+            TestValidResult(term, AsDynamic(tokenValues),result);
         }
 
         [Test]
-        public void ShouldResolveWithVersion() => ShouldResolve("The version is <versiontoken|12.0.4:supported>", "The version is supported", new Version(12, 0, 4));
+        [TestCase("The version is <versiontoken|12.0.4:supported>", "The version is supported", "12.0.4")]
+        [TestCase("The version is /versiontoken=12.0.4:supported/", "The version is supported", "12.0.4")]
+        public void ShouldResolveWithVersion(string term, string result, string version) => ShouldResolve(term, result, new Version(version));
 
         [Test]
         [TestCase("This is wrong: <>", typeof(ArgumentException), "value")]
         [TestCase("This is wrong: //", typeof(ArgumentException), "value")]
-        [TestCase("This is <stringtoken|string:failure:wrong|a success>", typeof(ArgumentException), "value")]
-        [TestCase("This is /stringtoken|string=failure=value:wrong|a success/", typeof(ArgumentException), "value")]
+        [TestCase("This is <stringtoken|value:failure:wrong|a success>", typeof(ArgumentException), "value")]
+        [TestCase("This is /stringtoken|stringtoken=value=failure:wrong|a success/", typeof(ArgumentException), "value")]
         public void ShouldNotResolve(string term, Type exceptionType, params object[] tokenValues)
         {
-            TestInvalidThrows(
-                term,
-                exceptionType,
-                AsDynamic(tokenValues)
-            );
+            TestInvalidThrows(term, AsDynamic(tokenValues), exceptionType);
         }
 
         private static dynamic AsDynamic(object[] tokenValues)
         {
-            var expandoObject = new ExpandoObject();
-
-            var dictionary = (IDictionary<string, object>)expandoObject;
-
-            var i = 1;
+            var dictionary = new Dictionary<string, object>();
+            var increment = 1;
+            var appendIncrement = tokenValues.Length > 1;
 
             foreach (var tokenValue in tokenValues)
             {
                 var key = $"{tokenValue.GetType().Name}token".ToLower();
 
-                if (tokenValues.Length > 1)
-                {
-                    key += i++;
-                }
+                if (appendIncrement) key += increment++;
 
                 dictionary.Add(key, tokenValue);
             }
 
-            return expandoObject;
+            return dictionary;
         }
 
         public void TestValidResult(Term term, object tokenValues, string result)
         {
             // Act
-            var resolvedTerm = term.With(tokenValues);
+            string resolvedTerm = term.With(tokenValues);
 
             // Assert
-            Assert.That(resolvedTerm.ToString(), Is.EqualTo(result));
+            Assert.That(resolvedTerm, Is.EqualTo(result));
         }
 
-        public void TestInvalidThrows(Term term, Type exceptionType, object tokenValues)
+        public void TestInvalidThrows(Term term, object tokenValues, Type exceptionType)
         {
+            // Act
+            string resolvedTermMethod() => term.With(tokenValues);
+
             // Assert
-            Assert.That(() => term.With(tokenValues).ToString(), Throws.TypeOf(exceptionType));
+            Assert.That(resolvedTermMethod, Throws.TypeOf(exceptionType));
         }
     }
 }
