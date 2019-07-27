@@ -79,13 +79,13 @@ namespace KenticoInspector.Core.Tokens
             {
                 case 1:
                     return (key[0], null);
+
                 case 2:
                     return (key[0], key[1]);
             }
 
             throw new ArgumentException($"Case key '{caseKey}' looks like an advanced case key but does not contain zero or one {advancedDelimiter}.");
         }
-
 
         private bool TryResolveToken(IDictionary<string, object> tokenDictionary, (string token, string value) advancedCaseKey, string caseValue, out string resolvedValue)
         {

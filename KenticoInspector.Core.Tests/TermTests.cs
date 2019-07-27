@@ -35,7 +35,7 @@ namespace KenticoInspector.Core.Tests
         [TestCase("The /wrongtoken=car:Blue /vehicle is going very fast", "The vehicle is going very fast", "truck", "car")]
         public void ShouldResolve(string term, string result, params object[] tokenValues)
         {
-            TestValidResult(term, AsDynamic(tokenValues),result);
+            TestValidResult(term, AsDynamic(tokenValues), result);
         }
 
         [Test]

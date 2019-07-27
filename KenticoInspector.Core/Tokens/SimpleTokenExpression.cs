@@ -42,7 +42,8 @@ namespace KenticoInspector.Core.Tokens
                 {
                     return token.ToString();
                 }
-            } else
+            }
+            else
             {
                 return string.Empty;
             }
@@ -91,6 +92,7 @@ namespace KenticoInspector.Core.Tokens
                     defaultValue = pair[0];
 
                     return (null, pair[0]);
+
                 case 2:
                     return (pair[0], pair[1]);
             }

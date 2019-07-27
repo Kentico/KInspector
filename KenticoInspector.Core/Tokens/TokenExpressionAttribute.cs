@@ -11,6 +11,5 @@ namespace KenticoInspector.Core.Tokens
         {
             Pattern = pattern;
         }
-
     }
 }
