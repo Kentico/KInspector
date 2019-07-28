@@ -11,6 +11,8 @@ namespace KenticoInspector.Core.Tokens
 {
     public class TokenExpressionResolver
     {
+        private const char space = ' ';
+
         private static IEnumerable<(Type tokenExpressionType, string pattern)> TokenExpressionTypePatterns { get; set; }
 
         private static string AllTokenExpressionPatterns => TokenExpressionTypePatterns
@@ -32,10 +34,12 @@ namespace KenticoInspector.Core.Tokens
 
         private static string GetTokenPatternFromAttribute(Type type)
         {
-            return type
+            var pattern = type
                 .GetCustomAttributes<TokenExpressionAttribute>(false)
                 .First()
                 .Pattern;
+
+            return $"( {pattern} )|({pattern} )|( {pattern}$)|(^{pattern}$)";
         }
 
         internal static string ResolveTokenExpressions(Term term, object tokenValues)
@@ -79,17 +83,52 @@ namespace KenticoInspector.Core.Tokens
 
         private static string ResolveTokenExpression(string tokenExpression, IDictionary<string, object> tokenDictionary)
         {
+            var (leadingSpace, innerTokenExpression, trailingSpace) = GetSplitExpression(tokenExpression);
+
+            string resolvedExpression = null;
+
             foreach (var (tokenExpressionType, pattern) in TokenExpressionTypePatterns)
             {
-                if (Regex.IsMatch(tokenExpression, pattern))
+                if (Regex.IsMatch(innerTokenExpression, pattern))
                 {
                     var expressionObject = FormatterServices.GetUninitializedObject(tokenExpressionType) as ITokenExpression;
 
-                    return expressionObject.Resolve(tokenExpression, tokenDictionary);
+                    resolvedExpression = expressionObject.Resolve(innerTokenExpression, tokenDictionary);
                 }
             }
 
-            return tokenExpression;
+            resolvedExpression = EnsureEmptyResolvedExpressionContainsOnlyOneSpace(ref leadingSpace, resolvedExpression, ref trailingSpace, innerTokenExpression);
+
+            return $"{leadingSpace}{resolvedExpression}{trailingSpace}";
+        }
+
+        private static string EnsureEmptyResolvedExpressionContainsOnlyOneSpace(ref char? leadingSpace, string resolvedExpression, ref char? trailingSpace, string innerTokenExpression)
+        {
+            if (string.IsNullOrEmpty(resolvedExpression) && leadingSpace != null && trailingSpace != null)
+            {
+                leadingSpace = null;
+                trailingSpace = null;
+
+                return space.ToString();
+            }
+            else
+            {
+                return resolvedExpression ?? innerTokenExpression;
+            }
+        }
+
+        private static (char? leadingSpace, string innerTokenExpression, char? trailingSpace) GetSplitExpression(string tokenExpression)
+        {
+            char? leadingSpace = null;
+            char? trailingSpace = null;
+
+            if (tokenExpression.Any())
+            {
+                if (tokenExpression.First() == space) leadingSpace = space;
+                if (tokenExpression.Last() == space) trailingSpace = space;
+            }
+
+            return (leadingSpace, tokenExpression.Trim(), trailingSpace);
         }
 
         private static string AggregateStrings(string left, string right)
