@@ -21,18 +21,33 @@ namespace KenticoInspector.Core.Tests
         [TestCase("<int32token|5:Many> cars", "Many cars", 5)]
         [TestCase("<int32token|One|Many> car", "One car", 1)]
         [TestCase("<int32token|One|Many> cars", "Many cars", 5)]
+
+        [TestCase("<int32token|>5:More than five|Many> cars", "More than five cars", 6)]
+        [TestCase("<int32token|<5:Less than five|Many> cars", "Many cars", 6)]
+
         [TestCase("<stringtoken|value:The> cars", "The cars", "value")]
-        [TestCase("<stringtoken|value:wrong|defaultvalue:The> car", "The car", "defaultvalue")]
         [TestCase("<stringtoken|value:wrong|defaultvalue:The red> car", "The red car", "defaultvalue")]
-        [TestCase("The < stringtoken|value:red >car", "The car", "blue")]
-        [TestCase("The <wrongtoken>car", "The car", "red")]
-        [TestCase("<stringtoken1> and <stringtoken2|nothing:an empty|a burning> truck", "No cars and an empty truck", "No cars", "nothing")]
+
         [TestCase("This is <stringtoken|a truck|a car>", "This is a car", "blue")]
-        [TestCase("The /stringtoken1=truck:Red|stringtoken2=car:Blue/ vehicle is going very fast", "The Red vehicle is going very fast", "truck", "van")]
-        [TestCase("The /stringtoken1=truck:Red|stringtoken2=car:Blue|light green/ vehicle is going very fast", "The light green vehicle is going very fast", "moped", "van")]
-        [TestCase("The /stringtoken1=truck:Red|stringtoken1=car:Blue/ vehicle is going very fast", "The Red vehicle is going very fast", "truck", "car")]
-        [TestCase("The /stringtoken2=car:Red|wrongtoken=car:Blue/ vehicle is going very fast", "The Red vehicle is going very fast", "truck", "car")]
-        [TestCase("The /wrongtoken=car:Blue /vehicle is going very fast", "The vehicle is going very fast", "truck", "car")]
+        [TestCase("The <stringtoken|value:red> car", "The car", "blue")]
+        [TestCase("The <wrongtoken> car", "The car", "red")]
+
+        [TestCase("<stringtoken1> and <stringtoken2|nothing:an empty|a burning> truck", "No cars and an empty truck", "No cars", "nothing")]
+
+        [TestCase("/int32token/ cars", "5 cars", 5)]
+        [TestCase("/int32token=5:Many/ cars", "Many cars", 5)]
+        [TestCase("/int32token:One|Many/ car", "One car", 1)]
+        [TestCase("/int32token:One|Many/ cars", "Many cars", 5)]
+
+        [TestCase("The /int32token>5:red|wrongtoken=car:blue/ vehicle is going very fast", "The red vehicle is going very fast", 6)]
+        [TestCase("The /int32token<5:red|blue/ vehicle is going very fast", "The blue vehicle is going very fast", 6)]
+
+        [TestCase("The /stringtoken1=truck:red|stringtoken2=car:blue/ vehicle is going very fast", "The red vehicle is going very fast", "truck", "van")]
+        [TestCase("The /stringtoken1=truck:red|stringtoken2=car:blue|light green/ vehicle is going very fast", "The light green vehicle is going very fast", "moped", "van")]
+        [TestCase("The /stringtoken1=truck:red|stringtoken1=car:blue/ vehicle is going very fast", "The red vehicle is going very fast", "truck", "car")]
+        [TestCase("The /stringtoken2=car:red|wrongtoken=car:blue/ vehicle is going very fast", "The red vehicle is going very fast", "truck", "car")]
+
+        [TestCase("The /wrongtoken=car:Blue/ vehicle is going very fast", "The vehicle is going very fast", "truck", "car")]
         public void ShouldResolve(string term, string result, params object[] tokenValues)
         {
             TestValidResult(term, AsDynamic(tokenValues), result);
@@ -45,8 +60,11 @@ namespace KenticoInspector.Core.Tests
 
         [Test]
         [TestCase("This is wrong: <>", typeof(ArgumentException), "value")]
-        [TestCase("This is wrong: //", typeof(ArgumentException), "value")]
+
         [TestCase("This is <stringtoken|value:failure:wrong|a success>", typeof(ArgumentException), "value")]
+
+        [TestCase("This is wrong: //", typeof(ArgumentException), "value")]
+
         [TestCase("This is /stringtoken|stringtoken=value=failure:wrong|a success/", typeof(ArgumentException), "value")]
         public void ShouldNotResolve(string term, Type exceptionType, params object[] tokenValues)
         {
