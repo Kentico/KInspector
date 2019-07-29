@@ -1,6 +1,6 @@
 ﻿using KenticoInspector.Core.Models;
 
-namespace KenticoInspector.Reports.RobotsConfigurationSummary.Models
+namespace KenticoInspector.Reports.RobotsTxtConfigurationSummary.Models
 {
     public class Terms
     {

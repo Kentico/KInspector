@@ -1,4 +1,4 @@
-﻿namespace KenticoInspector.Reports.RobotsConfigurationSummary
+﻿namespace KenticoInspector.Reports.RobotsTxtConfigurationSummary
 {
     public static class Constants
     {
