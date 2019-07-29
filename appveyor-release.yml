@@ -55,3 +55,6 @@ before_package:
     7z a KenticoInspector-$Env:APPVEYOR_BUILD_VERSION.zip .\publish\*
 
     appveyor PushArtifact KenticoInspector-$Env:APPVEYOR_BUILD_VERSION.zip
+deploy:
+- provider: Environment
+  name: Kentico Inspector Releases
