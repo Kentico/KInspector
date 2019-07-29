@@ -13,7 +13,27 @@ The application is Kentico version agnostic and has no dependencies on version-s
 
 ## Get the application
 
-Download the [latest release](https://github.com/Kentico/KInspector/releases/latest). **ADD MORE DETAILS FOR V4**
+### Introduction to V4
+
+Version 4 is a complete rewrite of the tool. We wanted to create a better, more flexible codebase for both the front and back ends.
+
+Download the [latest release](https://github.com/Kentico/KInspector/releases/latest).
+
+> :warning: V4 is currently ALPHA and we're still porting reports.
+>
+> If you need a report that hasn't been migrated yet, please use [the latest release of V3](https://github.com/Kentico/KInspector/releases) or consider porting it and submitting a PR!
+
+### Running the tool
+
+The application supports two modes currently: console and IIS. Console mode is useful if you just want to quickly run the tool occasionally, whereas IIS mode allows you to have it always available, for example, on a development server. In either case you need to extract the entire package in a folder.
+
+#### Console Mode
+
+To run in console mode simply run `KenticoInspector.WebApplication.exe` and open your browser to either https://localhost:5001 or http://localhost:5000.
+
+#### IIS Mode
+
+To run in IIS  mode point your IIS directory to the folder you extracted everything to and make sure the application pool is set to `No managed code`. Open the site in your browser.
 
 ## Contributing
 
