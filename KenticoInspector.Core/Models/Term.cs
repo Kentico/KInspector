@@ -20,14 +20,14 @@ namespace KenticoInspector.Core.Models
 
         public static implicit operator string(Term term)
         {
-            return term.RawMarkdown;
+            return term.ToString();
         }
 
         public override string ToString()
         {
             if (TokenValues != null)
             {
-                return TokenExpressionResolver.ResolveTokenExpressions(this, TokenValues);
+                return TokenExpressionResolver.ResolveTokenExpressions(RawMarkdown, TokenValues);
             }
 
             return RawMarkdown;

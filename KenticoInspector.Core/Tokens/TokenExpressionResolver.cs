@@ -5,26 +5,24 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
-using KenticoInspector.Core.Models;
-
 namespace KenticoInspector.Core.Tokens
 {
     public class TokenExpressionResolver
     {
-        private const char space = ' ';
-
         private static IEnumerable<(Type tokenExpressionType, string pattern)> TokenExpressionTypePatterns { get; set; }
-
-        private static string AllTokenExpressionPatterns => TokenExpressionTypePatterns
-                                .Select(tokenExpressionTypePattern => tokenExpressionTypePattern.pattern)
-                                .Where(ValueIsNotEmpty)
-                                .Aggregate(AsRegexOr);
 
         public static void RegisterTokenExpressions(Assembly assemblies)
         {
             TokenExpressionTypePatterns = assemblies.GetTypes()
-                                .Where(TypeIsMarkedWithTokenExpressionAttribute)
-                                .Select(type => (type, GetTokenPatternFromAttribute(type)));
+                                            .Where(TypeIsMarkedWithTokenExpressionAttribute)
+                                            .Select(AsTokenExpressionTypePattern);
+        }
+
+        private static (Type type, string) AsTokenExpressionTypePattern(Type type)
+        {
+            var pattern = string.Join(Constants.Pipe, GetTokenPatternsFromAttribute(type));
+
+            return (type, pattern);
         }
 
         private static bool TypeIsMarkedWithTokenExpressionAttribute(Type type)
@@ -32,23 +30,36 @@ namespace KenticoInspector.Core.Tokens
             return type.IsDefined(typeof(TokenExpressionAttribute), false);
         }
 
-        private static string GetTokenPatternFromAttribute(Type type)
+        private static string[] GetTokenPatternsFromAttribute(Type type)
         {
             var pattern = type
                 .GetCustomAttributes<TokenExpressionAttribute>(false)
                 .First()
                 .Pattern;
 
-            return $"( {pattern} )|({pattern} )|( {pattern}$)|(^{pattern}$)";
+            return new[]
+            {
+                $"([{Constants.Space}]{pattern}[{Constants.Space}{Constants.Period}{Constants.Colon}])",
+                $"({pattern}[{Constants.Space}{Constants.Period}{Constants.Colon}])",
+                $"([{Constants.Space}]{pattern})",
+                $"(^{pattern}$)"
+            };
         }
 
-        internal static string ResolveTokenExpressions(Term term, object tokenValues)
+        internal static string ResolveTokenExpressions(string term, object tokenValues)
         {
+            var allTokenExpressionPatterns = TokenExpressionTypePatterns
+                                                .Select(tokenExpressionTypePattern => tokenExpressionTypePattern.pattern)
+                                                .Where(pattern => !string.IsNullOrEmpty(pattern));
+
+            var joinedTokenExpressionPatterns = string.Join(Constants.Pipe, allTokenExpressionPatterns);
+
             var tokenDictionary = GetValuesDictionary(tokenValues);
 
-            return Regex.Split(term, AllTokenExpressionPatterns)
-                        .Select(tokenExpression => ResolveTokenExpression(tokenExpression, tokenDictionary))
-                        .Aggregate(AggregateStrings);
+            var resolvedExpressions = Regex.Split(term, joinedTokenExpressionPatterns)
+                                        .Select(tokenExpression => ResolveTokenExpression(tokenExpression, tokenDictionary));
+
+            return string.Join(string.Empty, resolvedExpressions);
         }
 
         private static IDictionary<string, object> GetValuesDictionary(object tokenValues)
@@ -71,19 +82,9 @@ namespace KenticoInspector.Core.Tokens
                     && prop.GetMethod != null;
         }
 
-        private static bool ValueIsNotEmpty(string pattern)
-        {
-            return !string.IsNullOrEmpty(pattern);
-        }
-
-        private static string AsRegexOr(string left, string right)
-        {
-            return $"{left}|{right}";
-        }
-
         private static string ResolveTokenExpression(string tokenExpression, IDictionary<string, object> tokenDictionary)
         {
-            var (leadingSpace, innerTokenExpression, trailingSpace) = GetSplitExpression(tokenExpression);
+            var (leadingChar, innerTokenExpression, trailingChar) = GetSplitExpression(tokenExpression);
 
             string resolvedExpression = null;
 
@@ -94,46 +95,46 @@ namespace KenticoInspector.Core.Tokens
                     var expressionObject = FormatterServices.GetUninitializedObject(tokenExpressionType) as ITokenExpression;
 
                     resolvedExpression = expressionObject.Resolve(innerTokenExpression, tokenDictionary);
+
+                    continue;
                 }
             }
 
-            resolvedExpression = EnsureEmptyResolvedExpressionContainsOnlyOneSpace(ref leadingSpace, resolvedExpression, ref trailingSpace, innerTokenExpression);
-
-            return $"{leadingSpace}{resolvedExpression}{trailingSpace}";
-        }
-
-        private static string EnsureEmptyResolvedExpressionContainsOnlyOneSpace(ref char? leadingSpace, string resolvedExpression, ref char? trailingSpace, string innerTokenExpression)
-        {
-            if (string.IsNullOrEmpty(resolvedExpression) && leadingSpace != null && trailingSpace != null)
+            if (string.IsNullOrEmpty(resolvedExpression) && leadingChar != null && trailingChar != null)
             {
-                leadingSpace = null;
-                trailingSpace = null;
-
-                return space.ToString();
+                return Constants.Space.ToString();
             }
             else
             {
-                return resolvedExpression ?? innerTokenExpression;
+                return $"{leadingChar}{resolvedExpression ?? innerTokenExpression}{trailingChar}";
             }
         }
 
-        private static (char? leadingSpace, string innerTokenExpression, char? trailingSpace) GetSplitExpression(string tokenExpression)
+        private static (char?, string, char?) GetSplitExpression(string tokenExpression)
         {
-            char? leadingSpace = null;
-            char? trailingSpace = null;
+            char? leadingChar = null;
+            char? trailingChar = null;
+
+            var leadingChars = new[] { Constants.Space };
+            var trailingChars = new[] { Constants.Space, Constants.Period, Constants.Colon };
 
             if (tokenExpression.Any())
             {
-                if (tokenExpression.First() == space) leadingSpace = space;
-                if (tokenExpression.Last() == space) trailingSpace = space;
+                var firstChar = tokenExpression.First();
+                var lastChar = tokenExpression.Last();
+
+                foreach (var item in leadingChars)
+                {
+                    if (firstChar == item) leadingChar = item;
+                }
+
+                foreach (var item in trailingChars)
+                {
+                    if (lastChar == item) trailingChar = item;
+                }
             }
 
-            return (leadingSpace, tokenExpression.Trim(), trailingSpace);
-        }
-
-        private static string AggregateStrings(string left, string right)
-        {
-            return $"{left}{right}";
+            return (leadingChar, tokenExpression.TrimStart(leadingChars).TrimEnd(trailingChars), trailingChar);
         }
     }
 }
