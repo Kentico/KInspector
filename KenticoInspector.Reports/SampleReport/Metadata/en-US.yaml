@@ -6,13 +6,6 @@
     It generates a random number of issues to report on.
     This description supports [Markdown](https://daringfireball.net/projects/markdown/) in [YAML](https://learn-the-web.algonquindesign.ca/topics/yaml/).
     
-    <oneInt|*customizationDoclink10|many>
-    <oneInt|1:one|many>
-    <falseBool|false:false|true default>
-    <falseBool|true:only shown when true>
-    <fiveInt|one|five>
-    <version|12.0.4:version 12, hotfix 4|some other version>
-    
     Some reference materials:
       * [YAML/Markdown Cheatsheet](https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/)
 terms:
