@@ -47,7 +47,7 @@ before_package:
 
     Set-Location ..\..\
 
-    # Create archive & push to Appveyor.
+    # Create archive & push to Appveyor
 
     7z a KenticoInspector-$Env:APPVEYOR_BUILD_VERSION.zip .\publish\*
 
