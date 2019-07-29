@@ -1,4 +1,4 @@
-version: 4.0.0.{build}
+version: 4.0.{build}
 pull_requests:
   do_not_increment_build_number: true
 image: Visual Studio 2017
@@ -13,14 +13,13 @@ dotnet_csproj:
   informational_version: '{version}'
 before_build:
 - cmd: >-
+    :: Restore nuget packages
     dotnet restore
 
+    :: Restore NPM packages & build front-end
     cd KenticoInspector.WebApplication\ClientApp
-
     npm i
-
     npm run build
-
     cd ..\..\
 build:
   project: KInspector.sln
