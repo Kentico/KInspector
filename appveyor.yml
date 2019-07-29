@@ -13,10 +13,7 @@ dotnet_csproj:
   informational_version: '{version}'
 before_build:
 - cmd: >-
-    :: Restore nuget packages
     dotnet restore
-
-    :: Restore NPM packages & build front-end
     cd KenticoInspector.WebApplication\ClientApp
     npm i
     npm run build
