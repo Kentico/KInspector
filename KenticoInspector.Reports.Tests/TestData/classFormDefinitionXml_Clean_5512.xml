@@ -1,0 +1,128 @@
+﻿<form version="2">
+  <field column="VersioningDataTestID" columntype="integer" guid="208fb04b-88d9-4abd-b303-9944ae965522" isPK="true" publicfield="false">
+    <properties>
+      <fieldcaption>VersioningDataTestID</fieldcaption>
+    </properties>
+    <settings>
+      <controlname>labelcontrol</controlname>
+    </settings>
+  </field>
+  <field allowempty="true" column="BoolNoDefault" columntype="boolean" guid="44066353-97fb-408f-a140-b16d46625ba5" publicfield="false" visible="true">
+    <properties>
+      <fieldcaption>Bool No Default</fieldcaption>
+    </properties>
+    <settings>
+      <controlname>CheckBoxControl</controlname>
+    </settings>
+  </field>
+  <field allowempty="true" column="BoolDefaultTrue" columntype="boolean" guid="075bb06a-fc24-4ff6-ad3c-70b4bb293f83" publicfield="false" visible="true">
+    <properties>
+      <defaultvalue>true</defaultvalue>
+      <fieldcaption>Bool Default True</fieldcaption>
+    </properties>
+    <settings>
+      <controlname>CheckBoxControl</controlname>
+    </settings>
+  </field>
+  <field allowempty="true" column="BoolDefaultFalse" columntype="boolean" guid="42187699-419b-45f6-8872-d797681e8314" publicfield="false" visible="true">
+    <properties>
+      <defaultvalue>false</defaultvalue>
+      <fieldcaption>Bool Default False</fieldcaption>
+    </properties>
+    <settings>
+      <controlname>CheckBoxControl</controlname>
+    </settings>
+  </field>
+  <field allowempty="true" column="DateTimeNoDefault" columnprecision="7" columntype="datetime" guid="b31c095c-60bf-492e-9a27-a9669ac5fa61" publicfield="false" visible="true">
+    <properties>
+      <fieldcaption>Date Time No Default</fieldcaption>
+    </properties>
+    <settings>
+      <CheckRange>True</CheckRange>
+      <controlname>CalendarControl</controlname>
+      <DisplayNow>True</DisplayNow>
+      <EditTime>True</EditTime>
+      <TimeZoneType>inherit</TimeZoneType>
+    </settings>
+  </field>
+  <field allowempty="true" column="DateTimeHardDefault" columnprecision="7" columntype="datetime" guid="c62edcef-19b9-4516-a6d5-d5e2749f4c05" publicfield="false" visible="true">
+    <properties>
+      <defaultvalue>6/6/2019 11:31:17 AM</defaultvalue>
+      <fieldcaption>Date Time Hard Default</fieldcaption>
+    </properties>
+    <settings>
+      <CheckRange>True</CheckRange>
+      <controlname>CalendarControl</controlname>
+      <DisplayNow>True</DisplayNow>
+      <EditTime>True</EditTime>
+      <TimeZoneType>inherit</TimeZoneType>
+    </settings>
+  </field>
+  <field allowempty="true" column="DateTimeMacroDefault" columnprecision="7" columntype="datetime" guid="1bebbad1-5ade-426d-b03b-b67177d0340a" publicfield="false" visible="true">
+    <properties>
+      <defaultvalue ismacro="true">{% DateTime.Now |(identity)GlobalAdministrator|(hash)7c28da48f4f66510323adef5331a9a3ff7ce9b27810dfe129d2574373bf87b3d%}</defaultvalue>
+      <fieldcaption>Date Time Macro Default</fieldcaption>
+    </properties>
+    <settings>
+      <CheckRange>True</CheckRange>
+      <controlname>CalendarControl</controlname>
+      <DisplayNow>True</DisplayNow>
+      <EditTime>True</EditTime>
+      <TimeZoneType>inherit</TimeZoneType>
+    </settings>
+  </field>
+  <field allowempty="true" column="TextNoDefault" columnsize="200" columntype="text" guid="f1fee3f7-0971-4944-92ab-4fb90e3ae47d" publicfield="false" visible="true">
+    <properties>
+      <fieldcaption>Text No Default</fieldcaption>
+    </properties>
+    <settings>
+      <AutoCompleteEnableCaching>False</AutoCompleteEnableCaching>
+      <AutoCompleteFirstRowSelected>False</AutoCompleteFirstRowSelected>
+      <AutoCompleteShowOnlyCurrentWordInCompletionListItem>False</AutoCompleteShowOnlyCurrentWordInCompletionListItem>
+      <controlname>TextBoxControl</controlname>
+      <FilterMode>False</FilterMode>
+      <Trim>False</Trim>
+    </settings>
+  </field>
+  <field allowempty="true" column="TextHardDefault" columnsize="200" columntype="text" guid="c0ce6ce3-bbbc-4156-99a2-2691d3f2b070" publicfield="false" visible="true">
+    <properties>
+      <defaultvalue>This is the default</defaultvalue>
+      <fieldcaption>Text Hard Default</fieldcaption>
+    </properties>
+    <settings>
+      <AutoCompleteEnableCaching>False</AutoCompleteEnableCaching>
+      <AutoCompleteFirstRowSelected>False</AutoCompleteFirstRowSelected>
+      <AutoCompleteShowOnlyCurrentWordInCompletionListItem>False</AutoCompleteShowOnlyCurrentWordInCompletionListItem>
+      <controlname>TextBoxControl</controlname>
+      <FilterMode>False</FilterMode>
+      <Trim>False</Trim>
+    </settings>
+  </field>
+  <field allowempty="true" column="DecimalNoDefault" columnprecision="4" columnsize="19" columntype="decimal" guid="bc4f2467-0fd7-451f-9633-3eb4eb4d7839" publicfield="false" visible="true">
+    <properties>
+      <fieldcaption>Decimal No Default</fieldcaption>
+    </properties>
+    <settings>
+      <AutoCompleteEnableCaching>False</AutoCompleteEnableCaching>
+      <AutoCompleteFirstRowSelected>False</AutoCompleteFirstRowSelected>
+      <AutoCompleteShowOnlyCurrentWordInCompletionListItem>False</AutoCompleteShowOnlyCurrentWordInCompletionListItem>
+      <controlname>TextBoxControl</controlname>
+      <FilterMode>False</FilterMode>
+      <Trim>False</Trim>
+    </settings>
+  </field>
+  <field allowempty="true" column="DecimalHardDefault" columnprecision="4" columnsize="19" columntype="decimal" guid="f63b4441-2e5a-45bc-bc88-a2249df21d3d" publicfield="false" visible="true">
+    <properties>
+      <defaultvalue>1.75</defaultvalue>
+      <fieldcaption>Decimal Hard Default</fieldcaption>
+    </properties>
+    <settings>
+      <AutoCompleteEnableCaching>False</AutoCompleteEnableCaching>
+      <AutoCompleteFirstRowSelected>False</AutoCompleteFirstRowSelected>
+      <AutoCompleteShowOnlyCurrentWordInCompletionListItem>False</AutoCompleteShowOnlyCurrentWordInCompletionListItem>
+      <controlname>TextBoxControl</controlname>
+      <FilterMode>False</FilterMode>
+      <Trim>False</Trim>
+    </settings>
+  </field>
+</form>
