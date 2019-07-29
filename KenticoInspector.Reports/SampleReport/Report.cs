@@ -36,7 +36,7 @@ namespace KenticoInspector.Reports.SampleReport
             {
                 var name = $"test-{i}";
                 var problem = GetRandomString(10);
-                data.Add(Metadata.Terms.DetailedResult.With(new { name, problem }).ToString());
+                data.Add(Metadata.Terms.DetailedResult.With(new { name, problem }));
             }
 
             return new ReportResults()
@@ -44,7 +44,7 @@ namespace KenticoInspector.Reports.SampleReport
                 Data = data,
                 Type = ReportResultsType.StringList,
                 Status = ReportResultsStatus.Information,
-                Summary = Metadata.Terms.Summary.With(new { issueCount }).ToString()
+                Summary = Metadata.Terms.Summary.With(new { issueCount })
             };
         }
 
