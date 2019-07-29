@@ -14,9 +14,13 @@ dotnet_csproj:
 before_build:
 - cmd: >-
     dotnet restore
+
     cd KenticoInspector.WebApplication\ClientApp
+
     npm i
+
     npm run build
+
     cd ..\..\
 build:
   project: KInspector.sln
