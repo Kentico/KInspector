@@ -84,15 +84,11 @@ namespace KenticoInspector.Core.Tests
 
         [Test]
         // Empty
-        //[TestCase("This is wrong: <>", typeof(ArgumentException), "value")]
-        // Case with colon without space
-        [TestCase("This is <stringtoken|value:failure:wrong|a success>", typeof(ArgumentException), "value")]
+        [TestCase("This is wrong: <>", typeof(ArgumentException), "value")]
         // Empty
         [TestCase("This is wrong: <?>", typeof(ArgumentException), "value")]
         // Case with multiple equals
         [TestCase("This is <?stringtoken|stringtoken=value=failure:wrong|a success>", typeof(ArgumentException), "value")]
-        // Case with colon without space
-        [TestCase("This is <?stringtoken|stringtoken=value:failure:wrong|a success>", typeof(ArgumentException), "value")]
         public void ShouldNotResolve(string term, Type exceptionType, params object[] tokenValues)
         {
             TestInvalidThrows(term, AsDynamic(tokenValues), exceptionType);
