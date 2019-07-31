@@ -3,6 +3,7 @@ pull_requests:
 image: Visual Studio 2017
 configuration: Release
 init:
+  - ps: cd $env:APPVEYOR_BUILD_FOLDER
   - ps: .\appveyor-set_version.ps1
 dotnet_csproj:
   patch: true
