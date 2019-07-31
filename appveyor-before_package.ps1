@@ -13,5 +13,6 @@ Copy-Item ".\dist\*" -Recurse -Destination "..\..\publish\dist\"
 Set-Location ..\..\
 
 # Create archive & push to Appveyor
-7z a appveyortest-$Env:SEMVER_VERSION.zip .\publish\*
-appveyor PushArtifact appveyortest-$Env:SEMVER_VERSION.zip
+$ filename = "Kentico Inspector $Env:SEMVER_VERSION.zip"
+7z a $filename .\publish\*
+appveyor PushArtifact $filename
