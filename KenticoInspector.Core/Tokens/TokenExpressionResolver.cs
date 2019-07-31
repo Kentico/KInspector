@@ -96,7 +96,7 @@ namespace KenticoInspector.Core.Tokens
 
                     resolvedExpression = expressionObject.Resolve(innerTokenExpression, tokenDictionary);
 
-                    continue;
+                    break;
                 }
             }
 

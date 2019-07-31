@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using KenticoInspector.Core.Extensions;
+
 namespace KenticoInspector.Core.Tokens
 {
     /// <summary>
     /// Represents tokens using a single token and having N cases and an optional default.
     /// </summary>
-    [TokenExpression("<[^?].*?>")]
+    [TokenExpression("<(?!\\?).*?>")]
     internal class SimpleTokenExpression : ITokenExpression
     {
         private static readonly char[] expressionBoundary = new[] { '<', '>' };
@@ -56,58 +58,41 @@ namespace KenticoInspector.Core.Tokens
                 throw new ArgumentException($"'{tokenExpression}' looks like a simple token expression but does not contain a key.");
             }
 
-            var token = tokenExpression;
+            var (token, casesAndDefault) = tokenExpression.SplitAtFirst(Constants.Pipe);
 
-            var indexOfFirstPipe = tokenExpression.IndexOf(Constants.Pipe);
-
-            if (indexOfFirstPipe > -1)
+            if (string.IsNullOrEmpty(casesAndDefault))
             {
-                token = tokenExpression.Substring(0, indexOfFirstPipe);
+                return (token, Enumerable.Empty<(string, char, string)>(), token);
             }
 
-            string defaultValue = null;
+            var (cases, defaultValue) = casesAndDefault.SplitAtLast(Constants.Pipe);
 
-            var cases = tokenExpression
-                .Split(new[] { Constants.Pipe }, StringSplitOptions.RemoveEmptyEntries)
-                .AsEnumerable();
-
-            if (cases.Count() > 1) cases = cases.Skip(1);
+            if (defaultValue.IndexOf(Constants.Colon) > -1)
+            {
+                cases = defaultValue;
+                defaultValue = null;
+            }
 
             var casePairs = cases
-                .Select(casePair => GetCasePair(casePair, ref defaultValue))
+                .Split(new[] { Constants.Pipe })
+                .Select(casePair => GetCasePair(casePair))
                 .ToList();
 
             return (token, casePairs, defaultValue);
         }
 
-        private static (string, char, string) GetCasePair(string casePair, ref string defaultValue)
+        private static (string, char, string) GetCasePair(string casePair)
         {
-            var pair = casePair.Split(new[] { Constants.Colon }, StringSplitOptions.RemoveEmptyEntries);
+            var pair = casePair.SplitAtFirst(Constants.Colon);
 
-            switch (pair.Length)
+            if (string.IsNullOrEmpty(pair.second))
             {
-                case 1:
-                    defaultValue = pair[0];
-
-                    return (null, Constants.Equals, pair[0]);
-
-                case 2:
-                    var (key, operation) = GetCaseKey(pair[0]);
-
-                    return (key, operation, pair[1]);
-
-                default:
-                    if (pair.Skip(2).Any(segment => segment[0] != Constants.Space))
-                    {
-                        break;
-                    }
-
-                    var (keyD, operationD) = GetCaseKey(pair[0]);
-
-                    return (keyD, operationD, pair.Skip(1).Aggregate((l, r) => $"{l}{Constants.Colon}{r}"));
+                return (null, Constants.Equals, pair.first);
             }
 
-            throw new ArgumentException($"Case pair '{casePair}' looks like a simple case pair but does not contain zero or one {Constants.Colon}.");
+            var (key, operation) = GetCaseKey(pair.first);
+
+            return (key, operation, pair.second);
         }
 
         private static (string, char) GetCaseKey(string caseKey)
