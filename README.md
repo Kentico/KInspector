@@ -27,13 +27,17 @@ Download the [latest release](https://github.com/Kentico/KInspector/releases/lat
 
 The application supports two modes currently: console and IIS. Console mode is useful if you just want to quickly run the tool occasionally, whereas IIS mode allows you to have it always available, for example, on a development server. In either case you need to extract the entire package in a folder.
 
+> :round_pushpin: **Note:** 
+> 
+> The application needs permission to create/modify files in the directory it is run from to save instances to a file.
+
 #### Console Mode
 
 To run in console mode simply run `KenticoInspector.WebApplication.exe` and open your browser to either https://localhost:5001 or http://localhost:5000.
 
 #### IIS Mode
 
-To run in IIS  mode point your IIS directory to the folder you extracted everything to and make sure the application pool is set to `No managed code`. Open the site in your browser.
+To run in IIS  mode point your IIS directory to the folder you extracted everything to and make sure the application pool's .NET CLR version is set to `No managed code`. Open the site in your browser.
 
 ## Contributing
 
@@ -45,26 +49,27 @@ If anything feels wrong or incomplete, please let us know. Create a new [issue](
 
 All versions below are from a known working environment. Lower versions may work but are not tested.
 
-- Visual Studio 2017 with latest update (15.9.11+)
-- .NET Core 2.2 SDK
-- Node for Windows (10.15.X+)
-- NPM (6.4.X+)
+- [Visual Studio 2017 updated to 15.9.11 or later](https://visualstudio.microsoft.com/vs/)
+- [.NET Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2)
+- [Node for Windows (10.15.X+)](https://nodejs.org/en/)
+- [NPM (6.4.X+) (included with Node)](https://www.npmjs.com/)
+- [Vue CLI (3.x)](https://cli.vuejs.org/)
 
 ### First run
 
-To build the Client UI application (required anytime the client UI code is updated unless you are using the `UI Development` debug launch setting):
+Even if you don't plan to make any changes in the Clietn UI application, you'll need to build it before your first run and any time the client code is updated. To build the Client UI application (required anytime the client UI code is updated unless you are using the `UI Development` debug launch setting):
 
-1. Open Powershell
+#### Frontend build instructions
+1. Open Powershell/Command Prompt
 1. Change the directory to `./KenticoInspector.WebApplication/ClientApp`
 1. Run `npm i`
-1. Run `npm build`
+1. Run `npm run build`
 
-To build the Backend:
+#### Backend build instructions
 
-1. First, build the Client UI
 1. Open `KInspector.sln` in Visual Studio
 1. Do a build
-1. Make sure the `KenticoInspector.WebApplication` proejct is the start up project
+1. Make sure the `KenticoInspector.WebApplication` project is the start up project
 1. You can run it with either the `IIS Express` or `Console` debug launch settings
 
 If you want to work on the Client UI applicaiton, there's a few additional steps to go through.
@@ -73,6 +78,6 @@ If you want to work on the Client UI applicaiton, there's a few additional steps
 1. In Powershell, run `npm i` (if you haven't yet) and `npm run serve`
 1. Leave the application is running.
 1. Follow the steps to build the backend, but run it using the `UI Development` debug launch settings.
-   - This runs the backend with a proxy to the running instance you started in Powershell and allows you to take advantage of the hot-reloading of the clietn application
+   - This runs the backend with a proxy to the running instance you started in Powershell and allows you to take advantage of the hot-reloading of the clientn application
 
 ![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/KInspector?pixel)
