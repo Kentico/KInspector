@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-
-using KenticoInspector.Reports.TransformationSecurityAnalysis.Constants;
-using KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Analysis;
 
 namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Data
 {
@@ -24,23 +20,18 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Data
 
         private static string GetNameFromPropertyXml(XElement propertyXml)
         {
-            return propertyXml.Attribute(XmlConstants.Name).Value;
+            return propertyXml.Attribute("name").Value;
         }
 
         public static bool PropertyXmlContainsTransformation(XElement propertyXml)
         {
             var propertyXmlContainsTransformation = GetNameFromPropertyXml(propertyXml)
-                .Contains(XmlConstants.Transformation, StringComparison.InvariantCultureIgnoreCase);
+                .Contains("transformation", StringComparison.InvariantCultureIgnoreCase);
 
             var propertyXmlIsNotEmpty = !string.IsNullOrEmpty(propertyXml.Value);
 
             return propertyXmlContainsTransformation
                 && propertyXmlIsNotEmpty;
-        }
-
-        public static Transformation PropertyTransformation(WebPartProperty property)
-        {
-            return property.Transformation;
         }
 
         public static bool HasIssues(WebPartProperty property)
@@ -50,13 +41,10 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Data
                 return false;
             }
 
-            return TransformationIssues(property)
+            return property
+                .Transformation
+                .Issues
                 .Any();
-        }
-
-        public static IEnumerable<TransformationIssue> TransformationIssues(WebPartProperty property)
-        {
-            return property.Transformation.Issues;
         }
     }
 }

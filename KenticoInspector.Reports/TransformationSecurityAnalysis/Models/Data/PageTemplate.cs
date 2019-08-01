@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 
 using KenticoInspector.Core.Models;
-using KenticoInspector.Reports.TransformationSecurityAnalysis.Constants;
 
 namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Data
 {
@@ -29,12 +27,12 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Data
             DisplayName = pageTemplateDto.PageTemplateDisplayName;
 
             Pages = pageDtos
-                    .Where(pageDto => PageDto.UsesPageTemplate(pageDto, pageTemplateDto))
+                    .Where(pageDto => pageDto.DocumentPageTemplateID == pageTemplateDto.PageTemplateID)
                     .Select(pageDto => new Page(pageDto, sites))
                     .OrderBy(page => page.AliasPath);
 
             WebParts = XDocument.Parse(pageTemplateDto.PageTemplateWebParts)
-                    .Descendants(XmlConstants.WebPart)
+                    .Descendants("webpart")
                     .Select(webPartXml => new WebPart(webPartXml))
                     .ToList();
         }
@@ -42,22 +40,10 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Data
         public void RemoveWebPartsWithNoProperties()
         {
             WebParts = WebParts
-                    .Where(WebPart.HasProperties);
-        }
-
-        public static IEnumerable<WebPart> TemplateWebParts(PageTemplate template)
-        {
-            return template.WebParts;
-        }
-
-        public static IOrderedEnumerable<Page> TemplatePages(PageTemplate template)
-        {
-            return template.Pages;
-        }
-
-        public static bool HasWebParts(PageTemplate template)
-        {
-            return TemplateWebParts(template).Any();
+                    .Where(webPart => webPart
+                        .Properties
+                        .Any()
+                    );
         }
     }
 }

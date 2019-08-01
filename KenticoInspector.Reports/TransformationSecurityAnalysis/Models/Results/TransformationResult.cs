@@ -2,7 +2,6 @@
 using System.Dynamic;
 using System.Linq;
 
-using KenticoInspector.Core.Helpers;
 using KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Analysis;
 using KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Data;
 
@@ -14,16 +13,14 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Results
     {
         private readonly IDictionary<string, string> dynamicIssueProperties = new Dictionary<string, string>();
 
-        public const string snippetWrapper = "...";
+        [JsonProperty]
+        public string Name { get; }
 
         [JsonProperty]
-        public string Name { get; set; }
+        public string Type { get; }
 
         [JsonProperty]
-        public string Type { get; set; }
-
-        [JsonProperty]
-        public int Uses { get; set; }
+        public int Uses { get; }
 
         public TransformationResult(Transformation transformation, int uses, IEnumerable<string> detectedIssueTypes)
         {
@@ -42,11 +39,15 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Results
             foreach (var issueGroup in groupedIssues)
             {
                 var aggregatedSnippets = issueGroup
-                    .Select(IssueSnippet)
-                    .Aggregate(ResultsHelper.AggregateAsLines);
+                    .Select(IssueSnippet);
 
-                dynamicIssueProperties[issueGroup.Key] = aggregatedSnippets;
+                dynamicIssueProperties[issueGroup.Key] = string.Join(string.Empty, aggregatedSnippets);
             }
+        }
+
+        private string IssueSnippet(TransformationIssue issue)
+        {
+            return $"{TransformationIssue.SnippetWrapper}{issue.CodeSnippet}{TransformationIssue.SnippetWrapper}";
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -61,16 +62,6 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Results
         public override IEnumerable<string> GetDynamicMemberNames()
         {
             return dynamicIssueProperties.Keys;
-        }
-
-        private string IssueSnippet(TransformationIssue issue)
-        {
-            return $"{snippetWrapper}{issue.CodeSnippet}{snippetWrapper}";
-        }
-
-        public static int TransformationUses(TransformationResult result)
-        {
-            return result.Uses;
         }
     }
 }

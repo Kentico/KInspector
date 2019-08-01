@@ -16,10 +16,5 @@
         public int NodeSiteID { get; set; }
 
         public int DocumentPageTemplateID { get; set; }
-
-        public static bool UsesPageTemplate(PageDto pageDto, PageTemplateDto pageTemplateDto)
-        {
-            return pageDto.DocumentPageTemplateID == pageTemplateDto.PageTemplateID;
-        }
     }
 }

@@ -4,17 +4,17 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Results
 {
     public class TemplateUsageResult
     {
-        public string Site { get; set; }
+        public string Site { get; }
 
-        public string NodeAliasPath { get; set; }
+        public string NodeAliasPath { get; }
 
-        public string Culture { get; set; }
+        public string Culture { get; }
 
-        public string Page { get; set; }
+        public string Page { get; }
 
-        public int NodeId { get; set; }
+        public int NodeId { get; }
 
-        public int TemplateId { get; set; }
+        public int TemplateId { get; }
 
         public TemplateUsageResult(Page page)
         {
@@ -24,11 +24,6 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Results
             NodeAliasPath = page.AliasPath;
             Culture = page.Culture.Name;
             TemplateId = page.TemplateId;
-        }
-
-        public static string OrderByKey(TemplateUsageResult usageResult)
-        {
-            return $"{usageResult.Site}{usageResult.NodeAliasPath}";
         }
     }
 }

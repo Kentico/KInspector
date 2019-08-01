@@ -1,12 +1,16 @@
-﻿namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Analysis
+﻿using System.Text.RegularExpressions;
+
+namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Analysis
 {
     public class TransformationIssue
     {
-        public const int SnippetPadding = 5;
+        public static int SnippetPadding => 5;
 
-        public string CodeSnippet { get; set; }
+        public static string SnippetWrapper => "...";
 
-        public string IssueType { get; set; }
+        public string CodeSnippet { get; }
+
+        public string IssueType { get; }
 
         public TransformationIssue(string codeSnippet, string issueType)
         {
@@ -14,9 +18,9 @@
             IssueType = issueType;
         }
 
-        public static string IssueIssueType(TransformationIssue transformationIssue)
+        public static string ReplaceEachUppercaseLetterWithASpaceAndTheLetter(string issueType)
         {
-            return transformationIssue.IssueType;
+            return Regex.Replace(issueType, "([A-Z])", " $1");
         }
     }
 }
