@@ -4,10 +4,17 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models
 {
     public class Terms
     {
-        public Term NoIssues { get; set; }
+        public Term WarningSummary { get; set; }
 
-        public Term Issues { get; set; }
+        public Term GoodSummary { get; set; }
 
+        public TableTitlesTerms TableTitles { get; set; }
+
+        public IssueDescriptionsTerms IssueDescriptions { get; set; }
+    }
+
+    public class TableTitlesTerms
+    {
         public Term IssueTypes { get; set; }
 
         public Term TransformationsWithIssues { get; set; }
@@ -15,7 +22,10 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models
         public Term TransformationUsage { get; set; }
 
         public Term TemplateUsage { get; set; }
+    }
 
+    public class IssueDescriptionsTerms
+    {
         public Term XssQueryHelper { get; set; }
 
         public Term XssQueryString { get; set; }

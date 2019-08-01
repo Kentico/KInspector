@@ -7,19 +7,21 @@
     * Serverside scripts
     * Use of complex data macros
 terms:
-  issueTypes: Issues types
-  issues: 'Found <summaryCount> issues with transformations categorized into the following issue types: <issueTypesAsCSV>.'
-  noIssues: No issues with transformations found.
-  templateUsage: Pages using templates
-  transformationsWithIssues: Transformations with issues
-  transformationUsage: Templates using Transformations
-  xssQueryHelper: The use of QueryHelper potentially renders malicious query string variables.
-  xssQueryString: The use of QueryString potentially renders malicious query string variables.
-  xssHttpContext: The use of HttpContext potentially renders malicious request variables.
-  xssServer: The use of Server potentially renders malicious request variables.
-  xssRequest: The use of Request potentially renders malicious request variables.
-  xssDocument: The use of Document in JavaScript potentially renders malicious data.
-  xssWindow: The use of Window in JavaScript potentially renders malicious data.
-  serverSideScript: Serverside scripts may be a sign of inefficient code or misuse of out-of-the-box methods.
-  documentsMacro: The use of Documents in a macro may be a sign of inefficient code or misuse of out-of-the-box methods.
-  queryMacro: The use of a query macro or QueryString in a macro potentially renders malicious query string variables.
+  goodSummary: No issues with transformations found.
+  warningSummary: 'Found <summaryCount> issues with transformations categorized into the following issue types: <issueTypesAsCSV>.'
+  tableTitles:
+    issueTypes: Issues types
+    transformationsWithIssues: Transformations with issues
+    transformationUsage: Templates using Transformations
+    templateUsage: Pages using templates
+  issueDescriptions:
+    xssQueryHelper: The use of QueryHelper potentially renders malicious query string variables.
+    xssQueryString: The use of QueryString potentially renders malicious query string variables.
+    xssHttpContext: The use of HttpContext potentially renders malicious request variables.
+    xssServer: The use of Server potentially renders malicious request variables.
+    xssRequest: The use of Request potentially renders malicious request variables.
+    xssDocument: The use of Document in JavaScript potentially renders malicious data.
+    xssWindow: The use of Window in JavaScript potentially renders malicious data.
+    serverSideScript: Serverside scripts may be a sign of inefficient code or misuse of out-of-the-box methods.
+    documentsMacro: The use of Documents in a macro may be a sign of inefficient code or misuse of out-of-the-box methods.
+    queryMacro: The use of a query macro or QueryString in a macro potentially renders malicious query string variables.

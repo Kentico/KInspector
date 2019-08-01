@@ -23,27 +23,27 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
             ReportTerms = reportTerms;
         }
 
-        public void XssQueryHelper(Transformation transformation) => UseRegexAnalysis(transformation, "queryhelper\\.", ReportTerms.XssQueryHelper);
+        public void XssQueryHelper(Transformation transformation) => UseRegexAnalysis(transformation, "queryhelper\\.", ReportTerms.IssueDescriptions.XssQueryHelper);
 
-        public void XssQueryString(Transformation transformation) => UseRegexAnalysis(transformation, "[ (.]querystring", ReportTerms.XssQueryString);
+        public void XssQueryString(Transformation transformation) => UseRegexAnalysis(transformation, "[ (.]querystring", ReportTerms.IssueDescriptions.XssQueryString);
 
-        public void XssHttpContext(Transformation transformation) => UseRegexAnalysis(transformation, "[ (.]httpcontext\\.", ReportTerms.XssHttpContext);
+        public void XssHttpContext(Transformation transformation) => UseRegexAnalysis(transformation, "[ (.]httpcontext\\.", ReportTerms.IssueDescriptions.XssHttpContext);
 
-        public void XssServer(Transformation transformation) => UseRegexAnalysis(transformation, "[ (.]server\\.", ReportTerms.XssServer);
+        public void XssServer(Transformation transformation) => UseRegexAnalysis(transformation, "[ (.]server\\.", ReportTerms.IssueDescriptions.XssServer);
 
-        public void XssRequest(Transformation transformation) => UseRegexAnalysis(transformation, "[ (.]request\\.", ReportTerms.XssRequest);
+        public void XssRequest(Transformation transformation) => UseRegexAnalysis(transformation, "[ (.]request\\.", ReportTerms.IssueDescriptions.XssRequest);
 
-        public void XssDocument(Transformation transformation) => UseRegexAnalysis(transformation, "<script .*?document\\.", ReportTerms.XssDocument);
+        public void XssDocument(Transformation transformation) => UseRegexAnalysis(transformation, "<script .*?document\\.", ReportTerms.IssueDescriptions.XssDocument);
 
-        public void XssWindow(Transformation transformation) => UseRegexAnalysis(transformation, "window\\.", ReportTerms.XssWindow);
+        public void XssWindow(Transformation transformation) => UseRegexAnalysis(transformation, "window\\.", ReportTerms.IssueDescriptions.XssWindow);
 
-        public void ServerSideScript(Transformation transformation) => UseRegexAnalysis(transformation, "<script runat=\"?server\"?", ReportTerms.ServerSideScript);
+        public void ServerSideScript(Transformation transformation) => UseRegexAnalysis(transformation, "<script runat=\"?server\"?", ReportTerms.IssueDescriptions.ServerSideScript);
 
-        public void DocumentsMacro(Transformation transformation) => UseRegexAnalysis(transformation, "{%.*?documents[[.]", ReportTerms.DocumentsMacro);
+        public void DocumentsMacro(Transformation transformation) => UseRegexAnalysis(transformation, "{%.*?documents[[.]", ReportTerms.IssueDescriptions.DocumentsMacro);
 
-        public void QueryMacro(Transformation transformation) => UseRegexAnalysis(transformation, "{\\?.*|{%.*querystring", ReportTerms.QueryMacro);
+        public void QueryMacro(Transformation transformation) => UseRegexAnalysis(transformation, "{\\?.*|{%.*querystring", ReportTerms.IssueDescriptions.QueryMacro);
 
-        private void UseRegexAnalysis(Transformation transformation, string pattern, Term issueDescription = null, [CallerMemberName]string issueType = null)
+        private void UseRegexAnalysis(Transformation transformation, string pattern, Term issueDescription, [CallerMemberName]string issueType = null)
         {
             var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
