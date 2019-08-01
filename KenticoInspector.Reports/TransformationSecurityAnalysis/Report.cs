@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
@@ -46,19 +45,20 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
 
             var pageDtos = databaseService.ExecuteSqlFromFile<PageDto>(Scripts.GetPages);
 
-            var pageDtosDocumentPageTemplateIds = pageDtos
+            var documentPageTemplateIds = pageDtos
                 .Select(pageDto => pageDto.DocumentPageTemplateID);
 
-            var pageTemplateDtos = databaseService.ExecuteSqlFromFile<PageTemplateDto>(Scripts.GetPageTemplates, new { DocumentPageTemplateIDs = pageDtosDocumentPageTemplateIds });
+            var pageTemplateDtos = databaseService.ExecuteSqlFromFile<PageTemplateDto>(Scripts.GetPageTemplates, new { DocumentPageTemplateIDs = documentPageTemplateIds });
 
             var sites = instanceService
                 .GetInstanceDetails(instanceService.CurrentInstance)
                 .Sites;
 
             var pageTemplates = pageTemplateDtos
-                .Select(pageTemplateDto => new PageTemplate(sites, pageDtos, pageTemplateDto));
+                .Select(pageTemplateDto => new PageTemplate(sites, pageDtos, pageTemplateDto))
+                .ToList();
 
-            var pageTemplatesUsingTransformationsWithIssues = GetPageTemplatesUsingTransformationsWithIssues(pageTemplates.ToList(), transformationsWithIssues);
+            var pageTemplatesUsingTransformationsWithIssues = GetPageTemplatesUsingTransformationsWithIssues(pageTemplates, transformationsWithIssues);
 
             return CompileResults(pageTemplatesUsingTransformationsWithIssues);
         }
@@ -75,7 +75,10 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
             }
 
             return transformations
-                .Where(Transformation.TransformationHasIssues);
+                .Where(transformation => transformation
+                    .Issues
+                    .Any()
+                );
         }
 
         private void AnalyzeTransformation(Transformation transformation)
@@ -117,15 +120,18 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
             }
 
             return pageTemplates
-                .Where(PageTemplate.HasWebParts);
+                .Where(pageTemplate => pageTemplate
+                    .WebParts
+                    .Any()
+                );
         }
 
         private ReportResults CompileResults(IEnumerable<PageTemplate> pageTemplates)
         {
             var allIssues = pageTemplates
-                .SelectMany(PageTemplate.TemplateWebParts)
-                .SelectMany(WebPart.WebPartProperties)
-                .SelectMany(WebPartProperty.TransformationIssues);
+                .SelectMany(pageTemplate => pageTemplate.WebParts)
+                .SelectMany(webPart => webPart.Properties)
+                .SelectMany(webPartProperty => webPartProperty.Transformation.Issues);
 
             if (!allIssues.Any())
             {
@@ -133,85 +139,78 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
                 {
                     Type = ReportResultsType.String,
                     Status = ReportResultsStatus.Good,
-                    Summary = Metadata.Terms.NoIssues
+                    Summary = Metadata.Terms.GoodSummary
                 };
             }
 
-            var oneIssueOfEachType = pageTemplates
-                            .SelectMany(PageTemplate.TemplateWebParts)
-                            .SelectMany(WebPart.WebPartProperties)
-                            .SelectMany(WebPartProperty.TransformationIssues)
-                            .GroupBy(TransformationIssue.IssueIssueType)
-                            .Select(g => g.First());
+            var oneIssueOfEachType = allIssues
+                .GroupBy(transformationIssue => transformationIssue.IssueType)
+                .Select(g => g.First());
 
             var issueTypes = oneIssueOfEachType
-                            .Select(transformationIssue => new IssueTypeResult(transformationIssue.IssueType, IssueAnalyzers.DetectedIssueTypes));
+                .Select(transformationIssue => new IssueTypeResult(transformationIssue.IssueType, IssueAnalyzers.DetectedIssueTypes));
 
             var issueTypesResult = new TableResult<IssueTypeResult>
             {
-                Name = Metadata.Terms.IssueTypes,
+                Name = Metadata.Terms.TableTitles.IssueTypes,
                 Rows = issueTypes
             };
 
             var usedIssueTypes = IssueAnalyzers.DetectedIssueTypes
                 .Keys
                 .Where(issueType => oneIssueOfEachType
-                                    .Select(issue => issue.IssueType)
-                                    .Contains(issueType));
+                    .Select(issue => issue.IssueType)
+                    .Contains(issueType)
+                );
 
-            var transformations = pageTemplates
-                                .SelectMany(PageTemplate.TemplateWebParts)
-                                .SelectMany(WebPart.WebPartProperties)
-                                .Select(WebPartProperty.PropertyTransformation)
-                                .GroupBy(Transformation.TransformationFullName)
-                                .Select(g => g.First())
-                                .Select(transformation => new TransformationResult(transformation, CountTransformationUses(transformation, pageTemplates), usedIssueTypes))
-                                .OrderBy(TransformationResult.TransformationUses);
+            var allTransformations = pageTemplates
+                .SelectMany(pageTemplate => pageTemplate.WebParts)
+                .SelectMany(webPart => webPart.Properties)
+                .Select(webPartProperty => webPartProperty.Transformation)
+                .GroupBy(transformation => transformation.FullName)
+                .Select(g => g.First());
+
+            var transformationsResultRows = allTransformations
+                .Select(transformation => new TransformationResult(transformation, CountTransformationUses(transformation, pageTemplates), usedIssueTypes))
+                .OrderBy(transformationResult => transformationResult.Uses);
 
             var transformationsResult = new TableResult<TransformationResult>
             {
-                Name = Metadata.Terms.TransformationsWithIssues,
-                Rows = transformations
+                Name = Metadata.Terms.TableTitles.TransformationsWithIssues,
+                Rows = transformationsResultRows
             };
 
-            var transformationUses = pageTemplates
-                                .SelectMany(AsTransformationUsageResults)
-                                .OrderBy(TransformationUsageResult.UniqueOrderByKey);
+            var transformationUsageResultRows = pageTemplates
+                .SelectMany(AsTransformationUsageResults);
 
             var transformationUsageResult = new TableResult<TransformationUsageResult>
             {
-                Name = Metadata.Terms.TransformationUsage,
-                Rows = transformationUses
+                Name = Metadata.Terms.TableTitles.TransformationUsage,
+                Rows = transformationUsageResultRows
             };
 
-            var templateUses = pageTemplates
-                                .SelectMany(PageTemplate.TemplatePages)
-                                .Select(page => new TemplateUsageResult(page))
-                                .OrderBy(TemplateUsageResult.OrderByKey);
+            var templateUsageResultRows = pageTemplates
+                .SelectMany(pageTemplate => pageTemplate.Pages)
+                .Select(page => new TemplateUsageResult(page));
 
             var templateUsageResult = new TableResult<TemplateUsageResult>
             {
-                Name = Metadata.Terms.TemplateUsage,
-                Rows = templateUses
+                Name = Metadata.Terms.TableTitles.TemplateUsage,
+                Rows = templateUsageResultRows
             };
 
-            var summaryCount = pageTemplates
-                .SelectMany(PageTemplate.TemplateWebParts)
-                .SelectMany(WebPart.WebPartProperties)
-                .Select(WebPartProperty.PropertyTransformation)
-                .GroupBy(Transformation.TransformationFullName)
-                .Select(g => g.First())
-                .Select(Transformation.TransformationIssues)
+            var summaryCount = allTransformations
+                .Select(transformation => transformation.Issues)
                 .Count();
 
-            var issueTypesAsCSV = string.Join(',', usedIssueTypes
-                .Select(issueType => ResultsHelper.ToTitleCase(issueType)));
+            var issueTypesAsCsv = string.Join(',', usedIssueTypes
+                .Select(issueType => TransformationIssue.ReplaceEachUppercaseLetterWithASpaceAndTheLetter(issueType)));
 
             return new ReportResults()
             {
                 Type = ReportResultsType.TableList,
                 Status = ReportResultsStatus.Warning,
-                Summary = Metadata.Terms.Issues.With(new { summaryCount, issueTypesAsCSV }),
+                Summary = Metadata.Terms.WarningSummary.With(new { summaryCount, issueTypesAsCsv }),
                 Data = new
                 {
                     issueTypesResult,
