@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,13 +21,6 @@ namespace KenticoInspector.Reports.Tests
     public class TransformationSecurityAnalysisTests : AbstractReportTest<Report, Terms>
     {
         private readonly Report mockReport;
-
-        private const string CleanPageTemplateAscx = @"TestData\CMS_PageTemplate\PageTemplateWebParts\CleanAscx.xml";
-        private const string CleanPageTemplateText = @"TestData\CMS_PageTemplate\PageTemplateWebParts\CleanText.xml";
-
-        private const string CleanTransformationAscx = @"TestData\CMS_Transformation\TransformationCode\CleanASCX.txt";
-        private const string CleanTransformationText = @"TestData\CMS_Transformation\TransformationCode\CleanText.txt";
-        private const string WithXssQueryHelperIssueTransformationAscx = @"TestData\CMS_Transformation\TransformationCode\WithXssQueryHelperIssueASCX.txt";
 
         private IEnumerable<PageDto> CleanPageDtoTable => new List<PageDto>
         {
@@ -58,13 +52,13 @@ namespace KenticoInspector.Reports.Tests
             new PageTemplateDto()
             {
                 PageTemplateID = 1,
-                PageTemplateWebParts = FromFile(CleanPageTemplateAscx),
+                PageTemplateWebParts = FromFile(@"TestData\CMS_PageTemplate\PageTemplateWebParts\CleanAscx.xml"),
                 PageTemplateCodeName = "PageTemplateASCX"
             },
             new PageTemplateDto()
             {
                 PageTemplateID = 2,
-                PageTemplateWebParts = FromFile(CleanPageTemplateText),
+                PageTemplateWebParts = FromFile(@"TestData\CMS_PageTemplate\PageTemplateWebParts\CleanText.xml"),
                 PageTemplateCodeName = "PageTemplateText"
             }
         };
@@ -74,34 +68,23 @@ namespace KenticoInspector.Reports.Tests
             new TransformationDto()
             {
                 TransformationName = "ASCXTransformation",
-                TransformationCode = FromFile(CleanTransformationAscx),
+                TransformationCode = FromFile(@"TestData\CMS_Transformation\TransformationCode\CleanASCX.txt"),
                 ClassName = "PageType1",
                 Type = TransformationType.ASCX
             },
             new TransformationDto()
             {
                 TransformationName = "JQueryTransformation",
-                TransformationCode = FromFile(CleanTransformationText),
+                TransformationCode = FromFile(@"TestData\CMS_Transformation\TransformationCode\CleanText.txt"),
                 ClassName = "PageType1",
                 Type = TransformationType.JQuery
             },
             new TransformationDto()
             {
                 TransformationName = "TextTransformation",
-                TransformationCode = FromFile(CleanTransformationText),
+                TransformationCode = FromFile(@"TestData\CMS_Transformation\TransformationCode\CleanText.txt"),
                 ClassName = "PageType2",
                 Type = TransformationType.Text
-            }
-        };
-
-        private IEnumerable<TransformationDto> XssQueryHelperIssueTransformationDtoTable => new List<TransformationDto>
-        {
-            new TransformationDto()
-            {
-                TransformationName = "ASCXTransformation",
-                TransformationCode = FromFile(WithXssQueryHelperIssueTransformationAscx),
-                ClassName = "PageType1",
-                Type = TransformationType.ASCX
             }
         };
 
@@ -116,13 +99,10 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void ShouldReturnNoIssues()
+        public void Should_ReturnGoodStatusAndGoodSummary_WhenTransformationsHaveNoIssues()
         {
             // Arrange
-
-            _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetTransformations, CleanTransformationDtoTable);
-            _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetPages, CleanPageDtoTable);
-            _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetPageTemplates, "DocumentPageTemplateIDs", CleanPageDtoTable.Select(pageDto => pageDto.DocumentPageTemplateID), CleanPageTemplateDtoTable);
+            ArrangeDatabaseService(CleanTransformationDtoTable);
 
             // Act
             var results = mockReport.GetResults();
@@ -130,16 +110,27 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
 
-            Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.NoIssues.ToString()));
+            Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.GoodSummary.ToString()));
         }
 
         [Test]
-        public void ShouldReturnSingleXssQueryHelperIssue()
+        public void Should_ReturnWarningStatus_WhenTransformationsHaveSingleXssQueryHelperIssue() => TestSingleIssue(@"TestData\CMS_Transformation\TransformationCode\WithXssQueryHelperIssueASCX.txt", (r, d) => d.XssQueryHelper != string.Empty && r.Uses == 2);
+
+        public void TestSingleIssue(string transformationCodeFilePath, Func<TransformationResult, dynamic, bool> transformationResultEvaluator)
         {
+            var transformationDtoTableWithIssue = new List<TransformationDto>
+            {
+                    new TransformationDto()
+                {
+                    TransformationName = "ASCXTransformation",
+                    TransformationCode = FromFile(transformationCodeFilePath),
+                    ClassName = "PageType1",
+                    Type = TransformationType.ASCX
+                }
+            };
+
             // Arrange
-            _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetTransformations, XssQueryHelperIssueTransformationDtoTable);
-            _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetPages, CleanPageDtoTable);
-            _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetPageTemplates, "DocumentPageTemplateIDs", CleanPageDtoTable.Select(pageDto => pageDto.DocumentPageTemplateID), CleanPageTemplateDtoTable);
+            ArrangeDatabaseService(transformationDtoTableWithIssue);
 
             // Act
             var results = mockReport.GetResults();
@@ -149,23 +140,27 @@ namespace KenticoInspector.Reports.Tests
 
             Assert.That(GetAnonymousTableResult<TableResult<IssueTypeResult>>(results, "issueTypesResult").Rows.Count(), Is.EqualTo(1));
             Assert.That(GetAnonymousTableResult<TableResult<TransformationResult>>(results, "transformationsResult").Rows.Count(), Is.EqualTo(1));
-            Assert.That(GetAnonymousTableResult<TableResult<TransformationResult>>(results, "transformationsResult").Rows, Has.One.Matches<TransformationResult>(r =>
-            {
-                dynamic row = r;
-
-                return row.XssQueryHelper != string.Empty
-                        && r.Uses == 2;
-            }
-            ));
+            Assert.That(GetAnonymousTableResult<TableResult<TransformationResult>>(results, "transformationsResult").Rows, Has.One.Matches<TransformationResult>(row => transformationResultEvaluator(row, row as dynamic)));
 
             Assert.That(GetAnonymousTableResult<TableResult<TransformationUsageResult>>(results, "transformationUsageResult").Rows.Count(), Is.EqualTo(1));
 
             Assert.That(GetAnonymousTableResult<TableResult<TemplateUsageResult>>(results, "templateUsageResult").Rows.Count(), Is.EqualTo(2));
         }
 
+        private void ArrangeDatabaseService(IEnumerable<TransformationDto> transformationDtoTable)
+        {
+            _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetTransformations, transformationDtoTable);
+            _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetPages, CleanPageDtoTable);
+            _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetPageTemplates, "DocumentPageTemplateIDs", CleanPageDtoTable.Select(pageDto => pageDto.DocumentPageTemplateID), CleanPageTemplateDtoTable);
+        }
+
         private static TResult GetAnonymousTableResult<TResult>(ReportResults results, string resultName)
         {
-            return results.Data.GetType().GetProperty(resultName).GetValue(results.Data);
+            return results
+                .Data
+                .GetType()
+                .GetProperty(resultName)
+                .GetValue(results.Data);
         }
     }
 }
