@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>7.1</LangVersion>
+    <Version/>
+    <PackageVersion/>
+    <AssemblyVersion/>
+    <FileVersion/>
+    <InformationalVersion/>
   </PropertyGroup>
 
   <ItemGroup>
