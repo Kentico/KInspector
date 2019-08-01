@@ -1,7 +1,7 @@
 # Kentico Inspector
 
 [![Join the chat at https://kentico-community.slack.com](https://img.shields.io/badge/join-slack-E6186D.svg)](https://kentico-community.slack.com)
-[![Build status](https://ci.appveyor.com/api/projects/status/udykjx510v83w9y6?svg=true)](https://ci.appveyor.com/project/kentico/kinspector)
+[![Build status](https://ci.appveyor.com/api/projects/status/n3nrch61bqxh497e/branch/master?svg=true)](https://ci.appveyor.com/project/kentico/kinspector-98xj0/branch/master)
 [![first-timers-only](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 [![Github All Releases](https://img.shields.io/github/downloads/kentico/kinspector/total.svg)](https://github.com/Kentico/KInspector/releases)
 
