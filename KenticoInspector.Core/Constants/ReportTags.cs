@@ -9,6 +9,8 @@
         public const string Performance = "Performance";
         public const string PortalEngine = "Portal Engine";
         public const string SEO = "SEO";
+        public const string Security = "Security";
+        public const string Transformations = "Transformations";
         public const string WebParts = "Web Parts";
     }
 }

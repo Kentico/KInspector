@@ -1,0 +1,19 @@
+﻿<page>
+  <webpartzone id="webPartZone" v="1">
+    <properties>
+      <property name="containerhideonsubpages">False</property>
+      <property name="disableviewstate">False</property>
+      <property name="hideonsubpages">False</property>
+      <property name="timezonetype">inherit</property>
+      <property name="useupdatepanel">False</property>
+      <property name="visible">True</property>
+      <property name="zonetitle">Web Part Zone</property>
+    </properties>
+    <webpart controlid="webPart" guid="d2c96a8b-2b04-4236-ad57-fc534c530417" type="WebPart2" v="1">
+      <property name="transformationname">PageType2.TextTransformation</property>
+    </webpart>
+    <webpart controlid="webPart" guid="d2c96a8b-2b04-4236-ad57-fc534c530416" type="WebPart3" v="1">
+      <property name="transformationname">PageType1.JQueryTransformation</property>
+    </webpart>
+  </webpartzone>
+</page>
