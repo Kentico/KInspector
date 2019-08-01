@@ -20,101 +20,89 @@ namespace KenticoInspector.Core.Tokens
 
             var expression = GetExpression(trimmedTokenExpression);
 
-            var resolved = false;
-
-            var resolvedValue = string.Empty;
-
             if (tokenDictionary.TryGetValue(expression.token, out object token))
             {
-                foreach (var (value, operation, caseValue) in expression.expressionCases)
+                foreach (var (value, operation, result) in expression.cases)
                 {
-                    resolved = TryResolveToken(token, value, operation, caseValue, out resolvedValue);
+                    var resolved = TryResolveToken(token, value, operation, result, out string resolvedToken);
 
-                    if (resolved) break;
-                }
-
-                if (resolved && expression.token != resolvedValue)
-                {
-                    return resolvedValue;
-                }
-
-                if (expression.token == expression.defaultValue)
-                {
-                    return token.ToString();
+                    if (resolved) return resolvedToken;
                 }
             }
-            else
+
+            if (expression.token == expression.defaultValue)
             {
-                return string.Empty;
+                return token?.ToString();
             }
 
             return expression.defaultValue ?? string.Empty;
         }
 
-        private (string token, IEnumerable<(string value, char operation, string caseValue)> expressionCases, string defaultValue) GetExpression(string tokenExpression)
+        private (string token, IEnumerable<(string value, char operation, string result)> cases, string defaultValue) GetExpression(string tokenExpression)
         {
-            if (string.IsNullOrEmpty(tokenExpression))
+            if (string.IsNullOrEmpty(tokenExpression)) throw new ArgumentException($"'{tokenExpression}' looks like a simple token expression but does not contain a token.");
+
+            var segments = tokenExpression.Split(Constants.Pipe);
+
+            if (segments[0].Contains(Constants.Colon)) throw new FormatException($"Simple token expression token '{segments[0]}' must not contain a {Constants.Colon}.");
+
+            var cases = new List<(string, char, string)>();
+
+            string defaultValue = null;
+
+            switch (segments.Length)
             {
-                throw new ArgumentException($"'{tokenExpression}' looks like a simple token expression but does not contain a key.");
+                case 1:
+                    defaultValue = segments[0];
+
+                    break;
+
+                default:
+                    if (!segments[segments.Length - 1].Contains(Constants.Colon))
+                    {
+                        defaultValue = segments[segments.Length - 1];
+                    }
+
+                    foreach (var segment in segments.Skip(1).Take(segments.Length - 1))
+                    {
+                        cases.Add(GetCase(segment));
+                    }
+
+                    break;
             }
 
-            var (token, casesAndDefault) = tokenExpression.SplitAtFirst(Constants.Pipe);
-
-            if (string.IsNullOrEmpty(casesAndDefault))
-            {
-                return (token, Enumerable.Empty<(string, char, string)>(), token);
-            }
-
-            var (cases, defaultValue) = casesAndDefault.SplitAtLast(Constants.Pipe);
-
-            if (defaultValue.IndexOf(Constants.Colon) > -1)
-            {
-                cases = defaultValue;
-                defaultValue = null;
-            }
-
-            var casePairs = cases
-                .Split(new[] { Constants.Pipe })
-                .Select(casePair => GetCasePair(casePair))
-                .ToList();
-
-            return (token, casePairs, defaultValue);
+            return (segments[0], cases, defaultValue);
         }
 
-        private static (string, char, string) GetCasePair(string casePair)
+        private static (string, char, string) GetCase(string expressionCase)
         {
-            var pair = casePair.SplitAtFirst(Constants.Colon);
+            var operation = Constants.Equals;
 
-            if (string.IsNullOrEmpty(pair.second))
+            var pair = expressionCase.SplitAtFirst(Constants.Colon);
+
+            if (!expressionCase.Contains(Constants.Colon))
             {
-                return (null, Constants.Equals, pair.first);
+                return (null, operation, pair.first);
             }
 
-            var (key, operation) = GetCaseKey(pair.first);
-
-            return (key, operation, pair.second);
-        }
-
-        private static (string, char) GetCaseKey(string caseKey)
-        {
-            char operation = Constants.Equals;
+            var firstChar = pair.first[0];
 
             var operationChars = new[] { Constants.MoreThan, Constants.LessThan };
 
-            if (caseKey.Any())
+            if (!operationChars.Contains(firstChar))
             {
-                var firstChar = caseKey.First();
-
-                foreach (var item in operationChars)
-                {
-                    if (firstChar == item) operation = item;
-                }
+                return (pair.first, operation, pair.second);
             }
 
-            return (caseKey.TrimStart(operationChars), operation);
+            foreach (var item in operationChars)
+            {
+                if (firstChar == item) operation = item;
+            }
+
+            return (pair.first.Substring(1), operation, pair.second);
         }
 
-        private bool TryResolveToken(object token, string value, char operation, string caseValue, out string resolvedValue)
+        private bool TryResolveToken(object token, string value, char operation, string result, out string resolvedValue)
         {
             switch (token)
             {
@@ -122,7 +110,7 @@ namespace KenticoInspector.Core.Tokens
                 case int lessThanValue when token is int && operation == Constants.LessThan && lessThanValue < int.Parse(value.ToString()):
                 case int moreThanValue when token is int && operation == Constants.MoreThan && moreThanValue > int.Parse(value.ToString()):
                 case var _ when token?.ToString() == value:
-                    resolvedValue = caseValue;
+                    resolvedValue = result;
 
                     return true;
             }
