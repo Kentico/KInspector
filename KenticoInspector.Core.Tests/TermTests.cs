@@ -72,26 +72,28 @@ namespace KenticoInspector.Core.Tests
         [TestCase("The <?wrongtoken=car:Blue> vehicle is going very fast", "The vehicle is going very fast", "truck", "car")]
         // URL
         [TestCase("<?stringtoken>: https://docs.kentico.com", "No cars: https://docs.kentico.com", "No cars")]
-        public void ShouldResolve(string term, string result, params object[] tokenValues)
+        public void Should_Resolve(string term, string result, params object[] tokenValues)
         {
-            TestValidResult(term, AsDynamic(tokenValues), result);
+            TestResolve(term, AsDynamic(tokenValues), result);
         }
 
         [Test]
         [TestCase("The version is <versiontoken|12.0.4:supported>", "The version is supported", "12.0.4")]
         [TestCase("The version is <?versiontoken=12.0.4:supported>", "The version is supported", "12.0.4")]
-        public void ShouldResolveWithVersion(string term, string result, string version) => ShouldResolve(term, result, new Version(version));
+        public void Should_Resolve_WithVersion(string term, string result, string version) => Should_Resolve(term, result, new Version(version));
 
         [Test]
         // Empty
         [TestCase("This is wrong: <>", typeof(ArgumentException), "value")]
         // Empty
         [TestCase("This is wrong: <?>", typeof(ArgumentException), "value")]
+        // Token with colon
+        [TestCase("This is <stringtoken:a failure>", typeof(FormatException), "value")]
         // Case with multiple equals
         [TestCase("This is <?stringtoken|stringtoken=value=failure:wrong|a success>", typeof(ArgumentException), "value")]
-        public void ShouldNotResolve(string term, Type exceptionType, params object[] tokenValues)
+        public void Should_ThrowException(string term, Type exceptionType, params object[] tokenValues)
         {
-            TestInvalidThrows(term, AsDynamic(tokenValues), exceptionType);
+            TestThrowException(term, AsDynamic(tokenValues), exceptionType);
         }
 
         private static dynamic AsDynamic(object[] tokenValues)
@@ -112,7 +114,7 @@ namespace KenticoInspector.Core.Tests
             return dictionary;
         }
 
-        public void TestValidResult(Term term, object tokenValues, string result)
+        public void TestResolve(Term term, object tokenValues, string result)
         {
             // Act
             string resolvedTerm = term.With(tokenValues).ToString();
@@ -121,7 +123,7 @@ namespace KenticoInspector.Core.Tests
             Assert.That(resolvedTerm, Is.EqualTo(result));
         }
 
-        public void TestInvalidThrows(Term term, object tokenValues, Type exceptionType)
+        public void TestThrowException(Term term, object tokenValues, Type exceptionType)
         {
             // Act
             string resolvedTermMethod() => term.With(tokenValues).ToString();
