@@ -14,3 +14,4 @@
 	WHERE 
 		UserEnabled = 1 
 		AND UserIsExternal = 0 
+        AND UserName NOT IN @ExcludedUserNames
