@@ -1,6 +1,6 @@
 ﻿namespace KenticoInspector.Reports.UserPasswordAnalysis.Models.Data
 {
-    public class UserDto
+    public class CmsUser
     {
         public string UserName { get; set; }
 

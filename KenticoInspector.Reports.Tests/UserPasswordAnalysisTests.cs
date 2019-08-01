@@ -20,32 +20,32 @@ namespace KenticoInspector.Reports.Tests
     {
         private readonly Report mockReport;
 
-        private IEnumerable<UserDto> UserDtoTableWithoutIssues => new List<UserDto>
+        private IEnumerable<CmsUser> CmsUserWithoutIssues => new List<CmsUser>
         {
-            new UserDto
+            new CmsUser
             {
                 UserPassword = "ABAnAAA/1oSX1",
                 UserPasswordFormat = "SHA1"
             }
         };
 
-        private IEnumerable<UserDto> UserDtoTableWithOneIssue => new List<UserDto>
+        private IEnumerable<CmsUser> CmsUserWithOneIssue => new List<CmsUser>
         {
-            new UserDto
+            new CmsUser
             {
                 UserPassword = "",
                 UserPasswordFormat = "SHA1"
             }
         };
 
-        private IEnumerable<UserDto> UserDtoTableWithTwoIssues => new List<UserDto>
+        private IEnumerable<CmsUser> CmsUserWithTwoIssues => new List<CmsUser>
         {
-            new UserDto
+            new CmsUser
             {
                 UserPassword = "password1",
                 UserPasswordFormat = ""
             },
-            new UserDto
+            new CmsUser
             {
                 UserPassword = "",
                 UserPasswordFormat = "SHA1"
@@ -61,7 +61,7 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnGoodStatusAndGoodSummary_WhenUserPasswordsHaveNoIssues()
         {
             // Arrange
-            ArrangeDatabaseService(UserDtoTableWithoutIssues);
+            ArrangeDatabaseService(CmsUserWithoutIssues);
 
             // Act
             var results = mockReport.GetResults();
@@ -76,11 +76,11 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnErrorStatusAndErrorSummary_WhenUserPasswordsHaveTwoIssues()
         {
             // Arrange
-            ArrangeDatabaseService(UserDtoTableWithTwoIssues);
+            ArrangeDatabaseService(CmsUserWithTwoIssues);
 
             // Act
             var results = mockReport.GetResults();
-            var resultsData = results.Data as List<TableResult<UserResult>>;
+            var resultsData = results.Data as List<TableResult<CmsUserResult>>;
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
@@ -96,11 +96,11 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnErrorStatusAndErrorSummary_WhenUserPasswordsHaveOneIssue()
         {
             // Arrange
-            ArrangeDatabaseService(UserDtoTableWithOneIssue);
+            ArrangeDatabaseService(CmsUserWithOneIssue);
 
             // Act
             var results = mockReport.GetResults();
-            var resultsData = results.Data as List<TableResult<UserResult>>;
+            var resultsData = results.Data as List<TableResult<CmsUserResult>>;
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
@@ -111,9 +111,9 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(resultsData[0].Rows.Count(), Is.EqualTo(1));
         }
 
-        private void ArrangeDatabaseService(IEnumerable<UserDto> userDtoTable)
+        private void ArrangeDatabaseService(IEnumerable<CmsUser> cmsUserTable)
         {
-            _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetEnabledAndNotExternalUsers, userDtoTable);
+            _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetEnabledAndNotExternalUsers, nameof(Report.ExcludedUserNames), Report.ExcludedUserNames, cmsUserTable);
         }
     }
 }

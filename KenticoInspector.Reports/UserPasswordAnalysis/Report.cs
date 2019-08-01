@@ -29,46 +29,38 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
             ReportTags.Configuration
         };
 
-        public IEnumerable<string> ExcludedUserNames => new List<string> {
+        public static IEnumerable<string> ExcludedUserNames => new List<string> {
             "public"
         };
 
         public override ReportResults GetResults()
         {
-            var userDtos = databaseService.ExecuteSqlFromFile<UserDto>(Scripts.GetEnabledAndNotExternalUsers);
+            var cmsUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetEnabledAndNotExternalUsers, new { ExcludedUserNames });
 
-            var userDtosWithoutExcludedUsers = GetUsersWithoutExcludedUsers(userDtos);
+            var cmsUsersWithEmptyPasswords = GetCmsUsersWithEmptyPasswords(cmsUsers);
 
-            var userDtosWithEmptyPasswords = GetUsersWithEmptyPasswords(userDtosWithoutExcludedUsers);
+            var cmsUsersWithPlaintextPasswords = GetUsersWithPlaintextPasswords(cmsUsers);
 
-            var userDtosWithPlaintextPasswords = GetUsersWithPlaintextPasswords(userDtosWithoutExcludedUsers);
-
-            return CompileResults(userDtosWithEmptyPasswords, userDtosWithPlaintextPasswords);
+            return CompileResults(cmsUsersWithEmptyPasswords, cmsUsersWithPlaintextPasswords);
         }
 
-        private IEnumerable<UserDto> GetUsersWithoutExcludedUsers(IEnumerable<UserDto> userDtos)
+        private IEnumerable<CmsUserResult> GetCmsUsersWithEmptyPasswords(IEnumerable<CmsUser> cmsUsers)
         {
-            return userDtos
-                .Where(userDto => !ExcludedUserNames.Contains(userDto.UserName));
+            return cmsUsers
+                .Where(cmsUser => string.IsNullOrEmpty(cmsUser.UserPassword))
+                .Select(cmsUser => new CmsUserResultWithPasswordFormat(cmsUser));
         }
 
-        private IEnumerable<UserResult> GetUsersWithEmptyPasswords(IEnumerable<UserDto> userDtos)
+        private IEnumerable<CmsUserResult> GetUsersWithPlaintextPasswords(IEnumerable<CmsUser> cmsUsers)
         {
-            return userDtos
-                .Where(userDto => string.IsNullOrEmpty(userDto.UserPassword))
-                .Select(userDto => new UserResultWithPasswordFormat(userDto));
+            return cmsUsers
+                .Where(cmsUser => string.IsNullOrEmpty(cmsUser.UserPasswordFormat))
+                .Select(cmsUser => new CmsUserResult(cmsUser));
         }
 
-        private IEnumerable<UserResult> GetUsersWithPlaintextPasswords(IEnumerable<UserDto> userDtos)
+        private ReportResults CompileResults(IEnumerable<CmsUserResult> cmsUsersWithEmptyPasswords, IEnumerable<CmsUserResult> cmsUsersWithPlaintextPasswords)
         {
-            return userDtos
-                .Where(userDto => string.IsNullOrEmpty(userDto.UserPasswordFormat))
-                .Select(userDto => new UserResult(userDto));
-        }
-
-        private ReportResults CompileResults(IEnumerable<UserResult> usersWithEmptyPasswords, IEnumerable<UserResult> usersWithPlaintextPasswords)
-        {
-            if (!usersWithEmptyPasswords.Any() && !usersWithPlaintextPasswords.Any())
+            if (!cmsUsersWithEmptyPasswords.Any() && !cmsUsersWithPlaintextPasswords.Any())
             {
                 return new ReportResults
                 {
@@ -82,14 +74,14 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
             {
                 Type = ReportResultsType.TableList,
                 Status = ReportResultsStatus.Error,
-                Data = new List<TableResult<UserResult>>()
+                Data = new List<TableResult<CmsUserResult>>()
             };
 
-            var (emptyCount, usersWithEmptyPasswordsResult) = GetTableResult(usersWithEmptyPasswords, Metadata.Terms.TableTitles.EmptyPasswords);
+            var (emptyCount, usersWithEmptyPasswordsResult) = GetTableResult(cmsUsersWithEmptyPasswords, Metadata.Terms.TableTitles.EmptyPasswords);
 
             if (emptyCount > 0) errorReportResults.Data.Add(usersWithEmptyPasswordsResult);
 
-            var (plaintextCount, usersWithPlaintextPasswordsResult) = GetTableResult(usersWithPlaintextPasswords, Metadata.Terms.TableTitles.PlaintextPasswords);
+            var (plaintextCount, usersWithPlaintextPasswordsResult) = GetTableResult(cmsUsersWithPlaintextPasswords, Metadata.Terms.TableTitles.PlaintextPasswords);
 
             if (plaintextCount > 0) errorReportResults.Data.Add(usersWithPlaintextPasswordsResult);
 
@@ -98,14 +90,14 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
             return errorReportResults;
         }
 
-        private (int, TableResult<UserResult>) GetTableResult(IEnumerable<UserResult> userDtos, Term term)
+        private (int, TableResult<CmsUserResult>) GetTableResult(IEnumerable<CmsUserResult> cmsUsers, Term term)
         {
-            var count = userDtos.Count();
+            var count = cmsUsers.Count();
 
-            var tableResult = new TableResult<UserResult>
+            var tableResult = new TableResult<CmsUserResult>
             {
                 Name = term,
-                Rows = userDtos
+                Rows = cmsUsers
             };
 
             return (count, tableResult);
