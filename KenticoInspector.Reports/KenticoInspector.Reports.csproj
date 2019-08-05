@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>7.1</LangVersion>
+    <Version/>
+    <PackageVersion/>
+    <AssemblyVersion/>
+    <FileVersion/>
+    <InformationalVersion/>
   </PropertyGroup>
 
   <ItemGroup>
@@ -120,6 +125,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TemplateLayoutAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TransformationSecurityAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TransformationSecurityAnalysis\Scripts\GetPages.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TransformationSecurityAnalysis\Scripts\GetPageTemplates.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TransformationSecurityAnalysis\Scripts\GetTransformations.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="UnusedPageTypeSummary\Scripts\GetUnusedPageTypes.sql">

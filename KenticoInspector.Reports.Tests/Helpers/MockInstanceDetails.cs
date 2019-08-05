@@ -1,5 +1,6 @@
 ﻿using KenticoInspector.Core.Models;
 using System;
+using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.Tests.Helpers
 {
@@ -9,24 +10,40 @@ namespace KenticoInspector.Reports.Tests.Helpers
         {
             AdministrationVersion = new Version("9.0"),
             DatabaseVersion = new Version("9.0"),
+            Sites = new List<Site>
+            {
+                new Site { DomainName = "kentico9.com" }
+            }
         };
 
         public static InstanceDetails Kentico10 = new InstanceDetails
         {
             AdministrationVersion = new Version("10.0"),
             DatabaseVersion = new Version("10.0"),
+            Sites = new List<Site>
+            {
+                new Site { DomainName = "kentico10.com" }
+            }
         };
 
         public static InstanceDetails Kentico11 = new InstanceDetails
         {
             AdministrationVersion = new Version("11.0"),
             DatabaseVersion = new Version("11.0"),
+            Sites = new List<Site>
+            {
+                new Site { DomainName = "kentico11.com" }
+            }
         };
 
         public static InstanceDetails Kentico12 = new InstanceDetails
         {
             AdministrationVersion = new Version("12.0"),
             DatabaseVersion = new Version("12.0"),
+            Sites = new List<Site>
+            {
+                new Site { DomainName = "kentico12.com" }
+            }
         };
 
         public static InstanceDetails Get(int majorVersion, Instance instance)

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -6,6 +6,11 @@
     <IsPackable>false</IsPackable>
 
     <LangVersion>7.1</LangVersion>
+    <Version/>
+    <PackageVersion/>
+    <AssemblyVersion/>
+    <FileVersion/>
+    <InformationalVersion/>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +27,21 @@
 
   <ItemGroup>
     <None Update="TestData\classFormDefinitionXml_Clean_5512.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\CMS_PageTemplate\PageTemplateWebParts\CleanAscx.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\CMS_PageTemplate\PageTemplateWebParts\CleanText.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\CMS_Transformation\TransformationCode\CleanASCX.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\CMS_Transformation\TransformationCode\CleanText.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\CMS_Transformation\TransformationCode\WithXssQueryHelperIssueASCX.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\VersionHistoryItem_Clean_518.xml">
