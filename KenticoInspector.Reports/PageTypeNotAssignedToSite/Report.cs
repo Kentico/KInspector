@@ -29,7 +29,7 @@ namespace KenticoInspector.Reports.PageTypeNotAssignedToSite
 
         public override ReportResults GetResults()
         {
-            var pageTypesNotAssigned = databaseService.ExecuteSqlFromFile<UnassignedPageTypes>(Scripts.PageTypeNotAssigned);
+            var pageTypesNotAssigned = databaseService.ExecuteSqlFromFile<UnassignedPageTypes>(Scripts.GetPageTypesNotAssignedToSite);
 
             return CompileResults(pageTypesNotAssigned);
         }

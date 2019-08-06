@@ -4,6 +4,6 @@
     {
         public static string BaseDirectory = $"{nameof(PageTypeNotAssignedToSite)}/Scripts";
 
-        public static string PageTypeNotAssigned = $"{BaseDirectory}/{nameof(PageTypeNotAssigned)}.sql";
+        public static string GetPageTypesNotAssignedToSite = $"{BaseDirectory}/{nameof(GetPageTypesNotAssignedToSite)}.sql";
     }
 }
