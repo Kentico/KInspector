@@ -4,8 +4,8 @@ namespace KenticoInspector.Reports.PageTypeNotAssignedToSite.Models
 {
     public class Terms
     {
-        public Term CountPageTypeNotAssigned { get; set; }
-        public Term PageTypesNotAssigned { get; set; }
-        public Term AllpageTypesAssigned { get; set; }
+        public Term WarningSummary { get; set; }
+        public Term UnassignedPageTypesTableHeader { get; set; }
+        public Term NoIssuesFound { get; set; }
     }
 }

@@ -39,11 +39,11 @@ namespace KenticoInspector.Reports.PageTypeNotAssignedToSite
             var results = new ReportResults
             {
                 Status = ReportResultsStatus.Good,
-                Summary = Metadata.Terms.AllpageTypesAssigned,
+                Summary = Metadata.Terms.NoIssuesFound,
                 Type = ReportResultsType.Table,
                 Data = new TableResult<PageType>()
                 {
-                    Name = Metadata.Terms.PageTypesNotAssigned,
+                    Name = Metadata.Terms.UnassignedPageTypesTableHeader,
                     Rows = unassignedPageTypes
                 }
             };
@@ -52,7 +52,7 @@ namespace KenticoInspector.Reports.PageTypeNotAssignedToSite
             if (unassignedPageTypeCount > 0)
             {
                 results.Status = ReportResultsStatus.Warning;
-                results.Summary = Metadata.Terms.CountPageTypeNotAssigned.With(new { unassignedPageTypeCount });
+                results.Summary = Metadata.Terms.WarningSummary.With(new { unassignedPageTypeCount });
             }
 
             return results;
