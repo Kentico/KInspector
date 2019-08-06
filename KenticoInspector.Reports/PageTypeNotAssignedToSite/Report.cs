@@ -23,7 +23,8 @@ namespace KenticoInspector.Reports.PageTypeNotAssignedToSite
 
         public override IList<string> Tags => new List<string>
         {
-            ReportTags.Information
+            ReportTags.Health,
+            ReportTags.Consistency
         };
 
         public override ReportResults GetResults()
