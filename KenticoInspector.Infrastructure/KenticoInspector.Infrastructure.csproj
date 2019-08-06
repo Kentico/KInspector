@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>7.1</LangVersion>
-    <Version/>
-    <PackageVersion/>
-    <AssemblyVersion/>
-    <FileVersion/>
-    <InformationalVersion/>
+    <Version />
+    <PackageVersion />
+    <AssemblyVersion />
+    <FileVersion />
+    <InformationalVersion />
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +15,7 @@
     <PackageReference Include="Dapper" Version="1.60.1" />
     <PackageReference Include="Dapper.FluentMap" Version="1.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
     <PackageReference Include="YamlDotNet" Version="6.1.1" />
   </ItemGroup>
 
