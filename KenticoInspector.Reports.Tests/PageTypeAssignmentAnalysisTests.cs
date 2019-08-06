@@ -19,33 +19,38 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnListOfUnassignedPageTypes_WhenSomeAreFound()
+        public void Should_ReturnListOfUnassignedPageTypes_When_SomeAreFound()
         {
             // Arrange
             var unassignedPageTypes = GetListOfUnassignedPageTypes();
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypesNotAssignedToSite))
-                .Returns(unassignedPageTypes);
+            ArrangeDatabaseCalls(unassignedPageTypes);
+            
             // Act
             var results = _mockReport.GetResults();
+
             // Assert
-            Assert.That(results.Data.Rows.Count == 5);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Data.Rows.Count > 0, "Expected more than 0 page types to be returned");
+            Assert.That(results.Status == ReportResultsStatus.Warning,$"Expected Warning status, got {results.Status} status");
         }
 
         [Test]
-        public void Should_ReturnEmptyListOfIdenticalLayouts_WhenNoneFound()
+        public void Should_ReturnEmptyListOfIdenticalLayouts_When_NoneFound()
         {
             // Arrange
-            var unassignedPageTypes = new List<PageType>();
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypesNotAssignedToSite))
-                .Returns(unassignedPageTypes);
+            ArrangeDatabaseCalls();
+
             // Act
             var results = _mockReport.GetResults();
             // Assert
-            Assert.That(results.Data.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Data.Rows.Count == 0, $"Expected 0 page types to be returned, got {results.Data.Rows.Count}");
+            Assert.That(results.Status == ReportResultsStatus.Good, $"Expected Good status, got {results.Status} status");
+        }
+
+        private void ArrangeDatabaseCalls(IEnumerable<PageType> unassignedPageTypes = null) {
+            unassignedPageTypes = unassignedPageTypes ?? new List<PageType>(); 
+            _mockDatabaseService
+               .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypesNotAssignedToSite))
+               .Returns(unassignedPageTypes);
         }
 
         private IEnumerable<PageType> GetListOfUnassignedPageTypes()
