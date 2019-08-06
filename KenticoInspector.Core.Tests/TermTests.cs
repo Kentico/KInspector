@@ -3,6 +3,7 @@ using KenticoInspector.Core.Tokens;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace KenticoInspector.Core.Tests
 {
@@ -50,69 +51,25 @@ namespace KenticoInspector.Core.Tests
         public void Should_Resolve_WithVersion(string term, string result, string version) => Should_Resolve(term, result, new Version(version));
 
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithSimplePluralization))]
-        public string Should_ResolveExpression_When_ExpressionHasSimplePluralization(string termString, object tokenValues)
-        {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
-        }
-
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithTokenOnly))]
-        public string Should_ResolveExpression_When_ExpressionHasTokenOnly(string termString, object tokenValues)
-        {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
-        }
-
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithTokenAndDefaultValue))]
-        public string Should_ResolveExpression_When_ExpressionHasTokenWithDefaultValue(string termString, object tokenValues)
-        {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
-        }
-
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneGreaterThanCase))]
-        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneGreaterThanCase(string termString, object tokenValues)
-        {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
-        }
-
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneGreaterThanCaseAndDefaultValue))]
-        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneGreaterThanCaseAndDefaultValue(string termString, object tokenValues)
-        {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
-        }
-
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneGreaterThanCaseAndIntegerCaseAndDefaultValue))]
-        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneGreaterThanCaseAndIntegerCaseAndDefaultValue(string termString, object tokenValues)
-        {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
-        }
-
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneIntegerCase))]
-        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneIntegerCase(string termString, object tokenValues)
-        {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
-        }
-
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneIntegerCaseAndDefaultValue))]
-        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneIntegerCaseAndDefaultValue(string termString, object tokenValues)
-        {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
-        }
-
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneLessThanCase))]
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneLessThanCaseAndDefaultValue))]
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneLessThanCaseAndDefaultValue))]
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneStringCase))]
-        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneStringCase(string termString, object tokenValues)
-        {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
-        }
-
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneStringCaseAndDefaultValue))]
-        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneStringCaseAndDefaultValue(string termString, object tokenValues)
-        {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
-        }
-
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithTwoIntegerCasesAndDefaultValue))]
-        public string Should_ResolveExpression_When_ExpressionHasTokenWithTwoIntegerCasesAndDefaultValue(string termString, object tokenValues)
+        public string Should_ResolveExpression_When_ExpressionIsValid(string termString, object tokenValues)
         {
-            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+            Term term = termString;
+            var result = term.With(tokenValues);
+
+            return result.ToString();
         }
 
         // Empty
@@ -166,19 +123,10 @@ namespace KenticoInspector.Core.Tests
 
             return dictionary;
         }
-
-        private string Should_ResolveExpression_When_ExpressionIsValid(string termString, object tokenValues)
-        {
-            Term term = termString;
-            var result = term.With(tokenValues);
-
-            return result.ToString();
-        }
     }
 
     public class TokenExpressionTestCases
     {
-        // TODO: Add WithLessThanCaseOnly
         // TODO: Add WithLessThanCaseAndDefault
         // TODO: Add WithLessThanCaseAndIntegerCaseAndDefault
         // TODO: Add boolean test case to all data sets
@@ -255,6 +203,52 @@ namespace KenticoInspector.Core.Tests
                 yield return new TestCaseData("<token|0:none|at least one>", new { token = 5 }).Returns("at least one");
                 yield return new TestCaseData("<token|0:none|at least one>", new { token = "some text" }).Returns("at least one");
                 yield return new TestCaseData("<token|0:none|at least one>", new { }).Returns("");
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithOneLessThanCase
+        {
+            get
+            {
+                var tokenExpression = "<token|<5:less than five>";
+                var returnsEmptyResult = string.Empty;
+                var returnsCase1Result = "less than five";
+
+                yield return GetTestCaseData(tokenExpression, TokenValueOptions.TokenIsNull, returnsEmptyResult);
+                yield return GetTestCaseData(tokenExpression, TokenValueOptions.TokenIs0, returnsCase1Result);
+                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, TokenValueOptions.TokenIs0, matchCase1Result);
+                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = 1 }, matchCase1Result);
+                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = 1.5 }, matchCase1Result);
+                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = 5 }, noMatch);
+                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = true }, noMatch);
+                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = false }, noMatch);
+                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = "some text" }, noMatch);
+                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { }, noMatch);
+            }
+        }
+
+        private static TestCaseData GetTestCaseData(string tokenExpression, object tokenValues, string resolved, [CallerMemberName] string category = "")
+        {
+
+            return new TestCaseData(tokenExpression, tokenValues)
+                .Returns(resolved)
+                .SetName($"Token Expression: \"{tokenExpression}\" with \"{tokenValues}\" resolves to \"{resolved}\"")
+                .SetCategory(category);
+        }
+
+        public static IEnumerable<TestCaseData> WithOneLessThanCaseAndDefaultValue
+        {
+            get
+            {
+                yield return new TestCaseData("<token|<5:0-4|had a value>", TokenValueOptions.TokenIsNull).Returns("");
+                yield return new TestCaseData("<token|<5:0-4|had a value>", TokenValueOptions.TokenIs0).Returns("0-4");
+                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = 1 }).Returns("0-4");
+                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = 1.5 }).Returns("0-4");
+                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = 5 }).Returns("had a value");
+                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = true }).Returns("had a value");
+                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = false }).Returns("had a value");
+                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = "some text" }).Returns("had a value");
+                yield return new TestCaseData("<token|<5:0-4|had a value>", new { }).Returns("");
             }
         }
 
@@ -343,5 +337,11 @@ namespace KenticoInspector.Core.Tests
                 yield return new TestCaseData("<token|0:none|1:one|some>", new { }).Returns("");
             }
         }
+    }
+
+    public class TokenValueOptions
+    {
+        public static object TokenIsNull => new { token = default(string) };
+        public static object TokenIs0 => new { token = 0 };
     }
 }
