@@ -24,7 +24,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var unassignedPageTypes = GetListOfUnassignedPageTypes();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<UnassignedPageTypes>(Scripts.PageTypeNotAssigned))
+                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.PageTypeNotAssigned))
                 .Returns(unassignedPageTypes);
             // Act
             var results = _mockReport.GetResults();
@@ -37,9 +37,9 @@ namespace KenticoInspector.Reports.Tests
         public void Should_ReturnEmptyListOfIdenticalLayouts_WhenNoneFound()
         {
             // Arrange
-            var unassignedPageTypes = new List<UnassignedPageTypes>();
+            var unassignedPageTypes = new List<PageType>();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<UnassignedPageTypes>(Scripts.PageTypeNotAssigned))
+                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.PageTypeNotAssigned))
                 .Returns(unassignedPageTypes);
             // Act
             var results = _mockReport.GetResults();
@@ -48,39 +48,39 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
 
-        private IEnumerable<UnassignedPageTypes> GetListOfUnassignedPageTypes()
+        private IEnumerable<PageType> GetListOfUnassignedPageTypes()
         {
-            return new List<UnassignedPageTypes>
+            return new List<PageType>
             {
-                new UnassignedPageTypes
+                new PageType
                 {
                     ClassName = "DancingGoatMvc.Article",
                     SiteName = "DancingGoatMvc",
                     NodeSiteID = 1,
                     NodeClassID = 5494
                 },
-                new UnassignedPageTypes
+                new PageType
                 {
                     ClassName = "DancingGoatMvc.Brewer",
                     SiteName = "DancingGoatMvc",
                     NodeSiteID = 1,
                     NodeClassID = 5477
                 },
-                new UnassignedPageTypes
+                new PageType
                 {
                     ClassName = "CMS.News",
                     SiteName = "CorporateSite",
                     NodeSiteID = 2,
                     NodeClassID = 5502
                 },
-                new UnassignedPageTypes
+                new PageType
                 {
                     ClassName = "CMS.Office",
                     SiteName = "CorporateSite",
                     NodeSiteID = 2,
                     NodeClassID = 5514
                 },
-                new UnassignedPageTypes
+                new PageType
                 {
                     ClassName = "globaltypes.customtype",
                     SiteName = "CorporateSite",

@@ -29,33 +29,30 @@ namespace KenticoInspector.Reports.PageTypeNotAssignedToSite
 
         public override ReportResults GetResults()
         {
-            var pageTypesNotAssigned = databaseService.ExecuteSqlFromFile<UnassignedPageTypes>(Scripts.GetPageTypesNotAssignedToSite);
+            var unassignedPageTypes = databaseService.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypesNotAssignedToSite);
 
-            return CompileResults(pageTypesNotAssigned);
+            return CompileResults(unassignedPageTypes);
         }
 
-        private ReportResults CompileResults(IEnumerable<UnassignedPageTypes> unassignedPageTypes)
+        private ReportResults CompileResults(IEnumerable<PageType> unassignedPageTypes)
         {
-            var countUnassignedPageTypes = unassignedPageTypes.Count();
-
             var results = new ReportResults
             {
-                Status = ReportResultsStatus.Information,
+                Status = ReportResultsStatus.Good,
+                Summary = Metadata.Terms.AllpageTypesAssigned,
                 Type = ReportResultsType.Table,
-                Data = new TableResult<dynamic>()
+                Data = new TableResult<PageType>()
                 {
                     Name = Metadata.Terms.PageTypesNotAssigned,
                     Rows = unassignedPageTypes
                 }
             };
 
-            if (countUnassignedPageTypes == 0)
+            var unassignedPageTypeCount = unassignedPageTypes.Count();
+            if (unassignedPageTypeCount > 0)
             {
-                results.Summary = Metadata.Terms.AllpageTypesAssigned;
-            }
-            else
-            {
-                results.Summary = Metadata.Terms.CountPageTypeNotAssigned.With(new { count = countUnassignedPageTypes });
+                results.Status = ReportResultsStatus.Warning;
+                results.Summary = Metadata.Terms.CountPageTypeNotAssigned.With(new { unassignedPageTypeCount });
             }
 
             return results;
