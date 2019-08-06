@@ -1,4 +1,4 @@
-﻿namespace KenticoInspector.Reports.PageTypeNotAssignedToSite.Models
+﻿namespace KenticoInspector.Reports.PageTypeAssignmentAnalysis.Models
 {
     public class PageType
     {

@@ -121,10 +121,10 @@
     <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedWebFarmTasks.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="PageTypeNotAssignedToSite\Metadata\en-US.yaml">
+    <None Update="PageTypeAssignmentAnalysis\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="PageTypeNotAssignedToSite\Scripts\GetPageTypesNotAssignedToSite.sql">
+    <None Update="PageTypeAssignmentAnalysis\Scripts\GetPageTypesNotAssignedToSite.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TemplateLayoutAnalysis\Scripts\GetIdenticalLayouts.sql">

@@ -1,6 +1,6 @@
 ﻿using KenticoInspector.Core.Constants;
-using KenticoInspector.Reports.PageTypeNotAssignedToSite;
-using KenticoInspector.Reports.PageTypeNotAssignedToSite.Models;
+using KenticoInspector.Reports.PageTypeAssignmentAnalysis;
+using KenticoInspector.Reports.PageTypeAssignmentAnalysis.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
 
@@ -9,11 +9,11 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
-    public class PageTypeNotAssignedTests : AbstractReportTest<Report, Terms>
+    public class PageTypeAssignmentAnalysisTests : AbstractReportTest<Report, Terms>
     {
         private Report _mockReport;
 
-        public PageTypeNotAssignedTests(int majorVersion) : base(majorVersion)
+        public PageTypeAssignmentAnalysisTests(int majorVersion) : base(majorVersion)
         {
             _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
         }
@@ -24,7 +24,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var unassignedPageTypes = GetListOfUnassignedPageTypes();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.PageTypeNotAssigned))
+                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypesNotAssignedToSite))
                 .Returns(unassignedPageTypes);
             // Act
             var results = _mockReport.GetResults();
@@ -39,7 +39,7 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var unassignedPageTypes = new List<PageType>();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.PageTypeNotAssigned))
+                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypesNotAssignedToSite))
                 .Returns(unassignedPageTypes);
             // Act
             var results = _mockReport.GetResults();
@@ -55,35 +55,35 @@ namespace KenticoInspector.Reports.Tests
                 new PageType
                 {
                     ClassName = "DancingGoatMvc.Article",
-                    SiteName = "DancingGoatMvc",
+                    ClassDisplayName = "Article (MVC)",
                     NodeSiteID = 1,
                     NodeClassID = 5494
                 },
                 new PageType
                 {
                     ClassName = "DancingGoatMvc.Brewer",
-                    SiteName = "DancingGoatMvc",
+                    ClassDisplayName = "Brewer (MVC)",
                     NodeSiteID = 1,
                     NodeClassID = 5477
                 },
                 new PageType
                 {
                     ClassName = "CMS.News",
-                    SiteName = "CorporateSite",
+                    ClassDisplayName = "News",
                     NodeSiteID = 2,
                     NodeClassID = 5502
                 },
                 new PageType
                 {
                     ClassName = "CMS.Office",
-                    SiteName = "CorporateSite",
+                    ClassDisplayName = "Office",
                     NodeSiteID = 2,
                     NodeClassID = 5514
                 },
                 new PageType
                 {
                     ClassName = "globaltypes.customtype",
-                    SiteName = "CorporateSite",
+                    ClassDisplayName = "Custom Type",
                     NodeSiteID = 2,
                     NodeClassID = 5497
                 },

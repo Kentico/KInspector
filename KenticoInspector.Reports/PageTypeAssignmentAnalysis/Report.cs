@@ -3,12 +3,12 @@ using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
-using KenticoInspector.Reports.PageTypeNotAssignedToSite.Models;
+using KenticoInspector.Reports.PageTypeAssignmentAnalysis.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace KenticoInspector.Reports.PageTypeNotAssignedToSite
+namespace KenticoInspector.Reports.PageTypeAssignmentAnalysis
 {
     public class Report : AbstractReport<Terms>
     {
