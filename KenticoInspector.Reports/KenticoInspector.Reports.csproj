@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>7.1</LangVersion>
-    <Version/>
-    <PackageVersion/>
-    <AssemblyVersion/>
-    <FileVersion/>
-    <InformationalVersion/>
+    <Version />
+    <PackageVersion />
+    <AssemblyVersion />
+    <FileVersion />
+    <InformationalVersion />
   </PropertyGroup>
 
   <ItemGroup>
@@ -122,6 +122,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedWebFarmTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PageTypeAssignmentAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PageTypeAssignmentAnalysis\Scripts\GetPageTypesNotAssignedToSite.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TemplateLayoutAnalysis\Scripts\GetIdenticalLayouts.sql">

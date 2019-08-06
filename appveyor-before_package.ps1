@@ -6,8 +6,8 @@ dotnet publish KenticoInspector.WebApplication.csproj /p:PublishDir=..\publish -
 
 # Copy compiled front-end to publish folder
 Set-Location .\ClientApp
-mkdir "..\..\publish\dist"
-Copy-Item ".\dist\*" -Recurse -Destination "..\..\publish\dist\"
+mkdir "..\..\publish\ClientApp\dist"
+Copy-Item ".\dist\*" -Recurse -Destination "..\..\publish\ClientApp\dist\"
 
 # Go back to root
 Set-Location ..\..\
