@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Tokens;
-
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 
 namespace KenticoInspector.Core.Tests
 {
@@ -16,36 +14,6 @@ namespace KenticoInspector.Core.Tests
             TokenExpressionResolver.RegisterTokenExpressions(typeof(Term).Assembly);
         }
 
-        [Test]
-        // Basic simple
-        [TestCase("<int32token> car", "1 car", 1)]
-        [TestCase("<int32token> cars", "5 cars", 5)]
-        // Explicit int case
-        [TestCase("<int32token|5:Many> cars", "Many cars", 5)]
-        // Implicit singular
-        [TestCase("<int32token|One|Many> car", "One car", 1)]
-        // Implicit plural
-        [TestCase("<int32token|One|Many> cars", "Many cars", 5)]
-        [TestCase("<int32token> <int32token|car|cars> found", "5 cars found", 5)]
-        // Conditional cases
-        [TestCase("<int32token|>5:More than five|Many> cars", "More than five cars", 6)]
-        [TestCase("<int32token|<5:Less than five|Many> cars", "Many cars", 6)]
-        // Explicit string case
-        [TestCase("<stringtoken|value:The> cars", "The cars", "value")]
-        // Default string case
-        [TestCase("<stringtoken|value:wrong|defaultvalue:The red> car", "The red car", "defaultvalue")]
-        // String case with colon
-        [TestCase("<stringtoken|value:The: red> car", "The: red car", "value")]
-        // Default string case with space
-        [TestCase("There is <stringtoken1|a truck|a car> <stringtoken2>.", "There is a car here.", "blue", "here")]
-        // Empty with one space when no match
-        [TestCase("The <stringtoken|value:red> car", "The car", "blue")]
-        [TestCase("The <wrongtoken> car", "The car", "red")]
-        // Multiple expressions
-        [TestCase("<stringtoken1> and <stringtoken2|nothing:an empty|a burning> truck", "No cars and an empty truck", "No cars", "nothing")]
-        [TestCase("<stringtoken1> and <stringtoken2|truck:a truck|a van>.", "No cars and a truck.", "No cars", "truck")]
-        // URL
-        [TestCase("<stringtoken>: https://docs.kentico.com", "No cars: https://docs.kentico.com", "No cars")]
         // Basic advanced
         [TestCase("<?int32token> car", "1 car", 1)]
         [TestCase("<?int32token> cars", "5 cars", 5)]
@@ -77,12 +45,76 @@ namespace KenticoInspector.Core.Tests
             TestResolve(term, AsDynamic(tokenValues), result);
         }
 
-        [Test]
         [TestCase("The version is <versiontoken|12.0.4:supported>", "The version is supported", "12.0.4")]
         [TestCase("The version is <?versiontoken=12.0.4:supported>", "The version is supported", "12.0.4")]
         public void Should_Resolve_WithVersion(string term, string result, string version) => Should_Resolve(term, result, new Version(version));
 
-        [Test]
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithSimplePluralization))]
+        public string Should_ResolveExpression_When_ExpressionHasSimplePluralization(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithTokenOnly))]
+        public string Should_ResolveExpression_When_ExpressionHasTokenOnly(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithTokenAndDefaultValue))]
+        public string Should_ResolveExpression_When_ExpressionHasTokenWithDefaultValue(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneGreaterThanCase))]
+        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneGreaterThanCase(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneGreaterThanCaseAndDefaultValue))]
+        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneGreaterThanCaseAndDefaultValue(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneGreaterThanCaseAndIntegerCaseAndDefaultValue))]
+        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneGreaterThanCaseAndIntegerCaseAndDefaultValue(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneIntegerCase))]
+        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneIntegerCase(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneIntegerCaseAndDefaultValue))]
+        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneIntegerCaseAndDefaultValue(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneStringCase))]
+        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneStringCase(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneStringCaseAndDefaultValue))]
+        public string Should_ResolveExpression_When_ExpressionHasTokenWithOneStringCaseAndDefaultValue(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithTwoIntegerCasesAndDefaultValue))]
+        public string Should_ResolveExpression_When_ExpressionHasTokenWithTwoIntegerCasesAndDefaultValue(string termString, object tokenValues)
+        {
+            return Should_ResolveExpression_When_ExpressionIsValid(termString, tokenValues);
+        }
+
         // Empty
         [TestCase("This is wrong: <>", typeof(ArgumentException), "value")]
         // Empty
@@ -94,24 +126,6 @@ namespace KenticoInspector.Core.Tests
         public void Should_ThrowException(string term, Type exceptionType, params object[] tokenValues)
         {
             TestThrowException(term, AsDynamic(tokenValues), exceptionType);
-        }
-
-        private static dynamic AsDynamic(object[] tokenValues)
-        {
-            var dictionary = new Dictionary<string, object>();
-            var increment = 1;
-            var appendIncrement = tokenValues.Length > 1;
-
-            foreach (var tokenValue in tokenValues)
-            {
-                var key = $"{tokenValue.GetType().Name}token".ToLower();
-
-                if (appendIncrement) key += increment++;
-
-                dictionary.Add(key, tokenValue);
-            }
-
-            return dictionary;
         }
 
         public void TestResolve(Term term, object tokenValues, string result)
@@ -130,6 +144,204 @@ namespace KenticoInspector.Core.Tests
 
             // Assert
             Assert.That(resolvedTermMethod, Throws.TypeOf(exceptionType));
+        }
+
+        private static dynamic AsDynamic(object[] tokenValues)
+        {
+            var dictionary = new Dictionary<string, object>();
+            var increment = 1;
+            var appendIncrement = tokenValues.Length > 1;
+
+            foreach (var tokenValue in tokenValues)
+            {
+                var key = $"{tokenValue.GetType().Name}token".ToLower();
+
+                if (appendIncrement)
+                {
+                    key += increment++;
+                }
+
+                dictionary.Add(key, tokenValue);
+            }
+
+            return dictionary;
+        }
+
+        private string Should_ResolveExpression_When_ExpressionIsValid(string termString, object tokenValues)
+        {
+            Term term = termString;
+            var result = term.With(tokenValues);
+
+            return result.ToString();
+        }
+    }
+
+    public class TokenExpressionTestCases
+    {
+        // TODO: Add WithLessThanCaseOnly
+        // TODO: Add WithLessThanCaseAndDefault
+        // TODO: Add WithLessThanCaseAndIntegerCaseAndDefault
+        // TODO: Add boolean test case to all data sets
+        // TODO: Add with special case values (has spaces, has colons, has urls)
+        // TODO: Add WithMultipleTokens
+
+        public static IEnumerable<TestCaseData> WithOneGreaterThanCase
+        {
+            get
+            {
+                yield return new TestCaseData("<token|>5:5+>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token|>5:5+>", new { token = 0 }).Returns("");
+                yield return new TestCaseData("<token|>5:5+>", new { token = 1 }).Returns("");
+                yield return new TestCaseData("<token|>5:5+>", new { token = 1.5 }).Returns("");
+                yield return new TestCaseData("<token|>5:5+>", new { token = 5 }).Returns("");
+                yield return new TestCaseData("<token|>5:5+>", new { token = 6 }).Returns("5+");
+                yield return new TestCaseData("<token|>5:5+>", new { token = "some text" }).Returns("");
+                yield return new TestCaseData("<token|>5:5+>", new { }).Returns("");
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithOneGreaterThanCaseAndDefaultValue
+        {
+            get
+            {
+                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = 0 }).Returns("resolved default");
+                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = 1 }).Returns("resolved default");
+                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = 1.5 }).Returns("resolved default");
+                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = 5 }).Returns("resolved default");
+                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = 6 }).Returns("5+");
+                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = "some text" }).Returns("resolved default");
+                yield return new TestCaseData("<token|>5:5+|resolved default>", new { }).Returns("");
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithOneGreaterThanCaseAndIntegerCaseAndDefaultValue
+        {
+            get
+            {
+                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = 0 }).Returns("none");
+                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = 1 }).Returns("some");
+                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = 1.5 }).Returns("some");
+                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = 5 }).Returns("some");
+                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = 6 }).Returns("many");
+                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = "some text" }).Returns("some");
+                yield return new TestCaseData("<token|>5:many|0:none|some>", new { }).Returns("");
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithOneIntegerCase
+        {
+            get
+            {
+                yield return new TestCaseData("<token|0:none>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token|0:none>", new { token = 0 }).Returns("none");
+                yield return new TestCaseData("<token|0:none>", new { token = 1 }).Returns("");
+                yield return new TestCaseData("<token|0:none>", new { token = 1.5 }).Returns("");
+                yield return new TestCaseData("<token|0:none>", new { token = 5 }).Returns("");
+                yield return new TestCaseData("<token|0:none>", new { token = "some text" }).Returns("");
+                yield return new TestCaseData("<token|0:none>", new { }).Returns("");
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithOneIntegerCaseAndDefaultValue
+        {
+            get
+            {
+                yield return new TestCaseData("<token|0:none|at least one>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token|0:none|at least one>", new { token = 0 }).Returns("none");
+                yield return new TestCaseData("<token|0:none|at least one>", new { token = 1 }).Returns("at least one");
+                yield return new TestCaseData("<token|0:none|at least one>", new { token = 1.5 }).Returns("at least one");
+                yield return new TestCaseData("<token|0:none|at least one>", new { token = 5 }).Returns("at least one");
+                yield return new TestCaseData("<token|0:none|at least one>", new { token = "some text" }).Returns("at least one");
+                yield return new TestCaseData("<token|0:none|at least one>", new { }).Returns("");
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithOneStringCase
+        {
+            get
+            {
+                yield return new TestCaseData("<token|some text:resolved>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token|some text:resolved>", new { token = 0 }).Returns("");
+                yield return new TestCaseData("<token|some text:resolved>", new { token = 1 }).Returns("");
+                yield return new TestCaseData("<token|some text:resolved>", new { token = 1.5 }).Returns("");
+                yield return new TestCaseData("<token|some text:resolved>", new { token = 5 }).Returns("");
+                yield return new TestCaseData("<token|some text:resolved>", new { token = "some text" }).Returns("resolved");
+                yield return new TestCaseData("<token|some text:resolved>", new { }).Returns("");
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithOneStringCaseAndDefaultValue
+        {
+            get
+            {
+                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = 0 }).Returns("resolved default");
+                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = 1 }).Returns("resolved default");
+                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = 1.5 }).Returns("resolved default");
+                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = 5 }).Returns("resolved default");
+                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = "some text" }).Returns("resolved");
+                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { }).Returns("");
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithSimplePluralization
+        {
+            get
+            {
+                yield return new TestCaseData("<token|issue|issues>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token|issue|issues>", new { token = 0 }).Returns("issues");
+                yield return new TestCaseData("<token|issue|issues>", new { token = 1 }).Returns("issue");
+                yield return new TestCaseData("<token|issue|issues>", new { token = 1.5 }).Returns("issues");
+                yield return new TestCaseData("<token|issue|issues>", new { token = 5 }).Returns("issues");
+                yield return new TestCaseData("<token|issue|issues>", new { token = "some text" }).Returns("issues");
+                yield return new TestCaseData("<token|issue|issues>", new { }).Returns("");
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithTokenAndDefaultValue
+        {
+            get
+            {
+                yield return new TestCaseData("<token|found>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token|found>", new { token = 0 }).Returns("found");
+                yield return new TestCaseData("<token|found>", new { token = 1 }).Returns("found");
+                yield return new TestCaseData("<token|found>", new { token = 1.5 }).Returns("found");
+                yield return new TestCaseData("<token|found>", new { token = 5 }).Returns("found");
+                yield return new TestCaseData("<token|found>", new { token = "some text" }).Returns("found");
+                yield return new TestCaseData("<token|found>", new { token = true }).Returns("found");
+                yield return new TestCaseData("<token|found>", new { }).Returns("");
+
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithTokenOnly
+        {
+            get
+            {
+                yield return new TestCaseData("<token>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token>", new { token = 0 }).Returns("0");
+                yield return new TestCaseData("<token>", new { token = 1 }).Returns("1");
+                yield return new TestCaseData("<token>", new { token = 1.5 }).Returns("1.5");
+                yield return new TestCaseData("<token>", new { token = 5 }).Returns("5");
+                yield return new TestCaseData("<token>", new { token = "some text" }).Returns("some text");
+                yield return new TestCaseData("<token>", new { }).Returns("");
+            }
+        }
+
+        public static IEnumerable<TestCaseData> WithTwoIntegerCasesAndDefaultValue
+        {
+            get
+            {
+                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = default(string) }).Returns("");
+                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = 0 }).Returns("none");
+                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = 1 }).Returns("one");
+                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = 1.5 }).Returns("some");
+                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = 5 }).Returns("some");
+                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = "some text" }).Returns("some");
+                yield return new TestCaseData("<token|0:none|1:one|some>", new { }).Returns("");
+            }
         }
     }
 }
