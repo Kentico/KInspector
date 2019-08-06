@@ -102,22 +102,38 @@ namespace KenticoInspector.Core.Tokens
             return (pair.first.Substring(1), operation, pair.second);
         }
 
-        private bool TryResolveToken(object token, string value, char operation, string result, out string resolvedValue)
+        public bool TryResolveToken(object tokenValue, string expressionCaseValue, char operation, string expressionCaseResult, out string resolvedValue)
         {
-            switch (token)
-            {
-                case int intValue when token is int && intValue == 1:
-                case int lessThanValue when token is int && operation == Constants.LessThan && lessThanValue < int.Parse(value.ToString()):
-                case int moreThanValue when token is int && operation == Constants.MoreThan && moreThanValue > int.Parse(value.ToString()):
-                case var _ when token?.ToString() == value:
-                    resolvedValue = result;
+            var resolved = false;
 
-                    return true;
+            var isTokenValueAnInteger = int.TryParse(tokenValue.ToString(), out int integerTokenValue);
+            if (isTokenValueAnInteger)
+            {
+                var isExpressionCaseValueAnInteger = int.TryParse(expressionCaseValue, out int integerExpressionCaseValue);
+                if (isExpressionCaseValueAnInteger)
+                {
+                    switch (integerTokenValue)
+                    {
+                        case int intTokenValueEquals when intTokenValueEquals == integerExpressionCaseValue:
+                        case int intTokenValueLessThan when operation == Constants.LessThan && intTokenValueLessThan < integerExpressionCaseValue:
+                        case int intTokenValueMoreThan when operation == Constants.MoreThan && intTokenValueMoreThan > integerExpressionCaseValue:
+                            resolved = true;
+                            break;
+                    }
+                } else if (integerTokenValue == 1)
+                {
+                    resolved = true;
+                }
             }
 
-            resolvedValue = null;
+            var tokenMatchedExpression = tokenValue?.ToString() == expressionCaseValue;
+            if (tokenMatchedExpression)
+            {
+                resolved = true;
+            }
 
-            return false;
+            resolvedValue = resolved ? expressionCaseResult : null;
+            return resolved;
         }
     }
 }
