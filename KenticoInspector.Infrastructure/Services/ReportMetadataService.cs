@@ -19,37 +19,34 @@ namespace KenticoInspector.Core.Helpers
         public ReportMetadata<T> GetReportMetadata<T>(string reportCodename) where T : new()
         {
             var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\";
+            
+            var reportMetadata = GetReportMetadataInternal<T>(metadataDirectory, CurrentCultureName);
 
-            var defaultCultureMetadataPath = $"{metadataDirectory}{DefaultCultureName}.yaml";
-
-            var currentCultureMetadataPath = $"{metadataDirectory}{CurrentCultureName}.yaml";
-
-            var currentCultureIsDefaultCulture = DefaultCultureName == CurrentCultureName;
-
-            var currentCultureMetadataPathExists = File.Exists(currentCultureMetadataPath);
-
-            if (!currentCultureIsDefaultCulture && currentCultureMetadataPathExists)
+            var isCurrentCultureDefaultCulture = CurrentCultureName == DefaultCultureName;
+            if (!isCurrentCultureDefaultCulture)
             {
-                var defaultCultureMetadata = DeserializeYaml<ReportMetadata<T>>(defaultCultureMetadataPath);
-
-                var currentCultureMetadata = DeserializeYaml<ReportMetadata<T>>(currentCultureMetadataPath, true);
-
-                return GetMergedMetadata(defaultCultureMetadata, currentCultureMetadata);
+                var defaultReportMetadata = GetReportMetadataInternal<T>(metadataDirectory, DefaultCultureName);
+                reportMetadata = GetMergedMetadata(defaultReportMetadata, reportMetadata);
             }
 
-            return DeserializeYaml<ReportMetadata<T>>(defaultCultureMetadataPath);
+            return reportMetadata;
         }
 
-        private T DeserializeYaml<T>(string path, bool ignoreUnmatchedProperties = false)
+
+        private ReportMetadata<T> GetReportMetadataInternal<T>(string metadataDirectory, string cultureName) where T : new()
+        {
+            var reportMetadataPath = $"{metadataDirectory}{cultureName}.yaml";
+            var reportMetadataPathExists = File.Exists(reportMetadataPath);
+            return reportMetadataPathExists 
+                ? DeserializeYaml<ReportMetadata<T>>(reportMetadataPath) 
+                : new ReportMetadata<T>();
+        }
+
+        private T DeserializeYaml<T>(string path)
         {
             var deserializerBuilder = new DeserializerBuilder()
-                .WithNamingConvention(new CamelCaseNamingConvention());
-
-            if (ignoreUnmatchedProperties)
-            {
-                deserializerBuilder
-                    .IgnoreUnmatchedProperties();
-            }
+                .WithNamingConvention(new CamelCaseNamingConvention())
+                .IgnoreUnmatchedProperties();
 
             var deserializer = deserializerBuilder
                 .Build();
