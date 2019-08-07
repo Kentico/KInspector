@@ -7,8 +7,9 @@ namespace KenticoInspector.Core
 {
     public abstract class AbstractReport<T> : IReport, IWithMetadata<T> where T : new()
     {
-        private ReportMetadata<T> metadata;
         protected readonly IReportMetadataService reportMetadataService;
+
+        private ReportMetadata<T> metadata;
 
         public AbstractReport(IReportMetadataService reportMetadataService)
         {
@@ -17,16 +18,9 @@ namespace KenticoInspector.Core
 
         public string Codename => GetCodename(this.GetType());
 
-        public static string GetCodename(Type reportType)
-        {
-            return GetDirectParentNamespace(reportType);
-        }
-
         public abstract IList<Version> CompatibleVersions { get; }
 
         public virtual IList<Version> IncompatibleVersions => new List<Version>();
-
-        public abstract IList<string> Tags { get; }
 
         public ReportMetadata<T> Metadata
         {
@@ -34,6 +28,13 @@ namespace KenticoInspector.Core
             {
                 return metadata ?? (metadata = reportMetadataService.GetReportMetadata<T>(Codename));
             }
+        }
+
+        public abstract IList<string> Tags { get; }
+
+        public static string GetCodename(Type reportType)
+        {
+            return GetDirectParentNamespace(reportType);
         }
 
         public abstract ReportResults GetResults();
