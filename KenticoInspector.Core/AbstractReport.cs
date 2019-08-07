@@ -7,6 +7,7 @@ namespace KenticoInspector.Core
 {
     public abstract class AbstractReport<T> : IReport, IWithMetadata<T> where T : new()
     {
+        private ReportMetadata<T> metadata;
         protected readonly IReportMetadataService reportMetadataService;
 
         public AbstractReport(IReportMetadataService reportMetadataService)
@@ -27,7 +28,13 @@ namespace KenticoInspector.Core
 
         public abstract IList<string> Tags { get; }
 
-        public ReportMetadata<T> Metadata => reportMetadataService.GetReportMetadata<T>(Codename);
+        public ReportMetadata<T> Metadata
+        {
+            get
+            {
+                return metadata ?? (metadata = reportMetadataService.GetReportMetadata<T>(Codename));
+            }
+        }
 
         public abstract ReportResults GetResults();
 
