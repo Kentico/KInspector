@@ -40,7 +40,7 @@ namespace KenticoInspector.Core.Helpers
             return DeserializeYaml<ReportMetadata<T>>(defaultCultureMetadataPath);
         }
 
-        public T DeserializeYaml<T>(string path, bool ignoreUnmatchedProperties = false)
+        private T DeserializeYaml<T>(string path, bool ignoreUnmatchedProperties = false)
         {
             var deserializerBuilder = new DeserializerBuilder()
                 .WithNamingConvention(new CamelCaseNamingConvention());
