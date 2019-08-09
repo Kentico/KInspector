@@ -1,30 +1,29 @@
 ﻿namespace KenticoInspector.Reports.UserPasswordAnalysis.Models.Data.Results
 {
-    public class CmsUserResult
+    public class CmsUserResult : CmsUser
     {
-        public string UserName { get; }
-
-        public string FullName { get; }
-
-        public string Email { get; }
-
-        public string PrivilegeLevel { get; }
-
-        public CmsUserResult(CmsUser cmsUser)
+        public CmsUserResult(
+            CmsUser user)
         {
-            UserName = cmsUser.UserName;
+            UserID = user.UserID;
+            UserName = user.UserName;
 
-            if (string.IsNullOrEmpty(cmsUser.FullName))
+            if (string.IsNullOrEmpty(
+                user.FullName))
             {
-                FullName = string.Join(' ', cmsUser.FirstName, cmsUser.MiddleName, cmsUser.LastName);
+                FullName = string.Join(
+                    ' ',
+                    user.FirstName,
+                    user.MiddleName,
+                    user.LastName);
             }
             else
             {
-                FullName = cmsUser.FullName;
+                FullName = user.FullName;
             }
 
-            Email = cmsUser.Email;
-            PrivilegeLevel = cmsUser.UserPrivilegeLevel.ToString();
+            Email = user.Email;
+            UserPrivilegeLevel = user.UserPrivilegeLevel;
         }
     }
 }

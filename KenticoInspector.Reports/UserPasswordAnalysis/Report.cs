@@ -17,50 +17,69 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(
+            IDatabaseService databaseService,
+            IReportMetadataService reportMetadataService)
+            : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
-        public override IList<string> Tags => new List<string> {
+        public override IList<string> Tags => new List<string>
+        {
             ReportTags.Security,
             ReportTags.Configuration
         };
 
-        public static IEnumerable<string> ExcludedUserNames => new List<string> {
+        public static IEnumerable<string> ExcludedUserNames => new List<string>
+        {
             "public"
         };
 
         public override ReportResults GetResults()
         {
-            var cmsUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetEnabledAndNotExternalUsers, new { ExcludedUserNames });
+            var users = databaseService.ExecuteSqlFromFile<CmsUser>(
+                Scripts.GetEnabledAndNotExternalUsers,
+                new { ExcludedUserNames });
 
-            var cmsUsersWithEmptyPasswords = GetCmsUsersWithEmptyPasswords(cmsUsers);
+            var usersWithEmptyPasswords = GetUsersWithEmptyPasswords(
+                users);
 
-            var cmsUsersWithPlaintextPasswords = GetUsersWithPlaintextPasswords(cmsUsers);
+            var usersWithPlaintextPasswords = GetUsersWithPlaintextPasswords(
+                users);
 
-            return CompileResults(cmsUsersWithEmptyPasswords, cmsUsersWithPlaintextPasswords);
+            return CompileResults(
+                usersWithEmptyPasswords,
+                usersWithPlaintextPasswords);
         }
 
-        private IEnumerable<CmsUserResult> GetCmsUsersWithEmptyPasswords(IEnumerable<CmsUser> cmsUsers)
+        private static IEnumerable<CmsUserResultWithPasswordFormat> GetUsersWithEmptyPasswords(
+            IEnumerable<CmsUser> users)
         {
-            return cmsUsers
-                .Where(cmsUser => string.IsNullOrEmpty(cmsUser.UserPassword))
-                .Select(cmsUser => new CmsUserResultWithPasswordFormat(cmsUser));
+            return users
+                .Where(user => string.IsNullOrEmpty(
+                    user.UserPassword))
+                .Select(user => new CmsUserResultWithPasswordFormat(
+                    user));
         }
 
-        private IEnumerable<CmsUserResult> GetUsersWithPlaintextPasswords(IEnumerable<CmsUser> cmsUsers)
+        private static IEnumerable<CmsUserResult> GetUsersWithPlaintextPasswords(
+            IEnumerable<CmsUser> users)
         {
-            return cmsUsers
-                .Where(cmsUser => string.IsNullOrEmpty(cmsUser.UserPasswordFormat))
-                .Select(cmsUser => new CmsUserResult(cmsUser));
+            return users
+                .Where(user => string.IsNullOrEmpty(
+                    user.UserPasswordFormat))
+                .Select(user => new CmsUserResult(
+                    user));
         }
 
-        private ReportResults CompileResults(IEnumerable<CmsUserResult> cmsUsersWithEmptyPasswords, IEnumerable<CmsUserResult> cmsUsersWithPlaintextPasswords)
+        private ReportResults CompileResults(
+            IEnumerable<CmsUserResult> usersWithEmptyPasswords,
+            IEnumerable<CmsUserResult> usersWithPlaintextPasswords)
         {
-            if (!cmsUsersWithEmptyPasswords.Any() && !cmsUsersWithPlaintextPasswords.Any())
+            if (!usersWithEmptyPasswords.Any() && !usersWithPlaintextPasswords.Any())
             {
                 return new ReportResults
                 {
@@ -77,30 +96,40 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
                 Data = new List<TableResult<CmsUserResult>>()
             };
 
-            var (emptyCount, usersWithEmptyPasswordsResult) = GetTableResult(cmsUsersWithEmptyPasswords, Metadata.Terms.TableTitles.EmptyPasswords);
+            var emptyCount = IfAnyAddTableResult(
+                errorReportResults.Data,
+                usersWithEmptyPasswords,
+                Metadata.Terms.TableTitles.EmptyPasswords);
 
-            if (emptyCount > 0) errorReportResults.Data.Add(usersWithEmptyPasswordsResult);
+            var plaintextCount = IfAnyAddTableResult(
+                errorReportResults.Data,
+                usersWithPlaintextPasswords,
+                Metadata.Terms.TableTitles.PlaintextPasswords);
 
-            var (plaintextCount, usersWithPlaintextPasswordsResult) = GetTableResult(cmsUsersWithPlaintextPasswords, Metadata.Terms.TableTitles.PlaintextPasswords);
-
-            if (plaintextCount > 0) errorReportResults.Data.Add(usersWithPlaintextPasswordsResult);
-
-            errorReportResults.Summary = Metadata.Terms.ErrorSummary.With(new { emptyCount, plaintextCount });
+            errorReportResults.Summary = Metadata.Terms.ErrorSummary.With(
+                new { emptyCount, plaintextCount });
 
             return errorReportResults;
         }
 
-        private (int, TableResult<CmsUserResult>) GetTableResult(IEnumerable<CmsUserResult> cmsUsers, Term term)
+        private static int IfAnyAddTableResult<T>(
+            dynamic data,
+            IEnumerable<T> results,
+            Term tableNameTerm)
         {
-            var count = cmsUsers.Count();
-
-            var tableResult = new TableResult<CmsUserResult>
+            if (results.Any())
             {
-                Name = term,
-                Rows = cmsUsers
-            };
+                var tableResult = new TableResult<T>
+                {
+                    Name = tableNameTerm,
+                    Rows = results
+                };
 
-            return (count, tableResult);
+                data.Add(
+                    tableResult);
+            }
+
+            return results.Count();
         }
     }
 }

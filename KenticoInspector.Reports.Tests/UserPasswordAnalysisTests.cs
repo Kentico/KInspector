@@ -52,68 +52,105 @@ namespace KenticoInspector.Reports.Tests
             }
         };
 
-        public UserPasswordAnalysisTests(int majorVersion) : base(majorVersion)
+        public UserPasswordAnalysisTests(
+            int majorVersion)
+            : base(majorVersion)
         {
-            mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
+            mockReport = new Report(
+                _mockDatabaseService.Object,
+                _mockReportMetadataService.Object);
         }
 
         [Test]
         public void Should_ReturnGoodStatusAndGoodSummary_WhenUserPasswordsHaveNoIssues()
         {
             // Arrange
-            ArrangeDatabaseService(CmsUserWithoutIssues);
+            ArrangeDatabaseService(
+                CmsUserWithoutIssues);
 
             // Act
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
+            Assert.That(
+                results.Status,
+                Is.EqualTo(ReportResultsStatus.Good));
 
-            Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.GoodSummary.ToString()));
+            Assert.That(
+                results.Summary,
+                Is.EqualTo(mockReport.Metadata.Terms.GoodSummary.ToString()));
         }
 
         [Test]
         public void Should_ReturnErrorStatusAndErrorSummary_WhenUserPasswordsHaveTwoIssues()
         {
             // Arrange
-            ArrangeDatabaseService(CmsUserWithTwoIssues);
+            ArrangeDatabaseService(
+                CmsUserWithTwoIssues);
 
             // Act
             var results = mockReport.GetResults();
             var resultsData = results.Data as List<TableResult<CmsUserResult>>;
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
+            Assert.That(
+                results.Status,
+                Is.EqualTo(ReportResultsStatus.Error));
 
-            Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
+            Assert.That(
+                results.Summary,
+                Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
 
-            Assert.That(resultsData.Count, Is.EqualTo(2));
-            Assert.That(resultsData[0].Rows.Count(), Is.EqualTo(1));
-            Assert.That(resultsData[1].Rows.Count(), Is.EqualTo(1));
+            Assert.That(
+                resultsData.Count,
+                Is.EqualTo(2));
+
+            Assert.That(
+                resultsData[0].Rows.Count(),
+                Is.EqualTo(1));
+
+            Assert.That(
+                resultsData[1].Rows.Count(),
+                Is.EqualTo(1));
         }
 
         [Test]
         public void Should_ReturnErrorStatusAndErrorSummary_WhenUserPasswordsHaveOneIssue()
         {
             // Arrange
-            ArrangeDatabaseService(CmsUserWithOneIssue);
+            ArrangeDatabaseService(
+                CmsUserWithOneIssue);
 
             // Act
             var results = mockReport.GetResults();
             var resultsData = results.Data as List<TableResult<CmsUserResult>>;
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
+            Assert.That(
+                results.Status,
+                Is.EqualTo(ReportResultsStatus.Error));
 
-            Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
+            Assert.That(
+                results.Summary,
+                Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
 
-            Assert.That(resultsData.Count, Is.EqualTo(1));
-            Assert.That(resultsData[0].Rows.Count(), Is.EqualTo(1));
+            Assert.That(
+                resultsData.Count,
+                Is.EqualTo(1));
+
+            Assert.That(
+                resultsData[0].Rows.Count(),
+                Is.EqualTo(1));
         }
 
-        private void ArrangeDatabaseService(IEnumerable<CmsUser> cmsUserTable)
+        private void ArrangeDatabaseService(
+            IEnumerable<CmsUser> cmsUserTable)
         {
-            _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetEnabledAndNotExternalUsers, nameof(Report.ExcludedUserNames), Report.ExcludedUserNames, cmsUserTable);
+            _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(
+                Scripts.GetEnabledAndNotExternalUsers,
+                nameof(Report.ExcludedUserNames),
+                Report.ExcludedUserNames,
+                cmsUserTable);
         }
     }
 }

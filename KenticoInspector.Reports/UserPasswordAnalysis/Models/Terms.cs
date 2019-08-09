@@ -13,8 +13,8 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis.Models
 
     public class TableTitlesTerms
     {
-        public Term PlaintextPasswords { get; set; }
-
         public Term EmptyPasswords { get; set; }
+
+        public Term PlaintextPasswords { get; set; }
     }
 }
