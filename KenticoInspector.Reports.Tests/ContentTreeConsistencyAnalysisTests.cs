@@ -1,5 +1,6 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using KenticoInspector.Reports.Tests.Helpers;
@@ -139,10 +140,8 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error, $"Status was '{results.Status}' instead of 'Error'");
 
-            var resultsData = (IDictionary<string, object>)results.Data;
-            var workflowData = resultsData.First(t => t.Value.GetType() == typeof(TableResult<VersionHistoryMismatchResult>)).Value as TableResult<VersionHistoryMismatchResult>;
+            var rowCount = results.Data.OfType<TableResult<VersionHistoryMismatchResult>>().First().Rows.Count();
 
-            var rowCount = workflowData.Rows.Count();
             Assert.That(rowCount == 4, $"There were {rowCount} rows instead 4 as expected");
         }
 
