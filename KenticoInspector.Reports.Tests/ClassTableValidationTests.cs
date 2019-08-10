@@ -1,8 +1,10 @@
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.ClassTableValidation;
 using KenticoInspector.Reports.ClassTableValidation.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -13,21 +15,24 @@ namespace KenticoInspector.Reports.Tests
     {
         private Report _mockReport;
 
+        private List<ClassWithNoTable> CleanClassResults => new List<ClassWithNoTable>();
+
         public ClassTableValidationTests(int majorVersion) : base(majorVersion)
         {
             _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object);
         }
 
         [Test]
-        public void Should_ReturnCleanResult_When_DatabaseIsClean()
+        public void Should_ReturnGoodResult_When_DatabaseWithoutIssues()
         {
             // Arrange
-            var tableResults = GetCleanTableResults();
+            var tableResults = GetTableResultsWithoutIssues();
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
                 .Returns(tableResults);
 
-            var classResults = GetCleanClassResults();
+            var classResults = CleanClassResults;
+
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
                 .Returns(classResults);
@@ -36,21 +41,21 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.TableResults.Rows.Count == 0);
-            Assert.That(results.Data.ClassResults.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
         }
 
         [Test]
-        public void Should_ReturnErrorResult_When_DatabaseHasClassWithNoTable()
+        public void Should_ReturnErrorResult_When_DatabaseWithClassWithNoTable()
         {
             // Arrange
-            var tableResults = GetCleanTableResults();
+            var tableResults = GetTableResultsWithoutIssues();
+
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
                 .Returns(tableResults);
 
-            var classResults = GetCleanClassResults();
+            var classResults = CleanClassResults;
+
             classResults.Add(new ClassWithNoTable
             {
                 ClassDisplayName = "Has no table",
@@ -66,16 +71,16 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.TableResults.Rows.Count == 0);
-            Assert.That(results.Data.ClassResults.Rows.Count == 1);
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
+            Assert.That(results.Data.OfType<TableResult<ClassWithNoTable>>().First().Rows.Count(), Is.EqualTo(1));
+            Assert.That(results.Data.OfType<TableResult<TableWithNoClass>>().First().Rows.Count(), Is.EqualTo(0));
         }
 
         [Test]
-        public void Should_ReturnErrorResult_When_DatabaseHasTableWithNoClass()
+        public void Should_ReturnErrorResult_When_DatabaseWithTableWithNoClass()
         {
             // Arrange
-            var tableResults = GetCleanTableResults(false);
+            var tableResults = GetTableResultsWithoutIssues(false);
             tableResults.Add(new TableWithNoClass
             {
                 TableName = "HasNoClass"
@@ -85,7 +90,8 @@ namespace KenticoInspector.Reports.Tests
                 .Setup(p => p.ExecuteSqlFromFile<TableWithNoClass>(Scripts.TablesWithNoClass))
                 .Returns(tableResults);
 
-            var classResults = GetCleanClassResults();
+            var classResults = CleanClassResults;
+
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
                 .Returns(classResults);
@@ -94,19 +100,15 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.TableResults.Rows.Count == 1);
-            Assert.That(results.Data.ClassResults.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Data.OfType<TableResult<ClassWithNoTable>>().First().Rows.Count(), Is.EqualTo(0));
+            Assert.That(results.Data.OfType<TableResult<TableWithNoClass>>().First().Rows.Count(), Is.EqualTo(1));
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
         }
 
-        private List<ClassWithNoTable> GetCleanClassResults()
-        {
-            return new List<ClassWithNoTable>();
-        }
-
-        private List<TableWithNoClass> GetCleanTableResults(bool includeWhitelistedTables = true)
+        private List<TableWithNoClass> GetTableResultsWithoutIssues(bool includeWhitelistedTables = true)
         {
             var tableResults = new List<TableWithNoClass>();
+
             if (includeWhitelistedTables && _mockInstanceDetails.DatabaseVersion.Major >= 10)
             {
                 tableResults.Add(new TableWithNoClass() { TableName = "CI_Migration" });
