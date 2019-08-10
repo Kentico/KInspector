@@ -1,7 +1,7 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis.Models;
 using System;
@@ -104,13 +104,6 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
                 Rows = documentSummaries
             };
 
-            var data = new
-            {
-                TemplateSummaryTable = templateSummaryTable,
-                WebPartSummaryTable = webPartSummaryTable,
-                DocumentSummaryTable = documentSummaryTable
-            };
-
             var affectedDocumentCount = documentSummaries.Count();
             var affectedTemplateCount = templateSummaries.Count();
             var affectedWebPartCount = webPartSummaries.Count();
@@ -123,8 +116,11 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
             {
                 Status = status,
                 Summary = summary,
-                Data = data,
-                Type = ReportResultsType.TableList
+                Data = {
+                    templateSummaryTable,
+                    webPartSummaryTable,
+                    documentSummaryTable
+                }
             };
         }
     }
