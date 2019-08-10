@@ -1,8 +1,10 @@
 ﻿using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.PageTypeAssignmentAnalysis;
 using KenticoInspector.Reports.PageTypeAssignmentAnalysis.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -24,13 +26,13 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var unassignedPageTypes = GetListOfUnassignedPageTypes();
             ArrangeDatabaseCalls(unassignedPageTypes);
-            
+
             // Act
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.Rows.Count > 0, "Expected more than 0 page types to be returned");
-            Assert.That(results.Status == ReportResultsStatus.Warning,$"Expected Warning status, got {results.Status} status");
+            Assert.That(results.Data.OfType<TableResult<PageType>>().First().Rows.Count, Is.GreaterThan(0));
+            Assert.That(results.Status == ReportResultsStatus.Warning, $"Expected Warning status, got {results.Status} status");
         }
 
         [Test]
@@ -42,12 +44,12 @@ namespace KenticoInspector.Reports.Tests
             // Act
             var results = _mockReport.GetResults();
             // Assert
-            Assert.That(results.Data.Rows.Count == 0, $"Expected 0 page types to be returned, got {results.Data.Rows.Count}");
             Assert.That(results.Status == ReportResultsStatus.Good, $"Expected Good status, got {results.Status} status");
         }
 
-        private void ArrangeDatabaseCalls(IEnumerable<PageType> unassignedPageTypes = null) {
-            unassignedPageTypes = unassignedPageTypes ?? new List<PageType>(); 
+        private void ArrangeDatabaseCalls(IEnumerable<PageType> unassignedPageTypes = null)
+        {
+            unassignedPageTypes = unassignedPageTypes ?? new List<PageType>();
             _mockDatabaseService
                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypesNotAssignedToSite))
                .Returns(unassignedPageTypes);
