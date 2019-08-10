@@ -1,4 +1,5 @@
 ﻿using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using System;
 using System.Collections.Generic;
 

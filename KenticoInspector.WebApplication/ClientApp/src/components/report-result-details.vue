@@ -1,60 +1,34 @@
 <template>
   <div>
-    <vue-showdown
-      v-if="type === 'String'"
-      key="string-result"
-      :markdown="data"
-      >
-    </vue-showdown>
-    <div
-      v-else-if="type === 'StringList'"
-      key="string-list-result"
-      >
-      <vue-showdown
-        v-for="(item, index) in data"
-        :key="`result-${index}`"
-        :markdown="item"
-        >
-      </vue-showdown>
-    </div>
-    <div
-      v-else-if="type === 'Table'"
-      key="table-result"
-      >
-      <report-result-details-table
-        :name="data.name"
-        :rows="data.rows"
-        ></report-result-details-table>
-    </div>
-    <div
-      v-else-if="type === 'TableList'"
-      key="table-list-result"
-      >
-      <report-result-details-table
-        v-for="(item, index) in data"
-        :key="`result-${index}`"
-        :name="item.name"
-        :rows="item.rows"
-        ></report-result-details-table>
-    </div>
+    <div v-for="(item, index) in data"
+         :key="`result-${index}`">
+      <div v-if="item.hasOwnProperty('string')">
 
+        <report-result-details-string :name="item.name"
+                                      :string="item.string">
+        </report-result-details-string>
+      </div>
+      <div v-else-if="item.hasOwnProperty('rows')">
+        <report-result-details-table :name="item.name"
+                                     :rows="item.rows">
+        </report-result-details-table>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import ReportResultDetailsTable from "./report-result-details-table"
-export default {
-  components: {
-    ReportResultDetailsTable
-  },
-  props: {
-    type: {
-      type: String,
-      required: true
+  import ReportResultDetailsTable from "./report-result-details-table"
+  import ReportResultDetailsString from "./report-result-details-string"
+  export default {
+    components: {
+      ReportResultDetailsTable,
+      ReportResultDetailsString
     },
-    data: {
-      required: true
+    props: {
+      data: {
+        required: true
+      }
     }
   }
-}
 </script>
