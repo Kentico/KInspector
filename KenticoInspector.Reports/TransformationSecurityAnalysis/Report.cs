@@ -6,7 +6,7 @@ using System.Reflection;
 using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.TransformationSecurityAnalysis.Models;
 using KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Analysis;
@@ -137,7 +137,6 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
             {
                 return new ReportResults()
                 {
-                    Type = ReportResultsType.String,
                     Status = ReportResultsStatus.Good,
                     Summary = Metadata.Terms.GoodSummary
                 };
@@ -208,10 +207,9 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
 
             return new ReportResults()
             {
-                Type = ReportResultsType.TableList,
                 Status = ReportResultsStatus.Warning,
                 Summary = Metadata.Terms.WarningSummary.With(new { summaryCount, issueTypesAsCsv }),
-                Data = new
+                Data =
                 {
                     issueTypesResult,
                     transformationsResult,

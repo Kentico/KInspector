@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 
 using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.Tests.Helpers;
 using KenticoInspector.Reports.TransformationSecurityAnalysis;
 using KenticoInspector.Reports.TransformationSecurityAnalysis.Models;
@@ -138,13 +138,14 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
 
-            Assert.That(GetAnonymousTableResult<TableResult<IssueTypeResult>>(results, "issueTypesResult").Rows.Count(), Is.EqualTo(1));
-            Assert.That(GetAnonymousTableResult<TableResult<TransformationResult>>(results, "transformationsResult").Rows.Count(), Is.EqualTo(1));
-            Assert.That(GetAnonymousTableResult<TableResult<TransformationResult>>(results, "transformationsResult").Rows, Has.One.Matches<TransformationResult>(row => transformationResultEvaluator(row, row as dynamic)));
+            Assert.That(results.Data.OfType<TableResult<IssueTypeResult>>().First().Rows.Count(), Is.EqualTo(1));
 
-            Assert.That(GetAnonymousTableResult<TableResult<TransformationUsageResult>>(results, "transformationUsageResult").Rows.Count(), Is.EqualTo(1));
+            Assert.That(results.Data.OfType<TableResult<TransformationResult>>().First().Rows.Count(), Is.EqualTo(1));
+            Assert.That(results.Data.OfType<TableResult<TransformationResult>>().First().Rows, Has.One.Matches<TransformationResult>(row => transformationResultEvaluator(row, row as dynamic)));
 
-            Assert.That(GetAnonymousTableResult<TableResult<TemplateUsageResult>>(results, "templateUsageResult").Rows.Count(), Is.EqualTo(2));
+            Assert.That(results.Data.OfType<TableResult<TransformationUsageResult>>().First().Rows.Count(), Is.EqualTo(1));
+
+            Assert.That(results.Data.OfType<TableResult<TemplateUsageResult>>().First().Rows.Count(), Is.EqualTo(2));
         }
 
         private void ArrangeDatabaseService(IEnumerable<TransformationDto> transformationDtoTable)
@@ -152,15 +153,6 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetTransformations, transformationDtoTable);
             _mockDatabaseService.SetupExecuteSqlFromFile(Scripts.GetPages, CleanPageDtoTable);
             _mockDatabaseService.SetupExecuteSqlFromFileWithListParameter(Scripts.GetPageTemplates, "DocumentPageTemplateIDs", CleanPageDtoTable.Select(pageDto => pageDto.DocumentPageTemplateID), CleanPageTemplateDtoTable);
-        }
-
-        private static TResult GetAnonymousTableResult<TResult>(ReportResults results, string resultName)
-        {
-            return results
-                .Data
-                .GetType()
-                .GetProperty(resultName)
-                .GetValue(results.Data);
         }
     }
 }
