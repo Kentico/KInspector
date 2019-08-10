@@ -1,4 +1,6 @@
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.TaskProcessingAnalysis;
 using KenticoInspector.Reports.TaskProcessingAnalysis.Models;
 using NUnit.Framework;
@@ -41,7 +43,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.IntegrationBusTask);
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, _mockReport.Metadata.Terms.CountIntegrationBusTask);
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
@@ -55,7 +57,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.ScheduledTask);
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, _mockReport.Metadata.Terms.CountScheduledTask);
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
@@ -69,7 +71,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.SearchTask);
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, _mockReport.Metadata.Terms.CountSearchTask);
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
@@ -83,7 +85,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.StagingTask);
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, _mockReport.Metadata.Terms.CountStagingTask);
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
@@ -97,16 +99,13 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.WebFarmTask);
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, _mockReport.Metadata.Terms.CountWebFarmTask);
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
-        private static void AssertThatResultsDataIncludesTaskTypeDetails(dynamic data, TaskType taskType)
+        private static void AssertThatResultsDataIncludesTaskTypeDetails(IList<Result> data, Term term)
         {
-            var resultsData = (IEnumerable<string>)data;
-            var hasTasksListedInResults = resultsData.Any(x => x.Contains(taskType.ToString(), System.StringComparison.InvariantCultureIgnoreCase));
-
-            Assert.That(hasTasksListedInResults, $"'{taskType}' not found in data.");
+            Assert.That(data.Select(x => (string)x), Has.One.Contains(term.ToString()));
         }
 
         private void SetupAllDatabaseQueries(

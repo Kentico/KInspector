@@ -9,6 +9,7 @@
       * Staging tasks
       * Search tasks
 terms:
+  goodSummary: No stuck tasks found.
   countIntegrationBusTask: <count> Integration Bus <count:task|tasks>.
   countScheduledTask: <count> Scheduled <count:task|tasks>.
   countSearchTask: <count> Search <count:task|tasks>.
