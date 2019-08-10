@@ -2,6 +2,7 @@
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DebugConfigurationAnalysis.Models;
 using System;
@@ -82,7 +83,6 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             {
                 Status = ReportResultsStatus.Information,
                 Summary = string.Empty,
-                Type = ReportResultsType.TableList
             };
 
             AnalyzeDatabaseSettingsResults(results, databaseSettingsKeys);
@@ -108,11 +108,11 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             webconfigSettingsValues.Add(new SettingsKey("Debug", Metadata.Terms.WebConfig.DebugKeyDisplayName, isCompilationDebugEnabled, false));
             webconfigSettingsValues.Add(new SettingsKey("Trace", Metadata.Terms.WebConfig.TraceKeyDisplayName, isTraceEnabled, false));
 
-            results.Data.WebConfigSettingsResults = new TableResult<SettingsKey>()
+            results.Data.Add(new TableResult<SettingsKey>()
             {
                 Name = Metadata.Terms.WebConfig.OverviewTableHeader,
                 Rows = webconfigSettingsValues
-            };
+            });
         }
 
         private void AnalyzeDatabaseSettingsResults(ReportResults results, IEnumerable<SettingsKey> databaseSettingsKeys)
@@ -128,18 +128,18 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
 
                 results.Summary += Metadata.Terms.Database.Summary.With(new { explicitlyEnabledSettingsCount });
 
-                results.Data.DatabaseSettingsEnabledNotByDefaultResults = new TableResult<SettingsKey>()
+                results.Data.Add(new TableResult<SettingsKey>()
                 {
                     Name = Metadata.Terms.Database.ExplicitlyEnabledSettingsTableHeader,
                     Rows = explicitlyEnabledSettings
-                };
+                });
             }
 
-            results.Data.AllDatabaseSettings = new TableResult<SettingsKey>()
+            results.Data.Add(new TableResult<SettingsKey>()
             {
                 Name = Metadata.Terms.Database.OverviewTableHeader,
                 Rows = databaseSettingsKeys
-            };
+            });
         }
     }
 }
