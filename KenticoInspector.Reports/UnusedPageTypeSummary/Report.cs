@@ -1,7 +1,7 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.UnusedPageTypeSummary.Models;
 using System;
@@ -34,13 +34,14 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
 
             return new ReportResults
             {
-                Type = ReportResultsType.Table,
                 Status = ReportResultsStatus.Information,
                 Summary = Metadata.Terms.CountUnusedPageType.With(new { count = countOfUnusedPageTypes }),
-                Data = new TableResult<PageType>()
-                {
-                    Name = Metadata.Terms.UnusedPageTypes,
-                    Rows = unusedPageTypes
+                Data = {
+                    new TableResult<PageType>()
+                    {
+                        Name = Metadata.Terms.UnusedPageTypes,
+                        Rows = unusedPageTypes
+                    }
                 }
             };
         }
