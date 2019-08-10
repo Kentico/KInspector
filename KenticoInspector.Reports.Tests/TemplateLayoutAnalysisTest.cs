@@ -1,8 +1,10 @@
 ﻿using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.TemplateLayoutAnalysis;
 using KenticoInspector.Reports.TemplateLayoutAnalysis.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -29,7 +31,7 @@ namespace KenticoInspector.Reports.Tests
             // Act
             var results = _mockReport.GetResults();
             // Assert
-            Assert.That(results.Data.Rows.Count == 5);
+            Assert.That(results.Data.OfType<TableResult<IdenticalPageLayouts>>().First().Rows.Count() == 5);
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
 
@@ -44,7 +46,7 @@ namespace KenticoInspector.Reports.Tests
             // Act
             var results = _mockReport.GetResults();
             // Assert
-            Assert.That(results.Data.Rows.Count == 0);
+            Assert.That(results.Data.OfType<TableResult<IdenticalPageLayouts>>().First().Rows.Count() == 0);
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
 

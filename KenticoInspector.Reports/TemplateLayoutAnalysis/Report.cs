@@ -1,7 +1,7 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.TemplateLayoutAnalysis.Models;
 using System;
@@ -41,11 +41,12 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
             var results = new ReportResults
             {
                 Status = ReportResultsStatus.Information,
-                Type = ReportResultsType.Table,
-                Data = new TableResult<dynamic>()
-                {
-                    Name = Metadata.Terms.IdenticalPageLayouts,
-                    Rows = identicalPageLayouts
+                Data = {
+                    new TableResult<IdenticalPageLayouts>()
+                    {
+                        Name = Metadata.Terms.IdenticalPageLayouts,
+                        Rows = identicalPageLayouts
+                    }
                 }
             };
 
