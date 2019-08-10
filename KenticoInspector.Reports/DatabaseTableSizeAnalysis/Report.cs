@@ -1,7 +1,7 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DatabaseTableSizeAnalysis.Models;
 using System;
@@ -30,13 +30,14 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
 
             return new ReportResults
             {
-                Type = ReportResultsType.Table,
                 Status = ReportResultsStatus.Information,
                 Summary = Metadata.Terms.CheckResultsTableForAnyIssues,
-                Data = new TableResult<DatabaseTableSizeResult>()
-                {
-                    Name = Metadata.Terms.Top25Results,
-                    Rows = top25LargestTables
+                Data = {
+                    new TableResult<DatabaseTableSizeResult>()
+                    {
+                        Name = Metadata.Terms.Top25Results,
+                        Rows = top25LargestTables
+                    }
                 }
             };
         }
