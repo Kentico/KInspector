@@ -62,7 +62,7 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnGoodStatusAndGoodSummary_WhenUserPasswordsHaveNoIssues()
+        public void Should_ReturnGoodStatusAndGoodSummary_When_UserPasswordsHaveNoIssues()
         {
             // Arrange
             ArrangeDatabaseService(
@@ -82,7 +82,7 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnErrorStatusAndErrorSummary_WhenUserPasswordsHaveTwoIssues()
+        public void Should_ReturnErrorStatusAndErrorSummary_When_UserPasswordsHaveTwoIssues()
         {
             // Arrange
             ArrangeDatabaseService(
@@ -115,7 +115,7 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnErrorStatusAndErrorSummary_WhenUserPasswordsHaveOneIssue()
+        public void Should_ReturnErrorStatusAndErrorSummary_When_UserPasswordsHaveOneIssue()
         {
             // Arrange
             ArrangeDatabaseService(
