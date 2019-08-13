@@ -180,7 +180,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
             foreach (var reportResult in allTableResults)
             {
-                var tableName = reportResult.TableName;
+                var name = reportResult.TableName;
 
                 if (reportResult.Status == ReportResultsStatus.Error)
                 {
@@ -188,7 +188,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
                     var count = reportResult.Data.Rows.Count;
 
-                    combinedResults.Summary += Metadata.Terms.NameFound.With(new { tableName, count });
+                    combinedResults.Summary += Metadata.Terms.NameFound.With(new { name, count });
                     combinedResults.Status = ReportResultsStatus.Error;
                 }
             }

@@ -209,8 +209,7 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
             {
                 Status = ReportResultsStatus.Warning,
                 Summary = Metadata.Terms.WarningSummary.With(new { summaryCount, issueTypesAsCsv }),
-                Data =
-                {
+                Data = {
                     issueTypesResult,
                     transformationsResult,
                     transformationUsageResult,

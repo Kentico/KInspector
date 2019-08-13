@@ -50,9 +50,7 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
                 {
                     Status = ReportResultsStatus.Error,
                     Summary = Metadata.Terms.CheckResultsTableForAnyIssues,
-                    Data = {
-                        dataTable
-                    }
+                    Data = dataTable
                 };
             }
             else
@@ -60,10 +58,7 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
                 return new ReportResults
                 {
                     Status = ReportResultsStatus.Good,
-                    Summary = Metadata.Terms.NoIssuesFound,
-                    Data = {
-                        string.Empty
-                    }
+                    Summary = Metadata.Terms.NoIssuesFound
                 };
             }
         }

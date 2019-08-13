@@ -8,7 +8,7 @@
     * Use of complex data macros
 terms:
   goodSummary: No issues with transformations found.
-  warningSummary: 'Found <summaryCount> issues with transformations categorized into the following issue types: <issueTypesAsCSV>.'
+  warningSummary: 'Found <summaryCount> issues with transformations categorized into the following issue types: <issueTypesAsCsv>.'
   tableTitles:
     issueTypes: Issues types
     transformationsWithIssues: Transformations with issues

@@ -41,12 +41,10 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
             var results = new ReportResults
             {
                 Status = ReportResultsStatus.Information,
-                Data = {
-                    new TableResult<IdenticalPageLayouts>()
-                    {
-                        Name = Metadata.Terms.IdenticalPageLayouts,
-                        Rows = identicalPageLayouts
-                    }
+                Data = new TableResult<IdenticalPageLayouts>()
+                {
+                    Name = Metadata.Terms.IdenticalPageLayouts,
+                    Rows = identicalPageLayouts
                 }
             };
 

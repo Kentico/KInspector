@@ -30,7 +30,7 @@ namespace KenticoInspector.Reports.SampleReport
             var random = new Random();
             var issueCount = random.Next(0, 3);
 
-            var data = new List<Result>();
+            var data = new ReportResultsData();
 
             for (int i = 0; i < issueCount; i++)
             {

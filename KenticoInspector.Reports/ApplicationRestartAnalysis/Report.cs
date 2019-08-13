@@ -65,9 +65,7 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             {
                 Status = ReportResultsStatus.Information,
                 Summary = $"{totalEventsText} ({totalStartEventsText}, {totalEndEventsText}) {timeSpanText}",
-                Data = {
-                    data
-                }
+                Data = data
             };
 
             return results;

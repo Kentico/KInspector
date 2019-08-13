@@ -54,9 +54,6 @@ namespace KenticoInspector.Reports.RobotsTxtConfigurationSummary
 
             return new ReportResults
             {
-                Data = {
-                    string.Empty,
-                },
                 Status = found ? ReportResultsStatus.Good : ReportResultsStatus.Warning,
                 Summary = found ? Metadata.Terms.RobotsTxtFound : Metadata.Terms.RobotsTxtNotFound,
             };
