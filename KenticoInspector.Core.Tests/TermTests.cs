@@ -3,7 +3,6 @@ using KenticoInspector.Core.Tokens;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace KenticoInspector.Core.Tests
 {
@@ -15,333 +14,565 @@ namespace KenticoInspector.Core.Tests
             TokenExpressionResolver.RegisterTokenExpressions(typeof(Term).Assembly);
         }
 
-        // Basic advanced
-        [TestCase("<?int32token> car", "1 car", 1)]
-        [TestCase("<?int32token> cars", "5 cars", 5)]
-        // Explicit advanced case
-        [TestCase("<?int32token=5:Many> cars", "Many cars", 5)]
-        // Implicit singular
-        [TestCase("<?int32token:One|Many> car", "One car", 1)]
-        // Implicit plural
-        [TestCase("<?int32token:One|Many> cars", "Many cars", 5)]
-        // Conditional cases
-        [TestCase("The <?int32token>5:red|wrongtoken=car:blue> vehicle is going very fast", "The red vehicle is going very fast", 6)]
-        [TestCase("The <?int32token<5:red|blue> vehicle is going very fast", "The blue vehicle is going very fast", 6)]
-        // String case with colon
-        [TestCase("<?stringtoken=value:The: red> car", "The: red car", "value")]
-        // Multiple cases, one match
-        [TestCase("The <?stringtoken1=truck:red|stringtoken2=car:blue> vehicle is going very fast", "The red vehicle is going very fast", "truck", "van")]
-        // Multiple cases, default match
-        [TestCase("The <?stringtoken1=truck:red|stringtoken2=car:blue|light green> vehicle is going very fast", "The light green vehicle is going very fast", "moped", "van")]
-        // Multiple cases, first match
-        [TestCase("The <?stringtoken1=truck:red|stringtoken1=car:blue> vehicle is going very fast", "The red vehicle is going very fast", "truck", "car")]
-        // Multiple cases, second token match
-        [TestCase("The <?stringtoken2=car:red|wrongtoken=car:blue> vehicle is going very fast", "The red vehicle is going very fast", "truck", "car")]
-        // Empty with one space when no match
-        [TestCase("The <?wrongtoken=car:Blue> vehicle is going very fast", "The vehicle is going very fast", "truck", "car")]
-        // URL
-        [TestCase("<?stringtoken>: https://docs.kentico.com", "No cars: https://docs.kentico.com", "No cars")]
-        public void Should_Resolve(string term, string result, params object[] tokenValues)
-        {
-            TestResolve(term, AsDynamic(tokenValues), result);
-        }
+        //[TestCase("<?int32token> car", "1 car", 1)]
+        //[TestCase("<?int32token> cars", "5 cars", 5)]
+        //[TestCase("<?int32token=5:Many> cars", "Many cars", 5)]
+        //[TestCase("<?int32token:One|Many> car", "One car", 1)]
+        //[TestCase("<?int32token:One|Many> cars", "Many cars", 5)]
+        //[TestCase("The <?int32token>5:red|wrongtoken=car:blue> vehicle is going very fast", "The red vehicle is going very fast", 6)]
+        //[TestCase("The <?int32token<5:red|blue> vehicle is going very fast", "The blue vehicle is going very fast", 6)]
+        //[TestCase("<?stringtoken=value:The: red> car", "The: red car", "value")]
+        //[TestCase("The <?stringtoken1=truck:red|stringtoken2=car:blue> vehicle is going very fast", "The red vehicle is going very fast", "truck", "van")]
+        //[TestCase("The <?stringtoken1=truck:red|stringtoken2=car:blue|light green> vehicle is going very fast", "The light green vehicle is going very fast", "moped", "van")]
+        //[TestCase("The <?stringtoken1=truck:red|stringtoken1=car:blue> vehicle is going very fast", "The red vehicle is going very fast", "truck", "car")]
+        //[TestCase("The <?stringtoken2=car:red|wrongtoken=car:blue> vehicle is going very fast", "The red vehicle is going very fast", "truck", "car")]
+        //[TestCase("The <?wrongtoken=car:Blue> vehicle is going very fast", "The vehicle is going very fast", "truck", "car")]
+        //[TestCase("<?stringtoken>: https://docs.kentico.com", "No cars: https://docs.kentico.com", "No cars")]
+        //public void Should_Resolve(string term, string result, params object[] tokenValues)
+        //{
+        //    TestResolve(term, AsDynamic(tokenValues), result);
+        //}
 
-        [TestCase("The version is <versiontoken|12.0.4:supported>", "The version is supported", "12.0.4")]
-        [TestCase("The version is <?versiontoken=12.0.4:supported>", "The version is supported", "12.0.4")]
-        public void Should_Resolve_WithVersion(string term, string result, string version) => Should_Resolve(term, result, new Version(version));
-
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithSimplePluralization))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithTokenOnly))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithTokenAndDefaultValue))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneGreaterThanCase))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneGreaterThanCaseAndDefaultValue))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneGreaterThanCaseAndIntegerCaseAndDefaultValue))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneIntegerCase))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneIntegerCaseAndDefaultValue))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneLessThanCase))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneLessThanCaseAndDefaultValue))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneLessThanCaseAndDefaultValue))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneStringCase))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithOneStringCaseAndDefaultValue))]
-        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.WithTwoIntegerCasesAndDefaultValue))]
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.ValidExpressionsWithOneSegment))]
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.ValidExpressionsWithTwoSegments))]
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.ValidExpressionsWithThreeSegments))]
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.ValidExpressionsWithFourSegments))]
         public string Should_ResolveExpression_When_ExpressionIsValid(string termString, object tokenValues)
         {
+            // Arrange
             Term term = termString;
             var result = term.With(tokenValues);
 
+            // Act
             return result.ToString();
         }
 
-        // Empty
-        [TestCase("This is wrong: <>", typeof(ArgumentException), "value")]
-        // Empty
-        [TestCase("This is wrong: <?>", typeof(ArgumentException), "value")]
-        // Token with colon
-        [TestCase("This is <stringtoken:a failure>", typeof(FormatException), "value")]
-        // Case with multiple equals
-        [TestCase("This is <?stringtoken|stringtoken=value=failure:wrong|a success>", typeof(ArgumentException), "value")]
-        public void Should_ThrowException(string term, Type exceptionType, params object[] tokenValues)
+        [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.InvalidExpressionsWithOneSegment))]
+        public void Should_Throw_When_ExpressionIsInvalid(string termString, object tokenValues, Type exceptionType)
         {
-            TestThrowException(term, AsDynamic(tokenValues), exceptionType);
-        }
+            // Arrange
+            Term term = termString;
+            var result = term.With(tokenValues);
 
-        public void TestResolve(Term term, object tokenValues, string result)
-        {
             // Act
-            string resolvedTerm = term.With(tokenValues).ToString();
-
-            // Assert
-            Assert.That(resolvedTerm, Is.EqualTo(result));
-        }
-
-        public void TestThrowException(Term term, object tokenValues, Type exceptionType)
-        {
-            // Act
-            string resolvedTermMethod() => term.With(tokenValues).ToString();
+            string resolvedTermMethod() => result.ToString();
 
             // Assert
             Assert.That(resolvedTermMethod, Throws.TypeOf(exceptionType));
         }
-
-        private static dynamic AsDynamic(object[] tokenValues)
-        {
-            var dictionary = new Dictionary<string, object>();
-            var increment = 1;
-            var appendIncrement = tokenValues.Length > 1;
-
-            foreach (var tokenValue in tokenValues)
-            {
-                var key = $"{tokenValue.GetType().Name}token".ToLower();
-
-                if (appendIncrement)
-                {
-                    key += increment++;
-                }
-
-                dictionary.Add(key, tokenValue);
-            }
-
-            return dictionary;
-        }
     }
+
+    public class TokenValues
+    {
+        public static object IsUndefined => new { };
+
+        public static object IsNull => new { token = default(string) };
+
+        public static object Is0 => new { token = 0 };
+
+        public static object Is1 => new { token = 1 };
+
+        public static object Is1_5 => new { token = 1.5 };
+
+        public static object Is5 => new { token = 5 };
+
+        public static object IsSome_Text => new { token = "some text" };
+
+        public static object IsTrue => new { token = true };
+
+        public static object IsFalse => new { token = false };
+
+        public static object IsVersion => new { token = new Version("12.0.4") };
+    }
+
+    // TODO: Add valid expressions with leading space case
+    // TODO: Add valid expressions with contains colon case
+    // TODO: Add valid expressions with contains url case
+    // TODO: Add valid expressions with multiple tokens
 
     public class TokenExpressionTestCases
     {
-        // TODO: Add WithLessThanCaseAndDefault
-        // TODO: Add WithLessThanCaseAndIntegerCaseAndDefault
-        // TODO: Add boolean test case to all data sets
-        // TODO: Add with special case values (has spaces, has colons, has urls)
-        // TODO: Add WithMultipleTokens
+        private static string category;
+        private static string tokenExpression;
 
-        public static IEnumerable<TestCaseData> WithOneGreaterThanCase
+        public static IEnumerable<TestCaseData> ValidExpressionsWithOneSegment()
         {
-            get
-            {
-                yield return new TestCaseData("<token|>5:5+>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token|>5:5+>", new { token = 0 }).Returns("");
-                yield return new TestCaseData("<token|>5:5+>", new { token = 1 }).Returns("");
-                yield return new TestCaseData("<token|>5:5+>", new { token = 1.5 }).Returns("");
-                yield return new TestCaseData("<token|>5:5+>", new { token = 5 }).Returns("");
-                yield return new TestCaseData("<token|>5:5+>", new { token = 6 }).Returns("5+");
-                yield return new TestCaseData("<token|>5:5+>", new { token = "some text" }).Returns("");
-                yield return new TestCaseData("<token|>5:5+>", new { }).Returns("");
-            }
+            category = "token only";
+            tokenExpression = "<token>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "0");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "1");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "1.5");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "5");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "some text");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "True");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "False");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "12.0.4");
         }
 
-        public static IEnumerable<TestCaseData> WithOneGreaterThanCaseAndDefaultValue
+        public static IEnumerable<TestCaseData> ValidExpressionsWithTwoSegments()
         {
-            get
-            {
-                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = 0 }).Returns("resolved default");
-                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = 1 }).Returns("resolved default");
-                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = 1.5 }).Returns("resolved default");
-                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = 5 }).Returns("resolved default");
-                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = 6 }).Returns("5+");
-                yield return new TestCaseData("<token|>5:5+|resolved default>", new { token = "some text" }).Returns("resolved default");
-                yield return new TestCaseData("<token|>5:5+|resolved default>", new { }).Returns("");
-            }
+            category = "token and default value";
+            tokenExpression = "<token|resolved>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "resolved");
+
+            category = "one integer case";
+            tokenExpression = "<token|0:resolved>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
+
+            category = "one double case";
+            tokenExpression = "<token|1.5:resolved>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
+
+            category = "one string case";
+            tokenExpression = "<token|some text:resolved>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
+
+            category = "one true case";
+            tokenExpression = "<token|true:resolved>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
+
+            category = "one version case";
+            tokenExpression = "<token|12.0.4:resolved>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "resolved");
+
+            category = "one more than integer case";
+            tokenExpression = "<token|>1:resolved>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
+
+            category = "one less than integer case";
+            tokenExpression = "<token|<5:resolved>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
         }
 
-        public static IEnumerable<TestCaseData> WithOneGreaterThanCaseAndIntegerCaseAndDefaultValue
+        public static IEnumerable<TestCaseData> ValidExpressionsWithThreeSegments()
         {
-            get
-            {
-                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = 0 }).Returns("none");
-                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = 1 }).Returns("some");
-                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = 1.5 }).Returns("some");
-                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = 5 }).Returns("some");
-                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = 6 }).Returns("many");
-                yield return new TestCaseData("<token|>5:many|0:none|some>", new { token = "some text" }).Returns("some");
-                yield return new TestCaseData("<token|>5:many|0:none|some>", new { }).Returns("");
-            }
+            category = "simple pluralization";
+            tokenExpression = "<token|issue|issues>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "issues");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "issue");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "issues");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "issues");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "issues");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "issues");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "issues");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "issues");
+
+            category = "one integer case and default value";
+            tokenExpression = "<token|1:resolved|not one>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not one");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "not one");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not one");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not one");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not one");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not one");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not one");
+
+            category = "one double case and default value";
+            tokenExpression = "<token|1.5:resolved|not one point five>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not one point five");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "not one point five");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not one point five");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not one point five");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not one point five");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not one point five");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not one point five");
+
+            category = "one string case and default value";
+            tokenExpression = "<token|some text:resolved|not some text>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not some text");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "not some text");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "not some text");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not some text");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not some text");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not some text");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not some text");
+
+            category = "one true case and default value";
+            tokenExpression = "<token|true:resolved|not true>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not true");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "not true");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "not true");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not true");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not true");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not true");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not true");
+
+            category = "one version case and default value";
+            tokenExpression = "<token|12.0.4:resolved|not version 12>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not version 12");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "not version 12");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "not version 12");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not version 12");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not version 12");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not version 12");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not version 12");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "resolved");
+
+            category = "one more than integer case and default value";
+            tokenExpression = "<token|>1:resolved|not more than>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not more than");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "not more than");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not more than");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not more than");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not more than");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not more than");
+
+            category = "one less than integer case and default value";
+            tokenExpression = "<token|<5:resolved|not less than>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not less than");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not less than");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not less than");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not less than");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not less than");
+
+            category = "two integer cases";
+            tokenExpression = "<token|0:resolved|1:not zero>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "not zero");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
+
+            category = "two double cases";
+            tokenExpression = "<token|9.9:not one point five|1.5:resolved>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
+
+            category = "two string cases";
+            tokenExpression = "<token|some text:resolved|other text:not some text>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
+
+            category = "one true case and one false case";
+            tokenExpression = "<token|true:resolved|false:not true>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not true");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
+
+            category = "two version cases";
+            tokenExpression = "<token|12.0.4:resolved|8.1.18:not version 12>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "resolved");
+
+            category = "one more than integer case and one integer case";
+            tokenExpression = "<token|>1:resolved|0:not more than 1>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not more than 1");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
+
+            category = "one less than integer case and one integer case";
+            tokenExpression = "<token|<5:resolved|5:not less than 5>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not less than 5");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "");
         }
 
-        public static IEnumerable<TestCaseData> WithOneIntegerCase
+        public static IEnumerable<TestCaseData> ValidExpressionsWithFourSegments()
         {
-            get
-            {
-                yield return new TestCaseData("<token|0:none>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token|0:none>", new { token = 0 }).Returns("none");
-                yield return new TestCaseData("<token|0:none>", new { token = 1 }).Returns("");
-                yield return new TestCaseData("<token|0:none>", new { token = 1.5 }).Returns("");
-                yield return new TestCaseData("<token|0:none>", new { token = 5 }).Returns("");
-                yield return new TestCaseData("<token|0:none>", new { token = "some text" }).Returns("");
-                yield return new TestCaseData("<token|0:none>", new { }).Returns("");
-            }
+            category = "two integer cases and default value";
+            tokenExpression = "<token|1:resolved one|5:resolved five|not either>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "resolved one");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "resolved five");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not either");
+
+            category = "two double cases and default value";
+            tokenExpression = "<token|1.5:resolved one point five|9.9:resolved nine point nine|not either>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved one point five");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not either");
+
+            category = "two string cases and default value";
+            tokenExpression = "<token|some text:resolved|other text: not some text|not either>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "resolved");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not either");
+
+            category = "one true case, one false case, and default value";
+            tokenExpression = "<token|true:resolved true|false:resolved false|not either>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "resolved true");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "resolved false");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not either");
+
+            category = "two version cases and default value";
+            tokenExpression = "<token|12.0.4:resolved|8.1.18:not version 12|not either>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "resolved");
+
+            category = "one more than integer case, one integer case, and default value";
+            tokenExpression = "<token|>1:resolved more than one|1:resolved one|not either>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "resolved one");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved more than one");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "resolved more than one");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not either");
+
+            category = "one less than integer case, one integer case, and default value";
+            tokenExpression = "<token|<5:resolved less than five|5:resolved five|not either>";
+
+            yield return GetValidTestCaseWhen(TokenValues.IsUndefined, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.IsNull, returns: "");
+            yield return GetValidTestCaseWhen(TokenValues.Is0, returns: "resolved less than five");
+            yield return GetValidTestCaseWhen(TokenValues.Is1, returns: "resolved less than five");
+            yield return GetValidTestCaseWhen(TokenValues.Is1_5, returns: "resolved less than five");
+            yield return GetValidTestCaseWhen(TokenValues.Is5, returns: "resolved five");
+            yield return GetValidTestCaseWhen(TokenValues.IsSome_Text, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsTrue, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsFalse, returns: "not either");
+            yield return GetValidTestCaseWhen(TokenValues.IsVersion, returns: "not either");
         }
 
-        public static IEnumerable<TestCaseData> WithOneIntegerCaseAndDefaultValue
+        public static IEnumerable<TestCaseData> InvalidExpressionsWithOneSegment()
         {
-            get
-            {
-                yield return new TestCaseData("<token|0:none|at least one>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token|0:none|at least one>", new { token = 0 }).Returns("none");
-                yield return new TestCaseData("<token|0:none|at least one>", new { token = 1 }).Returns("at least one");
-                yield return new TestCaseData("<token|0:none|at least one>", new { token = 1.5 }).Returns("at least one");
-                yield return new TestCaseData("<token|0:none|at least one>", new { token = 5 }).Returns("at least one");
-                yield return new TestCaseData("<token|0:none|at least one>", new { token = "some text" }).Returns("at least one");
-                yield return new TestCaseData("<token|0:none|at least one>", new { }).Returns("");
-            }
+            category = "empty";
+            tokenExpression = "<>";
+
+            yield return GetInvalidTestCaseWhen(TokenValues.IsUndefined, throws: typeof(ArgumentException));
+            yield return GetInvalidTestCaseWhen(TokenValues.IsNull, throws: typeof(ArgumentException));
+            yield return GetInvalidTestCaseWhen(TokenValues.Is1, throws: typeof(ArgumentException));
+            yield return GetInvalidTestCaseWhen(TokenValues.IsSome_Text, throws: typeof(ArgumentException));
+
+            category = "one segment and has a colon";
+            tokenExpression = "<token:resolved>";
+
+            yield return GetInvalidTestCaseWhen(TokenValues.IsUndefined, throws: typeof(FormatException));
+            yield return GetInvalidTestCaseWhen(TokenValues.IsNull, throws: typeof(FormatException));
+            yield return GetInvalidTestCaseWhen(TokenValues.Is1, throws: typeof(FormatException));
+            yield return GetInvalidTestCaseWhen(TokenValues.IsSome_Text, throws: typeof(FormatException));
         }
 
-        public static IEnumerable<TestCaseData> WithOneLessThanCase
+        private static TestCaseData GetValidTestCaseWhen(object tokenValues, string returns)
         {
-            get
-            {
-                var tokenExpression = "<token|<5:less than five>";
-                var returnsEmptyResult = string.Empty;
-                var returnsCase1Result = "less than five";
-
-                yield return GetTestCaseData(tokenExpression, TokenValueOptions.TokenIsNull, returnsEmptyResult);
-                yield return GetTestCaseData(tokenExpression, TokenValueOptions.TokenIs0, returnsCase1Result);
-                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, TokenValueOptions.TokenIs0, matchCase1Result);
-                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = 1 }, matchCase1Result);
-                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = 1.5 }, matchCase1Result);
-                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = 5 }, noMatch);
-                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = true }, noMatch);
-                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = false }, noMatch);
-                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { token = "some text" }, noMatch);
-                //yield return GetTestCaseData(nameof(WithOneLessThanCase), token, new { }, noMatch);
-            }
-        }
-
-        private static TestCaseData GetTestCaseData(string tokenExpression, object tokenValues, string resolved, [CallerMemberName] string category = "")
-        {
-
             return new TestCaseData(tokenExpression, tokenValues)
-                .Returns(resolved)
-                .SetName($"Token Expression: \"{tokenExpression}\" with \"{tokenValues}\" resolves to \"{resolved}\"")
-                .SetCategory(category);
+                .Returns(returns)
+                .SetName($"\"{tokenExpression}\" with {tokenValues} returns \"{returns}\"")
+                .SetCategory($"Token expression with {category}");
         }
 
-        public static IEnumerable<TestCaseData> WithOneLessThanCaseAndDefaultValue
+        private static TestCaseData GetInvalidTestCaseWhen(object tokenValues, Type throws)
         {
-            get
-            {
-                yield return new TestCaseData("<token|<5:0-4|had a value>", TokenValueOptions.TokenIsNull).Returns("");
-                yield return new TestCaseData("<token|<5:0-4|had a value>", TokenValueOptions.TokenIs0).Returns("0-4");
-                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = 1 }).Returns("0-4");
-                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = 1.5 }).Returns("0-4");
-                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = 5 }).Returns("had a value");
-                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = true }).Returns("had a value");
-                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = false }).Returns("had a value");
-                yield return new TestCaseData("<token|<5:0-4|had a value>", new { token = "some text" }).Returns("had a value");
-                yield return new TestCaseData("<token|<5:0-4|had a value>", new { }).Returns("");
-            }
+            return new TestCaseData(tokenExpression, tokenValues, throws)
+                .SetName($"\"{tokenExpression}\" with {tokenValues} throws \"{throws.Name}\"")
+                .SetCategory($"Token expression that is {category}");
         }
-
-        public static IEnumerable<TestCaseData> WithOneStringCase
-        {
-            get
-            {
-                yield return new TestCaseData("<token|some text:resolved>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token|some text:resolved>", new { token = 0 }).Returns("");
-                yield return new TestCaseData("<token|some text:resolved>", new { token = 1 }).Returns("");
-                yield return new TestCaseData("<token|some text:resolved>", new { token = 1.5 }).Returns("");
-                yield return new TestCaseData("<token|some text:resolved>", new { token = 5 }).Returns("");
-                yield return new TestCaseData("<token|some text:resolved>", new { token = "some text" }).Returns("resolved");
-                yield return new TestCaseData("<token|some text:resolved>", new { }).Returns("");
-            }
-        }
-
-        public static IEnumerable<TestCaseData> WithOneStringCaseAndDefaultValue
-        {
-            get
-            {
-                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = 0 }).Returns("resolved default");
-                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = 1 }).Returns("resolved default");
-                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = 1.5 }).Returns("resolved default");
-                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = 5 }).Returns("resolved default");
-                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { token = "some text" }).Returns("resolved");
-                yield return new TestCaseData("<token|some text:resolved|resolved default>", new { }).Returns("");
-            }
-        }
-
-        public static IEnumerable<TestCaseData> WithSimplePluralization
-        {
-            get
-            {
-                yield return new TestCaseData("<token|issue|issues>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token|issue|issues>", new { token = 0 }).Returns("issues");
-                yield return new TestCaseData("<token|issue|issues>", new { token = 1 }).Returns("issue");
-                yield return new TestCaseData("<token|issue|issues>", new { token = 1.5 }).Returns("issues");
-                yield return new TestCaseData("<token|issue|issues>", new { token = 5 }).Returns("issues");
-                yield return new TestCaseData("<token|issue|issues>", new { token = "some text" }).Returns("issues");
-                yield return new TestCaseData("<token|issue|issues>", new { }).Returns("");
-            }
-        }
-
-        public static IEnumerable<TestCaseData> WithTokenAndDefaultValue
-        {
-            get
-            {
-                yield return new TestCaseData("<token|found>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token|found>", new { token = 0 }).Returns("found");
-                yield return new TestCaseData("<token|found>", new { token = 1 }).Returns("found");
-                yield return new TestCaseData("<token|found>", new { token = 1.5 }).Returns("found");
-                yield return new TestCaseData("<token|found>", new { token = 5 }).Returns("found");
-                yield return new TestCaseData("<token|found>", new { token = "some text" }).Returns("found");
-                yield return new TestCaseData("<token|found>", new { token = true }).Returns("found");
-                yield return new TestCaseData("<token|found>", new { }).Returns("");
-
-            }
-        }
-
-        public static IEnumerable<TestCaseData> WithTokenOnly
-        {
-            get
-            {
-                yield return new TestCaseData("<token>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token>", new { token = 0 }).Returns("0");
-                yield return new TestCaseData("<token>", new { token = 1 }).Returns("1");
-                yield return new TestCaseData("<token>", new { token = 1.5 }).Returns("1.5");
-                yield return new TestCaseData("<token>", new { token = 5 }).Returns("5");
-                yield return new TestCaseData("<token>", new { token = "some text" }).Returns("some text");
-                yield return new TestCaseData("<token>", new { }).Returns("");
-            }
-        }
-
-        public static IEnumerable<TestCaseData> WithTwoIntegerCasesAndDefaultValue
-        {
-            get
-            {
-                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = default(string) }).Returns("");
-                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = 0 }).Returns("none");
-                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = 1 }).Returns("one");
-                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = 1.5 }).Returns("some");
-                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = 5 }).Returns("some");
-                yield return new TestCaseData("<token|0:none|1:one|some>", new { token = "some text" }).Returns("some");
-                yield return new TestCaseData("<token|0:none|1:one|some>", new { }).Returns("");
-            }
-        }
-    }
-
-    public class TokenValueOptions
-    {
-        public static object TokenIsNull => new { token = default(string) };
-        public static object TokenIs0 => new { token = 0 };
     }
 }
