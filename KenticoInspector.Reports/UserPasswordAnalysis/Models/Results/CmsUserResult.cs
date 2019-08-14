@@ -2,20 +2,14 @@
 {
     public class CmsUserResult : CmsUser
     {
-        public CmsUserResult(
-            CmsUser user)
+        public CmsUserResult(CmsUser user)
         {
             UserID = user.UserID;
             UserName = user.UserName;
 
-            if (string.IsNullOrEmpty(
-                user.FullName))
+            if (string.IsNullOrEmpty(user.FullName))
             {
-                FullName = string.Join(
-                    ' ',
-                    user.FirstName,
-                    user.MiddleName,
-                    user.LastName);
+                FullName = $"{user.FirstName} {user.MiddleName} {user.LastName}";
             }
             else
             {

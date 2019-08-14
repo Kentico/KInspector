@@ -7,8 +7,7 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis.Models.Data.Results
         [JsonProperty(Order = 1)]
         public new string UserPasswordFormat { get; set; }
 
-        public CmsUserResultWithPasswordFormat(
-            CmsUser user)
+        public CmsUserResultWithPasswordFormat(CmsUser user)
             : base(user)
         {
             UserPasswordFormat = user.UserPasswordFormat;

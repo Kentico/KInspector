@@ -17,9 +17,7 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(
-            IDatabaseService databaseService,
-            IReportMetadataService reportMetadataService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService)
             : base(reportMetadataService)
         {
             this.databaseService = databaseService;
@@ -42,37 +40,29 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
         {
             var users = databaseService.ExecuteSqlFromFile<CmsUser>(
                 Scripts.GetEnabledAndNotExternalUsers,
-                new { ExcludedUserNames });
+                new { ExcludedUserNames }
+                );
 
-            var usersWithEmptyPasswords = GetUsersWithEmptyPasswords(
-                users);
+            var usersWithEmptyPasswords = GetUsersWithEmptyPasswords(users);
 
-            var usersWithPlaintextPasswords = GetUsersWithPlaintextPasswords(
-                users);
+            var usersWithPlaintextPasswords = GetUsersWithPlaintextPasswords(users);
 
-            return CompileResults(
-                usersWithEmptyPasswords,
-                usersWithPlaintextPasswords);
+            return CompileResults(usersWithEmptyPasswords, usersWithPlaintextPasswords);
         }
 
         private static IEnumerable<CmsUserResultWithPasswordFormat> GetUsersWithEmptyPasswords(
             IEnumerable<CmsUser> users)
         {
             return users
-                .Where(user => string.IsNullOrEmpty(
-                    user.UserPassword))
-                .Select(user => new CmsUserResultWithPasswordFormat(
-                    user));
+                .Where(user => string.IsNullOrEmpty(user.UserPassword))
+                .Select(user => new CmsUserResultWithPasswordFormat(user));
         }
 
-        private static IEnumerable<CmsUserResult> GetUsersWithPlaintextPasswords(
-            IEnumerable<CmsUser> users)
+        private static IEnumerable<CmsUserResult> GetUsersWithPlaintextPasswords(IEnumerable<CmsUser> users)
         {
             return users
-                .Where(user => string.IsNullOrEmpty(
-                    user.UserPasswordFormat))
-                .Select(user => new CmsUserResult(
-                    user));
+                .Where(user => string.IsNullOrEmpty(user.UserPasswordFormat))
+                .Select(user => new CmsUserResult(user));
         }
 
         private ReportResults CompileResults(
@@ -99,23 +89,21 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
             var emptyCount = IfAnyAddTableResult(
                 errorReportResults.Data,
                 usersWithEmptyPasswords,
-                Metadata.Terms.TableTitles.EmptyPasswords);
+                Metadata.Terms.TableTitles.EmptyPasswords
+                );
 
             var plaintextCount = IfAnyAddTableResult(
                 errorReportResults.Data,
                 usersWithPlaintextPasswords,
-                Metadata.Terms.TableTitles.PlaintextPasswords);
+                Metadata.Terms.TableTitles.PlaintextPasswords
+                );
 
-            errorReportResults.Summary = Metadata.Terms.ErrorSummary.With(
-                new { emptyCount, plaintextCount });
+            errorReportResults.Summary = Metadata.Terms.ErrorSummary.With(new { emptyCount, plaintextCount });
 
             return errorReportResults;
         }
 
-        private static int IfAnyAddTableResult<T>(
-            dynamic data,
-            IEnumerable<T> results,
-            Term tableNameTerm)
+        private static int IfAnyAddTableResult<T>(dynamic data, IEnumerable<T> results, Term tableNameTerm)
         {
             if (results.Any())
             {
@@ -125,8 +113,7 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
                     Rows = results
                 };
 
-                data.Add(
-                    tableResult);
+                data.Add(tableResult);
             }
 
             return results.Count();
