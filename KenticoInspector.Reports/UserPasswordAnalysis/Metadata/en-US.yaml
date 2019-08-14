@@ -9,7 +9,7 @@
     
     Since Kentico 10, the recommended and most secure password format is `PBKDF2`.
 terms:
-  errorSummary: Found <emptyCount> users with empty passwords and <plaintextCount> with plaintext passwords.
+  errorSummary: Found <emptyCount> <emptyCount:user|users> with an empty password and <plaintextCount> <plaintextCount:user|users> with a plaintext password.
   goodSummary: Found no users with empty or plaintext passwords.
   tableTitles:
     plaintextPasswords: Users with plaintext passwords
