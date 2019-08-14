@@ -56,91 +56,67 @@ namespace KenticoInspector.Reports.Tests
             int majorVersion)
             : base(majorVersion)
         {
-            mockReport = new Report(
-                _mockDatabaseService.Object,
-                _mockReportMetadataService.Object);
+            mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
         }
 
         [Test]
-        public void Should_ReturnGoodStatusAndGoodSummary_WhenUserPasswordsHaveNoIssues()
+        public void Should_ReturnGoodStatusAndGoodSummary_When_UserPasswordsHaveNoIssues()
         {
             // Arrange
-            ArrangeDatabaseService(
-                CmsUserWithoutIssues);
+            ArrangeDatabaseService(CmsUserWithoutIssues);
 
             // Act
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(
-                results.Status,
-                Is.EqualTo(ReportResultsStatus.Good));
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
 
-            Assert.That(
-                results.Summary,
-                Is.EqualTo(mockReport.Metadata.Terms.GoodSummary.ToString()));
+            Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.GoodSummary.ToString()));
         }
 
         [Test]
-        public void Should_ReturnErrorStatusAndErrorSummary_WhenUserPasswordsHaveTwoIssues()
+        public void Should_ReturnErrorStatusAndErrorSummary_When_UserPasswordsHaveTwoIssues()
         {
             // Arrange
-            ArrangeDatabaseService(
-                CmsUserWithTwoIssues);
+            ArrangeDatabaseService(CmsUserWithTwoIssues);
 
             // Act
             var results = mockReport.GetResults();
             var resultsData = results.Data as List<TableResult<CmsUserResult>>;
+            var firstResultRowCount = resultsData[0].Rows.Count();
+            var secondResultRowCount = resultsData[1].Rows.Count();
 
             // Assert
-            Assert.That(
-                results.Status,
-                Is.EqualTo(ReportResultsStatus.Error));
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
 
-            Assert.That(
-                results.Summary,
-                Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
+            Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
 
-            Assert.That(
-                resultsData.Count,
-                Is.EqualTo(2));
+            Assert.That(resultsData.Count, Is.EqualTo(2));
 
-            Assert.That(
-                resultsData[0].Rows.Count(),
-                Is.EqualTo(1));
+            Assert.That(firstResultRowCount, Is.EqualTo(1));
 
-            Assert.That(
-                resultsData[1].Rows.Count(),
-                Is.EqualTo(1));
+            Assert.That(secondResultRowCount, Is.EqualTo(1));
         }
 
         [Test]
-        public void Should_ReturnErrorStatusAndErrorSummary_WhenUserPasswordsHaveOneIssue()
+        public void Should_ReturnErrorStatusAndErrorSummary_When_UserPasswordsHaveOneIssue()
         {
             // Arrange
-            ArrangeDatabaseService(
-                CmsUserWithOneIssue);
+            ArrangeDatabaseService(CmsUserWithOneIssue);
 
             // Act
             var results = mockReport.GetResults();
             var resultsData = results.Data as List<TableResult<CmsUserResult>>;
+            var firstResultRowCount = resultsData[0].Rows.Count();
 
             // Assert
-            Assert.That(
-                results.Status,
-                Is.EqualTo(ReportResultsStatus.Error));
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
 
-            Assert.That(
-                results.Summary,
-                Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
+            Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
 
-            Assert.That(
-                resultsData.Count,
-                Is.EqualTo(1));
+            Assert.That(resultsData.Count, Is.EqualTo(1));
 
-            Assert.That(
-                resultsData[0].Rows.Count(),
-                Is.EqualTo(1));
+            Assert.That(firstResultRowCount, Is.EqualTo(1));
         }
 
         private void ArrangeDatabaseService(
@@ -150,7 +126,8 @@ namespace KenticoInspector.Reports.Tests
                 Scripts.GetEnabledAndNotExternalUsers,
                 nameof(Report.ExcludedUserNames),
                 Report.ExcludedUserNames,
-                cmsUserTable);
+                cmsUserTable
+                );
         }
     }
 }
