@@ -3,17 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>7.1</LangVersion>
-    <Version/>
-    <PackageVersion/>
-    <AssemblyVersion/>
-    <FileVersion/>
-    <InformationalVersion/>
+    <Version />
+    <PackageVersion />
+    <AssemblyVersion />
+    <FileVersion />
+    <InformationalVersion />
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
   </ItemGroup>
 
   <ItemGroup>

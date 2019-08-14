@@ -4,6 +4,8 @@ namespace KenticoInspector.Core.Services.Interfaces
 {
     public interface IReportMetadataService : IService
     {
+        string DefaultCultureName { get; }
+
         string CurrentCultureName { get; }
 
         ReportMetadata<TTerms> GetReportMetadata<TTerms>(string reportCodename) where TTerms : new();
