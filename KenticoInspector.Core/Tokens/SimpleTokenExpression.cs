@@ -30,9 +30,14 @@ namespace KenticoInspector.Core.Tokens
                 }
             }
 
+            if (token == null)
+            {
+                return string.Empty;
+            }
+
             if (expression.token == expression.defaultValue)
             {
-                return token?.ToString();
+                return token.ToString();
             }
 
             return expression.defaultValue ?? string.Empty;
@@ -102,38 +107,104 @@ namespace KenticoInspector.Core.Tokens
             return (pair.first.Substring(1), operation, pair.second);
         }
 
-        public bool TryResolveToken(object tokenValue, string expressionCaseValue, char operation, string expressionCaseResult, out string resolvedValue)
+        public bool TryResolveToken(object token, string expressionCaseValue, char operation, string expressionCaseResult, out string resolvedValue)
         {
             var resolved = false;
+            resolvedValue = null;
 
-            var isTokenValueAnInteger = int.TryParse(tokenValue.ToString(), out int integerTokenValue);
-            if (isTokenValueAnInteger)
+            if (token == null)
             {
-                var isExpressionCaseValueAnInteger = int.TryParse(expressionCaseValue, out int integerExpressionCaseValue);
-                if (isExpressionCaseValueAnInteger)
+                return resolved;
+            }
+
+            switch (token)
+            {
+                case int intToken:
+                    resolved = TryResolveIntToken(intToken, expressionCaseValue, operation);
+                    break;
+
+                case double doubleToken:
+                    resolved = TryResolveDoubleToken(doubleToken, expressionCaseValue, operation);
+                    break;
+
+                case bool boolToken:
+                    resolved = TryResolveBoolToken(boolToken, expressionCaseValue);
+                    break;
+
+                default:
+                    resolved = TryResolveStringToken(token.ToString(), expressionCaseValue);
+                    break;
+            }
+
+            if (resolved)
+            {
+                resolvedValue = expressionCaseResult;
+            }
+
+            return resolved;
+        }
+
+        private static bool TryResolveIntToken(int token, string expressionCaseValue, char operation)
+        {
+            var expressionCaseValueIsInt = int.TryParse(expressionCaseValue, out int intExpressionCaseValue);
+
+            if (expressionCaseValueIsInt)
+            {
+                if (operation == Constants.Equals && token == intExpressionCaseValue
+                    || operation == Constants.LessThan && token < intExpressionCaseValue
+                    || operation == Constants.MoreThan && token > intExpressionCaseValue)
                 {
-                    switch (integerTokenValue)
-                    {
-                        case int intTokenValueEquals when intTokenValueEquals == integerExpressionCaseValue:
-                        case int intTokenValueLessThan when operation == Constants.LessThan && intTokenValueLessThan < integerExpressionCaseValue:
-                        case int intTokenValueMoreThan when operation == Constants.MoreThan && intTokenValueMoreThan > integerExpressionCaseValue:
-                            resolved = true;
-                            break;
-                    }
-                } else if (integerTokenValue == 1)
+                    return true;
+                }
+            }
+            else if (string.IsNullOrEmpty(expressionCaseValue) && token == 1)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryResolveDoubleToken(double token, string expressionCaseValue, char operation)
+        {
+            var expressionCaseValueIsDouble = double.TryParse(expressionCaseValue, out double doubleExpressionCaseValue);
+
+            if (expressionCaseValueIsDouble)
+            {
+                if (token == doubleExpressionCaseValue
+                    || operation == Constants.LessThan && token < doubleExpressionCaseValue
+                    || operation == Constants.MoreThan && token > doubleExpressionCaseValue)
                 {
-                    resolved = true;
+                    return true;
                 }
             }
 
-            var tokenMatchedExpression = tokenValue?.ToString() == expressionCaseValue;
-            if (tokenMatchedExpression)
+            return false;
+        }
+
+        private static bool TryResolveBoolToken(bool token, string expressionCaseValue)
+        {
+            var expressionCaseValueIsBool = bool.TryParse(expressionCaseValue, out bool boolExpressionCaseValue);
+
+            if (expressionCaseValueIsBool)
             {
-                resolved = true;
+                if (token == boolExpressionCaseValue)
+                {
+                    return true;
+                }
             }
 
-            resolvedValue = resolved ? expressionCaseResult : null;
-            return resolved;
+            return false;
+        }
+
+        private static bool TryResolveStringToken(string token, string expressionCaseValue)
+        {
+            if (token == expressionCaseValue)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
