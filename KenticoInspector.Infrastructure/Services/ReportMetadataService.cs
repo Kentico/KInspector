@@ -16,10 +16,10 @@ namespace KenticoInspector.Core.Helpers
 
         public string CurrentCultureName => Thread.CurrentThread.CurrentCulture.Name;
 
-        public ReportMetadataService(IInstanceService instanceService)
+        public ReportMetadata<T> GetReportMetadata<T>(string reportCodename) where T : new()
         {
             var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\";
-            
+
             var reportMetadata = GetReportMetadataInternal<T>(metadataDirectory, CurrentCultureName);
 
             var isCurrentCultureDefaultCulture = CurrentCultureName == DefaultCultureName;
@@ -37,8 +37,8 @@ namespace KenticoInspector.Core.Helpers
         {
             var reportMetadataPath = $"{metadataDirectory}{cultureName}.yaml";
             var reportMetadataPathExists = File.Exists(reportMetadataPath);
-            return reportMetadataPathExists 
-                ? DeserializeYaml<ReportMetadata<T>>(reportMetadataPath) 
+            return reportMetadataPathExists
+                ? DeserializeYaml<ReportMetadata<T>>(reportMetadataPath)
                 : new ReportMetadata<T>();
         }
 
