@@ -144,25 +144,9 @@ namespace KenticoInspector.Core.Tokens
             return resolved;
         }
 
-        private static bool TryResolveIntToken(int token, string expressionCaseValue, char operation)
+        private bool TryResolveIntToken(int token, string expressionCaseValue, char operation)
         {
-            var expressionCaseValueIsInt = int.TryParse(expressionCaseValue, out int intExpressionCaseValue);
-
-            if (expressionCaseValueIsInt)
-            {
-                if (operation == Constants.Equals && token == intExpressionCaseValue
-                    || operation == Constants.LessThan && token < intExpressionCaseValue
-                    || operation == Constants.MoreThan && token > intExpressionCaseValue)
-                {
-                    return true;
-                }
-            }
-            else if (string.IsNullOrEmpty(expressionCaseValue) && token == 1)
-            {
-                return true;
-            }
-
-            return false;
+            return TryResolveDoubleToken(token, expressionCaseValue, operation);
         }
 
         private static bool TryResolveDoubleToken(double token, string expressionCaseValue, char operation)
@@ -171,12 +155,16 @@ namespace KenticoInspector.Core.Tokens
 
             if (expressionCaseValueIsDouble)
             {
-                if (token == doubleExpressionCaseValue
+                if (operation == Constants.Equals && token == doubleExpressionCaseValue
                     || operation == Constants.LessThan && token < doubleExpressionCaseValue
                     || operation == Constants.MoreThan && token > doubleExpressionCaseValue)
                 {
                     return true;
                 }
+            }
+            else if (string.IsNullOrEmpty(expressionCaseValue) && token == 1)
+            {
+                return true;
             }
 
             return false;
