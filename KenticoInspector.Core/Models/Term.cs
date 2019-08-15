@@ -4,13 +4,13 @@ namespace KenticoInspector.Core.Models
 {
     public class Term
     {
-        private string RawMarkdown { get; set; }
+        private string Markdown { get; set; }
 
         private object TokenValues { get; set; }
 
         private Term(string value)
         {
-            RawMarkdown = value;
+            Markdown = value;
         }
 
         public static implicit operator Term(string value)
@@ -27,10 +27,10 @@ namespace KenticoInspector.Core.Models
         {
             if (TokenValues != null)
             {
-                return TokenExpressionResolver.ResolveTokenExpressions(RawMarkdown, TokenValues);
+                return TokenExpressionResolver.ResolveTokenExpressions(Markdown, TokenValues);
             }
 
-            return RawMarkdown;
+            return Markdown;
         }
 
         /// <summary>

@@ -8,6 +8,6 @@ namespace KenticoInspector.Core.Services.Interfaces
 
         string CurrentCultureName { get; }
 
-        ReportMetadata<TTerms> GetReportMetadata<TTerms>(string reportCodename) where TTerms : new();
+        ReportMetadata<T> GetReportMetadata<T>(string reportCodename) where T : new();
     }
 }

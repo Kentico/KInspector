@@ -19,7 +19,6 @@ namespace KenticoInspector.Core.Helpers
         public ReportMetadata<T> GetReportMetadata<T>(string reportCodename) where T : new()
         {
             var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\";
-
             var reportMetadata = GetReportMetadataInternal<T>(metadataDirectory, CurrentCultureName);
 
             var isCurrentCultureDefaultCulture = CurrentCultureName == DefaultCultureName;
@@ -31,7 +30,6 @@ namespace KenticoInspector.Core.Helpers
 
             return reportMetadata;
         }
-
 
         private ReportMetadata<T> GetReportMetadataInternal<T>(string metadataDirectory, string cultureName) where T : new()
         {

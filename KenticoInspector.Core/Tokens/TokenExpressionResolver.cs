@@ -11,53 +11,51 @@ namespace KenticoInspector.Core.Tokens
     {
         private static IEnumerable<(Type tokenExpressionType, string pattern)> TokenExpressionTypePatterns { get; set; }
 
-        public static void RegisterTokenExpressions(Assembly assemblies)
+        public static void RegisterTokenExpressions(Assembly assembly)
         {
-            TokenExpressionTypePatterns = assemblies.GetTypes()
-                                            .Where(TypeIsMarkedWithTokenExpressionAttribute)
-                                            .Select(AsTokenExpressionTypePattern);
-        }
+            TokenExpressionTypePatterns = assembly
+                .GetTypes()
+                .Where(TypeIsMarkedWithTokenExpressionAttribute)
+                .Select(AsTokenExpressionTypePattern);
 
-        private static (Type type, string) AsTokenExpressionTypePattern(Type type)
-        {
-            var pattern = string.Join(Constants.Pipe, GetTokenPatternsFromAttribute(type));
-
-            return (type, pattern);
-        }
-
-        private static bool TypeIsMarkedWithTokenExpressionAttribute(Type type)
-        {
-            return type.IsDefined(typeof(TokenExpressionAttribute), false);
-        }
-
-        private static string[] GetTokenPatternsFromAttribute(Type type)
-        {
-            var pattern = type
-                .GetCustomAttributes<TokenExpressionAttribute>(false)
-                .First()
-                .Pattern;
-
-            return new[]
+            bool TypeIsMarkedWithTokenExpressionAttribute(Type type)
             {
-                $"([{Constants.Space}]{pattern}[{Constants.Space}{Constants.Period}{Constants.Colon}])",
-                $"({pattern}[{Constants.Space}{Constants.Period}{Constants.Colon}])",
-                $"([{Constants.Space}]{pattern})",
-                $"(^{pattern}$)"
-            };
+                return type.IsDefined(typeof(TokenExpressionAttribute), false);
+            }
+
+            (Type type, string) AsTokenExpressionTypePattern(Type type)
+            {
+                var pattern = type
+                    .GetCustomAttributes<TokenExpressionAttribute>(false)
+                    .First()
+                    .Pattern;
+
+                var patternVariants = new[]
+                {
+                    $"([{Constants.Space}]{pattern}[{Constants.Space}{Constants.Period}{Constants.Colon}])",
+                    $"({pattern}[{Constants.Space}{Constants.Period}{Constants.Colon}])",
+                    $"([{Constants.Space}]{pattern})",
+                    $"(^{pattern}$)"
+                };
+
+                var joinedPattern = string.Join(Constants.Pipe, patternVariants);
+
+                return (type, joinedPattern);
+            }
         }
 
         internal static string ResolveTokenExpressions(string term, object tokenValues)
         {
             var allTokenExpressionPatterns = TokenExpressionTypePatterns
-                                                .Select(tokenExpressionTypePattern => tokenExpressionTypePattern.pattern)
-                                                .Where(pattern => !string.IsNullOrEmpty(pattern));
+                .Select(tokenExpressionTypePattern => tokenExpressionTypePattern.pattern)
+                .Where(pattern => !string.IsNullOrEmpty(pattern));
 
             var joinedTokenExpressionPatterns = string.Join(Constants.Pipe, allTokenExpressionPatterns);
 
             var tokenDictionary = GetValuesDictionary(tokenValues);
 
             var resolvedExpressions = Regex.Split(term, joinedTokenExpressionPatterns)
-                                        .Select(tokenExpression => ResolveTokenExpression(tokenExpression, tokenDictionary));
+                .Select(tokenExpression => ResolveTokenExpression(tokenExpression, tokenDictionary));
 
             return string.Join(string.Empty, resolvedExpressions);
         }
@@ -79,7 +77,7 @@ namespace KenticoInspector.Core.Tokens
         private static bool PropertyIsNotIndexableAndHasGetter(PropertyInfo prop)
         {
             return prop.GetIndexParameters().Length == 0
-                    && prop.GetMethod != null;
+                && prop.GetMethod != null;
         }
 
         private static string ResolveTokenExpression(string tokenExpression, IDictionary<string, object> tokenDictionary)
