@@ -1,15 +1,17 @@
-using KenticoInspector.Core.Models;
-using KenticoInspector.Core.Tokens;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+
+using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Tokens;
+
+using NUnit.Framework;
 
 namespace KenticoInspector.Core.Tests
 {
     [TestFixture]
-    public class TermTests
+    public class SimpleTokenExpressionTests
     {
-        public TermTests()
+        public SimpleTokenExpressionTests()
         {
             TokenExpressionResolver.RegisterTokenExpressions(typeof(Term).Assembly);
         }
