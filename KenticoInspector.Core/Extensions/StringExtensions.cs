@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 
 namespace KenticoInspector.Core.Extensions
 {
@@ -8,16 +8,14 @@ namespace KenticoInspector.Core.Extensions
         {
             var index = source.IndexOf(splitChar);
 
-            var splitString = source.Split(splitChar);
-
-            switch (splitString.Length)
+            if (index < 0)
             {
-                case 1:
-                    return (source, null);
-
-                default:
-                    return (source.Substring(0, index), source.Substring(index + 1, source.Length - index - 1));
+                return (source, null);
             }
+
+            var charSpan = source.AsSpan();
+
+            return (new string(charSpan.Slice(0, index)), new string(charSpan.Slice(index + 1)));
         }
     }
 }
