@@ -4,10 +4,20 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis.Models
 {
     public class Terms
     {
+        public Summaries Summaries { get; set; }
+
+        public TableTitles TableTitles { get; set; }
+    }
+
+    public class Summaries
+    {
+        public Term Good { get; set; }
+
+        public Term Information { get; set; }
+    }
+
+    public class TableTitles
+    {
         public Term ApplicationRestartEvents { get; set; }
-        public Term CountEndEvent { get; set; }
-        public Term CountStartEvent { get; set; }
-        public Term CountTotalEvent { get; set; }
-        public Term SpanningEarliestLatest { get; set; }
     }
 }

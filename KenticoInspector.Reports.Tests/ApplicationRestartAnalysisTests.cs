@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
+
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.ApplicationRestartAnalysis;
 using KenticoInspector.Reports.ApplicationRestartAnalysis.Models;
+using KenticoInspector.Reports.ApplicationRestartAnalysis.Models.Data;
+
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -14,74 +17,60 @@ namespace KenticoInspector.Reports.Tests
     {
         private Report _mockReport;
 
+        private IEnumerable<CmsEventLog> CmsEventsWithoutStartAndEndCodes => new List<CmsEventLog>();
+
+        private IEnumerable<CmsEventLog> CmsEventsWithStartAndEndCodes => new List<CmsEventLog>
+        {
+            new CmsEventLog
+            {
+                EventCode = "STARTAPP",
+                EventTime = DateTime.Now.AddHours(-1),
+                EventMachineName = "Server-01"
+            },
+
+            new CmsEventLog
+            {
+                EventCode = "ENDAPP",
+                EventTime = DateTime.Now.AddHours(-1).AddMinutes(-1),
+                EventMachineName = "Server-01"
+            }
+        };
+
         public ApplicationRestartAnalysisTests(int majorVersion) : base(majorVersion)
         {
             _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
         }
 
-        [Test]
-        public void Should_ReturnEmptyResult_When_DatabaseHasNoEvents()
+        [TestCase(Category = "No events", TestName = "Database without events produces a good result")]
+        public void Should_ReturnGoodResult_When_DatabaseWithoutEvents()
         {
             // Arrange
-            var applicationRestartEvents = new List<ApplicationRestartEvent>();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.ApplicationRestartEvents))
-                .Returns(applicationRestartEvents);
+                .Setup(p => p.ExecuteSqlFromFile<CmsEventLog>(Scripts.GetCmsEventLogsWithStartOrEndCode))
+                .Returns(CmsEventsWithoutStartAndEndCodes);
 
             // Act
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
         }
 
-        [Test]
-        public void Should_ReturnResult_When_DatabaseHasEvents()
+        [TestCase(Category = "One restart event", TestName = "Database with events produces an information result and lists two events")]
+        public void Should_ReturnResult_When_DatabaseWithRestartEvents()
         {
             // Arrange
-            var applicationRestartEvents = new List<ApplicationRestartEvent>();
-
-            applicationRestartEvents.Add(new ApplicationRestartEvent
-            {
-                EventCode = "STARTAPP",
-                EventTime = DateTime.Now.AddHours(-1),
-                EventMachineName = "Server-01"
-            });
-
-            applicationRestartEvents.Add(new ApplicationRestartEvent
-            {
-                EventCode = "ENDAPP",
-                EventTime = DateTime.Now.AddHours(-1).AddMinutes(-1),
-                EventMachineName = "Server-01"
-            });
-
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.ApplicationRestartEvents))
-                .Returns(applicationRestartEvents);
+                .Setup(p => p.ExecuteSqlFromFile<CmsEventLog>(Scripts.GetCmsEventLogsWithStartOrEndCode))
+                .Returns(CmsEventsWithStartAndEndCodes);
 
             // Act
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.Rows.Count == 2);
-            Assert.That(results.Status == ReportResultsStatus.Information);
-        }
-
-        [Test]
-        public void Should_ReturnTableResultType()
-        {
-            // Arrange
-            var applicationRestartEvents = new List<ApplicationRestartEvent>();
-            _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.ApplicationRestartEvents))
-                .Returns(applicationRestartEvents);
-
-            // Act
-            var results = _mockReport.GetResults();
-
-            // Assert
-            Assert.That(results.Type == ReportResultsType.Table);
+            Assert.That(results.Type, Is.EqualTo(ReportResultsType.Table));
+            Assert.That(results.Data.Rows.Count, Is.EqualTo(2));
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Information));
         }
     }
 }
