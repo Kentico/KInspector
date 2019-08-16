@@ -5,7 +5,7 @@ namespace KenticoInspector.Core.Helpers
 {
     public class DirectoryHelper
     {
-        private const string FilePrefix = "file:\\";
+        private const string filePrefix = "file:\\";
 
         /// <summary>
         /// Gets the executing directory of the application.
@@ -17,7 +17,7 @@ namespace KenticoInspector.Core.Helpers
 
             var assemblyDirectory = Path.GetDirectoryName(assemblyPath);
 
-            return assemblyDirectory.Substring(FilePrefix.Length);
+            return assemblyDirectory.Substring(filePrefix.Length);
         }
     }
 }

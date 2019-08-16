@@ -1,7 +1,9 @@
-﻿using KenticoInspector.Core.Constants;
+﻿using System.Dynamic;
+
+using KenticoInspector.Core.Constants;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.Dynamic;
 
 namespace KenticoInspector.Core.Models
 {
