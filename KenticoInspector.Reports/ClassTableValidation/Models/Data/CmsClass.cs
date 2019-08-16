@@ -1,7 +1,9 @@
-﻿namespace KenticoInspector.Reports.ClassTableValidation.Models
+﻿namespace KenticoInspector.Reports.ClassTableValidation.Models.Data
 {
-    public class ClassWithNoTable
+    public class CmsClass
     {
+        public int ClassID { get; set; }
+
         public string ClassDisplayName { get; set; }
 
         public string ClassName { get; set; }

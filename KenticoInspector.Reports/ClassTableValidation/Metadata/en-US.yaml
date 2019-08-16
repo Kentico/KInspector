@@ -1,14 +1,16 @@
 ﻿details:
   name: Class/table validation
-  shortDescription: Validates that Kentico classes and Database tables are properly connected.
+  shortDescription: Validates that Kentico system classes and Database tables are properly connected.
   longDescription: |
-    Compares Kentico Classes against tables in database, and displays non-matching entries in:
-      * Tables without Class
+    Displays non-matching entries in:
+      * Tables without class
       * Classes without specified table
-      * Missing Class tables.
+      * Missing class tables
     Excludes those classes which are not meant to have a table.
 terms:
-  countIssueFound: <count> <count:issue|issues> found.
-  databaseTablesWithMissingKenticoClasses: Database tables with missing Kentico classes
-  kenticoClassesWithMissingDatabaseTables: Kentico classes with missing database tables
-  noIssuesFound: No issues found.
+  summaries:
+    error: <totalErrors> <totalErrors:issue|issues> found.
+    good: No issues found.
+  tableTitles:
+    databaseTablesWithMissingKenticoClasses: Database tables with missing Kentico classes
+    kenticoClassesWithMissingDatabaseTables: Kentico classes with missing database tables
