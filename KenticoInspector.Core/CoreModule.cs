@@ -1,7 +1,9 @@
-﻿using Autofac;
+﻿using System.Reflection;
+
+using Autofac;
+
 using KenticoInspector.Core.Repositories.Interfaces;
 using KenticoInspector.Core.Services.Interfaces;
-using System.Reflection;
 
 namespace KenticoInspector.Core
 {

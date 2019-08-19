@@ -1,9 +1,9 @@
-﻿using KenticoInspector.Core.Models;
+﻿using System;
+using System.Collections.Generic;
+
+using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
 using KenticoInspector.Core.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace KenticoInspector.Infrastructure.Services
 {
@@ -12,14 +12,20 @@ namespace KenticoInspector.Infrastructure.Services
         private readonly IInstanceRepository _instanceRepository;
         private readonly ISiteRepository _siteRepository;
         private readonly IVersionRepository _versionRepository;
+        private readonly IDatabaseService _databaseService;
 
         public Instance CurrentInstance { get; private set; }
 
-        public InstanceService(IInstanceRepository instanceRepository, IVersionRepository versionRepository, ISiteRepository siteRepository)
+        public InstanceService(
+            IInstanceRepository instanceRepository,
+            IVersionRepository versionRepository,
+            ISiteRepository siteRepository,
+            IDatabaseService databaseService)
         {
             _instanceRepository = instanceRepository;
             _versionRepository = versionRepository;
             _siteRepository = siteRepository;
+            _databaseService = databaseService;
         }
 
         public bool DeleteInstance(Guid instanceGuid)
@@ -42,17 +48,20 @@ namespace KenticoInspector.Infrastructure.Services
         public InstanceDetails GetInstanceDetails(Guid instanceGuid)
         {
             var instance = _instanceRepository.GetInstance(instanceGuid);
+
             return GetInstanceDetails(instance);
         }
 
         public InstanceDetails GetInstanceDetails(Instance instance)
         {
+            _databaseService.Configure(instance.DatabaseSettings);
+
             return new InstanceDetails
             {
                 Guid = instance.Guid,
                 AdministrationVersion = _versionRepository.GetKenticoAdministrationVersion(instance),
                 DatabaseVersion = _versionRepository.GetKenticoDatabaseVersion(instance),
-                Sites = _siteRepository.GetSites(instance).ToList()
+                Sites = _siteRepository.GetSites(instance)
             };
         }
 

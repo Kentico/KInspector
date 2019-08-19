@@ -1,19 +1,31 @@
-﻿using Dapper;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Dapper;
+
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
-using System;
-using System.Diagnostics;
-using System.IO;
+using KenticoInspector.Core.Services.Interfaces;
 
 namespace KenticoInspector.Infrastructure.Services
 {
     public class VersionRepository : IVersionRepository
     {
+        private readonly IDatabaseService databaseService;
+
+        private static readonly string getCmsSettingsPath = @"Scripts/GetCmsSettings.sql";
+
         private const string _administrationDllToCheck = "CMS.DataEngine.dll";
         private const string _relativeAdministrationDllPath = "bin";
         private const string _relativeHotfixFileFolderPath = "App_Data\\Install";
         private const string _hotfixFile = "Hotfix.txt";
+
+        public VersionRepository(IDatabaseService databaseService)
+        {
+            this.databaseService = databaseService;
+        }
 
         public Version GetKenticoAdministrationVersion(Instance instance)
         {
@@ -28,12 +40,14 @@ namespace KenticoInspector.Infrastructure.Services
             }
 
             var binDirectory = Path.Combine(rootPath, _relativeAdministrationDllPath);
+
             if (!Directory.Exists(binDirectory))
             {
                 return null;
             }
 
             var dllFileToCheck = Path.Combine(binDirectory, _administrationDllToCheck);
+
             if (!File.Exists(dllFileToCheck))
             {
                 return null;
@@ -42,10 +56,13 @@ namespace KenticoInspector.Infrastructure.Services
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(dllFileToCheck);
 
             var hotfix = "0";
+
             var hotfixDirectory = Path.Combine(rootPath, _relativeHotfixFileFolderPath);
+
             if (Directory.Exists(hotfixDirectory))
             {
                 var hotfixFile = Path.Combine(hotfixDirectory, _hotfixFile);
+
                 if (File.Exists(hotfixFile))
                 {
                     hotfix = File.ReadAllText(hotfixFile);
@@ -53,6 +70,7 @@ namespace KenticoInspector.Infrastructure.Services
             }
 
             var version = $"{fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart}.{hotfix}";
+
             return new Version(version);
         }
 
@@ -63,17 +81,13 @@ namespace KenticoInspector.Infrastructure.Services
 
         public Version GetKenticoDatabaseVersion(DatabaseSettings databaseSettings)
         {
-            try
-            {
-                var connection = DatabaseHelper.GetSqlConnection(databaseSettings);
-                var version = connection.QuerySingle<string>("SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSDBVersion'");
-                var hotfix = connection.QuerySingle<string>("SELECT KeyValue FROM CMS_SettingsKey WHERE KeyName = 'CMSHotfixVersion'");
-                return new Version($"{version}.{hotfix}");
-            }
-            catch
-            {
-                return null;
-            }
+            var settingsKeys = databaseService.ExecuteSqlFromFile<string>(getCmsSettingsPath)
+                .ToList();
+
+            var version = settingsKeys[0];
+            var hotfix = settingsKeys[1];
+
+            return new Version($"{version}.{hotfix}");
         }
     }
 }
