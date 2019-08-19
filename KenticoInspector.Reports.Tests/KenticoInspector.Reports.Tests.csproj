@@ -6,11 +6,11 @@
     <IsPackable>false</IsPackable>
 
     <LangVersion>7.1</LangVersion>
-    <Version/>
-    <PackageVersion/>
-    <AssemblyVersion/>
-    <FileVersion/>
-    <InformationalVersion/>
+    <Version />
+    <PackageVersion />
+    <AssemblyVersion />
+    <FileVersion />
+    <InformationalVersion />
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +27,12 @@
 
   <ItemGroup>
     <None Update="TestData\classFormDefinitionXml_Clean_5512.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\CMS_Class\Class1\ClassXmlSchema.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\CMS_Class\Class1\ClassXmlSchemaWithAddedField.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\CMS_PageTemplate\PageTemplateWebParts\CleanAscx.xml">
