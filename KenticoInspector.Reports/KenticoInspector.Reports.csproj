@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -20,6 +20,9 @@
 
   <ItemGroup>
     <None Update="DebugConfigurationAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="UserPasswordAnalysis\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SampleReport\Metadata\en-US.yaml">
@@ -158,6 +161,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="UnusedPageTypeSummary\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="UserPasswordAnalysis\Scripts\GetEnabledAndNotExternalUsers.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="WebPartPerformanceAnalysis\Metadata\en-US.yaml">
