@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
@@ -24,8 +23,7 @@ namespace KenticoInspector.WebApplication.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<IReport>> Get()
         {
-            return Ok(_reportService
-                .GetReports());
+            return Ok(_reportService.GetReports());
         }
 
         // GET api/reports/5

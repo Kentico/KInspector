@@ -16,66 +16,51 @@ namespace KenticoInspector.Core.Helpers
 
         public string CurrentCultureName => Thread.CurrentThread.CurrentCulture.Name;
 
-        public ReportMetadata<T> GetReportMetadata<T>(
-            string reportCodename)
+        public ReportMetadata<T> GetReportMetadata<T>(string reportCodename)
             where T : new()
         {
             var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\";
 
-            var reportMetadata = GetReportMetadataFromFile<T>(
-                metadataDirectory,
-                CurrentCultureName);
+            var reportMetadata = GetReportMetadataFromFile<T>(metadataDirectory, CurrentCultureName);
 
             var currentCultureIsDefaultCulture = CurrentCultureName == DefaultCultureName;
 
             if (!currentCultureIsDefaultCulture)
             {
-                var defaultReportMetadata = GetReportMetadataFromFile<T>(
-                    metadataDirectory,
-                    DefaultCultureName);
+                var defaultReportMetadata = GetReportMetadataFromFile<T>(metadataDirectory, DefaultCultureName);
 
-                reportMetadata = GetMergedMetadata(
-                    defaultReportMetadata,
-                    reportMetadata);
+                reportMetadata = GetMergedMetadata(defaultReportMetadata, reportMetadata);
             }
 
             return reportMetadata;
         }
 
-        private static ReportMetadata<T> GetReportMetadataFromFile<T>(
-            string metadataDirectory,
-            string cultureName)
+        private static ReportMetadata<T> GetReportMetadataFromFile<T>(string metadataDirectory, string cultureName)
             where T : new()
         {
             var reportMetadataPath = $"{metadataDirectory}{cultureName}.yaml";
 
-            var reportMetadataPathExists = File.Exists(
-                reportMetadataPath);
+            var reportMetadataPathExists = File.Exists(reportMetadataPath);
 
             return reportMetadataPathExists
-                ? DeserializeYaml<ReportMetadata<T>>(
-                    reportMetadataPath)
+                ? DeserializeYaml<ReportMetadata<T>>(reportMetadataPath)
                 : new ReportMetadata<T>();
         }
 
-        private static T DeserializeYaml<T>(
-            string path)
+        private static T DeserializeYaml<T>(string path)
         {
             var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(
-                    new CamelCaseNamingConvention())
+                .WithNamingConvention(new CamelCaseNamingConvention())
                 .IgnoreUnmatchedProperties()
                 .Build();
 
-            var yamlFile = File.ReadAllText(
-                path);
+            var yamlFile = File.ReadAllText(path);
 
-            return deserializer.Deserialize<T>(
-                yamlFile);
+            return deserializer.Deserialize<T>(yamlFile);
         }
 
         private static ReportMetadata<T> GetMergedMetadata<T>(
-            ReportMetadata<T> defaultMetadata,
+            ReportMetadata<T> defaultMetadata, 
             ReportMetadata<T> overrideMetadata)
             where T : new()
         {
@@ -106,22 +91,17 @@ namespace KenticoInspector.Core.Helpers
             {
                 var objectTypePropertyType = objectTypeProperty.PropertyType;
 
-                var defaultObjectPropertyValue = objectTypeProperty.GetValue(
-                    defaultObject);
+                var defaultObjectPropertyValue = objectTypeProperty.GetValue(defaultObject);
 
                 object overrideObjectPropertyValue = overrideObject != null
-                    ? objectTypeProperty.GetValue(
-                        overrideObject)
+                    ? objectTypeProperty.GetValue(overrideObject)
                     : defaultObjectPropertyValue;
 
                 if (objectTypePropertyType.Namespace == objectType.Namespace)
                 {
-                    var targetObjectPropertyValue = Activator.CreateInstance(
-                        objectTypePropertyType);
+                    var targetObjectPropertyValue = Activator.CreateInstance(objectTypePropertyType);
 
-                    objectTypeProperty.SetValue(
-                        targetObject,
-                        targetObjectPropertyValue);
+                    objectTypeProperty.SetValue(targetObject, targetObjectPropertyValue);
 
                     RecursivelySetPropertyValues(
                         objectTypePropertyType,
@@ -131,9 +111,7 @@ namespace KenticoInspector.Core.Helpers
                 }
                 else
                 {
-                    objectTypeProperty.SetValue(
-                        targetObject,
-                        overrideObjectPropertyValue);
+                    objectTypeProperty.SetValue(targetObject, overrideObjectPropertyValue);
                 }
             }
         }
