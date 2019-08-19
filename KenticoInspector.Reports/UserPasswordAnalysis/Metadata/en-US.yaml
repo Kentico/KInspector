@@ -1,0 +1,16 @@
+﻿details:
+  name: User password analysis
+  shortDescription: Shows all users with empty or plaintext passwords.
+  longDescription: |
+    Each category of insecure password is listed separately.
+    
+    Passwords stored in plain text greatly increase the risk to users in the event that unauthorized users gain access your database and increase the risk that your site may be accessed through a brute force attack.
+    By ensuring that all stored password are salted and hashed, you can significantly mitigate the damage done in the event of a database breach, and decrease the risk of unauthorized access to sensitive parts of your site.
+    
+    Since Kentico 10, the recommended and most secure password format is `PBKDF2`.
+terms:
+  goodSummary: Found no users with empty or plaintext passwords.
+  errorSummary: Found <emptyCount> <emptyCount:user|users> with an empty password and <plaintextCount> <plaintextCount:user|users> with a plaintext password.
+  tableTitles:
+    emptyPasswords: Users with empty passwords
+    plaintextPasswords: Users with plaintext passwords

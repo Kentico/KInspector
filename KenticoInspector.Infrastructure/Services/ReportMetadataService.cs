@@ -16,7 +16,8 @@ namespace KenticoInspector.Core.Helpers
 
         public string CurrentCultureName => Thread.CurrentThread.CurrentCulture.Name;
 
-        public ReportMetadata<T> GetReportMetadata<T>(string reportCodename) where T : new()
+        public ReportMetadata<T> GetReportMetadata<T>(string reportCodename)
+            where T : new()
         {
             var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\";
 

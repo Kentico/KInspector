@@ -12,5 +12,6 @@
         public const string Security = "Security";
         public const string Transformations = "Transformations";
         public const string WebParts = "Web Parts";
+        public const string Configuration = "Configuration";
     }
 }
