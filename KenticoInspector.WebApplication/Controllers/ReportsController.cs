@@ -1,10 +1,11 @@
-﻿using KenticoInspector.Core;
+﻿using System;
+using System.Collections.Generic;
+
+using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace KenticoInspector.WebApplication.Controllers
 {

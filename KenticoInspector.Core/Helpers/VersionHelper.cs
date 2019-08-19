@@ -8,12 +8,15 @@ namespace KenticoInspector.Core.Helpers
     {
         public static IList<Version> GetVersionList(params string[] versions)
         {
-            return versions.Select(x => GetVersionFromShortString(x)).ToList();
+            return versions
+                .Select(GetVersionFromShortString)
+                .ToList();
         }
 
         public static Version GetVersionFromShortString(string version)
         {
             var expandedVersionString = ExpandVersionString(version);
+
             return new Version(expandedVersionString);
         }
 
