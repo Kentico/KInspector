@@ -16,25 +16,6 @@ namespace KenticoInspector.Core.Tests
             TokenExpressionResolver.RegisterTokenExpressions(typeof(Term).Assembly);
         }
 
-        //[TestCase("<?int32token> car", "1 car", 1)]
-        //[TestCase("<?int32token> cars", "5 cars", 5)]
-        //[TestCase("<?int32token=5:Many> cars", "Many cars", 5)]
-        //[TestCase("<?int32token:One|Many> car", "One car", 1)]
-        //[TestCase("<?int32token:One|Many> cars", "Many cars", 5)]
-        //[TestCase("The <?int32token>5:red|wrongtoken=car:blue> vehicle is going very fast", "The red vehicle is going very fast", 6)]
-        //[TestCase("The <?int32token<5:red|blue> vehicle is going very fast", "The blue vehicle is going very fast", 6)]
-        //[TestCase("<?stringtoken=value:The: red> car", "The: red car", "value")]
-        //[TestCase("The <?stringtoken1=truck:red|stringtoken2=car:blue> vehicle is going very fast", "The red vehicle is going very fast", "truck", "van")]
-        //[TestCase("The <?stringtoken1=truck:red|stringtoken2=car:blue|light green> vehicle is going very fast", "The light green vehicle is going very fast", "moped", "van")]
-        //[TestCase("The <?stringtoken1=truck:red|stringtoken1=car:blue> vehicle is going very fast", "The red vehicle is going very fast", "truck", "car")]
-        //[TestCase("The <?stringtoken2=car:red|wrongtoken=car:blue> vehicle is going very fast", "The red vehicle is going very fast", "truck", "car")]
-        //[TestCase("The <?wrongtoken=car:Blue> vehicle is going very fast", "The vehicle is going very fast", "truck", "car")]
-        //[TestCase("<?stringtoken>: https://docs.kentico.com", "No cars: https://docs.kentico.com", "No cars")]
-        //public void Should_Resolve(string term, string result, params object[] tokenValues)
-        //{
-        //    TestResolve(term, AsDynamic(tokenValues), result);
-        //}
-
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.ValidExpressionsWithOneSegment))]
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.ValidExpressionsWithTwoSegments))]
         [TestCaseSource(typeof(TokenExpressionTestCases), nameof(TokenExpressionTestCases.ValidExpressionsWithThreeSegments))]
@@ -564,16 +545,16 @@ namespace KenticoInspector.Core.Tests
 
         private static TestCaseData GetValidTestCaseWhen(object tokenValues, string returns)
         {
+            //TODO: SetName($"\"{tokenExpression}\" with {tokenValues} returns \"{returns}\"") once NUnit fixes https://github.com/nunit/nunit3-vs-adapter/issues/607
             return new TestCaseData(tokenExpression, tokenValues)
                 .Returns(returns)
-                .SetName($"\"{tokenExpression}\" with {tokenValues} returns \"{returns}\"")
                 .SetCategory($"Token expression with {category}");
         }
 
         private static TestCaseData GetInvalidTestCaseWhen(object tokenValues, Type throws)
         {
+            //TODO: SetName($"\"{tokenExpression}\" with {tokenValues} throws \"{throws.Name}\"") once NUnit fixes https://github.com/nunit/nunit3-vs-adapter/issues/607
             return new TestCaseData(tokenExpression, tokenValues, throws)
-                .SetName($"\"{tokenExpression}\" with {tokenValues} throws \"{throws.Name}\"")
                 .SetCategory($"Token expression that is {category}");
         }
     }

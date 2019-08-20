@@ -23,7 +23,7 @@ namespace KenticoInspector.WebApplication.Controllers
         [HttpGet("{instanceGuid}")]
         public ActionResult<IEnumerable<IReport>> Get(Guid instanceGuid)
         {
-            return _reportService.GetReports(instanceGuid).ToList();
+            return Ok(_reportService.GetReports(instanceGuid));
         }
 
         // POST api/values
