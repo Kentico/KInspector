@@ -18,7 +18,7 @@ terms:
   database:
     explicitlyEnabledSettingsTableHeader: Explicitly enabled settings
     overviewTableHeader: Database settings overview
-    summary: <explicitlyEnabledSettingsCount> database <explicitlyEnabledSettingsCount:setting|settings> explicitly enabled
+    summary: <explicitlyEnabledSettingsCount> database <explicitlyEnabledSettingsCount|setting|settings> explicitly enabled
   webConfig:
     debugKeyDisplayName: Compilation Debug
     overviewTableHeader: Web.config settings overview
