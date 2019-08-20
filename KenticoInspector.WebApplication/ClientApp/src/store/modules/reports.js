@@ -51,8 +51,8 @@ const getters = {
 }
 
 const actions = {
-  getAll: ({ commit }) => {
-    api.reportService.getReports()
+    getAll: ({ commit }, instanceGuid) => {
+        api.reportService.getReports(instanceGuid)
       .then(items => {
         commit('setItems', items)
       })
