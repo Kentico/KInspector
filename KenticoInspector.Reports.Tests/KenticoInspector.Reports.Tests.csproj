@@ -29,6 +29,12 @@
     <None Update="TestData\classFormDefinitionXml_Clean_5512.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\CMS_Class\Class1\ClassXmlSchema.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\CMS_Class\Class1\ClassXmlSchemaWithAddedField.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\CMS_PageTemplate\PageTemplateWebParts\CleanAscx.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
