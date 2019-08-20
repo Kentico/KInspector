@@ -67,7 +67,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.OfType<TableResult<ApplicationRestartEvent>>().First().Rows.Count, Is.EqualTo(2));
+            Assert.That(results.Data.First<TableResult<ApplicationRestartEvent>>().Rows.Count, Is.EqualTo(2));
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Information));
         }
     }

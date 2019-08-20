@@ -140,7 +140,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Error, $"Status was '{results.Status}' instead of 'Error'");
 
-            var rowCount = results.Data.OfType<TableResult<VersionHistoryMismatchResult>>().First().Rows.Count();
+            var rowCount = results.Data.First<TableResult<VersionHistoryMismatchResult>>().Rows.Count();
 
             Assert.That(rowCount == 4, $"There were {rowCount} rows instead 4 as expected");
         }

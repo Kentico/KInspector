@@ -31,7 +31,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.OfType<TableResult<PageType>>().First().Rows.Count, Is.GreaterThan(0));
+            Assert.That(results.Data.First<TableResult<PageType>>().Rows.Count, Is.GreaterThan(0));
             Assert.That(results.Status == ReportResultsStatus.Warning, $"Expected Warning status, got {results.Status} status");
         }
 

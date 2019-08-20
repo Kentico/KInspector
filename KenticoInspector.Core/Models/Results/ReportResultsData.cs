@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Core.Models.Results
 {
@@ -27,6 +28,13 @@ namespace KenticoInspector.Core.Models.Results
                     result
                 }
             );
+        }
+
+        public T First<T>() where T : Result
+        {
+            return this
+                .OfType<T>()
+                .First();
         }
     }
 

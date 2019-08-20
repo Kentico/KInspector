@@ -112,14 +112,6 @@
 </style>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-
-    .summary p {
-      margin: 0
-    }
-</style>
-
-<script>
   import { mapActions, mapGetters } from 'vuex'
 
   import ReportResultDetails from "./report-result-details"

@@ -83,8 +83,8 @@ namespace KenticoInspector.Reports.Tests
 
             // Act
             var results = mockReport.GetResults();
-            var cmsUserResultWithPasswordFormat = results.Data.OfType<TableResult<CmsUserResultWithPasswordFormat>>().First().Rows.Count();
-            var cmsUserResult = results.Data.OfType<TableResult<CmsUserResult>>().First().Rows.Count();
+            var cmsUserResultWithPasswordFormat = results.Data.First<TableResult<CmsUserResultWithPasswordFormat>>().Rows.Count();
+            var cmsUserResult = results.Data.First<TableResult<CmsUserResult>>().Rows.Count();
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
@@ -104,7 +104,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Act
             var results = mockReport.GetResults();
-            var cmsUserResultWithPasswordFormat = results.Data.OfType<TableResult<CmsUserResultWithPasswordFormat>>().First().Rows.Count();
+            var cmsUserResultWithPasswordFormat = results.Data.First<TableResult<CmsUserResultWithPasswordFormat>>().Rows.Count();
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));

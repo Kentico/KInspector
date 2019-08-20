@@ -138,14 +138,14 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
 
-            Assert.That(results.Data.OfType<TableResult<IssueTypeResult>>().First().Rows.Count(), Is.EqualTo(1));
+            Assert.That(results.Data.First<TableResult<IssueTypeResult>>().Rows.Count(), Is.EqualTo(1));
 
-            Assert.That(results.Data.OfType<TableResult<TransformationResult>>().First().Rows.Count(), Is.EqualTo(1));
-            Assert.That(results.Data.OfType<TableResult<TransformationResult>>().First().Rows, Has.One.Matches<TransformationResult>(row => transformationResultEvaluator(row, row as dynamic)));
+            Assert.That(results.Data.First<TableResult<TransformationResult>>().Rows.Count(), Is.EqualTo(1));
+            Assert.That(results.Data.First<TableResult<TransformationResult>>().Rows, Has.One.Matches<TransformationResult>(row => transformationResultEvaluator(row, row as dynamic)));
 
-            Assert.That(results.Data.OfType<TableResult<TransformationUsageResult>>().First().Rows.Count(), Is.EqualTo(1));
+            Assert.That(results.Data.First<TableResult<TransformationUsageResult>>().Rows.Count(), Is.EqualTo(1));
 
-            Assert.That(results.Data.OfType<TableResult<TemplateUsageResult>>().First().Rows.Count(), Is.EqualTo(2));
+            Assert.That(results.Data.First<TableResult<TemplateUsageResult>>().Rows.Count(), Is.EqualTo(2));
         }
 
         private void ArrangeDatabaseService(IEnumerable<TransformationDto> transformationDtoTable)
