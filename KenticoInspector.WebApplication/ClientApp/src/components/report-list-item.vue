@@ -76,12 +76,14 @@
                 @click="showResults = !showResults"
                 v-ripple>
         <v-flex>
-          <v-icon :color="resultIconColor"
-                  class="pr-1"
-                  style="float: left">
+          <v-icon
+            :color="resultIconColor"
+            class="pr-1"
+            style="float: left"
+            >
             {{ resultIcon }}
           </v-icon>
-          <vue-showdown :markdown="results.summary" class="summary" tag="span" />
+        <vue-showdown :markdown="results.summary" class="summary" tag="span"/>
         </v-flex>
         <v-spacer></v-spacer>
         <v-flex shrink>
@@ -100,9 +102,17 @@
 </template>
 
 <style>
-  .summary {
-    position: relative
-  }
+    .summary {
+        position: relative
+    }
+
+    .summary p {
+        margin: 0
+    }
+</style>
+
+<script>
+import { mapActions, mapGetters } from 'vuex'
 
     .summary p {
       margin: 0

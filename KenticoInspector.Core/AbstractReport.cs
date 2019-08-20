@@ -1,8 +1,9 @@
-﻿using KenticoInspector.Core.Models;
+﻿using System;
+using System.Collections.Generic;
+
+using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
-using System;
-using System.Collections.Generic;
 
 namespace KenticoInspector.Core
 {

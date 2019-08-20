@@ -1,10 +1,11 @@
-﻿using KenticoInspector.Core;
+﻿using System;
+using System.Collections.Generic;
+
+using KenticoInspector.Core;
 using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
+
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace KenticoInspector.WebApplication.Controllers
 {
@@ -22,7 +23,7 @@ namespace KenticoInspector.WebApplication.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<IReport>> Get()
         {
-            return _reportService.GetReports().ToList();
+            return Ok(_reportService.GetReports());
         }
 
         // GET api/reports/5

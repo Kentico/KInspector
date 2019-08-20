@@ -16,39 +16,42 @@ namespace KenticoInspector.Core.Helpers
 
         public string CurrentCultureName => Thread.CurrentThread.CurrentCulture.Name;
 
-        public ReportMetadata<T> GetReportMetadata<T>(string reportCodename) where T : new()
+        public ReportMetadata<T> GetReportMetadata<T>(string reportCodename)
+            where T : new()
         {
             var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\";
-            
-            var reportMetadata = GetReportMetadataInternal<T>(metadataDirectory, CurrentCultureName);
 
-            var isCurrentCultureDefaultCulture = CurrentCultureName == DefaultCultureName;
-            if (!isCurrentCultureDefaultCulture)
+            var reportMetadata = GetReportMetadataFromFile<T>(metadataDirectory, CurrentCultureName);
+
+            var currentCultureIsDefaultCulture = CurrentCultureName == DefaultCultureName;
+
+            if (!currentCultureIsDefaultCulture)
             {
-                var defaultReportMetadata = GetReportMetadataInternal<T>(metadataDirectory, DefaultCultureName);
+                var defaultReportMetadata = GetReportMetadataFromFile<T>(metadataDirectory, DefaultCultureName);
+
                 reportMetadata = GetMergedMetadata(defaultReportMetadata, reportMetadata);
             }
 
             return reportMetadata;
         }
 
-
-        private ReportMetadata<T> GetReportMetadataInternal<T>(string metadataDirectory, string cultureName) where T : new()
+        private static ReportMetadata<T> GetReportMetadataFromFile<T>(string metadataDirectory, string cultureName)
+            where T : new()
         {
             var reportMetadataPath = $"{metadataDirectory}{cultureName}.yaml";
+
             var reportMetadataPathExists = File.Exists(reportMetadataPath);
-            return reportMetadataPathExists 
-                ? DeserializeYaml<ReportMetadata<T>>(reportMetadataPath) 
+
+            return reportMetadataPathExists
+                ? DeserializeYaml<ReportMetadata<T>>(reportMetadataPath)
                 : new ReportMetadata<T>();
         }
 
-        private T DeserializeYaml<T>(string path)
+        private static T DeserializeYaml<T>(string path)
         {
-            var deserializerBuilder = new DeserializerBuilder()
+            var deserializer = new DeserializerBuilder()
                 .WithNamingConvention(new CamelCaseNamingConvention())
-                .IgnoreUnmatchedProperties();
-
-            var deserializer = deserializerBuilder
+                .IgnoreUnmatchedProperties()
                 .Build();
 
             var yamlFile = File.ReadAllText(path);
@@ -56,24 +59,31 @@ namespace KenticoInspector.Core.Helpers
             return deserializer.Deserialize<T>(yamlFile);
         }
 
-        private ReportMetadata<T> GetMergedMetadata<T>(ReportMetadata<T> defaultMetadata, ReportMetadata<T> overrideMetadata) where T : new()
+        private static ReportMetadata<T> GetMergedMetadata<T>(
+            ReportMetadata<T> defaultMetadata, 
+            ReportMetadata<T> overrideMetadata)
+            where T : new()
         {
-            var mergedMetadata = new ReportMetadata<T>
-            {
-                Details = new ReportDetails(),
-                Terms = new T()
-            };
+            var mergedMetadata = new ReportMetadata<T>();
 
-            mergedMetadata.Details.Name = overrideMetadata.Details?.Name ?? defaultMetadata.Details.Name;
-            mergedMetadata.Details.ShortDescription = overrideMetadata.Details?.ShortDescription ?? defaultMetadata.Details.ShortDescription;
-            mergedMetadata.Details.LongDescription = overrideMetadata.Details?.LongDescription ?? defaultMetadata.Details.LongDescription;
+            mergedMetadata.Details.Name = overrideMetadata.Details.Name ?? defaultMetadata.Details.Name;
+            mergedMetadata.Details.ShortDescription = overrideMetadata.Details.ShortDescription ?? defaultMetadata.Details.ShortDescription;
+            mergedMetadata.Details.LongDescription = overrideMetadata.Details.LongDescription ?? defaultMetadata.Details.LongDescription;
 
-            RecursivelySetPropertyValues(typeof(T), defaultMetadata.Terms, overrideMetadata.Terms, mergedMetadata.Terms);
+            RecursivelySetPropertyValues(
+                typeof(T),
+                defaultMetadata.Terms,
+                overrideMetadata.Terms,
+                mergedMetadata.Terms);
 
             return mergedMetadata;
         }
 
-        private static void RecursivelySetPropertyValues(Type objectType, object defaultObject, object overrideObject, object targetObject)
+        private static void RecursivelySetPropertyValues(
+            Type objectType,
+            object defaultObject,
+            object overrideObject,
+            object targetObject)
         {
             var objectTypeProperties = objectType.GetProperties();
 
@@ -83,12 +93,9 @@ namespace KenticoInspector.Core.Helpers
 
                 var defaultObjectPropertyValue = objectTypeProperty.GetValue(defaultObject);
 
-                object overrideObjectPropertyValue = null;
-
-                if (overrideObject != null)
-                {
-                    overrideObjectPropertyValue = objectTypeProperty.GetValue(overrideObject);
-                }
+                object overrideObjectPropertyValue = overrideObject != null
+                    ? objectTypeProperty.GetValue(overrideObject)
+                    : defaultObjectPropertyValue;
 
                 if (objectTypePropertyType.Namespace == objectType.Namespace)
                 {
@@ -96,11 +103,15 @@ namespace KenticoInspector.Core.Helpers
 
                     objectTypeProperty.SetValue(targetObject, targetObjectPropertyValue);
 
-                    RecursivelySetPropertyValues(objectTypePropertyType, defaultObjectPropertyValue, overrideObjectPropertyValue, targetObjectPropertyValue);
+                    RecursivelySetPropertyValues(
+                        objectTypePropertyType,
+                        defaultObjectPropertyValue,
+                        overrideObjectPropertyValue,
+                        targetObjectPropertyValue);
                 }
                 else
                 {
-                    objectTypeProperty.SetValue(targetObject, overrideObjectPropertyValue ?? defaultObjectPropertyValue);
+                    objectTypeProperty.SetValue(targetObject, overrideObjectPropertyValue);
                 }
             }
         }
