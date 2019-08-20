@@ -1,0 +1,45 @@
+﻿details:
+  name: Security settings analysis
+  shortDescription: Shows security issues in Kentico admin settings and `web.config` settings.
+  longDescription: |
+    Each security issue is accompanied by a short reason for the recommendation.
+    
+    It is critical that passwords are stored securely in the database. Since Kentico 10, the recommended and most secure password format is `PBKDF2`. For more, see [Setting the user password format](https://docs.kentico.com/k12sp/securing-websites/designing-secure-websites/securing-user-accounts-and-passwords/setting-the-user-password-format).
+    
+    Checks the following security settings in the `web.config`:
+    * Compilation debug
+    * Tracing
+    * Custom errors
+    * Cookieless authentication
+    * Session fixation
+    * CSRF protection check 
+    * Http only cookies
+    * Viewstate (MAC) validation
+    * Hash string salt
+    * SA in CMSConnectionString
+    * Click jacking protection override
+terms:
+  globalSiteName: (global)
+  recommendedValues:
+    notEmpty: Not empty
+  recommendationReasons:
+    cMSRegistrationEmailConfirmation: REASON
+    cMSResetPasswordRequiresApproval: REASON
+    cMSSendEmailWithResetPassword: REASON
+    cMSPasswordExpiration: REASON
+    cMSUsePasswordPolicy: REASON
+    cMSChatEnableFloodProtection: REASON
+    cMSFloodProtectionEnabled: REASON
+    cMSUseSSLForAdministrationInterface: REASON
+
+    cMSRenewSessionAuthChange: REASON
+    cMSHashStringSalt: REASON
+
+    compilationDebug: REASON
+    traceEnabled: REASON
+  summaries:
+    error: Found <cmsSettingsKeyResultsCount> <cmsSettingsKeyResultsCount:issue|issues> with admin security <cmsSettingsKeyResultsCount:setting|settings> and <webConfigSettingsResultsCount> <webConfigSettingsResultsCount:issue|issues> with web.config security <webConfigSettingsResultsCount:setting|settings>.
+    good: Found no issues in admin or web.config security settings.
+  tableTitles:
+    adminSecuritySettings: Admin security settings
+    webConfigSecuritySettings: Web.config security settings
