@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Xml.Linq;
 
 namespace KenticoInspector.Core.Helpers
 {
@@ -28,6 +29,13 @@ namespace KenticoInspector.Core.Helpers
             }
 
             return query;
+        }
+
+        public static XDocument GetXDocumentFromFile(string path)
+        {
+            var fileText = File.ReadAllText(path);
+
+            return XDocument.Parse(fileText);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Reports.ColumnFieldValidation;
 using KenticoInspector.Reports.ColumnFieldValidation.Models;
@@ -28,7 +29,7 @@ namespace KenticoInspector.Reports.Tests
             {
                 ClassName = "Class.1",
                 ClassTableName = "Class1",
-                ClassXmlSchema = GetXDocumentFromFile(@"TestData\CMS_Class\Class1\ClassXmlSchema.xml")
+                ClassXmlSchema = FileHelper.GetXDocumentFromFile(@"TestData\CMS_Class\Class1\ClassXmlSchema.xml")
             }
         };
 
@@ -38,7 +39,7 @@ namespace KenticoInspector.Reports.Tests
             {
                 ClassName = "Class.1",
                 ClassTableName = "Class1",
-                ClassXmlSchema = GetXDocumentFromFile(@"TestData\CMS_Class\Class1\ClassXmlSchemaWithAddedField.xml")
+                ClassXmlSchema = FileHelper.GetXDocumentFromFile(@"TestData\CMS_Class\Class1\ClassXmlSchemaWithAddedField.xml")
             }
         };
 
@@ -119,15 +120,8 @@ namespace KenticoInspector.Reports.Tests
                 );
         }
 
-        private static XDocument GetXDocumentFromFile(string path)
-        {
-            var fileText = File.ReadAllText(path);
-
-            return XDocument.Parse(fileText);
-        }
-
         [TestCase(Category = "Class and table match", TestName = "Matching class and table produce a good result")]
-        public void Should_ReturnGoodResult_WhenClassAndTableMatch()
+        public void Should_ReturnGoodResult_When_ClassAndTableMatch()
         {
             // Arrange
             ArrangeDatabaseService(ValidCmsClasses, ValidTableColumns);
@@ -142,7 +136,7 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [TestCase(Category = "Class has added field", TestName = "Class with added field produces an error result")]
-        public void Should_ReturnErrorResult_WhenClassHasAddedField()
+        public void Should_ReturnErrorResult_When_ClassHasAddedField()
         {
             // Arrange
             ArrangeDatabaseService(InvalidCmsClasses, ValidTableColumns);
@@ -153,11 +147,11 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
 
-            Assert.That(GetExpandoTableResult<TableResult<CmsClassResult>>(results).Rows.Count(), Is.EqualTo(1));
+            Assert.That(GetExpandTableResult<TableResult<CmsClassResult>>(results).Rows.Count(), Is.EqualTo(1));
         }
 
         [TestCase(Category = "Table has added column", TestName = "Table with added column produces an error result")]
-        public void Should_ReturnErrorResult_WhenTableHasAddedColumn()
+        public void Should_ReturnErrorResult_When_TableHasAddedColumn()
         {
             // Arrange
             ArrangeDatabaseService(ValidCmsClasses, InvalidTableColumns);
@@ -168,7 +162,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
 
-            Assert.That(GetExpandoTableResult<TableResult<TableResult>>(results).Rows.Count(), Is.EqualTo(1));
+            Assert.That(GetExpandTableResult<TableResult<TableResult>>(results).Rows.Count(), Is.EqualTo(1));
         }
 
         private void ArrangeDatabaseService(IEnumerable<CmsClass> cmsClasses, IEnumerable<TableColumn> tableColumns)
@@ -182,10 +176,11 @@ namespace KenticoInspector.Reports.Tests
                 Scripts.GetTableColumns,
                 nameof(classTableNames),
                 classTableNames,
-                tableColumns);
+                tableColumns
+                );
         }
 
-        private static TResult GetExpandoTableResult<TResult>(ReportResults results)
+        private static TResult GetExpandTableResult<TResult>(ReportResults results)
         {
             IDictionary<string, object> dictionaryData = results.Data;
 
