@@ -1,7 +1,9 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Core.Tokens;
 using KenticoInspector.Reports.Tests.Helpers;
+
 using Moq;
 
 namespace KenticoInspector.Reports.Tests
@@ -20,6 +22,9 @@ namespace KenticoInspector.Reports.Tests
         public AbstractReportTest(int majorVersion)
         {
             var reportCodename = AbstractReport<TermsType>.GetCodename(typeof(ReportType));
+
+            TokenExpressionResolver.RegisterTokenExpressions(typeof(TokenExpressionResolver).Assembly);
+
             InitializeCommonMocks(majorVersion, reportCodename);
         }
 

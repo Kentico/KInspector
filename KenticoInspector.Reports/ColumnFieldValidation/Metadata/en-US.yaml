@@ -1,0 +1,13 @@
+﻿details:
+  name: Column/field validation
+  shortDescription: Validates that Kentico classes' definitions match their respective tables' columns.
+  longDescription: |
+     Compares Kentico class fields against their database table's columns by name and SQL data type and displays non-matching entries.
+     Lists columns without class field and class fields without table column. For any mismatched column or field, the name and SQL data type are shown.
+terms:
+  summaries:
+    error: Found <cmsClassesResultCount> <cmsClassesResultCount|class|classes> with fields not in a table and <tablesResultCount> <tablesResultCount|table|tables> with columns not in a class.
+    good: No issues with classes and their tables found.
+  tableTitles:
+    classesWithAddedFields: Classes with fields not in table
+    tablesWithAddedColumns: Tables with columns not in class
