@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading;
 
@@ -12,9 +12,16 @@ namespace KenticoInspector.Core.Helpers
 {
     public class ReportMetadataService : IReportMetadataService
     {
+        private readonly IInstanceService instanceService;
+
         public string DefaultCultureName => "en-US";
 
         public string CurrentCultureName => Thread.CurrentThread.CurrentCulture.Name;
+
+        public ReportMetadataService(IInstanceService instanceService)
+        {
+            this.instanceService = instanceService;
+        }
 
         public ReportMetadata<T> GetReportMetadata<T>(string reportCodename)
             where T : new()
@@ -31,6 +38,24 @@ namespace KenticoInspector.Core.Helpers
 
                 reportMetadata = GetMergedMetadata(defaultReportMetadata, reportMetadata);
             }
+
+            var instanceDetails = instanceService.GetInstanceDetails(instanceService.CurrentInstance);
+
+            var commonData = new
+            {
+                instanceUrl = instanceService.CurrentInstance.Url,
+                administrationVersion = instanceDetails.AdministrationVersion,
+                databaseVersion = instanceDetails.DatabaseVersion
+            };
+
+            Term name = reportMetadata.Details.Name;
+            reportMetadata.Details.Name = name.With(commonData);
+
+            Term shortDescription = reportMetadata.Details.ShortDescription;
+            reportMetadata.Details.ShortDescription = shortDescription.With(commonData);
+
+            Term longDescription = reportMetadata.Details.LongDescription;
+            reportMetadata.Details.LongDescription = longDescription.With(commonData);
 
             return reportMetadata;
         }
@@ -67,8 +92,10 @@ namespace KenticoInspector.Core.Helpers
             var mergedMetadata = new ReportMetadata<T>();
 
             mergedMetadata.Details.Name = overrideMetadata.Details.Name ?? defaultMetadata.Details.Name;
-            mergedMetadata.Details.ShortDescription = overrideMetadata.Details.ShortDescription ?? defaultMetadata.Details.ShortDescription;
-            mergedMetadata.Details.LongDescription = overrideMetadata.Details.LongDescription ?? defaultMetadata.Details.LongDescription;
+            mergedMetadata.Details.ShortDescription = 
+                overrideMetadata.Details.ShortDescription ?? defaultMetadata.Details.ShortDescription;
+            mergedMetadata.Details.LongDescription = 
+                overrideMetadata.Details.LongDescription ?? defaultMetadata.Details.LongDescription;
 
             RecursivelySetPropertyValues(
                 typeof(T),
