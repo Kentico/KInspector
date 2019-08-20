@@ -6,6 +6,7 @@ namespace KenticoInspector.Core.Models
     {
         public ReportDetails Details { get; set; } = new ReportDetails();
 
+        [JsonIgnore]
         public T Terms { get; set; } = new T();
     }
 }

@@ -43,13 +43,19 @@ namespace KenticoInspector.Core.Tokens
             return expression.defaultValue ?? string.Empty;
         }
 
-        private (string token, IEnumerable<(string value, char operation, string result)> cases, string defaultValue) GetExpression(string tokenExpression)
+        private (
+            string token,
+            IEnumerable<(string value, char operation, string result)> cases, 
+            string defaultValue
+            ) GetExpression(string tokenExpression)
         {
-            if (string.IsNullOrEmpty(tokenExpression)) throw new ArgumentException($"'{tokenExpression}' looks like a simple token expression but does not contain a token.");
+            if (string.IsNullOrEmpty(tokenExpression))
+                throw new ArgumentException($"'{tokenExpression}' looks like a simple token expression but does not contain a token.");
 
             var segments = tokenExpression.Split(Constants.Pipe);
 
-            if (segments[0].Contains(Constants.Colon)) throw new FormatException($"Simple token expression token '{segments[0]}' must not contain a {Constants.Colon}.");
+            if (segments[0].Contains(Constants.Colon))
+                throw new FormatException($"Simple token expression token '{segments[0]}' must not contain a {Constants.Colon}.");
 
             var cases = new List<(string, char, string)>();
 
@@ -107,7 +113,13 @@ namespace KenticoInspector.Core.Tokens
             return (pair.first.Substring(1), operation, pair.second);
         }
 
-        public bool TryResolveToken(object token, string expressionCaseValue, char operation, string expressionCaseResult, out string resolvedValue)
+        public bool TryResolveToken(
+            object token, 
+            string expressionCaseValue, 
+            char operation, 
+            string expressionCaseResult, 
+            out string resolvedValue
+            )
         {
             var resolved = false;
             resolvedValue = null;

@@ -92,8 +92,10 @@ namespace KenticoInspector.Core.Helpers
             var mergedMetadata = new ReportMetadata<T>();
 
             mergedMetadata.Details.Name = overrideMetadata.Details.Name ?? defaultMetadata.Details.Name;
-            mergedMetadata.Details.ShortDescription = overrideMetadata.Details.ShortDescription ?? defaultMetadata.Details.ShortDescription;
-            mergedMetadata.Details.LongDescription = overrideMetadata.Details.LongDescription ?? defaultMetadata.Details.LongDescription;
+            mergedMetadata.Details.ShortDescription = 
+                overrideMetadata.Details.ShortDescription ?? defaultMetadata.Details.ShortDescription;
+            mergedMetadata.Details.LongDescription = 
+                overrideMetadata.Details.LongDescription ?? defaultMetadata.Details.LongDescription;
 
             RecursivelySetPropertyValues(
                 typeof(T),
