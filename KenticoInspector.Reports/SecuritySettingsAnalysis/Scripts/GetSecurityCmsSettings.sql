@@ -14,4 +14,4 @@ FROM
 LEFT JOIN CMS_SettingsCategory C ON C.CategoryIDPath LIKE CONCAT('%', S.KeyCategoryID)
 
 WHERE 
-	KeyName IN @securityCmsSettingsKeyNames
+	KeyName IN @cmsSettingsKeysNames

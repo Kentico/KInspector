@@ -10,6 +10,7 @@ using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results;
@@ -44,32 +45,26 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
 
         public override ReportResults GetResults()
         {
-            var securityCmsSettingsKeyNames = typeof(SettingsKeyAnalyzers)
+            var cmsSettingsKeysNames = typeof(SettingsKeyAnalyzers)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
                 .Where(method => method.ReturnType == typeof(CmsSettingsKeyResult))
                 .Select(method => method.Name);
 
             var cmsSettingsKeys = databaseService.ExecuteSqlFromFile<CmsSettingsKey>(
                 Scripts.GetSecurityCmsSettings,
-                new { securityCmsSettingsKeyNames }
+                new { cmsSettingsKeysNames }
                 );
 
             var cmsSettingsKeyResults = GetCmsSettingsKeyResults(cmsSettingsKeys);
 
             var cmsSettingsCategoryIdsOnPaths = cmsSettingsKeyResults
-                .Select(settingsKey => settingsKey.CategoryIDPath)
-                .SelectMany(idPath => idPath.Split('/', StringSplitOptions.RemoveEmptyEntries))
-                .Select(pathSegment => pathSegment.TrimStart('0'))
+                .SelectMany(cmsSettingsKeyResult => cmsSettingsKeyResult.GetCategoryIdsOnPath())
                 .Distinct();
 
             var cmsSettingsCategories = databaseService.ExecuteSqlFromFile<CmsSettingsCategory>(
                 Scripts.GetCmsSettingsCategories,
                 new { cmsSettingsCategoryIdsOnPaths }
                 );
-
-            var instancePath = instanceService.CurrentInstance.Path;
-
-            var resxValues = cmsFileService.GetResourceStringsFromResx(instancePath);
 
             var sites = instanceService
                 .GetInstanceDetails(instanceService.CurrentInstance)
@@ -80,12 +75,17 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
                     Name = Metadata.Terms.GlobalSiteName
                 });
 
-            var localizedCmsSettingsKeyResults = GetLocalizedCmsSettingsKeyResults(
-                cmsSettingsKeyResults,
-                cmsSettingsCategories,
-                resxValues,
-                sites
-                );
+            var instancePath = instanceService.CurrentInstance.Path;
+
+            var resxValues = cmsFileService.GetResourceStringsFromResx(instancePath);
+
+            var localizedCmsSettingsKeyResults = cmsSettingsKeyResults
+                .Select(cmsSettingsKeyResult => new CmsSettingsKeyResult(
+                    cmsSettingsKeyResult,
+                    cmsSettingsCategories,
+                    sites,
+                    resxValues
+                    ));
 
             var webConfigXml = cmsFileService.GetXmlDocument(instancePath, DefaultKenticoPaths.WebConfigFile);
 
@@ -105,81 +105,32 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
 
             var systemWebSettingsResults = GetSystemWebSettingsResults(systemWebElements);
 
-            return CompileResults(localizedCmsSettingsKeyResults, appSettingsResults.Concat(systemWebSettingsResults));
+            var connectionStringElements = webConfig
+                .Descendants("connectionStrings")
+                .Elements();
+
+            var connectionStringElementsResults = GetConnectionStringsResults(connectionStringElements);
+
+            var webConfigSettingsResults = appSettingsResults
+                .Concat(systemWebSettingsResults)
+                .Concat(connectionStringElementsResults);
+
+            return CompileResults(localizedCmsSettingsKeyResults, webConfigSettingsResults);
         }
 
         private IEnumerable<CmsSettingsKeyResult> GetCmsSettingsKeyResults(IEnumerable<CmsSettingsKey> cmsSettingsKeys)
         {
-            var keyAnalyzersObject = new SettingsKeyAnalyzers(Metadata.Terms);
-
-            var keyAnalyzers = keyAnalyzersObject
-                .GetType()
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(method => method.ReturnType == typeof(CmsSettingsKeyResult));
+            var analyzersObject = new SettingsKeyAnalyzers(Metadata.Terms);
 
             foreach (var cmsSettingsKey in cmsSettingsKeys)
             {
-                var matchingKeyAnalyzer = keyAnalyzers
-                    .FirstOrDefault(keyAnalyzer => keyAnalyzer.Name
-                        .Equals(cmsSettingsKey.KeyName, StringComparison.InvariantCulture));
+                var analysisResult = analyzersObject.GetAnalysis(cmsSettingsKey, cmsSettingsKey.KeyName);
 
-                if (matchingKeyAnalyzer != null)
+                if (analysisResult is CmsSettingsKeyResult cmsSettingsKeyResult)
                 {
-                    var analysisResult = matchingKeyAnalyzer.Invoke(keyAnalyzersObject, new[] { cmsSettingsKey });
-
-                    if (analysisResult is CmsSettingsKeyResult settingsKeyResult)
-                    {
-                        yield return settingsKeyResult;
-                    }
+                    yield return cmsSettingsKeyResult;
                 }
             }
-        }
-
-        private static IEnumerable<CmsSettingsKeyResult> GetLocalizedCmsSettingsKeyResults(
-            IEnumerable<CmsSettingsKeyResult> cmsSettingsKeyResultsWithRecommendations,
-            IEnumerable<CmsSettingsCategory> cmsSettingsCategories,
-            IDictionary<string, string> resxValues,
-            IEnumerable<Site> sites
-            )
-        {
-            foreach (var cmsSettingsKeyResult in cmsSettingsKeyResultsWithRecommendations)
-            {
-                cmsSettingsKeyResult.SiteName = sites
-                    .FirstOrDefault(site => site.Id == cmsSettingsKeyResult.SiteID)
-                    .Name;
-
-                cmsSettingsKeyResult.KeyDisplayName = TryReplaceDisplayName(
-                    resxValues,
-                    cmsSettingsKeyResult.KeyDisplayName
-                    );
-
-                var categoryDisplayNames = cmsSettingsKeyResult.CategoryIDPath
-                    .Split('/', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(pathSegment => pathSegment.TrimStart('0'))
-                    .Select(idString => cmsSettingsCategories
-                        .First(cmsSettingsCategory => cmsSettingsCategory.CategoryID.ToString() == idString)
-                        .CategoryDisplayName)
-                    .Select(categoryDisplayName => TryReplaceDisplayName(resxValues, categoryDisplayName));
-
-                cmsSettingsKeyResult.KeyPath = string.Join(" > ", categoryDisplayNames);
-
-                yield return cmsSettingsKeyResult;
-            }
-        }
-
-        private static string TryReplaceDisplayName(IDictionary<string, string> resxValues, string displayName)
-        {
-            displayName = displayName
-                .Replace("{$", string.Empty)
-                .Replace("$}", string.Empty)
-                .ToLowerInvariant();
-
-            if (resxValues.TryGetValue(displayName, out string keyName))
-            {
-                displayName = keyName;
-            }
-
-            return displayName;
         }
 
         private static XDocument ToXDocument(XmlDocument document, LoadOptions options = LoadOptions.None)
@@ -192,50 +143,48 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
 
         private IEnumerable<WebConfigSettingResult> GetAppSettingsResults(IEnumerable<WebConfigSetting> appSettings)
         {
-            var appSettingsAnalyzersObject = new AppSettingsAnalyzers(Metadata.Terms);
-
-            var appSettingsAnalyzers = appSettingsAnalyzersObject
-                .GetType()
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(method => method.ReturnType == typeof(WebConfigSettingResult));
+            var analyzersObject = new AppSettingAnalyzers(Metadata.Terms);
 
             foreach (var appSetting in appSettings)
             {
-                var matchingKeyAnalyzer = appSettingsAnalyzers
-                    .FirstOrDefault(keyAnalyzer => keyAnalyzer.Name
-                        .Equals(appSetting.KeyName, StringComparison.InvariantCulture));
+                var analysisResult = analyzersObject.GetAnalysis(appSetting, appSetting.KeyName);
 
-                if (matchingKeyAnalyzer != null)
+                if (analysisResult is WebConfigSettingResult appSettingResult)
                 {
-                    var analysisResult = matchingKeyAnalyzer.Invoke(appSettingsAnalyzersObject, new[] { appSetting });
-
-                    if (analysisResult is WebConfigSettingResult appSettingResult)
-                    {
-                        yield return appSettingResult;
-                    }
+                    yield return appSettingResult;
                 }
             }
         }
 
         private IEnumerable<WebConfigSettingResult> GetSystemWebSettingsResults(IEnumerable<XElement> systemWebElements)
         {
-            var systemWebSettingsAnalyzersObject = new SystemWebSettingsAnalyzers(Metadata.Terms);
-
-            var systemWebSettingsAnalyzers = systemWebSettingsAnalyzersObject
-                .GetType()
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(method => method.ReturnType == typeof(WebConfigSettingResult));
+            var analyzersObject = new SystemWebSettingAnalyzers(Metadata.Terms);
 
             foreach (var systemWebElement in systemWebElements)
             {
-                foreach (var systemWebSettingsAnalyzer in systemWebSettingsAnalyzers)
-                {
-                    var analysisResult = systemWebSettingsAnalyzer.Invoke(systemWebSettingsAnalyzersObject, new[] { systemWebElement });
+                var analysisResult = analyzersObject.GetAnalysis(systemWebElement, systemWebElement.Name.ToString());
 
-                    if (analysisResult is WebConfigSettingResult systemWebSettingResult)
-                    {
-                        yield return systemWebSettingResult;
-                    }
+                if (analysisResult is WebConfigSettingResult systemWebSettingResult)
+                {
+                    yield return systemWebSettingResult;
+                }
+            }
+        }
+
+        private IEnumerable<WebConfigSettingResult> GetConnectionStringsResults(IEnumerable<XElement> connectionStringElements)
+        {
+            var analyzersObject = new ConnectionStringsAnalyzers(Metadata.Terms);
+
+            foreach (var connectionStringElement in connectionStringElements)
+            {
+                var analysisResult = analyzersObject.GetAnalysis(
+                    connectionStringElement,
+                    connectionStringElement.Attribute("name")?.Value
+                    );
+
+                if (analysisResult is WebConfigSettingResult systemWebSettingResult)
+                {
+                    yield return systemWebSettingResult;
                 }
             }
         }

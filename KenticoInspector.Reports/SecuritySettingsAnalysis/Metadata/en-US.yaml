@@ -7,38 +7,66 @@
     It is critical that passwords are stored securely in the database. Since Kentico 10, the recommended and most secure password format is `PBKDF2`. For more, see [Setting the user password format](https://docs.kentico.com/k12sp/securing-websites/designing-secure-websites/securing-user-accounts-and-passwords/setting-the-user-password-format).
     
     Checks the following security settings in the `web.config`:
-    * Compilation debug
-    * Tracing
-    * Custom errors
     * Cookieless authentication
-    * Session fixation
-    * CSRF protection check 
-    * Http only cookies
-    * Viewstate (MAC) validation
+    * Compilation debug
+    * Custom errors
+    * Http-only cookies
+    * Viewstate usage
+    * Tracing
+    * CSRF protection 
     * Hash string salt
-    * SA in CMSConnectionString
-    * Click jacking protection override
+    * Session fixation
+    * Clickjacking protection override
+    * User `sa` in `CMSConnectionString`
 terms:
   globalSiteName: (global)
   recommendedValues:
+    empty: Empty
+    invalidLogonAttempts: Less than or equal to 5
+    noDangerousExtensions: No dangerous extensions
     notEmpty: Not empty
+    notOn: Not 'On'
+    notSaUser: Not 'sa' user
+    resetPasswordInterval: 'Between 1 and 12, inclusive'
+    passwordMinimalLength: More than or equal to 8
+    passwordNumberOfNonAlphaNumChars: More than or equal to 2
+    reCaptcha: 3 (reCaptcha)
+    useCookies: useCookies
   recommendationReasons:
-    cMSRegistrationEmailConfirmation: REASON
-    cMSResetPasswordRequiresApproval: REASON
-    cMSSendEmailWithResetPassword: REASON
-    cMSPasswordExpiration: REASON
-    cMSUsePasswordPolicy: REASON
-    cMSChatEnableFloodProtection: REASON
-    cMSFloodProtectionEnabled: REASON
-    cMSUseSSLForAdministrationInterface: REASON
-
-    cMSRenewSessionAuthChange: REASON
-    cMSHashStringSalt: REASON
-
-    compilationDebug: REASON
-    traceEnabled: REASON
+    appSettings:
+      cMSEnableCsrfProtection: REASON
+      cMSHashStringSalt: REASON
+      cMSRenewSessionAuthChange: REASON
+      cMSXFrameOptionsExcluded: REASON
+    settingsKeys:
+      cMSAutocompleteEnableForLogin: REASON
+      cMSCaptchaControl: REASON
+      cMSChatEnableFloodProtection: REASON
+      cMSFloodProtectionEnabled: REASON
+      cMSForumAttachmentExtensions: REASON
+      cMSMaximumInvalidLogonAttempts: REASON
+      cMSMediaFileAllowedExtensions: REASON
+      cMSPasswordExpiration: REASON
+      cMSPasswordFormat: REASON
+      cMSPolicyMinimalLength: REASON
+      cMSPolicyNumberOfNonAlphaNumChars: REASON
+      cMSRegistrationEmailConfirmation: REASON
+      cMSResetPasswordInterval: REASON
+      cMSResetPasswordRequiresApproval: REASON
+      cMSRESTServiceEnabled: REASON
+      cMSSendEmailWithResetPassword: REASON
+      cMSUploadExtensions: REASON
+      cMSUsePasswordPolicy: REASON
+      cMSUseSSLForAdministrationInterface: REASON
+    systemWebSettings:
+      authenticationCookieless: REASON
+      compilationDebug: REASON
+      customErrorsMode: REASON
+      httpCookiesHttpOnlyCookies: REASON
+      pagesEnableViewState: REASON
+      traceEnabled: REASON
   summaries:
-    error: Found <cmsSettingsKeyResultsCount> <cmsSettingsKeyResultsCount:issue|issues> with admin security <cmsSettingsKeyResultsCount:setting|settings> and <webConfigSettingsResultsCount> <webConfigSettingsResultsCount:issue|issues> with web.config security <webConfigSettingsResultsCount:setting|settings>.
+    error: Found <cmsSettingsKeyResultsCount> <cmsSettingsKeyResultsCount:issue|issues> with admin security settings and <webConfigSettingsResultsCount> <webConfigSettingsResultsCount:issue|issues> with web.config security settings.
     good: Found no issues in admin or web.config security settings.
   tableTitles:
     adminSecuritySettings: Admin security settings
