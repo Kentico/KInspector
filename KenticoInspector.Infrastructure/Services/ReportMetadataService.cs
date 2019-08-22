@@ -28,16 +28,28 @@ namespace KenticoInspector.Core.Helpers
         {
             var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\";
 
-            var reportMetadata = GetReportMetadataFromFile<T>(metadataDirectory, CurrentCultureName);
+            var currentMetadata = DeserializeMetadataFromYamlFile<ReportMetadata<T>>(
+                metadataDirectory,
+                CurrentCultureName,
+                false
+            );
 
             var currentCultureIsDefaultCulture = CurrentCultureName == DefaultCultureName;
 
+            var mergedMetadata = new ReportMetadata<T>();
+
             if (!currentCultureIsDefaultCulture)
             {
-                var defaultReportMetadata = GetReportMetadataFromFile<T>(metadataDirectory, DefaultCultureName);
+                var defaultMetadata = DeserializeMetadataFromYamlFile<ReportMetadata<T>>(
+                    metadataDirectory,
+                    DefaultCultureName,
+                    true
+                );
 
-                reportMetadata = GetMergedMetadata(defaultReportMetadata, reportMetadata);
+                mergedMetadata = GetMergedMetadata(defaultMetadata, currentMetadata);
             }
+
+            var reportMetadata = currentCultureIsDefaultCulture ? currentMetadata : mergedMetadata;
 
             var instanceDetails = instanceService.GetInstanceDetails(instanceService.CurrentInstance);
 
@@ -49,43 +61,59 @@ namespace KenticoInspector.Core.Helpers
             };
 
             Term name = reportMetadata.Details.Name;
+
             reportMetadata.Details.Name = name.With(commonData);
 
             Term shortDescription = reportMetadata.Details.ShortDescription;
+
             reportMetadata.Details.ShortDescription = shortDescription.With(commonData);
 
             Term longDescription = reportMetadata.Details.LongDescription;
+
             reportMetadata.Details.LongDescription = longDescription.With(commonData);
 
             return reportMetadata;
         }
 
-        private static ReportMetadata<T> GetReportMetadataFromFile<T>(string metadataDirectory, string cultureName)
+        private static T DeserializeMetadataFromYamlFile<T>(
+            string metadataDirectory,
+            string cultureName,
+            bool ignoreUnmatchedProperties)
             where T : new()
         {
             var reportMetadataPath = $"{metadataDirectory}{cultureName}.yaml";
 
             var reportMetadataPathExists = File.Exists(reportMetadataPath);
 
-            return reportMetadataPathExists
-                ? DeserializeYaml<ReportMetadata<T>>(reportMetadataPath)
-                : new ReportMetadata<T>();
+            if (reportMetadataPathExists)
+            {
+                var fileText = File.ReadAllText(reportMetadataPath);
+
+                return DeserializeYaml<T>(fileText, ignoreUnmatchedProperties);
+            }
+
+            return new T();
         }
 
-        private static T DeserializeYaml<T>(string path)
+        private static T DeserializeYaml<T>(
+            string yaml,
+            bool ignoreUnmatchedProperties)
         {
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(new CamelCaseNamingConvention())
-                .IgnoreUnmatchedProperties()
-                .Build();
+            var deserializerBuilder = new DeserializerBuilder()
+                .WithNamingConvention(new CamelCaseNamingConvention());
 
-            var yamlFile = File.ReadAllText(path);
+            if (ignoreUnmatchedProperties)
+            {
+                deserializerBuilder.IgnoreUnmatchedProperties();
+            }
 
-            return deserializer.Deserialize<T>(yamlFile);
+            var deserializer = deserializerBuilder.Build();
+
+            return deserializer.Deserialize<T>(yaml);
         }
 
         private static ReportMetadata<T> GetMergedMetadata<T>(
-            ReportMetadata<T> defaultMetadata, 
+            ReportMetadata<T> defaultMetadata,
             ReportMetadata<T> overrideMetadata)
             where T : new()
         {
@@ -121,7 +149,7 @@ namespace KenticoInspector.Core.Helpers
                 var defaultObjectPropertyValue = objectTypeProperty.GetValue(defaultObject);
 
                 object overrideObjectPropertyValue = overrideObject != null
-                    ? objectTypeProperty.GetValue(overrideObject)
+                    ? objectTypeProperty.GetValue(overrideObject) 
                     : defaultObjectPropertyValue;
 
                 if (objectTypePropertyType.Namespace == objectType.Namespace)
