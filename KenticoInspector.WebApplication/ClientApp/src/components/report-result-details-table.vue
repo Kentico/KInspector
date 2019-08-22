@@ -9,12 +9,18 @@
     >
     <template slot="items" slot-scope="props">
       <td v-for="(header, index) in headers" :key="`header-${index}`">
-        {{ props.item[header.value] }}
+        <vue-showdown :markdown="props.item[header.value]" class="cell"></vue-showdown>
       </td>
     </template>
    </v-data-table>
   </div>
 </template>
+
+<style>
+  .cell p {
+    margin-bottom: 0;
+  }
+</style>
 
 <script>
 export default {
