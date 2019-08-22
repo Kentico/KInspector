@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 using KenticoInspector.Core.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models;
@@ -11,29 +9,31 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
 {
     public abstract class AbstractAnalyzers<TData, TResult> where TResult : class
     {
-        private IEnumerable<MethodInfo> analyzers;
-
         protected Terms ReportTerms { get; }
 
-        protected IEnumerable<MethodInfo> Analyzers => analyzers ?? (analyzers = GetType()
-            .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-            .Where(method => method.ReturnType == typeof(TResult)));
+        public abstract IEnumerable<Expression<Func<TData, TResult>>> Analyzers { get; }
 
         public AbstractAnalyzers(Terms reportTerms)
         {
             ReportTerms = reportTerms;
         }
 
-        public TResult GetAnalysis(object setting, string name)
+        public TResult GetAnalysis(
+            Expression<Func<TData, TResult>> analyzer,
+            IEnumerable<TData> settings,
+            Func<TData, string> getSettingName
+            )
         {
             TResult result = null;
 
-            var matchingAnalyzers = Analyzers
-                .Where(analyzer => Match(analyzer.Name, name));
-
-            foreach (var analyzer in matchingAnalyzers)
+            foreach (var setting in settings)
             {
-                result = analyzer.Invoke(this, new[] { setting }) as TResult ?? result;
+                var expectedSettingName = analyzer.Parameters[0].Name;
+
+                if (Match(expectedSettingName, getSettingName(setting)))
+                {
+                    result = analyzer.Compile()(setting) as TResult ?? result;
+                }
             }
 
             return result;
@@ -41,26 +41,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
 
         protected virtual bool Match(string analyzerName, string name)
         {
-            return analyzerName
-                .Equals(name, StringComparison.InvariantCulture);
-        }
-
-        protected virtual TResult AnalyzeUsingString(TData setting, string recommendedValue, Term recommendationReason)
-            => AnalyzeUsingFunc(
-                setting,
-                value => value.Equals(recommendedValue, StringComparison.InvariantCultureIgnoreCase),
-                recommendedValue,
-                recommendationReason
-                );
-
-        protected virtual TResult AnalyzeUsingFunc(
-            TData setting,
-            Func<string, bool> valueIsRecommended,
-            string recommendedValue,
-            Term recommendationReason
-            )
-        {
-            throw new NotImplementedException();
+            return analyzerName.Equals(name, StringComparison.InvariantCulture);
         }
 
         protected virtual TResult AnalyzeUsingExpression(
@@ -71,6 +52,16 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
             )
         {
             throw new NotImplementedException();
+        }
+
+        protected static bool IsNullOrEquals(string value, string equals)
+        {
+            return value == null || Equals(value, equals);
+        }
+
+        protected static bool Equals(string value, string equals)
+        {
+            return value != null && value.Equals(equals, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

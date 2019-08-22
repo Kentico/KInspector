@@ -9,7 +9,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results
     public class CmsSettingsKeyResult
     {
         private readonly int siteID;
-        private string categoryIDPath;
+        private readonly string categoryIDPath;
 
         public string SiteName { get; }
 

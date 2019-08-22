@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Web;
 using System.Xml.Linq;
 
 using KenticoInspector.Core.Models;
@@ -17,16 +18,13 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results
 
         public string RecommendationReason { get; set; }
 
-        public WebConfigSettingResult(WebConfigSetting webConfigSetting, string recommendedValue, Term recommendationReason)
-        {
-            KeyPath = webConfigSetting.KeyPath;
-            KeyName = webConfigSetting.KeyName;
-            KeyValue = webConfigSetting.KeyValue;
-            RecommendedValue = recommendedValue;
-            RecommendationReason = recommendationReason;
-        }
-
-        public WebConfigSettingResult(XElement element, string keyName, string keyValue, string recommendedValue, Term recommendationReason)
+        public WebConfigSettingResult(
+            XElement element,
+            string keyName,
+            string keyValue,
+            string recommendedValue,
+            Term recommendationReason
+            )
         {
             KeyPath = GetPath(element);
             KeyName = keyName;
@@ -47,7 +45,9 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results
                     return trimmedElement.ToString().Replace(" />", ">");
                 });
 
-            return string.Join("/", elementsOnPath);
+            var path = string.Join("/", elementsOnPath);
+
+            return HttpUtility.HtmlEncode(path);
         }
     }
 }

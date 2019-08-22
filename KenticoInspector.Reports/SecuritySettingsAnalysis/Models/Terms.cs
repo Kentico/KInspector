@@ -36,13 +36,13 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models
         public Term PasswordNumberOfNonAlphaNumChars { get; set; }
 
         public Term ReCaptcha { get; set; }
-
-        public Term UseCookies { get; set; }
     }
 
     public class RecommendationReasons
     {
         public AppSettings AppSettings { get; set; }
+
+        public ConnectionStrings ConnectionStrings { get; set; }
 
         public SettingsKeys SettingsKeys { get; set; }
 
@@ -58,6 +58,11 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models
         public Term CMSRenewSessionAuthChange { get; set; }
 
         public Term CMSXFrameOptionsExcluded { get; set; }
+    }
+
+    public class ConnectionStrings
+    {
+        public Term SaUser { get; set; }
     }
 
     public class SettingsKeys
@@ -78,6 +83,8 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models
 
         public Term CMSPasswordExpiration { get; set; }
 
+        public Term CMSPasswordExpirationBehaviour { get; set; }
+
         public Term CMSPasswordFormat { get; set; }
 
         public Term CMSPolicyMinimalLength { get; set; }
@@ -88,11 +95,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models
 
         public Term CMSResetPasswordInterval { get; set; }
 
-        public Term CMSResetPasswordRequiresApproval { get; set; }
-
         public Term CMSRESTServiceEnabled { get; set; }
-
-        public Term CMSSendEmailWithResetPassword { get; set; }
 
         public Term CMSUploadExtensions { get; set; }
 
@@ -113,12 +116,14 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models
 
         public Term PagesEnableViewState { get; set; }
 
+        public Term PagesEnableViewStateMac { get; set; }
+
         public Term TraceEnabled { get; set; }
     }
 
     public class Summaries
     {
-        public Term Error { get; set; }
+        public Term Warning { get; set; }
 
         public Term Good { get; set; }
     }

@@ -2,10 +2,6 @@
   name: Security settings analysis
   shortDescription: Shows security issues in Kentico admin settings and `web.config` settings.
   longDescription: |
-    Each security issue is accompanied by a short reason for the recommendation.
-    
-    It is critical that passwords are stored securely in the database. Since Kentico 10, the recommended and most secure password format is `PBKDF2`. For more, see [Setting the user password format](https://docs.kentico.com/k12sp/securing-websites/designing-secure-websites/securing-user-accounts-and-passwords/setting-the-user-password-format).
-    
     Checks the following security settings in the `web.config`:
     * Cookieless authentication
     * Compilation debug
@@ -18,6 +14,8 @@
     * Session fixation
     * Clickjacking protection override
     * User `sa` in `CMSConnectionString`
+    
+    Each security issue is accompanied by a short reason for the recommendation.
 terms:
   globalSiteName: (global)
   recommendedValues:
@@ -30,43 +28,44 @@ terms:
     resetPasswordInterval: 'Between 1 and 12, inclusive'
     passwordMinimalLength: More than or equal to 8
     passwordNumberOfNonAlphaNumChars: More than or equal to 2
-    reCaptcha: 3 (reCaptcha)
-    useCookies: useCookies
+    reCaptcha: 3 (reCAPTCHA)
   recommendationReasons:
     appSettings:
-      cMSEnableCsrfProtection: REASON
-      cMSHashStringSalt: REASON
-      cMSRenewSessionAuthChange: REASON
-      cMSXFrameOptionsExcluded: REASON
+      cMSEnableCsrfProtection: Default CSRF disabled. Ensure custom protection has been implemented.
+      cMSHashStringSalt: Macro signature hash salt not set. This may cause macro security to break if `CMSConnectionString` is changed.
+      cMSRenewSessionAuthChange: "Consider enabling session renewal, to enforce user session disposal: [Avoiding session fixation](https://docs.kentico.com/k12sp/securing-websites/designing-secure-websites/securing-and-protecting-the-system/session-protection#Sessionprotection-Avoidingsessionfixation)."
+      cMSXFrameOptionsExcluded: "Click jacking protection is disabled for these paths. For more, see [Clickjacking protection](https://docs.kentico.com/k12sp/securing-websites/designing-secure-websites/securing-and-protecting-the-system/clickjacking-protection)."
+    connectionStrings:
+      saUser: Use integrated security or a specific user.
     settingsKeys:
-      cMSAutocompleteEnableForLogin: REASON
-      cMSCaptchaControl: REASON
-      cMSChatEnableFloodProtection: REASON
-      cMSFloodProtectionEnabled: REASON
-      cMSForumAttachmentExtensions: REASON
-      cMSMaximumInvalidLogonAttempts: REASON
-      cMSMediaFileAllowedExtensions: REASON
-      cMSPasswordExpiration: REASON
-      cMSPasswordFormat: REASON
-      cMSPolicyMinimalLength: REASON
-      cMSPolicyNumberOfNonAlphaNumChars: REASON
-      cMSRegistrationEmailConfirmation: REASON
-      cMSResetPasswordInterval: REASON
-      cMSResetPasswordRequiresApproval: REASON
-      cMSRESTServiceEnabled: REASON
-      cMSSendEmailWithResetPassword: REASON
-      cMSUploadExtensions: REASON
-      cMSUsePasswordPolicy: REASON
-      cMSUseSSLForAdministrationInterface: REASON
+      cMSAutocompleteEnableForLogin: Enabled autocomplete could be exploited by a physical agent.
+      cMSCaptchaControl: We recommend setting this to reCAPTCHA and configuring the reCAPTCHA settings.
+      cMSChatEnableFloodProtection: "If the chat feature is used, we recommend enabling flood protection."
+      cMSFloodProtectionEnabled: "If the blog or forums features are used, we recommend enabling flood protection."
+      cMSForumAttachmentExtensions: "Check for possible dangerous extensions (.exe, .src, ...)."
+      cMSMaximumInvalidLogonAttempts: We recommend a reasonable limit to invalid logon attempts.
+      cMSMediaFileAllowedExtensions: "Check for possible dangerous extensions (.exe, .src, ...)."
+      cMSPasswordExpiration: We recommend enabling password expiration.
+      cMSPasswordExpirationBehaviour: We recommend locking the account when the password is expired.
+      cMSPasswordFormat: "The most secure password format is `PBKDF2`.For more, see [Setting the user password format](https://docs.kentico.com/k12sp/securing-websites/designing-secure-websites/securing-user-accounts-and-passwords/setting-the-user-password-format)."
+      cMSPolicyMinimalLength: A secure number of characters prevents brute force attacks.
+      cMSPolicyNumberOfNonAlphaNumChars: A secure number of special characters prevents brute force attacks.
+      cMSRegistrationEmailConfirmation: We recommend enabling registration email confirmation.
+      cMSResetPasswordInterval: We recommend setting this to no more than half a day.
+      cMSRESTServiceEnabled: "There are known security flaws in the REST service. We recommend implementing Web API instead: [Using ASP.NET Web API with Kentico](https://docs.kentico.com/k12sp/integrating-3rd-party-systems/using-asp-net-web-api-with-kentico)."
+      cMSUploadExtensions: "Check for possible dangerous extensions (.exe, .src, ...)."
+      cMSUsePasswordPolicy: We recommend enabling and configuring the password policy.
+      cMSUseSSLForAdministrationInterface: We recommend enabling SSL for the admin interface unless you have SSL enforced in another way.
     systemWebSettings:
-      authenticationCookieless: REASON
-      compilationDebug: REASON
-      customErrorsMode: REASON
-      httpCookiesHttpOnlyCookies: REASON
-      pagesEnableViewState: REASON
-      traceEnabled: REASON
+      authenticationCookieless: Cookieless authentication is the most secure option.
+      compilationDebug: We do not recommend enabling debug compilation in production.
+      customErrorsMode: We recommend enabling custom errors for all requests.
+      httpCookiesHttpOnlyCookies: HTTP-only cookies is the most secure option.
+      pagesEnableViewState: We do not recommend disabling `ViewState`.
+      pagesEnableViewStateMac: We do not recommend disabling `ViewStateMac`.
+      traceEnabled: We do not recommend enabling trace in production.
   summaries:
-    error: Found <cmsSettingsKeyResultsCount> <cmsSettingsKeyResultsCount:issue|issues> with admin security settings and <webConfigSettingsResultsCount> <webConfigSettingsResultsCount:issue|issues> with web.config security settings.
+    warning: Found <cmsSettingsKeyResultsCount> <cmsSettingsKeyResultsCount:issue|issues> with admin security settings and <webConfigSettingsResultsCount> <webConfigSettingsResultsCount:issue|issues> with web.config security settings.
     good: Found no issues in admin or web.config security settings.
   tableTitles:
     adminSecuritySettings: Admin security settings

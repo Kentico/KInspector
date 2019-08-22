@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+
 using KenticoInspector.Core.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data;
@@ -13,172 +14,136 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
     {
         private readonly IEnumerable<string> dangerousExtensions = new[] { "exe", "src", "cs", "dll", "aspx", "ascx" };
 
+        public override IEnumerable<Expression<Func<CmsSettingsKey, CmsSettingsKeyResult>>> Analyzers
+            => new List<Expression<Func<CmsSettingsKey, CmsSettingsKeyResult>>>
+        {
+            CMSAutocompleteEnableForLogin => AnalyzeUsingExpression(
+                CMSAutocompleteEnableForLogin,
+                value => Equals(value, "false"),
+                "false",
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSAutocompleteEnableForLogin
+                ),
+            CMSCaptchaControl => AnalyzeUsingExpression(
+                CMSCaptchaControl,
+                value => Equals(value, "3"),
+                ReportTerms.RecommendedValues.ReCaptcha,
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSCaptchaControl
+                ),
+            CMSChatEnableFloodProtection => AnalyzeUsingExpression(
+                CMSChatEnableFloodProtection,
+                value => Equals(value, "true"),
+                "true",
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSChatEnableFloodProtection
+                ),
+            CMSFloodProtectionEnabled => AnalyzeUsingExpression(
+                CMSFloodProtectionEnabled,
+                value => Equals(value, "true"),
+                "true",
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSFloodProtectionEnabled
+                ),
+            CMSForumAttachmentExtensions => AnalyzeUsingExpression(
+                CMSForumAttachmentExtensions,
+                value => !value.Split(';', StringSplitOptions.RemoveEmptyEntries)
+                    .Any(ext => dangerousExtensions.Contains(ext.ToLower())),
+                ReportTerms.RecommendedValues.NoDangerousExtensions,
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSForumAttachmentExtensions
+                ),
+            CMSMaximumInvalidLogonAttempts => AnalyzeUsingExpression(
+                CMSMaximumInvalidLogonAttempts,
+                value => int.Parse(value) <= 5,
+                ReportTerms.RecommendedValues.InvalidLogonAttempts,
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSMaximumInvalidLogonAttempts
+                ),
+            CMSMediaFileAllowedExtensions => AnalyzeUsingExpression(
+                CMSMediaFileAllowedExtensions,
+                value => !value.Split(';', StringSplitOptions.RemoveEmptyEntries)
+                    .Any(ext => dangerousExtensions.Contains(ext.ToLower())),
+                ReportTerms.RecommendedValues.NoDangerousExtensions,
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSMediaFileAllowedExtensions
+                ),
+            CMSPasswordExpiration => AnalyzeUsingExpression(
+                CMSPasswordExpiration,
+                value => Equals(value, "true"),
+                "true",
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSPasswordExpiration
+                ),
+            CMSPasswordExpirationBehaviour => AnalyzeUsingExpression(
+                CMSPasswordExpirationBehaviour,
+                value => Equals(value, "LOCKACCOUNT"),
+                "LOCKACCOUNT",
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSPasswordExpirationBehaviour
+                ),
+            CMSPasswordFormat => AnalyzeUsingExpression(
+                CMSPasswordFormat,
+                value => Equals(value, "PBKDF2"),
+                "PBKDF2",
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSPasswordFormat
+                ),
+            CMSPolicyMinimalLength => AnalyzeUsingExpression(
+                CMSPolicyMinimalLength,
+                value => int.Parse(value) >= 8,
+                ReportTerms.RecommendedValues.PasswordMinimalLength,
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSPolicyMinimalLength
+                ),
+            CMSPolicyNumberOfNonAlphaNumChars => AnalyzeUsingExpression(
+                CMSPolicyNumberOfNonAlphaNumChars,
+                value => int.Parse(value) >= 2,
+                ReportTerms.RecommendedValues.PasswordNumberOfNonAlphaNumChars,
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSPolicyNumberOfNonAlphaNumChars
+                ),
+            CMSRegistrationEmailConfirmation => AnalyzeUsingExpression(
+                CMSRegistrationEmailConfirmation,
+                value => Equals(value, "true"),
+                "true",
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSRegistrationEmailConfirmation
+                ),
+            CMSResetPasswordInterval => AnalyzeUsingExpression(
+               CMSResetPasswordInterval,
+                value => int.Parse(value) >= 1 && int.Parse(value) <= 12,
+                ReportTerms.RecommendedValues.ResetPasswordInterval,
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSResetPasswordInterval
+                ),
+            CMSRESTServiceEnabled => AnalyzeUsingExpression(
+                CMSRESTServiceEnabled,
+                value => Equals(value, "false"),
+                "false",
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSRESTServiceEnabled
+                ),
+            CMSUploadExtensions => AnalyzeUsingExpression(
+                CMSUploadExtensions,
+                value => !value.Split(';', StringSplitOptions.RemoveEmptyEntries)
+                    .Any(ext => dangerousExtensions.Contains(ext.ToLower())),
+                ReportTerms.RecommendedValues.NoDangerousExtensions,
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSUploadExtensions
+                ),
+            CMSUsePasswordPolicy => AnalyzeUsingExpression(
+                CMSUsePasswordPolicy,
+                value => Equals(value, "true"),
+                "true",
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSUsePasswordPolicy
+                ),
+            CMSUseSSLForAdministrationInterface => AnalyzeUsingExpression(
+                CMSUseSSLForAdministrationInterface,
+                value => Equals(value, "true"),
+                "true",
+                ReportTerms.RecommendationReasons.SettingsKeys.CMSUseSSLForAdministrationInterface
+                )
+        };
+
         public SettingsKeyAnalyzers(Terms reportTerms) : base(reportTerms)
         {
         }
 
-        public IEnumerable<Expression<Func<CmsSettingsKey, CmsSettingsKeyResult>>> TestAnalyzers1 => new List<Expression<Func<CmsSettingsKey, CmsSettingsKeyResult>>>
-        {
-            CMSCaptchaControl => AnalyzeUsingFunc(
-                CMSCaptchaControl,
-                value => value.Equals("3", StringComparison.InvariantCultureIgnoreCase),
-                ReportTerms.RecommendedValues.UseCookies,
-                ReportTerms.RecommendationReasons.SystemWebSettings.AuthenticationCookieless
-                )
-        };
-
-        public CmsSettingsKeyResult CMSAutocompleteEnableForLogin(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "false",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSAutocompleteEnableForLogin
-                );
-
-        public CmsSettingsKeyResult CMSCaptchaControl(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingFunc(
-                cmsSettingsKey,
-                value => value.Equals("3", StringComparison.InvariantCultureIgnoreCase),
-                ReportTerms.RecommendedValues.ReCaptcha,
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSCaptchaControl
-                );
-
-        public CmsSettingsKeyResult CMSChatEnableFloodProtection(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "true",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSChatEnableFloodProtection
-                );
-
-        public CmsSettingsKeyResult CMSFloodProtectionEnabled(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "true",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSFloodProtectionEnabled
-                );
-
-        public CmsSettingsKeyResult CMSForumAttachmentExtensions(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingFunc(
-                cmsSettingsKey,
-                value => !value.Split(';')
-                    .Any(ext => dangerousExtensions.Contains(ext.ToLower())),
-                ReportTerms.RecommendedValues.NoDangerousExtensions,
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSForumAttachmentExtensions
-                );
-
-        public CmsSettingsKeyResult CMSMaximumInvalidLogonAttempts(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingFunc(
-                cmsSettingsKey,
-                value => int.Parse(value) <= 5,
-                ReportTerms.RecommendedValues.InvalidLogonAttempts,
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSMaximumInvalidLogonAttempts
-                );
-
-        public CmsSettingsKeyResult CMSMediaFileAllowedExtensions(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingFunc(
-                cmsSettingsKey,
-                value => !value.Split(';')
-                    .Any(ext => dangerousExtensions.Contains(ext.ToLower())),
-                ReportTerms.RecommendedValues.NoDangerousExtensions,
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSMediaFileAllowedExtensions
-                );
-
-        public CmsSettingsKeyResult CMSPasswordExpiration(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "true",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSPasswordExpiration
-                );
-
-        public CmsSettingsKeyResult CMSPasswordFormat(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "PBKDF2",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSPasswordFormat
-                );
-
-        public CmsSettingsKeyResult CMSPolicyMinimalLength(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingFunc(
-                cmsSettingsKey,
-                value => int.Parse(value) >= 8,
-                ReportTerms.RecommendedValues.PasswordMinimalLength,
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSPolicyMinimalLength
-                );
-
-        public CmsSettingsKeyResult CMSPolicyNumberOfNonAlphaNumChars(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingFunc(
-                cmsSettingsKey,
-                value => int.Parse(value) >= 2,
-                ReportTerms.RecommendedValues.PasswordNumberOfNonAlphaNumChars,
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSPolicyNumberOfNonAlphaNumChars
-                );
-
-        public CmsSettingsKeyResult CMSRegistrationEmailConfirmation(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "true",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSRegistrationEmailConfirmation
-                );
-
-        public CmsSettingsKeyResult CMSResetPasswordInterval(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingFunc(
-                cmsSettingsKey,
-                value => int.Parse(value) >= 1 && int.Parse(value) <= 12,
-                ReportTerms.RecommendedValues.ResetPasswordInterval,
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSResetPasswordInterval
-                );
-
-        public CmsSettingsKeyResult CMSResetPasswordRequiresApproval(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "true",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSResetPasswordRequiresApproval
-                );
-
-        public CmsSettingsKeyResult CMSRESTServiceEnabled(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "true",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSRESTServiceEnabled
-                );
-
-        public CmsSettingsKeyResult CMSSendEmailWithResetPassword(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "true",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSSendEmailWithResetPassword
-                );
-
-        public CmsSettingsKeyResult CMSUploadExtensions(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingFunc(
-                cmsSettingsKey,
-                value => !value.Split(';')
-                    .Any(ext => dangerousExtensions.Contains(ext.ToLower())),
-                ReportTerms.RecommendedValues.NoDangerousExtensions,
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSUploadExtensions
-                );
-
-        public CmsSettingsKeyResult CMSUsePasswordPolicy(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "true",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSUsePasswordPolicy
-                );
-
-        public CmsSettingsKeyResult CMSUseSSLForAdministrationInterface(CmsSettingsKey cmsSettingsKey)
-            => AnalyzeUsingString(
-                cmsSettingsKey,
-                "true",
-                ReportTerms.RecommendationReasons.SettingsKeys.CMSUseSSLForAdministrationInterface
-                );
-
-        protected override CmsSettingsKeyResult AnalyzeUsingFunc(
+        protected override CmsSettingsKeyResult AnalyzeUsingExpression(
             CmsSettingsKey cmsSettingsKey,
-            Func<string, bool> valueIsRecommended,
+            Expression<Func<string, bool>> valueIsRecommended,
             string recommendedValue,
             Term recommendationReason
             )
         {
-            if (valueIsRecommended(cmsSettingsKey.KeyValue)) return null;
+            string keyValue = cmsSettingsKey.KeyValue;
+
+            if (valueIsRecommended.Compile()(keyValue)) return null;
 
             return new CmsSettingsKeyResult(cmsSettingsKey, recommendedValue, recommendationReason);
         }

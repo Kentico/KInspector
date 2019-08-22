@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -45,10 +44,9 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
 
         public override ReportResults GetResults()
         {
-            var cmsSettingsKeysNames = typeof(SettingsKeyAnalyzers)
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(method => method.ReturnType == typeof(CmsSettingsKeyResult))
-                .Select(method => method.Name);
+            var cmsSettingsKeysNames = new SettingsKeyAnalyzers(null)
+                .Analyzers
+                .Select(analyzer => analyzer.Parameters[0].Name);
 
             var cmsSettingsKeys = databaseService.ExecuteSqlFromFile<CmsSettingsKey>(
                 Scripts.GetSecurityCmsSettings,
@@ -89,13 +87,34 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
 
             var webConfigXml = cmsFileService.GetXmlDocument(instancePath, DefaultKenticoPaths.WebConfigFile);
 
+            var webConfigSettingsResults = GetWebConfigSettingsResults(webConfigXml);
+
+            return CompileResults(localizedCmsSettingsKeyResults, webConfigSettingsResults);
+        }
+
+        private IEnumerable<CmsSettingsKeyResult> GetCmsSettingsKeyResults(IEnumerable<CmsSettingsKey> cmsSettingsKeys)
+        {
+            var analyzersObject = new SettingsKeyAnalyzers(Metadata.Terms);
+
+            foreach (var analyzer in analyzersObject.Analyzers)
+            {
+                var analysisResult = analyzersObject.GetAnalysis(analyzer, cmsSettingsKeys, key => key.KeyName);
+
+                if (analysisResult is CmsSettingsKeyResult cmsSettingsKeyResult)
+                {
+                    yield return cmsSettingsKeyResult;
+                }
+            }
+        }
+
+        private IEnumerable<WebConfigSettingResult> GetWebConfigSettingsResults(XmlDocument webConfigXml)
+        {
             // This conversion is temporary pending standardization of XDocument usage
             var webConfig = ToXDocument(webConfigXml);
 
             var appSettings = webConfig
                 .Descendants("appSettings")
-                .Elements()
-                .Select(element => new AppSetting(element));
+                .Elements();
 
             var appSettingsResults = GetAppSettingsResults(appSettings);
 
@@ -105,49 +124,26 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
 
             var systemWebSettingsResults = GetSystemWebSettingsResults(systemWebElements);
 
-            var connectionStringElements = webConfig
+            var connectionStrings = webConfig
                 .Descendants("connectionStrings")
                 .Elements();
 
-            var connectionStringElementsResults = GetConnectionStringsResults(connectionStringElements);
+            var connectionStringElementsResults = GetConnectionStringsResults(connectionStrings);
 
             var webConfigSettingsResults = appSettingsResults
                 .Concat(systemWebSettingsResults)
                 .Concat(connectionStringElementsResults);
 
-            return CompileResults(localizedCmsSettingsKeyResults, webConfigSettingsResults);
+            return webConfigSettingsResults;
         }
 
-        private IEnumerable<CmsSettingsKeyResult> GetCmsSettingsKeyResults(IEnumerable<CmsSettingsKey> cmsSettingsKeys)
-        {
-            var analyzersObject = new SettingsKeyAnalyzers(Metadata.Terms);
-
-            foreach (var cmsSettingsKey in cmsSettingsKeys)
-            {
-                var analysisResult = analyzersObject.GetAnalysis(cmsSettingsKey, cmsSettingsKey.KeyName);
-
-                if (analysisResult is CmsSettingsKeyResult cmsSettingsKeyResult)
-                {
-                    yield return cmsSettingsKeyResult;
-                }
-            }
-        }
-
-        private static XDocument ToXDocument(XmlDocument document, LoadOptions options = LoadOptions.None)
-        {
-            using (var reader = new XmlNodeReader(document))
-            {
-                return XDocument.Load(reader, options);
-            }
-        }
-
-        private IEnumerable<WebConfigSettingResult> GetAppSettingsResults(IEnumerable<WebConfigSetting> appSettings)
+        private IEnumerable<WebConfigSettingResult> GetAppSettingsResults(IEnumerable<XElement> appSettings)
         {
             var analyzersObject = new AppSettingAnalyzers(Metadata.Terms);
 
-            foreach (var appSetting in appSettings)
+            foreach (var analyzer in analyzersObject.Analyzers)
             {
-                var analysisResult = analyzersObject.GetAnalysis(appSetting, appSetting.KeyName);
+                var analysisResult = analyzersObject.GetAnalysis(analyzer, appSettings, key => key.Attribute("key")?.Value);
 
                 if (analysisResult is WebConfigSettingResult appSettingResult)
                 {
@@ -160,31 +156,32 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
         {
             var analyzersObject = new SystemWebSettingAnalyzers(Metadata.Terms);
 
-            foreach (var systemWebElement in systemWebElements)
+            foreach (var analyzer in analyzersObject.Analyzers)
             {
-                var analysisResult = analyzersObject.GetAnalysis(systemWebElement, systemWebElement.Name.ToString());
+                var analysisResult = analyzersObject.GetAnalysis(analyzer, systemWebElements, key => key.Name.LocalName);
 
-                if (analysisResult is WebConfigSettingResult systemWebSettingResult)
+                if (analysisResult is WebConfigSettingResult systemWebElementsResult)
                 {
-                    yield return systemWebSettingResult;
+                    yield return systemWebElementsResult;
                 }
             }
         }
 
         private IEnumerable<WebConfigSettingResult> GetConnectionStringsResults(IEnumerable<XElement> connectionStringElements)
         {
-            var analyzersObject = new ConnectionStringsAnalyzers(Metadata.Terms);
+            var analyzersObject = new ConnectionStringAnalyzers(Metadata.Terms);
 
-            foreach (var connectionStringElement in connectionStringElements)
+            foreach (var analyzer in analyzersObject.Analyzers)
             {
                 var analysisResult = analyzersObject.GetAnalysis(
-                    connectionStringElement,
-                    connectionStringElement.Attribute("name")?.Value
+                    analyzer,
+                    connectionStringElements,
+                    key => key.Attribute("name")?.Value
                     );
 
-                if (analysisResult is WebConfigSettingResult systemWebSettingResult)
+                if (analysisResult is WebConfigSettingResult connectionStringResult)
                 {
-                    yield return systemWebSettingResult;
+                    yield return connectionStringResult;
                 }
             }
         }
@@ -206,7 +203,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
             var errorReportResults = new ReportResults
             {
                 Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Error
+                Status = ReportResultsStatus.Warning
             };
 
             var cmsSettingsKeyResultsCount = IfAnyAddTableResult(
@@ -221,7 +218,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
                 Metadata.Terms.TableTitles.WebConfigSecuritySettings
                 );
 
-            errorReportResults.Summary = Metadata.Terms.Summaries.Error.With(new
+            errorReportResults.Summary = Metadata.Terms.Summaries.Warning.With(new
             {
                 cmsSettingsKeyResultsCount,
                 webConfigSettingsResultsCount
@@ -246,6 +243,14 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
             }
 
             return results.Count();
+        }
+
+        private static XDocument ToXDocument(XmlDocument document, LoadOptions options = LoadOptions.None)
+        {
+            using (var reader = new XmlNodeReader(document))
+            {
+                return XDocument.Load(reader, options);
+            }
         }
     }
 }

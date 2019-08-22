@@ -1,58 +1,65 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Xml.Linq;
 
 using KenticoInspector.Core.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models;
-using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results;
 
 namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
 {
-    public class AppSettingAnalyzers : AbstractAnalyzers<WebConfigSetting, WebConfigSettingResult>
+    public class AppSettingAnalyzers : AbstractAnalyzers<XElement, WebConfigSettingResult>
     {
+        public override IEnumerable<Expression<Func<XElement, WebConfigSettingResult>>> Analyzers
+            => new List<Expression<Func<XElement, WebConfigSettingResult>>>
+        {
+            CMSEnableCsrfProtection => AnalyzeUsingExpression(
+                CMSEnableCsrfProtection,
+                value => Equals(value, "true"),
+                "true",
+                ReportTerms.RecommendationReasons.AppSettings.CMSEnableCsrfProtection
+                ),
+            CMSHashStringSalt => AnalyzeUsingExpression(
+                CMSHashStringSalt,
+                value => !string.IsNullOrEmpty(value),
+                ReportTerms.RecommendedValues.NotEmpty,
+                ReportTerms.RecommendationReasons.AppSettings.CMSHashStringSalt
+                ),
+            CMSRenewSessionAuthChange => AnalyzeUsingExpression(
+                CMSRenewSessionAuthChange,
+                value => Equals(value, "true"),
+                "true",
+                ReportTerms.RecommendationReasons.AppSettings.CMSRenewSessionAuthChange
+                ),
+             CMSXFrameOptionsExcluded => AnalyzeUsingExpression(
+                CMSXFrameOptionsExcluded,
+                value => string.IsNullOrEmpty(value),
+                ReportTerms.RecommendedValues.Empty,
+                ReportTerms.RecommendationReasons.AppSettings.CMSXFrameOptionsExcluded
+                )
+        };
+
         public AppSettingAnalyzers(Terms reportTerms) : base(reportTerms)
         {
         }
 
-        public WebConfigSettingResult CMSEnableCsrfProtection(WebConfigSetting webConfigSetting)
-            => AnalyzeUsingString(
-                webConfigSetting,
-                "true",
-                ReportTerms.RecommendationReasons.AppSettings.CMSEnableCsrfProtection
-                );
-
-        public WebConfigSettingResult CMSHashStringSalt(WebConfigSetting webConfigSetting)
-            => AnalyzeUsingFunc(
-                webConfigSetting,
-                value => !string.IsNullOrEmpty(value),
-                ReportTerms.RecommendedValues.NotEmpty,
-                ReportTerms.RecommendationReasons.AppSettings.CMSHashStringSalt
-                );
-
-        public WebConfigSettingResult CMSRenewSessionAuthChange(WebConfigSetting webConfigSetting)
-            => AnalyzeUsingString(
-                webConfigSetting,
-                "true",
-                ReportTerms.RecommendationReasons.AppSettings.CMSRenewSessionAuthChange
-                );
-
-        public WebConfigSettingResult CMSXFrameOptionsExcluded(WebConfigSetting webConfigSetting)
-            => AnalyzeUsingFunc(
-                webConfigSetting,
-                value => string.IsNullOrEmpty(value),
-                ReportTerms.RecommendedValues.Empty,
-                ReportTerms.RecommendationReasons.AppSettings.CMSXFrameOptionsExcluded
-                );
-
-        protected override WebConfigSettingResult AnalyzeUsingFunc(
-            WebConfigSetting webConfigSetting,
-            Func<string, bool> valueIsRecommended,
+        protected override WebConfigSettingResult AnalyzeUsingExpression(
+            XElement appSetting,
+            Expression<Func<string, bool>> valueIsRecommended,
             string recommendedValue,
             Term recommendationReason
             )
         {
-            if (valueIsRecommended(webConfigSetting.KeyValue)) return null;
+            string attributeName = valueIsRecommended.Parameters[0].Name;
 
-            return new WebConfigSettingResult(webConfigSetting, recommendedValue, recommendationReason);
+            string keyValue = appSetting.Attribute(attributeName)?.Value;
+
+            if (valueIsRecommended.Compile()(keyValue)) return null;
+
+            string keyName = appSetting.Attribute("key").Value;
+
+            return new WebConfigSettingResult(appSetting, keyName, keyValue, recommendedValue, recommendationReason);
         }
     }
 }
