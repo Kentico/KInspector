@@ -5,12 +5,15 @@ using System.Threading;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Reports.Tests.Helpers;
 
 using NUnit.Framework;
 
 namespace KenticoInspector.Infrastructure.Tests
 {
-    [TestFixture]
+    [TestFixture(10)]
+    [TestFixture(11)]
+    [TestFixture(12)]
     public class ReportMetadataServiceTests
     {
         private readonly IReportMetadataService reportMedatadataService;
@@ -20,9 +23,14 @@ namespace KenticoInspector.Infrastructure.Tests
             public Term SingleTerm { get; set; }
         }
 
-        public ReportMetadataServiceTests()
+        public ReportMetadataServiceTests(int majorVersion)
         {
-            reportMedatadataService = new ReportMetadataService();
+            var mockInstance = MockInstances.Get(majorVersion);
+            var mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
+
+            var mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(mockInstance, mockInstanceDetails);
+
+            reportMedatadataService = new ReportMetadataService(mockInstanceService.Object);
         }
 
         [TestCaseSource(typeof(YamlTestCases), nameof(YamlTestCases.YamlMatchesModel))]
@@ -45,7 +53,7 @@ namespace KenticoInspector.Infrastructure.Tests
             Assert.That(metadata.Terms.SingleTerm.ToString(), Is.EqualTo(resolvedMetadata.Terms.SingleTerm.ToString()));
         }
 
-        [TestCase("en-US", "TestData\\YamlDoesNotMatch")]
+        [TestCase("en-US", "TestData\\YamlDoesNotMatch", TestName = "Metadata throws exception when YAML does not match the model.")]
         public void Should_Throw_When_YamlDoesNotMatchModel(
             string cultureName,
             string yamlPath)
