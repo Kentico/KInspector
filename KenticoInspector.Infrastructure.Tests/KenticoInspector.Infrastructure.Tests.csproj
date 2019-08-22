@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -8,14 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.10.1" />
-    <PackageReference Include="nunit" Version="3.11.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.14.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\KenticoInspector.Core\KenticoInspector.Core.csproj" />
     <ProjectReference Include="..\KenticoInspector.Infrastructure\KenticoInspector.Infrastructure.csproj" />
+    <ProjectReference Include="..\KenticoInspector.Reports.Tests\KenticoInspector.Reports.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,5 +30,4 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>
