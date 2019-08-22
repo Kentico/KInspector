@@ -5,6 +5,7 @@ using System.Threading;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+using KenticoInspector.Core.Tokens;
 using KenticoInspector.Reports.Tests.Helpers;
 
 using NUnit.Framework;
@@ -25,6 +26,8 @@ namespace KenticoInspector.Infrastructure.Tests
 
         public ReportMetadataServiceTests(int majorVersion)
         {
+            TokenExpressionResolver.RegisterTokenExpressions(typeof(Term).Assembly);
+
             var mockInstance = MockInstances.Get(majorVersion);
             var mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
 

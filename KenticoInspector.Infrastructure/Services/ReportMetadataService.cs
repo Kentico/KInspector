@@ -44,11 +44,7 @@ namespace KenticoInspector.Core.Helpers
                     true
                 );
 
-                return GetMergedMetadata(defaultReportMetadata, reportMetadata);
-            }
-            else
-            {
-                return reportMetadata;
+                reportMetadata = GetMergedMetadata(defaultReportMetadata, reportMetadata);
             }
 
             var instanceDetails = instanceService.GetInstanceDetails(instanceService.CurrentInstance);
@@ -61,12 +57,15 @@ namespace KenticoInspector.Core.Helpers
             };
 
             Term name = reportMetadata.Details.Name;
+
             reportMetadata.Details.Name = name.With(commonData);
 
             Term shortDescription = reportMetadata.Details.ShortDescription;
+
             reportMetadata.Details.ShortDescription = shortDescription.With(commonData);
 
             Term longDescription = reportMetadata.Details.LongDescription;
+
             reportMetadata.Details.LongDescription = longDescription.With(commonData);
 
             return reportMetadata;
