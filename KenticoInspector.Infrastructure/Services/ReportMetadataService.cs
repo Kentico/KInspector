@@ -28,7 +28,7 @@ namespace KenticoInspector.Core.Helpers
         {
             var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\";
 
-            var reportMetadata = DeserializeMetadataFromYamlFile<ReportMetadata<T>>(
+            var currentMetadata = DeserializeMetadataFromYamlFile<ReportMetadata<T>>(
                 metadataDirectory,
                 CurrentCultureName,
                 false
@@ -36,16 +36,20 @@ namespace KenticoInspector.Core.Helpers
 
             var currentCultureIsDefaultCulture = CurrentCultureName == DefaultCultureName;
 
+            var mergedMetadata = new ReportMetadata<T>();
+
             if (!currentCultureIsDefaultCulture)
             {
-                var defaultReportMetadata = DeserializeMetadataFromYamlFile<ReportMetadata<T>>(
+                var defaultMetadata = DeserializeMetadataFromYamlFile<ReportMetadata<T>>(
                     metadataDirectory,
                     DefaultCultureName,
                     true
                 );
 
-                reportMetadata = GetMergedMetadata(defaultReportMetadata, reportMetadata);
+                mergedMetadata = GetMergedMetadata(defaultMetadata, currentMetadata);
             }
+
+            var reportMetadata = currentCultureIsDefaultCulture ? currentMetadata : mergedMetadata;
 
             var instanceDetails = instanceService.GetInstanceDetails(instanceService.CurrentInstance);
 
@@ -145,17 +149,14 @@ namespace KenticoInspector.Core.Helpers
                 var defaultObjectPropertyValue = objectTypeProperty.GetValue(defaultObject);
 
                 object overrideObjectPropertyValue = overrideObject != null
-                    ? objectTypeProperty.GetValue(overrideObject)
+                    ? objectTypeProperty.GetValue(overrideObject) 
                     : defaultObjectPropertyValue;
 
                 if (objectTypePropertyType.Namespace == objectType.Namespace)
                 {
-                    var targetObjectPropertyValue = Activator.CreateInstance(
-                        objectTypePropertyType);
+                    var targetObjectPropertyValue = Activator.CreateInstance(objectTypePropertyType);
 
-                    objectTypeProperty.SetValue(
-                        targetObject,
-                        targetObjectPropertyValue);
+                    objectTypeProperty.SetValue(targetObject, targetObjectPropertyValue);
 
                     RecursivelySetPropertyValues(
                         objectTypePropertyType,
@@ -165,9 +166,7 @@ namespace KenticoInspector.Core.Helpers
                 }
                 else
                 {
-                    objectTypeProperty.SetValue(
-                        targetObject,
-                        overrideObjectPropertyValue);
+                    objectTypeProperty.SetValue(targetObject, overrideObjectPropertyValue);
                 }
             }
         }

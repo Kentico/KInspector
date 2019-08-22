@@ -29,6 +29,7 @@ namespace KenticoInspector.Infrastructure.Tests
             TokenExpressionResolver.RegisterTokenExpressions(typeof(Term).Assembly);
 
             var mockInstance = MockInstances.Get(majorVersion);
+
             var mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
 
             var mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(mockInstance, mockInstanceDetails);
@@ -112,8 +113,8 @@ namespace KenticoInspector.Infrastructure.Tests
                 string yamlPath,
                 ReportMetadata<TestTerms> resolvedMetadata)
             {
-                return new TestCaseData(cultureCode, yamlPath, resolvedMetadata)
-                    .SetName($"Metadata in culture \"{cultureCode}\" resolves.");
+                return new TestCaseData(cultureCode, yamlPath, resolvedMetadata);
+                //TODO: add .SetName($"Metadata in culture \"{cultureCode}\" resolves."); once NUnit fixes https://github.com/nunit/nunit3-vs-adapter/issues/607
             }
         }
     }
