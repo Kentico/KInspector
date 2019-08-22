@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+
 using KenticoInspector.Core.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models;
 
@@ -24,10 +26,17 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
 
         public TResult GetAnalysis(object setting, string name)
         {
-            var matchingAnalyzer = Analyzers
-                .FirstOrDefault(analyzer => Match(analyzer.Name, name));
+            TResult result = null;
 
-            return matchingAnalyzer?.Invoke(this, new[] { setting }) as TResult;
+            var matchingAnalyzers = Analyzers
+                .Where(analyzer => Match(analyzer.Name, name));
+
+            foreach (var analyzer in matchingAnalyzers)
+            {
+                result = analyzer.Invoke(this, new[] { setting }) as TResult ?? result;
+            }
+
+            return result;
         }
 
         protected virtual bool Match(string analyzerName, string name)
@@ -36,7 +45,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
                 .Equals(name, StringComparison.InvariantCulture);
         }
 
-        protected TResult AnalyzeUsingString(TData setting, string recommendedValue, Term recommendationReason)
+        protected virtual TResult AnalyzeUsingString(TData setting, string recommendedValue, Term recommendationReason)
             => AnalyzeUsingFunc(
                 setting,
                 value => value.Equals(recommendedValue, StringComparison.InvariantCultureIgnoreCase),
@@ -44,11 +53,24 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
                 recommendationReason
                 );
 
-        protected abstract TResult AnalyzeUsingFunc(
+        protected virtual TResult AnalyzeUsingFunc(
             TData setting,
             Func<string, bool> valueIsRecommended,
             string recommendedValue,
             Term recommendationReason
-            );
+            )
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual TResult AnalyzeUsingExpression(
+            TData element,
+            Expression<Func<string, bool>> valueIsRecommended,
+            string recommendedValue,
+            Term recommendationReason
+            )
+        {
+            throw new NotImplementedException();
+        }
     }
 }

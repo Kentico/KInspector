@@ -11,10 +11,10 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data
 
         public string KeyPath { get; }
 
-        public WebConfigSetting(XElement element, string keyName, string keyValue)
+        public WebConfigSetting(XElement element, string keyName, XAttribute attributeWithValue)
         {
             KeyName = keyName;
-            KeyValue = keyValue;
+            KeyValue = attributeWithValue?.Value;
             KeyPath = GetPath(element);
         }
 

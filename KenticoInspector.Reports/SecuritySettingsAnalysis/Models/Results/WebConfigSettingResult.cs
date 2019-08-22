@@ -1,4 +1,7 @@
-﻿using KenticoInspector.Core.Models;
+﻿using System.Linq;
+using System.Xml.Linq;
+
+using KenticoInspector.Core.Models;
 
 namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results
 {
@@ -21,6 +24,30 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results
             KeyValue = webConfigSetting.KeyValue;
             RecommendedValue = recommendedValue;
             RecommendationReason = recommendationReason;
+        }
+
+        public WebConfigSettingResult(XElement element, string keyName, string keyValue, string recommendedValue, Term recommendationReason)
+        {
+            KeyPath = GetPath(element);
+            KeyName = keyName;
+            KeyValue = keyValue;
+            RecommendedValue = recommendedValue;
+            RecommendationReason = recommendationReason;
+        }
+
+        private string GetPath(XElement element)
+        {
+            var elementsOnPath = element.AncestorsAndSelf()
+                .Reverse()
+                .Select(elementOnPath =>
+                {
+                    var trimmedElement = new XElement(elementOnPath);
+                    trimmedElement.RemoveNodes();
+
+                    return trimmedElement.ToString().Replace(" />", ">");
+                });
+
+            return string.Join("/", elementsOnPath);
         }
     }
 }

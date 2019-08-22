@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Linq.Expressions;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data;
@@ -16,6 +16,16 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
         public SettingsKeyAnalyzers(Terms reportTerms) : base(reportTerms)
         {
         }
+
+        public IEnumerable<Expression<Func<CmsSettingsKey, CmsSettingsKeyResult>>> TestAnalyzers1 => new List<Expression<Func<CmsSettingsKey, CmsSettingsKeyResult>>>
+        {
+            CMSCaptchaControl => AnalyzeUsingFunc(
+                CMSCaptchaControl,
+                value => value.Equals("3", StringComparison.InvariantCultureIgnoreCase),
+                ReportTerms.RecommendedValues.UseCookies,
+                ReportTerms.RecommendationReasons.SystemWebSettings.AuthenticationCookieless
+                )
+        };
 
         public CmsSettingsKeyResult CMSAutocompleteEnableForLogin(CmsSettingsKey cmsSettingsKey)
             => AnalyzeUsingString(

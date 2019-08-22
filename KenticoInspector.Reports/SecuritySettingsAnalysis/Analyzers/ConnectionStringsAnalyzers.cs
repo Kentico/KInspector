@@ -19,7 +19,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
                 new WebConfigSetting(
                     connectionStringElement,
                     "CMSConnectionString",
-                    connectionStringElement.Attribute("connectionString")?.Value
+                    connectionStringElement.Attribute("connectionString")
                     ),
                 value => !value.Contains("user id=sa;", StringComparison.InvariantCultureIgnoreCase),
                 ReportTerms.RecommendedValues.NotSaUser,
