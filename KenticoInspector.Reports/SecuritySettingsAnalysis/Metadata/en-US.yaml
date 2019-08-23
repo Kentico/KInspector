@@ -65,7 +65,7 @@ terms:
       pagesEnableViewStateMac: We do not recommend disabling `ViewStateMac`.
       traceEnabled: We do not recommend enabling trace in production.
   summaries:
-    warning: Found <cmsSettingsKeyResultsCount> <cmsSettingsKeyResultsCount:issue|issues> with admin security settings and <webConfigSettingsResultsCount> <webConfigSettingsResultsCount:issue|issues> with web.config security settings.
+    warning: Found <cmsSettingsKeyResultsCount> <cmsSettingsKeyResultsCount|issue|issues> with admin security settings and <webConfigSettingsResultsCount> <webConfigSettingsResultsCount|issue|issues> with web.config security settings.
     good: Found no issues in admin or web.config security settings.
   tableTitles:
     adminSecuritySettings: Admin security settings
