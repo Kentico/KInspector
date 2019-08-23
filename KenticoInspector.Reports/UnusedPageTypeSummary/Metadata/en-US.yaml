@@ -4,5 +4,5 @@
   longDescription: |
     This report checks for page types that are not in use by any page on any site.
 terms:
-  countUnusedPageType: <count> unused page <count:type|types>.
+  countUnusedPageType: <count> unused page <count|type|types>.
   unusedPageTypes: Unused page types

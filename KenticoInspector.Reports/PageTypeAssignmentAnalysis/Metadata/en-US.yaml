@@ -4,6 +4,6 @@
   longDescription: |
     If the page type is not assigned to the site and is used by this site, you will encounter problems while using import/export feature.
 terms:
-  warningSummary: <unassignedPageTypeCount> page <unassignedPageTypeCount:type|types> found that <unassignedPageTypeCount:is|are> not assigned to the site <unassignedPageTypeCount:it|they> <unassignedPageTypeCount:is|are> used on.
+  warningSummary: <unassignedPageTypeCount> page <unassignedPageTypeCount|type|types> found that <unassignedPageTypeCount|is|are> not assigned to the site <unassignedPageTypeCount|it|they> <unassignedPageTypeCount|is|are> used on.
   unassignedPageTypesTableHeader: Page types not assigned to site
   noIssuesFound: All page types are assigned to sites.
