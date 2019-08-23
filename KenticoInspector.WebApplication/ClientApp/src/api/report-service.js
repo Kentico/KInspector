@@ -1,9 +1,9 @@
 import axios from "axios";
 
 class ReportService {
-  getReports () {
+    getReports(instanceGuid) {
     return new Promise((resolve)=>{
-      axios.get("/api/reports")
+            axios.get(`/api/reports/${instanceGuid}`)
       .then(r => r.data)
       .then(reports => {
         resolve(reports)

@@ -4,6 +4,6 @@
   longDescription: |
     Returns the list of templates with identical custom layouts (whitespace sensitive).
 terms:
-  countIdenticalPageLayoutFound: <count> identical page <count:layout|layouts> found.
+  countIdenticalPageLayoutFound: <count> identical page <count|layout|layouts> found.
   identicalPageLayouts: Identical page layouts
   noIdenticalPageLayoutsFound: No identical page layouts found.

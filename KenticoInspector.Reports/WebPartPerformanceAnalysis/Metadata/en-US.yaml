@@ -14,4 +14,4 @@ terms:
     documentSummary: Document Summary
     templateSummary: Template Summary
     webPartSummary: Web Part Summary
-  summary: <affectedWebPartCount> <affectedWebPartCount:web part|web parts> on <affectedTemplateCount> <affectedTemplateCount:template|templates> affecting <affectedDocumentCount> <affectedDocumentCount:document|documents>
+  summary: <affectedWebPartCount> <affectedWebPartCount|web part|web parts> on <affectedTemplateCount> <affectedTemplateCount|template|templates> affecting <affectedDocumentCount> <affectedDocumentCount|document|documents>.

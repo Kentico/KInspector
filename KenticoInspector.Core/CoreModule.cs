@@ -1,7 +1,12 @@
-﻿using Autofac;
+
+using System.Linq;
+using System.Reflection;
+
+using Autofac;
+
 using KenticoInspector.Core.Repositories.Interfaces;
 using KenticoInspector.Core.Services.Interfaces;
-using System.Reflection;
+using KenticoInspector.Core.Tokens;
 
 namespace KenticoInspector.Core
 {
@@ -26,6 +31,8 @@ namespace KenticoInspector.Core
                     )
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+
+            TokenExpressionResolver.RegisterTokenExpressions(assemblies);
         }
     }
 }
