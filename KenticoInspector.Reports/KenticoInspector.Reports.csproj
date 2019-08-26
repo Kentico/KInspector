@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="PagetypeFieldsDataTypeMismatch\Metadata\en-US.yaml">
+    <None Update="PageTypeFieldAnalysis\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="PagetypeFieldsDataTypeMismatch\Scripts\GetFieldsWithMismatchedTypes.sql">
+    <None Update="PageTypeFieldAnalysis\Scripts\GetMatchingCmsPageTypeFieldsWithDifferentDataTypes.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="DebugConfigurationAnalysis\Metadata\en-US.yaml">
