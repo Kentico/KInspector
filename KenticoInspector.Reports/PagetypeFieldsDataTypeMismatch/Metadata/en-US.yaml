@@ -1,0 +1,18 @@
+﻿details:
+  name: Page type fields data type mismatch
+  shortDescription: Checks for cases where two or more page types have a field with the same name but mismatched data types
+  longDescription: |
+    When two or more page types have a field with the same name, but mismatched data types it can cause several issues with the CMS.
+    For example, when exporting/importing a site or when working with web parts / widgets that list more than one page type you may receive errors.
+    The best way to fix this issue is to use the page type code name as the field name prefix. For example: CustomPageTypeA_FieldName
+    
+    You may also checkout [this article](https://devnet.kentico.com/articles/conversion-failed-when-converting-from-a-character-string-to-uniqueidentifier) for more information.
+    
+    This report will show duplicated field names, their associated page types and the data types they are set to on that page type. 
+    See Fields with mismatched data types for this listing.
+terms:
+  summaries:
+    information: Found <fieldResultCount> <fieldResultCount|field|fields> that were duplicated and had mismatched data types. 
+    good: No issues with duplicate page type fields with mismatched data types.
+  tableTitles:
+    fieldsWithMismatchedTypes: Fields with mismatched data types 
