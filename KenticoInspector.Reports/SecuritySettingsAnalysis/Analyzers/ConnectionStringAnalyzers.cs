@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 using KenticoInspector.Core.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models;
-using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results;
+using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Results;
 
 namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
 {

@@ -12,7 +12,7 @@ using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data;
-using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results;
+using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Results;
 
 namespace KenticoInspector.Reports.SecuritySettingsAnalysis
 {

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 using KenticoInspector.Core.Models;
+using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data;
 
-namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results
+namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Results
 {
     public class CmsSettingsKeyResult
     {

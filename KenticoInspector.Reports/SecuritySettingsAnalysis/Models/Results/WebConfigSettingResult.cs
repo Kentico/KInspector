@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 using KenticoInspector.Core.Models;
 
-namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results
+namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Results
 {
     public class WebConfigSettingResult
     {

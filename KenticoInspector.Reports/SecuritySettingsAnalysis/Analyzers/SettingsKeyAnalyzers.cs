@@ -6,13 +6,14 @@ using System.Linq.Expressions;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data;
-using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data.Results;
+using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Results;
 
 namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
 {
     public class SettingsKeyAnalyzers : AbstractAnalyzers<CmsSettingsKey, CmsSettingsKeyResult>
     {
-        private readonly IEnumerable<string> dangerousExtensions = new[] { "exe", "src", "cs", "dll", "aspx", "ascx" };
+        private readonly IEnumerable<string> dangerousExtensions
+            = new[] { "exe", "src", "cs", "dll", "aspx", "ascx", "msi", "bat" };
 
         public override IEnumerable<Expression<Func<CmsSettingsKey, CmsSettingsKeyResult>>> Analyzers
             => new List<Expression<Func<CmsSettingsKey, CmsSettingsKeyResult>>>
