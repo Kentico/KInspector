@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using KenticoInspector.Core;
@@ -37,8 +37,10 @@ namespace KenticoInspector.Infrastructure.Services
             return report.GetResults();
         }
 
-        public IEnumerable<IReport> GetReports()
+        public IEnumerable<IReport> GetReports(Guid instanceGuid)
         {
+            instanceService.SetCurrentInstance(instanceGuid);
+
             return reportRepository.GetReports();
         }
     }

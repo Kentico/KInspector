@@ -20,17 +20,10 @@ namespace KenticoInspector.WebApplication.Controllers
             _reportService = reportService;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<IReport>> Get()
+        [HttpGet("{instanceGuid}")]
+        public ActionResult<IEnumerable<IReport>> Get(Guid instanceGuid)
         {
-            return Ok(_reportService.GetReports());
-        }
-
-        // GET api/reports/5
-        [HttpGet("{codename}")]
-        public ActionResult<IReport> Get(string codename)
-        {
-            return Ok(_reportService.GetReport(codename));
+            return Ok(_reportService.GetReports(instanceGuid));
         }
 
         // POST api/values

@@ -11,6 +11,6 @@ namespace KenticoInspector.Core.Services.Interfaces
 
         ReportResults GetReportResults(string reportCodename, Guid instanceGuid);
 
-        IEnumerable<IReport> GetReports();
+        IEnumerable<IReport> GetReports(Guid instanceGuid);
     }
 }
