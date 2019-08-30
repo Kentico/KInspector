@@ -4,6 +4,6 @@
     {
         public static string BaseDirectory = $"{nameof(PageTypeFieldAnalysis)}/Scripts";
 
-        public static string GetMatchingCmsPageTypeFieldsWithDifferentDataTypes = $"{BaseDirectory}/{nameof(GetMatchingCmsPageTypeFieldsWithDifferentDataTypes)}.sql";
+        public static string GetCmsPageTypeFields = $"{BaseDirectory}/{nameof(GetCmsPageTypeFields)}.sql";
     }
 }

@@ -15,10 +15,8 @@ namespace KenticoInspector.Reports.PageTypeFieldAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(
-            IDatabaseService databaseService,
-            IReportMetadataService reportMetadataService
-            ) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) 
+            : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -33,11 +31,14 @@ namespace KenticoInspector.Reports.PageTypeFieldAnalysis
 
         public override ReportResults GetResults()
         {
-            var fieldsWithMismatchedTypes = databaseService
-                .ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetMatchingCmsPageTypeFieldsWithDifferentDataTypes);
+            var pagetypeFields = databaseService
+                .ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFields);
+
+            var fieldsWithMismatchedTypes = CheckForMismatchedTypes(pagetypeFields);
 
             return CompileResults(fieldsWithMismatchedTypes);
         }
+        
 
         private ReportResults CompileResults(IEnumerable<CmsPageTypeField> fieldsWithMismatchedTypes)
         {
@@ -51,19 +52,37 @@ namespace KenticoInspector.Reports.PageTypeFieldAnalysis
             }
 
             var fieldResultCount = fieldsWithMismatchedTypes.Count();
-            var fieldResults = new TableResult<CmsPageTypeField>()
+
+            var fieldResults = new TableResult<dynamic>()
             {
                 Name = Metadata.Terms.TableTitles.MatchingPageTypeFieldsWithDifferentDataTypes,
                 Rows = fieldsWithMismatchedTypes
             };
 
-            return new ReportResults
+            var results = new ReportResults
             {
                 Type = ReportResultsType.TableList,
                 Status = ReportResultsStatus.Information,
                 Summary = Metadata.Terms.Summaries.Information.With(new { fieldResultCount }),
-                Data = fieldResults
+                
             };
+
+            results.Data.FieldResults = fieldResults;
+
+            return results;
+        }
+
+        private IEnumerable<CmsPageTypeField> CheckForMismatchedTypes(IEnumerable<CmsPageTypeField> pagetypeFields)
+        {
+            var fieldsWithMismatchedTypes =
+                pagetypeFields
+                    .Distinct()
+                    .GroupBy(x => x.FieldName)
+                    .Where(g => g.Count() > 1)
+                    .SelectMany(g => g)
+                    .OrderBy(i => i.FieldName);
+
+            return fieldsWithMismatchedTypes;
         }
     }
 }

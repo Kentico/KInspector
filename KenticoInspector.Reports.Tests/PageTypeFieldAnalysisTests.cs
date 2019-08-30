@@ -45,7 +45,7 @@ namespace KenticoInspector.Reports.Tests
         {
             // Arrange
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetMatchingCmsPageTypeFieldsWithDifferentDataTypes))
+                .Setup(p => p.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFields))
                 .Returns(CmsPageTypeFieldsWithoutIssues);
 
             // Act
@@ -60,7 +60,7 @@ namespace KenticoInspector.Reports.Tests
         {
             // Arrange
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetMatchingCmsPageTypeFieldsWithDifferentDataTypes))
+                .Setup(p => p.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFields))
                 .Returns(CmsPageTypeFieldsWithIdenticalNamesAndDifferentDataTypes);
 
             // Act
