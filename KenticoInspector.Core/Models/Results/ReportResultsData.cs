@@ -6,7 +6,7 @@ namespace KenticoInspector.Core.Models.Results
 {
     public class ReportResultsData : ReportResultsData<Result>
     {
-        public ReportResultsData()
+        internal ReportResultsData()
         {
         }
 
@@ -37,16 +37,10 @@ namespace KenticoInspector.Core.Models.Results
                 .First();
         }
 
-        public int AddIfAny<T>(IEnumerable<T> results, Term tableNameTerm)
+        public int AddIfAny<T>(TableResult<T> tableResult)
         {
-            if (results.Any())
+            if (tableResult.Rows.Any())
             {
-                var tableResult = new TableResult<T>
-                {
-                    Name = tableNameTerm,
-                    Rows = results
-                };
-
                 Add(tableResult);
             }
 
@@ -58,16 +52,16 @@ namespace KenticoInspector.Core.Models.Results
     {
         protected List<T> results;
 
-        public ReportResultsData()
-        {
-            results = new List<T>();
-        }
-
-        public T this[int index] { get => results[index]; set => results[index] = value; }
-
         public int Count => results.Count;
 
         public bool IsReadOnly => false;
+
+        public T this[int index] { get => results[index]; set => results[index] = value; }
+
+        internal ReportResultsData()
+        {
+            results = new List<T>();
+        }
 
         public void Add(T item) => results.Add(item);
 

@@ -84,13 +84,11 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
             };
 
             var emptyCount = errorReportResults.Data.AddIfAny(
-                usersWithEmptyPasswords,
-                Metadata.Terms.TableTitles.EmptyPasswords
+                usersWithEmptyPasswords.AsResult(Metadata.Terms.TableTitles.EmptyPasswords)
                 );
 
             var plaintextCount = errorReportResults.Data.AddIfAny(
-                usersWithPlaintextPasswords,
-                Metadata.Terms.TableTitles.PlaintextPasswords
+                usersWithPlaintextPasswords.AsResult(Metadata.Terms.TableTitles.PlaintextPasswords)
                 );
 
             errorReportResults.Summary = Metadata.Terms.ErrorSummary.With(new { emptyCount, plaintextCount });

@@ -69,11 +69,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             var nodeIds = databaseService.ExecuteSqlFromFile<int>(script);
             var details = databaseService.ExecuteSqlFromFile<T>(getDetailsScript, new { IDs = nodeIds.ToArray() });
 
-            var data = new TableResult<T>
-            {
-                Name = name,
-                Rows = details
-            };
+            var data = details.AsResult(name);
 
             return new ConsistencyResult(
                 data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
@@ -113,11 +109,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 
             var tableName = Metadata.Terms.WorkflowInconsistencies;
 
-            var data = new TableResult<VersionHistoryMismatchResult>
-            {
-                Name = tableName,
-                Rows = comparisonResults
-            };
+            var data = comparisonResults.AsResult(tableName);
 
             return new ConsistencyResult(
                 status,

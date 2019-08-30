@@ -226,13 +226,11 @@ namespace KenticoInspector.Reports.ColumnFieldValidation
             };
 
             var cmsClassesResultCount = errorReportResults.Data.AddIfAny(
-                cmsClassesWithAddedFields,
-                Metadata.Terms.TableTitles.ClassesWithAddedFields
+                cmsClassesWithAddedFields.AsResult(Metadata.Terms.TableTitles.ClassesWithAddedFields)
             );
 
             var tablesResultCount = errorReportResults.Data.AddIfAny(
-                tablesWithAddedColumns,
-                Metadata.Terms.TableTitles.TablesWithAddedColumns
+                tablesWithAddedColumns.AsResult(Metadata.Terms.TableTitles.TablesWithAddedColumns)
             );
 
             errorReportResults.Summary = Metadata.Terms.Summaries.Error.With(new

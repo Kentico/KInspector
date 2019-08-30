@@ -40,15 +40,11 @@ namespace KenticoInspector.Reports.PagetypeFieldsDataTypeMisMatch
         private ReportResults CompileResults(IEnumerable<ClassField> fieldsWithMismatchedTypes)
         {
             var fieldErrorCount = fieldsWithMismatchedTypes.Count();
-            var fieldResults = new TableResult<ClassField>
-            {
-                Name = Metadata.Terms.TableTitles.FieldsWithMismatchedTypes,
-                Rows = fieldsWithMismatchedTypes
-            };
+            var fieldResults = fieldsWithMismatchedTypes.AsResult(Metadata.Terms.TableTitles.FieldsWithMismatchedTypes);
 
             var results = new ReportResults();
 
-            results.Data.Add( fieldResults);
+            results.Data.Add(fieldResults);
 
             switch (fieldErrorCount)
             {

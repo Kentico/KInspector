@@ -33,14 +33,14 @@ namespace KenticoInspector.Reports.SampleReport
             var results = new ReportResults()
             {
                 Status = ReportResultsStatus.Information,
-                Summary = Metadata.Terms.Summary.With(new { issueCount }).ToString()
+                Summary = Metadata.Terms.Summary.With(new { issueCount })
             };
 
             for (int i = 0; i < issueCount; i++)
             {
                 var name = $"test-{i}";
                 var problem = GetRandomString(10);
-                results.Data.Add(Metadata.Terms.DetailedResult.With(new { name, problem }).ToString());
+                results.Data.Add(Metadata.Terms.DetailedResult.With(new { name, problem }));
             }
 
             return results;

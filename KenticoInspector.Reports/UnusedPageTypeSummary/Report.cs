@@ -36,11 +36,7 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
             {
                 Status = ReportResultsStatus.Information,
                 Summary = Metadata.Terms.CountUnusedPageType.With(new { count = countOfUnusedPageTypes }),
-                Data = new TableResult<PageType>()
-                {
-                    Name = Metadata.Terms.UnusedPageTypes,
-                    Rows = unusedPageTypes
-                }
+                Data = unusedPageTypes.AsResult(Metadata.Terms.UnusedPageTypes)
             };
         }
     }
