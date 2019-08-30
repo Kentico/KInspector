@@ -179,6 +179,8 @@ namespace KenticoInspector.Reports.Tests
 
         public string WebConfigWithRecommendedValues => @"TestData\CMS\WebConfig\webConfigWithRecommendedValues.xml";
 
+        public string WebConfigWithoutRecommendedValues => @"TestData\CMS\WebConfig\webConfigWithoutRecommendedValues.xml";
+
         public SecuritySettingsAnalysisTests(int majorVersion) : base(majorVersion)
         {
             mockReport = new Report(
@@ -189,7 +191,10 @@ namespace KenticoInspector.Reports.Tests
                 );
         }
 
-        [TestCase(Category = "Settings keys and web.config have recommended values", TestName = "Settings keys and web.config with recommended values produce a good result")]
+        [TestCase(
+            Category = "Settings keys and web.config with recommended values",
+            TestName = "Settings keys and web.config with recommended values produce a good result"
+            )]
         public void Should_ReturnGoodResult_When_SettingsKeysAndWebConfigWithRecommendedValues()
         {
             // Arrange
@@ -205,7 +210,10 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Good.ToString()));
         }
 
-        [TestCase(Category = "Settings keys do not have recommended values and web.config has recommended values", TestName = "Settings keys without recommended values and web.config with recommended values produce a good result")]
+        [TestCase(
+            Category = "Settings keys without recommended values and web.config with recommended values",
+            TestName = "Settings keys without recommended values and web.config with recommended values produce a warning result"
+            )]
         public void Should_ReturnWarningResult_When_SettingsKeysWithoutRecommendedValuesAndWebConfigWithRecommendedValues()
         {
             // Arrange
@@ -221,6 +229,49 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Warning.ToString()));
 
             Assert.That(GetResult<TableResult<CmsSettingsKeyResult>>(results).Rows.Count(), Is.EqualTo(5));
+        }
+
+        [TestCase(
+            Category = "Settings keys with recommended values and web.config without recommended values",
+            TestName = "Settings keys with recommended values and web.config without recommended values produce a warning result"
+            )]
+        public void Should_ReturnWarningResult_When_SettingsKeysWithRecommendedValuesAndWebConfigWithoutRecommendedValues()
+        {
+            // Arrange
+            ArrangeDatabaseService(CmsSettingsKeysWithRecommendedValues, CmsSettingsCategoriesWithRecommendedValues);
+            ArrangeCmsFileService(WebConfigWithoutRecommendedValues);
+
+            // Act
+            var results = mockReport.GetResults();
+
+            // Assert
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
+
+            Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Warning.ToString()));
+
+            Assert.That(GetResult<TableResult<WebConfigSettingResult>>(results).Rows.Count(), Is.EqualTo(8));
+        }
+
+        [TestCase(
+            Category = "Settings keys without recommended values and web.config without recommended values",
+            TestName = "Settings keys without recommended values and web.config without recommended values produce a warning result"
+            )]
+        public void Should_ReturnWarningResult_When_SettingsKeysWithoutRecommendedValuesAndWebConfigWithoutRecommendedValues()
+        {
+            // Arrange
+            ArrangeDatabaseService(CmsSettingsKeysWithoutRecommendedValues, CmsSettingsCategoriesWithoutRecommendedValues);
+            ArrangeCmsFileService(WebConfigWithoutRecommendedValues);
+
+            // Act
+            var results = mockReport.GetResults();
+
+            // Assert
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
+
+            Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Warning.ToString()));
+
+            Assert.That(GetResult<TableResult<CmsSettingsKeyResult>>(results).Rows.Count(), Is.EqualTo(5));
+            Assert.That(GetResult<TableResult<WebConfigSettingResult>>(results).Rows.Count(), Is.EqualTo(8));
         }
 
         private void ArrangeDatabaseService(

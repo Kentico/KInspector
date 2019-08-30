@@ -29,6 +29,9 @@
     <None Update="TestData\classFormDefinitionXml_Clean_5512.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\CMS\WebConfig\webConfigWithoutRecommendedValues.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\CMS\WebConfig\webConfigWithRecommendedValues.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -59,10 +62,6 @@
     <None Update="TestData\VersionHistoryItem_Corrupt_519.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="TestData\CMS\WebConfig\" />
   </ItemGroup>
 
 </Project>
