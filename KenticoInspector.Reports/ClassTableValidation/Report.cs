@@ -42,11 +42,11 @@ namespace KenticoInspector.Reports.ClassTableValidation
 
         private ReportResults CompileResults(IEnumerable<TableWithNoClass> tablesWithMissingClass, IEnumerable<ClassWithNoTable> classesWithMissingTable)
         {
-            var tableResults = tablesWithMissingClass.AsResult(Metadata.Terms.DatabaseTablesWithMissingKenticoClasses);
+            var tableResults = tablesWithMissingClass.AsResult().WithLabel(Metadata.Terms.DatabaseTablesWithMissingKenticoClasses);
 
             var tableErrors = tablesWithMissingClass.Count();
 
-            var classResults = classesWithMissingTable.AsResult(Metadata.Terms.KenticoClassesWithMissingDatabaseTables);
+            var classResults = classesWithMissingTable.AsResult().WithLabel(Metadata.Terms.KenticoClassesWithMissingDatabaseTables);
 
             var classErrors = classesWithMissingTable.Count();
 

@@ -1,13 +1,14 @@
-﻿using KenticoInspector.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
@@ -52,89 +53,6 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
                 documentNodesWithMissingTreeNodeResults,
                 workflowInconsistenciesResults
             );
-        }
-
-        private ConsistencyResult GetTreeNodeTestResult(string tableName, string sqlScriptRelativeFilePath)
-        {
-            return GetTestResult<CmsTreeNode>(tableName, sqlScriptRelativeFilePath, Scripts.GetTreeNodeDetails);
-        }
-
-        private ConsistencyResult GetDocumentNodeTestResult(string name, string script)
-        {
-            return GetTestResult<CmsDocumentNode>(name, script, Scripts.GetDocumentNodeDetails);
-        }
-
-        private ConsistencyResult GetTestResult<T>(string name, string script, string getDetailsScript)
-        {
-            var nodeIds = databaseService.ExecuteSqlFromFile<int>(script);
-            var details = databaseService.ExecuteSqlFromFile<T>(getDetailsScript, new { IDs = nodeIds.ToArray() });
-
-            var data = details.AsResult(name);
-
-            return new ConsistencyResult(
-                data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
-                name,
-                data
-            );
-        }
-
-        private ConsistencyResult GetWorkflowInconsistencyResult()
-        {
-            var versionHistoryItems = GetVersionHistoryItems();
-
-            var classItems = GetCmsClassItems(versionHistoryItems);
-
-            // TODO: Find a use for this information
-            // var allDocumentNodeIds = versionHistoryItems.Select(x => x.DocumentID);
-            // var allDocumentNodes = _databaseService.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, new { IDs = allDocumentNodeIds.ToArray() });
-
-            var comparisonResults = new List<VersionHistoryMismatchResult>();
-
-            foreach (var cmsClass in classItems)
-            {
-                var classVersionHistoryItems = versionHistoryItems
-                    .Where(versionHistoryItem => versionHistoryItem.VersionClassID == cmsClass.ClassID);
-
-                var coupledDataIds = classVersionHistoryItems
-                    .Select(classVersionHistoryItem => classVersionHistoryItem.CoupledDataID);
-
-                var coupledData = GetCoupledData(cmsClass, coupledDataIds);
-
-                var classComparisionResults = CompareVersionHistoryItemsWithPublishedItems(versionHistoryItems, coupledData, cmsClass.ClassFields);
-
-                comparisonResults.AddRange(classComparisionResults);
-            }
-
-            var status = comparisonResults.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good;
-
-            var tableName = Metadata.Terms.WorkflowInconsistencies;
-
-            var data = comparisonResults.AsResult(tableName);
-
-            return new ConsistencyResult(
-                status,
-                tableName,
-                data
-            );
-        }
-
-        private IEnumerable<CmsVersionHistoryItem> GetVersionHistoryItems()
-        {
-            var latestVersionHistoryIds = databaseService.ExecuteSqlFromFile<int>(Scripts.GetLatestVersionHistoryIdForAllDocuments);
-
-            return databaseService.ExecuteSqlFromFile<CmsVersionHistoryItem>(Scripts.GetVersionHistoryDetails, new { IDs = latestVersionHistoryIds });
-        }
-
-        private IEnumerable<CmsClassItem> GetCmsClassItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems)
-        {
-            var cmsClassIds = versionHistoryItems.Select(vhi => vhi.VersionClassID);
-            return databaseService.ExecuteSqlFromFile<CmsClassItem>(Scripts.GetCmsClassItems, new { IDs = cmsClassIds.ToArray() });
-        }
-
-        private IEnumerable<IDictionary<string, object>> GetCoupledData(CmsClassItem cmsClassItem, IEnumerable<int> Ids)
-        {
-            var replacements = new CoupledDataScriptReplacements(cmsClassItem.ClassTableName, cmsClassItem.ClassIDColumn);
-            return databaseService.ExecuteSqlFromFileGeneric(Scripts.GetCmsDocumentCoupledDataItems, replacements.Dictionary, new { IDs = Ids });
         }
 
         private IEnumerable<VersionHistoryMismatchResult> CompareVersionHistoryItemsWithPublishedItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems, IEnumerable<IDictionary<string, object>> coupledData, IEnumerable<CmsClassField> cmsClassFields)
@@ -191,6 +109,89 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             }
 
             return combinedResults;
+        }
+
+        private IEnumerable<CmsClassItem> GetCmsClassItems(IEnumerable<CmsVersionHistoryItem> versionHistoryItems)
+        {
+            var cmsClassIds = versionHistoryItems.Select(vhi => vhi.VersionClassID);
+            return databaseService.ExecuteSqlFromFile<CmsClassItem>(Scripts.GetCmsClassItems, new { IDs = cmsClassIds.ToArray() });
+        }
+
+        private IEnumerable<IDictionary<string, object>> GetCoupledData(CmsClassItem cmsClassItem, IEnumerable<int> Ids)
+        {
+            var replacements = new CoupledDataScriptReplacements(cmsClassItem.ClassTableName, cmsClassItem.ClassIDColumn);
+            return databaseService.ExecuteSqlFromFileGeneric(Scripts.GetCmsDocumentCoupledDataItems, replacements.Dictionary, new { IDs = Ids });
+        }
+
+        private ConsistencyResult GetDocumentNodeTestResult(string name, string script)
+        {
+            return GetTestResult<CmsDocumentNode>(name, script, Scripts.GetDocumentNodeDetails);
+        }
+
+        private ConsistencyResult GetTestResult<T>(string name, string script, string getDetailsScript)
+        {
+            var nodeIds = databaseService.ExecuteSqlFromFile<int>(script);
+            var details = databaseService.ExecuteSqlFromFile<T>(getDetailsScript, new { IDs = nodeIds.ToArray() });
+
+            var data = details.AsResult().WithLabel(name);
+
+            return new ConsistencyResult(
+                data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                name,
+                data
+            );
+        }
+
+        private ConsistencyResult GetTreeNodeTestResult(string tableName, string sqlScriptRelativeFilePath)
+        {
+            return GetTestResult<CmsTreeNode>(tableName, sqlScriptRelativeFilePath, Scripts.GetTreeNodeDetails);
+        }
+
+        private IEnumerable<CmsVersionHistoryItem> GetVersionHistoryItems()
+        {
+            var latestVersionHistoryIds = databaseService.ExecuteSqlFromFile<int>(Scripts.GetLatestVersionHistoryIdForAllDocuments);
+
+            return databaseService.ExecuteSqlFromFile<CmsVersionHistoryItem>(Scripts.GetVersionHistoryDetails, new { IDs = latestVersionHistoryIds });
+        }
+
+        private ConsistencyResult GetWorkflowInconsistencyResult()
+        {
+            var versionHistoryItems = GetVersionHistoryItems();
+
+            var classItems = GetCmsClassItems(versionHistoryItems);
+
+            // TODO: Find a use for this information
+            // var allDocumentNodeIds = versionHistoryItems.Select(x => x.DocumentID);
+            // var allDocumentNodes = _databaseService.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, new { IDs = allDocumentNodeIds.ToArray() });
+
+            var comparisonResults = new List<VersionHistoryMismatchResult>();
+
+            foreach (var cmsClass in classItems)
+            {
+                var classVersionHistoryItems = versionHistoryItems
+                    .Where(versionHistoryItem => versionHistoryItem.VersionClassID == cmsClass.ClassID);
+
+                var coupledDataIds = classVersionHistoryItems
+                    .Select(classVersionHistoryItem => classVersionHistoryItem.CoupledDataID);
+
+                var coupledData = GetCoupledData(cmsClass, coupledDataIds);
+
+                var classComparisionResults = CompareVersionHistoryItemsWithPublishedItems(versionHistoryItems, coupledData, cmsClass.ClassFields);
+
+                comparisonResults.AddRange(classComparisionResults);
+            }
+
+            var status = comparisonResults.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good;
+
+            var tableName = Metadata.Terms.WorkflowInconsistencies;
+
+            var data = comparisonResults.AsResult().WithLabel(tableName);
+
+            return new ConsistencyResult(
+                status,
+                tableName,
+                data
+            );
         }
     }
 }

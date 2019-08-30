@@ -41,7 +41,7 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
             var results = new ReportResults
             {
                 Status = ReportResultsStatus.Information,
-                Data = identicalPageLayouts.AsResult(Metadata.Terms.IdenticalPageLayouts)
+                Data = identicalPageLayouts.AsResult().WithLabel(Metadata.Terms.IdenticalPageLayouts)
             };
 
             if (countIdenticalPageLayouts == 0)

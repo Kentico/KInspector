@@ -11,6 +11,6 @@
 terms:
   goodSummary: Found no users with empty or plaintext passwords.
   errorSummary: Found <emptyCount> <emptyCount|user|users> with an empty password and <plaintextCount> <plaintextCount|user|users> with a plaintext password.
-  tableTitles:
+  tableLabels:
     emptyPasswords: Users with empty passwords
     plaintextPasswords: Users with plaintext passwords

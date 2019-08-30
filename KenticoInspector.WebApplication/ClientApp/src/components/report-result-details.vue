@@ -4,12 +4,12 @@
          :key="`result-${index}`">
       <div v-if="item.hasOwnProperty('string')">
 
-        <report-result-details-string :name="item.name"
+        <report-result-details-string :label="item.label"
                                       :string="item.string">
         </report-result-details-string>
       </div>
       <div v-else-if="item.hasOwnProperty('rows')">
-        <report-result-details-table :name="item.name"
+        <report-result-details-table :label="item.label"
                                      :rows="item.rows">
         </report-result-details-table>
       </div>

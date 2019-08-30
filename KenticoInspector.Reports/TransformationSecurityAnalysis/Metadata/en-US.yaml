@@ -9,7 +9,7 @@
 terms:
   goodSummary: No issues with transformations found.
   warningSummary: 'Found <summaryCount> issues with transformations categorized into the following issue types: <issueTypesAsCsv>.'
-  tableTitles:
+  tableLabels:
     issueTypes: Issues types
     transformationsWithIssues: Transformations with issues
     transformationUsage: Templates using Transformations

@@ -38,8 +38,6 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.First<TableResult<TableWithNoClass>>().Rows.Count(), Is.EqualTo(0));
-            Assert.That(results.Data.First<TableResult<ClassWithNoTable>>().Rows.Count(), Is.EqualTo(0));
             Assert.That(results.Status == ReportResultsStatus.Good);
         }
 
@@ -68,7 +66,6 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.First<TableResult<TableWithNoClass>>().Rows.Count(), Is.EqualTo(0));
             Assert.That(results.Data.First<TableResult<ClassWithNoTable>>().Rows.Count(), Is.EqualTo(1));
             Assert.That(results.Status == ReportResultsStatus.Error);
         }
@@ -97,7 +94,6 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.First<TableResult<TableWithNoClass>>().Rows.Count(), Is.EqualTo(1));
-            Assert.That(results.Data.First<TableResult<ClassWithNoTable>>().Rows.Count(), Is.EqualTo(0));
             Assert.That(results.Status == ReportResultsStatus.Error);
         }
 

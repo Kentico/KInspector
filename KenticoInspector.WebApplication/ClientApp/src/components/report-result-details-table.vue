@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card-title>
-      <h4 v-if="name">{{ name }}</h4>
+      <h4 v-if="label">{{ label }}</h4>
       <v-spacer></v-spacer>
       <v-text-field v-if="rows.length > 1"
                     v-model="search"
@@ -26,7 +26,7 @@
 <script>
   export default {
     props: {
-      name: {
+      label: {
         type: String,
         default: ""
       },

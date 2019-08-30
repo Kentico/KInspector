@@ -40,7 +40,7 @@ namespace KenticoInspector.Reports.PageTypeAssignmentAnalysis
             {
                 Status = ReportResultsStatus.Good,
                 Summary = Metadata.Terms.NoIssuesFound,
-                Data = unassignedPageTypes.AsResult(Metadata.Terms.UnassignedPageTypesTableHeader)
+                Data = unassignedPageTypes.AsResult().WithLabel(Metadata.Terms.UnassignedPageTypesTableHeader)
             };
 
             var unassignedPageTypeCount = unassignedPageTypes.Count();

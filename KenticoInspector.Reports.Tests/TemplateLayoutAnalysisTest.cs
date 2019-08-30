@@ -46,7 +46,6 @@ namespace KenticoInspector.Reports.Tests
             // Act
             var results = _mockReport.GetResults();
             // Assert
-            Assert.That(results.Data.First<TableResult<IdenticalPageLayouts>>().Rows.Count(), Is.EqualTo(0));
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
 

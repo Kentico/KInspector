@@ -35,7 +35,7 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
 
         private ReportResults CompileResults(IEnumerable<ApplicationRestartEvent> applicationRestartEvents)
         {
-            var data = applicationRestartEvents.AsResult(Metadata.Terms.ApplicationRestartEvents);
+            var data = applicationRestartEvents.AsResult().WithLabel(Metadata.Terms.ApplicationRestartEvents);
 
             var totalEvents = applicationRestartEvents.Count();
             var totalStartEvents = applicationRestartEvents.Where(e => e.EventCode == "STARTAPP").Count();

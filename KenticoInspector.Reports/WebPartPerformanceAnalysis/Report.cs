@@ -84,15 +84,15 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
 
         private ReportResults CompileResults(IEnumerable<TemplateSummary> templateSummaries)
         {
-            var templateSummaryTable = templateSummaries.AsResult(Metadata.Terms.Headers.TemplateSummary);
+            var templateSummaryTable = templateSummaries.AsResult().WithLabel(Metadata.Terms.TableLabels.TemplateSummary);
 
             var webPartSummaries = templateSummaries.SelectMany(x => x.AffectedWebParts);
 
-            var webPartSummaryTable = webPartSummaries.AsResult(Metadata.Terms.Headers.WebPartSummary);
+            var webPartSummaryTable = webPartSummaries.AsResult().WithLabel(Metadata.Terms.TableLabels.WebPartSummary);
 
             var documentSummaries = templateSummaries.SelectMany(x => x.AffectedDocuments);
 
-            var documentSummaryTable = documentSummaries.AsResult(Metadata.Terms.Headers.DocumentSummary);
+            var documentSummaryTable = documentSummaries.AsResult().WithLabel(Metadata.Terms.TableLabels.DocumentSummary);
 
             var affectedDocumentCount = documentSummaries.Count();
             var affectedTemplateCount = templateSummaries.Count();

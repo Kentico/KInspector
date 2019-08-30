@@ -35,7 +35,6 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.First<TableResult<ClassField>>().Rows.Count(), Is.EqualTo(0));
             Assert.That(results.Status == ReportResultsStatus.Good);
         }
 

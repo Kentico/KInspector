@@ -14,5 +14,5 @@ terms:
   summaries:
     information: Found <fieldResultCount> <fieldResultCount|field|fields> that were duplicated and had mismatched data types. 
     good: No issues with duplicate page type fields with mismatched data types.
-  tableTitles:
+  tableLabels:
     fieldsWithMismatchedTypes: Fields with mismatched data types 

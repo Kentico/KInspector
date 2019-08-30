@@ -41,7 +41,7 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
 
             if (hasIssues)
             {
-                var dataTable = checkDbResults.Rows.OfType<DataRow>().AsResult(null);
+                var dataTable = checkDbResults.Rows.OfType<DataRow>().AsResult();
 
                 return new ReportResults
                 {

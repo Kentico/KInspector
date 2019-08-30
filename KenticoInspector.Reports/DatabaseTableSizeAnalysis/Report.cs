@@ -32,7 +32,7 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
             {
                 Status = ReportResultsStatus.Information,
                 Summary = Metadata.Terms.CheckResultsTableForAnyIssues,
-                Data = top25LargestTables.AsResult(Metadata.Terms.Top25Results)
+                Data = top25LargestTables.AsResult().WithLabel(Metadata.Terms.Top25Results)
             };
         }
     }

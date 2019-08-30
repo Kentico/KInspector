@@ -225,12 +225,16 @@ namespace KenticoInspector.Reports.ColumnFieldValidation
                 Status = ReportResultsStatus.Error
             };
 
-            var cmsClassesResultCount = errorReportResults.Data.AddIfAny(
-                cmsClassesWithAddedFields.AsResult(Metadata.Terms.TableTitles.ClassesWithAddedFields)
+            var cmsClassesResultCount = cmsClassesWithAddedFields.Count();
+
+            errorReportResults.Data.Add(
+                cmsClassesWithAddedFields.AsResult().WithLabel(Metadata.Terms.TableLabels.ClassesWithAddedFields)
             );
 
-            var tablesResultCount = errorReportResults.Data.AddIfAny(
-                tablesWithAddedColumns.AsResult(Metadata.Terms.TableTitles.TablesWithAddedColumns)
+            var tablesResultCount = tablesWithAddedColumns.Count();
+
+            errorReportResults.Data.Add(
+                tablesWithAddedColumns.AsResult().WithLabel(Metadata.Terms.TableLabels.TablesWithAddedColumns)
             );
 
             errorReportResults.Summary = Metadata.Terms.Summaries.Error.With(new

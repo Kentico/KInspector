@@ -110,7 +110,7 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
                 new SettingsKey("Trace", Metadata.Terms.WebConfig.TraceKeyDisplayName, isTraceEnabled, false)
             };
 
-            results.Data.Add(webconfigSettingsValues.AsResult(Metadata.Terms.WebConfig.OverviewTableHeader));
+            results.Data.Add(webconfigSettingsValues.AsResult().WithLabel(Metadata.Terms.WebConfig.OverviewTableHeader));
         }
 
         private void AnalyzeDatabaseSettingsResults(ReportResults results, IEnumerable<SettingsKey> databaseSettingsKeys)
@@ -126,10 +126,10 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
 
                 results.Summary += Metadata.Terms.Database.Summary.With(new { explicitlyEnabledSettingsCount });
 
-                results.Data.Add(explicitlyEnabledSettings.AsResult(Metadata.Terms.Database.ExplicitlyEnabledSettingsTableHeader));
+                results.Data.Add(explicitlyEnabledSettings.AsResult().WithLabel(Metadata.Terms.Database.ExplicitlyEnabledSettingsTableHeader));
             }
 
-            results.Data.Add(databaseSettingsKeys.AsResult(Metadata.Terms.Database.OverviewTableHeader));
+            results.Data.Add(databaseSettingsKeys.AsResult().WithLabel(Metadata.Terms.Database.OverviewTableHeader));
         }
     }
 }

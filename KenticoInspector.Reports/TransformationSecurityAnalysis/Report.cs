@@ -149,7 +149,7 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
             var issueTypes = oneIssueOfEachType
                 .Select(transformationIssue => new IssueTypeResult(transformationIssue.IssueType, IssueAnalyzers.DetectedIssueTypes));
 
-            var issueTypesResult = issueTypes.AsResult(Metadata.Terms.TableTitles.IssueTypes);
+            var issueTypesResult = issueTypes.AsResult().WithLabel(Metadata.Terms.TableLabels.IssueTypes);
 
             var usedIssueTypes = IssueAnalyzers.DetectedIssueTypes
                 .Keys
@@ -169,18 +169,18 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
                 .Select(transformation => new TransformationResult(transformation, CountTransformationUses(transformation, pageTemplates), usedIssueTypes))
                 .OrderBy(transformationResult => transformationResult.Uses);
 
-            var transformationsResult = transformationsResultRows.AsResult(Metadata.Terms.TableTitles.TransformationsWithIssues);
+            var transformationsResult = transformationsResultRows.AsResult().WithLabel(Metadata.Terms.TableLabels.TransformationsWithIssues);
 
             var transformationUsageResultRows = pageTemplates
                 .SelectMany(AsTransformationUsageResults);
 
-            var transformationUsageResult = transformationUsageResultRows.AsResult(Metadata.Terms.TableTitles.TransformationUsage);
+            var transformationUsageResult = transformationUsageResultRows.AsResult().WithLabel(Metadata.Terms.TableLabels.TransformationUsage);
 
             var templateUsageResultRows = pageTemplates
                 .SelectMany(pageTemplate => pageTemplate.Pages)
                 .Select(page => new TemplateUsageResult(page));
 
-            var templateUsageResult = templateUsageResultRows.AsResult(Metadata.Terms.TableTitles.TemplateUsage);
+            var templateUsageResult = templateUsageResultRows.AsResult().WithLabel(Metadata.Terms.TableLabels.TemplateUsage);
 
             var summaryCount = allTransformations
                 .Select(transformation => transformation.Issues)

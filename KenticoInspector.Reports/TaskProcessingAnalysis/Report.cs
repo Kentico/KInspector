@@ -60,17 +60,22 @@ namespace KenticoInspector.Reports.TaskProcessingAnalysis
                 };
             }
 
-            var data = taskTypesAndCounts
-                .Where(taskTypeAndCount => taskTypeAndCount.Count > 0)
-                .Select(AsTaskCountLine)
-                .ToList();
-
-            return new ReportResults()
+            var results = new ReportResults()
             {
                 Status = ReportResultsStatus.Warning,
-                Summary = Metadata.Terms.CountUnprocessedTask.With(new { count }),
-                Data = data
+                Summary = Metadata.Terms.CountUnprocessedTask.With(new { count })
             };
+
+            var lines = taskTypesAndCounts
+                .Where(taskTypeAndCount => taskTypeAndCount.Count > 0)
+                .Select(AsTaskCountLine);
+
+            foreach (var result in lines)
+            {
+                results.Data.Add(result);
+            }
+
+            return results;
         }
 
         private static Result AsTaskCountLine(TaskCountResult taskCountResult)

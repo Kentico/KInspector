@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.Tests.Helpers;
 using KenticoInspector.Reports.UserPasswordAnalysis;

@@ -4,7 +4,6 @@ using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.TaskProcessingAnalysis;
 using KenticoInspector.Reports.TaskProcessingAnalysis.Models;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace KenticoInspector.Reports.Tests
@@ -89,9 +88,29 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
-        private static void AssertThatResultsDataIncludesTaskTypeDetails(IList<Result> data, Term term)
+        [Test]
+        public void Should_ReturnWarningResult_When_ThereAreUnprocessedWebFarmTasks()
         {
-            Assert.That(data.Select(x => (string)x), Has.One.Contains(term.ToString()));
+            // Arrange
+            SetupAllDatabaseQueries(unprocessedWebFarmTasks: 1);
+
+            // Act
+            var results = _mockReport.GetResults();
+
+            // Assert
+            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, _mockReport.Metadata.Terms.CountWebFarmTask);
+            Assert.That(results.Status == ReportResultsStatus.Warning);
+        }
+
+        private static void AssertThatResultsDataIncludesTaskTypeDetails(ReportResultsData data, Term term)
+        {
+            foreach (var result in data)
+            {
+                if (result is StringResult stringResult)
+                {
+                    Assert.That(stringResult.String, Does.Contain(term.ToString()));
+                }
+            }
         }
 
         private void SetupAllDatabaseQueries(
