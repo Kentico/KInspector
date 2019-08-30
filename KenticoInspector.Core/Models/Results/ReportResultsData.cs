@@ -36,6 +36,22 @@ namespace KenticoInspector.Core.Models.Results
                 .OfType<T>()
                 .First();
         }
+
+        public int AddIfAny<T>(IEnumerable<T> results, Term tableNameTerm)
+        {
+            if (results.Any())
+            {
+                var tableResult = new TableResult<T>
+                {
+                    Name = tableNameTerm,
+                    Rows = results
+                };
+
+                Add(tableResult);
+            }
+
+            return results.Count();
+        }
     }
 
     public class ReportResultsData<T> : IList<T> where T : Result

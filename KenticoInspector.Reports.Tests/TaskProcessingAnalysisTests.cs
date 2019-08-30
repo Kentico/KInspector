@@ -89,20 +89,6 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Warning);
         }
 
-        [Test]
-        public void Should_ReturnWarningResult_When_ThereAreUnprocessedWebFarmTasks()
-        {
-            // Arrange
-            SetupAllDatabaseQueries(unprocessedWebFarmTasks: 1);
-
-            // Act
-            var results = _mockReport.GetResults();
-
-            // Assert
-            AssertThatResultsDataIncludesTaskTypeDetails(results.Data, _mockReport.Metadata.Terms.CountWebFarmTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
-        }
-
         private static void AssertThatResultsDataIncludesTaskTypeDetails(IList<Result> data, Term term)
         {
             Assert.That(data.Select(x => (string)x), Has.One.Contains(term.ToString()));

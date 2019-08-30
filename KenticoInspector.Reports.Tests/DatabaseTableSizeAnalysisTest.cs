@@ -33,8 +33,8 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.First<TableResult<DatabaseTableSizeResult>>().Rows.Count() == 25);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Data.First<TableResult<DatabaseTableSizeResult>>().Rows.Count(), Is.EqualTo(25));
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Information));
         }
 
         private List<DatabaseTableSizeResult> GetCleanResults()

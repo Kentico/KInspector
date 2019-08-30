@@ -21,7 +21,7 @@ namespace KenticoInspector.Reports.Tests
     {
         private readonly Report mockReport;
 
-        private IEnumerable<CmsUser> CmsUsersWithoutIssues => new List<CmsUser>
+        private IEnumerable<CmsUser> CmsUserWithoutIssues => new List<CmsUser>
         {
             new CmsUser
             {
@@ -30,7 +30,7 @@ namespace KenticoInspector.Reports.Tests
             }
         };
 
-        private IEnumerable<CmsUser> CmsUsersWithOneIssue => new List<CmsUser>
+        private IEnumerable<CmsUser> CmsUserWithOneIssue => new List<CmsUser>
         {
             new CmsUser
             {
@@ -39,7 +39,7 @@ namespace KenticoInspector.Reports.Tests
             }
         };
 
-        private IEnumerable<CmsUser> CmsUsersWithTwoIssues => new List<CmsUser>
+        private IEnumerable<CmsUser> CmsUserWithTwoIssues => new List<CmsUser>
         {
             new CmsUser
             {
@@ -61,10 +61,10 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnGoodResult_When_UserPasswordsHaveNoIssues()
+        public void Should_ReturnGoodStatusAndGoodSummary_When_UserPasswordsHaveNoIssues()
         {
             // Arrange
-            ArrangeDatabaseService(CmsUsersWithoutIssues);
+            ArrangeDatabaseService(CmsUserWithoutIssues);
 
             // Act
             var results = mockReport.GetResults();
@@ -76,42 +76,39 @@ namespace KenticoInspector.Reports.Tests
         }
 
         [Test]
-        public void Should_ReturnErrorResult_When_UserPasswordsHaveTwoIssues()
+        public void Should_ReturnErrorStatusAndErrorSummary_When_UserPasswordsHaveTwoIssues()
         {
             // Arrange
-            ArrangeDatabaseService(CmsUsersWithTwoIssues);
+            ArrangeDatabaseService(CmsUserWithTwoIssues);
 
             // Act
             var results = mockReport.GetResults();
-            var cmsUserResultWithPasswordFormat = results.Data.First<TableResult<CmsUserResultWithPasswordFormat>>().Rows.Count();
-            var cmsUserResult = results.Data.First<TableResult<CmsUserResult>>().Rows.Count();
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
 
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
 
-            Assert.That(cmsUserResultWithPasswordFormat, Is.EqualTo(1));
+            Assert.That(results.Data.First<TableResult<CmsUserResultWithPasswordFormat>>().Rows.Count(), Is.EqualTo(1));
 
-            Assert.That(cmsUserResult, Is.EqualTo(1));
+            Assert.That(results.Data.First<TableResult<CmsUserResult>>().Rows.Count(), Is.EqualTo(1));
         }
 
         [Test]
-        public void Should_ReturnErrorResult_When_UserPasswordsHaveOneIssue()
+        public void Should_ReturnErrorStatusAndErrorSummary_When_UserPasswordsHaveOneIssue()
         {
             // Arrange
-            ArrangeDatabaseService(CmsUsersWithOneIssue);
+            ArrangeDatabaseService(CmsUserWithOneIssue);
 
             // Act
             var results = mockReport.GetResults();
-            var cmsUserResultWithPasswordFormat = results.Data.First<TableResult<CmsUserResultWithPasswordFormat>>().Rows.Count();
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
 
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
 
-            Assert.That(cmsUserResultWithPasswordFormat, Is.EqualTo(1));
+            Assert.That(results.Data.First<TableResult<CmsUserResultWithPasswordFormat>>().Rows.Count(), Is.EqualTo(1));
         }
 
         private void ArrangeDatabaseService(

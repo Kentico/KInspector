@@ -31,7 +31,7 @@ namespace KenticoInspector.Reports.Tests
             // Act
             var results = _mockReport.GetResults();
             // Assert
-            Assert.That(results.Data.First<TableResult<IdenticalPageLayouts>>().Rows.Count() == 5);
+            Assert.That(results.Data.First<TableResult<IdenticalPageLayouts>>().Rows.Count(), Is.EqualTo(5));
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
 
@@ -46,7 +46,7 @@ namespace KenticoInspector.Reports.Tests
             // Act
             var results = _mockReport.GetResults();
             // Assert
-            Assert.That(results.Data.First<TableResult<IdenticalPageLayouts>>().Rows.Count() == 0);
+            Assert.That(results.Data.First<TableResult<IdenticalPageLayouts>>().Rows.Count(), Is.EqualTo(0));
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
 

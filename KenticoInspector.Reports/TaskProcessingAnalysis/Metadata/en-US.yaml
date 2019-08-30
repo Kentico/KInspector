@@ -10,9 +10,9 @@
       * Search tasks
 terms:
   goodSummary: No stuck tasks found.
-  countIntegrationBusTask: <count> Integration Bus <count:task|tasks>.
-  countScheduledTask: <count> Scheduled <count:task|tasks>.
-  countSearchTask: <count> Search <count:task|tasks>.
-  countStagingTask: <count> Staging <count:task|tasks>.
-  countUnprocessedTask: <count> unprocessed <count:task|tasks>.
-  countWebFarmTask: <count> Web farm <count:task|tasks>.
+  countIntegrationBusTask: <count> Integration Bus <count|task|tasks>.
+  countScheduledTask: <count> Scheduled <count|task|tasks>.
+  countSearchTask: <count> Search <count|task|tasks>.
+  countStagingTask: <count> Staging <count|task|tasks>.
+  countUnprocessedTask: <count> unprocessed <count|task|tasks>.
+  countWebFarmTask: <count> Web farm <count|task|tasks>.

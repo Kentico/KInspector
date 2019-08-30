@@ -33,7 +33,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.First<TableResult<PageType>>().Rows.Count() == 6);
+            Assert.That(results.Data.First<TableResult<PageType>>().Rows.Count(), Is.EqualTo(6));
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
 

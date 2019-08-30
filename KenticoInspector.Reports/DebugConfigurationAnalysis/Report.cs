@@ -128,14 +128,14 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
 
                 results.Summary += Metadata.Terms.Database.Summary.With(new { explicitlyEnabledSettingsCount });
 
-                results.Data.Add(new TableResult<SettingsKey>()
+                results.Data.Add(new TableResult<SettingsKey>
                 {
                     Name = Metadata.Terms.Database.ExplicitlyEnabledSettingsTableHeader,
                     Rows = explicitlyEnabledSettings
                 });
             }
 
-            results.Data.Add(new TableResult<SettingsKey>()
+            results.Data.Add(new TableResult<SettingsKey>
             {
                 Name = Metadata.Terms.Database.OverviewTableHeader,
                 Rows = databaseSettingsKeys

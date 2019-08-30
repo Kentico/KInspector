@@ -5,7 +5,6 @@ using System.Linq;
 using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.UserPasswordAnalysis.Models;
@@ -84,14 +83,12 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
                 Status = ReportResultsStatus.Error
             };
 
-            var emptyCount = IfAnyAddTableResult(
-                errorReportResults.Data,
+            var emptyCount = errorReportResults.Data.AddIfAny(
                 usersWithEmptyPasswords,
                 Metadata.Terms.TableTitles.EmptyPasswords
                 );
 
-            var plaintextCount = IfAnyAddTableResult(
-                errorReportResults.Data,
+            var plaintextCount = errorReportResults.Data.AddIfAny(
                 usersWithPlaintextPasswords,
                 Metadata.Terms.TableTitles.PlaintextPasswords
                 );
@@ -99,22 +96,6 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
             errorReportResults.Summary = Metadata.Terms.ErrorSummary.With(new { emptyCount, plaintextCount });
 
             return errorReportResults;
-        }
-
-        private static int IfAnyAddTableResult<T>(ReportResultsData data, IEnumerable<T> results, Term tableNameTerm)
-        {
-            if (results.Any())
-            {
-                var tableResult = new TableResult<T>
-                {
-                    Name = tableNameTerm,
-                    Rows = results
-                };
-
-                data.Add(tableResult);
-            }
-
-            return results.Count();
         }
     }
 }

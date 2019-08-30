@@ -26,13 +26,13 @@ namespace KenticoInspector.Reports.Tests
             // Arrange
             var unassignedPageTypes = GetListOfUnassignedPageTypes();
             ArrangeDatabaseCalls(unassignedPageTypes);
-
+            
             // Act
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.First<TableResult<PageType>>().Rows.Count, Is.GreaterThan(0));
-            Assert.That(results.Status == ReportResultsStatus.Warning, $"Expected Warning status, got {results.Status} status");
+            Assert.That(results.Data.First<TableResult<PageType>>().Rows.Count(), Is.GreaterThan(0));
+            Assert.That(results.Status == ReportResultsStatus.Warning,$"Expected Warning status, got {results.Status} status");
         }
 
         [Test]
@@ -47,9 +47,8 @@ namespace KenticoInspector.Reports.Tests
             Assert.That(results.Status == ReportResultsStatus.Good, $"Expected Good status, got {results.Status} status");
         }
 
-        private void ArrangeDatabaseCalls(IEnumerable<PageType> unassignedPageTypes = null)
-        {
-            unassignedPageTypes = unassignedPageTypes ?? new List<PageType>();
+        private void ArrangeDatabaseCalls(IEnumerable<PageType> unassignedPageTypes = null) {
+            unassignedPageTypes = unassignedPageTypes ?? new List<PageType>(); 
             _mockDatabaseService
                .Setup(p => p.ExecuteSqlFromFile<PageType>(Scripts.GetPageTypesNotAssignedToSite))
                .Returns(unassignedPageTypes);
