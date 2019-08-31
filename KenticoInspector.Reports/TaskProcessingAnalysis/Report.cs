@@ -14,7 +14,7 @@ namespace KenticoInspector.Reports.TaskProcessingAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -84,7 +84,7 @@ namespace KenticoInspector.Reports.TaskProcessingAnalysis
                 Data = taskResults
                     .Where(x => x.Value > 0)
                     .Select(AsTaskCountLabel),
-                Status = totalUnprocessedTasks > 0 ? ReportResultsStatus.Warning : ReportResultsStatus.Good,
+                Status = totalUnprocessedTasks > 0 ? ResultsStatus.Warning : ResultsStatus.Good,
                 Summary = Metadata.Terms.CountUnprocessedTask.With(new { count = totalUnprocessedTasks }),
                 Type = ReportResultsType.StringList
             };

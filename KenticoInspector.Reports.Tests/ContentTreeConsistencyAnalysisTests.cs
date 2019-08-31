@@ -33,7 +33,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -137,7 +137,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error, $"Status was '{results.Status}' instead of 'Error'");
+            Assert.That(results.Status == ResultsStatus.Error, $"Status was '{results.Status}' instead of 'Error'");
 
             var resultsData = (IDictionary<string, object>)results.Data;
             var workflowData = resultsData.First(t => t.Value.GetType() == typeof(TableResult<VersionHistoryMismatchResult>)).Value as TableResult<VersionHistoryMismatchResult>;
@@ -156,7 +156,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
         }
 
         private List<CmsDocumentNode> GetBadDocumentNodes()

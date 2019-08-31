@@ -10,7 +10,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace KenticoInspector.Core.Helpers
 {
-    public class ReportMetadataService : IReportMetadataService
+    public class ModuleMetadataService : IModuleMetadataService
     {
         private readonly IInstanceService instanceService;
 
@@ -18,17 +18,17 @@ namespace KenticoInspector.Core.Helpers
 
         public string CurrentCultureName => Thread.CurrentThread.CurrentCulture.Name;
 
-        public ReportMetadataService(IInstanceService instanceService)
+        public ModuleMetadataService(IInstanceService instanceService)
         {
             this.instanceService = instanceService;
         }
 
-        public ReportMetadata<T> GetReportMetadata<T>(string reportCodename)
+        public ModuleMetadata<T> GetModuleMetadata<T>(string moduleCodename)
             where T : new()
         {
-            var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\";
+            var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{moduleCodename}\\Metadata\\";
 
-            var currentMetadata = DeserializeMetadataFromYamlFile<ReportMetadata<T>>(
+            var currentMetadata = DeserializeMetadataFromYamlFile<ModuleMetadata<T>>(
                 metadataDirectory,
                 CurrentCultureName,
                 false
@@ -36,11 +36,11 @@ namespace KenticoInspector.Core.Helpers
 
             var currentCultureIsDefaultCulture = CurrentCultureName == DefaultCultureName;
 
-            var mergedMetadata = new ReportMetadata<T>();
+            var mergedMetadata = new ModuleMetadata<T>();
 
             if (!currentCultureIsDefaultCulture)
             {
-                var defaultMetadata = DeserializeMetadataFromYamlFile<ReportMetadata<T>>(
+                var defaultMetadata = DeserializeMetadataFromYamlFile<ModuleMetadata<T>>(
                     metadataDirectory,
                     DefaultCultureName,
                     true
@@ -49,7 +49,7 @@ namespace KenticoInspector.Core.Helpers
                 mergedMetadata = GetMergedMetadata(defaultMetadata, currentMetadata);
             }
 
-            var reportMetadata = currentCultureIsDefaultCulture ? currentMetadata : mergedMetadata;
+            var ModuleMetadata = currentCultureIsDefaultCulture ? currentMetadata : mergedMetadata;
 
             var instanceDetails = instanceService.GetInstanceDetails(instanceService.CurrentInstance);
 
@@ -60,19 +60,19 @@ namespace KenticoInspector.Core.Helpers
                 databaseVersion = instanceDetails.DatabaseVersion
             };
 
-            Term name = reportMetadata.Details.Name;
+            Term name = ModuleMetadata.Details.Name;
 
-            reportMetadata.Details.Name = name.With(commonData);
+            ModuleMetadata.Details.Name = name.With(commonData);
 
-            Term shortDescription = reportMetadata.Details.ShortDescription;
+            Term shortDescription = ModuleMetadata.Details.ShortDescription;
 
-            reportMetadata.Details.ShortDescription = shortDescription.With(commonData);
+            ModuleMetadata.Details.ShortDescription = shortDescription.With(commonData);
 
-            Term longDescription = reportMetadata.Details.LongDescription;
+            Term longDescription = ModuleMetadata.Details.LongDescription;
 
-            reportMetadata.Details.LongDescription = longDescription.With(commonData);
+            ModuleMetadata.Details.LongDescription = longDescription.With(commonData);
 
-            return reportMetadata;
+            return ModuleMetadata;
         }
 
         private static T DeserializeMetadataFromYamlFile<T>(
@@ -81,13 +81,13 @@ namespace KenticoInspector.Core.Helpers
             bool ignoreUnmatchedProperties)
             where T : new()
         {
-            var reportMetadataPath = $"{metadataDirectory}{cultureName}.yaml";
+            var ModuleMetadataPath = $"{metadataDirectory}{cultureName}.yaml";
 
-            var reportMetadataPathExists = File.Exists(reportMetadataPath);
+            var ModuleMetadataPathExists = File.Exists(ModuleMetadataPath);
 
-            if (reportMetadataPathExists)
+            if (ModuleMetadataPathExists)
             {
-                var fileText = File.ReadAllText(reportMetadataPath);
+                var fileText = File.ReadAllText(ModuleMetadataPath);
 
                 return DeserializeYaml<T>(fileText, ignoreUnmatchedProperties);
             }
@@ -112,12 +112,12 @@ namespace KenticoInspector.Core.Helpers
             return deserializer.Deserialize<T>(yaml);
         }
 
-        private static ReportMetadata<T> GetMergedMetadata<T>(
-            ReportMetadata<T> defaultMetadata,
-            ReportMetadata<T> overrideMetadata)
+        private static ModuleMetadata<T> GetMergedMetadata<T>(
+            ModuleMetadata<T> defaultMetadata,
+            ModuleMetadata<T> overrideMetadata)
             where T : new()
         {
-            var mergedMetadata = new ReportMetadata<T>();
+            var mergedMetadata = new ModuleMetadata<T>();
 
             mergedMetadata.Details.Name = overrideMetadata.Details.Name ?? defaultMetadata.Details.Name;
             mergedMetadata.Details.ShortDescription = 

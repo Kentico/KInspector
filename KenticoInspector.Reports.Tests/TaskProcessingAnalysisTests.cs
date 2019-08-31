@@ -28,7 +28,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.IntegrationBusTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.ScheduledTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.SearchTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.StagingTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.WebFarmTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         private static void AssertThatResultsDataIncludesTaskTypeDetails(dynamic data, TaskType taskType)

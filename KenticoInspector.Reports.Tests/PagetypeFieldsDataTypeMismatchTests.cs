@@ -35,7 +35,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.FieldResults.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.FieldResults.Rows.Count == 2);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Status == ResultsStatus.Information);
         }
 
         private List<ClassField> GetMismatchedFieldsResults()

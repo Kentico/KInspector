@@ -16,7 +16,7 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
         private readonly IDatabaseService _databaseService;
         private readonly IInstanceService _instanceService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IInstanceService instanceService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             _databaseService = databaseService;
             _instanceService = instanceService;
@@ -117,7 +117,7 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
 
             var summary = Metadata.Terms.Summary.With(new { affectedDocumentCount, affectedTemplateCount, affectedWebPartCount });
 
-            var status = templateSummaries.Count() > 0 ? ReportResultsStatus.Warning : ReportResultsStatus.Good;
+            var status = templateSummaries.Count() > 0 ? ResultsStatus.Warning : ResultsStatus.Good;
 
             return new ReportResults
             {

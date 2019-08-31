@@ -14,7 +14,7 @@ namespace KenticoInspector.Reports.PageTypeAssignmentAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -38,7 +38,7 @@ namespace KenticoInspector.Reports.PageTypeAssignmentAnalysis
         {
             var results = new ReportResults
             {
-                Status = ReportResultsStatus.Good,
+                Status = ResultsStatus.Good,
                 Summary = Metadata.Terms.NoIssuesFound,
                 Type = ReportResultsType.Table,
                 Data = new TableResult<PageType>()
@@ -51,7 +51,7 @@ namespace KenticoInspector.Reports.PageTypeAssignmentAnalysis
             var unassignedPageTypeCount = unassignedPageTypes.Count();
             if (unassignedPageTypeCount > 0)
             {
-                results.Status = ReportResultsStatus.Warning;
+                results.Status = ResultsStatus.Warning;
                 results.Summary = Metadata.Terms.WarningSummary.With(new { unassignedPageTypeCount });
             }
 

@@ -14,7 +14,7 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -35,7 +35,7 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
             return new ReportResults
             {
                 Type = ReportResultsType.Table,
-                Status = ReportResultsStatus.Information,
+                Status = ResultsStatus.Information,
                 Summary = Metadata.Terms.CountUnusedPageType.With(new { count = countOfUnusedPageTypes }),
                 Data = new TableResult<PageType>()
                 {

@@ -108,7 +108,7 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Good));
 
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.GoodSummary.ToString()));
         }
@@ -136,7 +136,7 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Warning));
 
             Assert.That(GetAnonymousTableResult<TableResult<IssueTypeResult>>(results, "issueTypesResult").Rows.Count(), Is.EqualTo(1));
             Assert.That(GetAnonymousTableResult<TableResult<TransformationResult>>(results, "transformationsResult").Rows.Count(), Is.EqualTo(1));

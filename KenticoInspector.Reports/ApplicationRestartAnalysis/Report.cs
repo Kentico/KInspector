@@ -14,7 +14,7 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -63,7 +63,7 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             var results = new ReportResults
             {
                 Type = ReportResultsType.Table,
-                Status = ReportResultsStatus.Information,
+                Status = ResultsStatus.Information,
                 Summary = $"{totalEventsText} ({totalStartEventsText}, {totalEndEventsText}) {timeSpanText}",
                 Data = data
             };

@@ -21,7 +21,7 @@ namespace KenticoInspector.Reports.RobotsTxtConfigurationSummary
         public Report(
             IDatabaseService databaseService,
             IInstanceService instanceService,
-            IReportMetadataService reportMetadataService,
+            IModuleMetadataService reportMetadataService,
             HttpClient httpClient = null
         ) : base(reportMetadataService)
 
@@ -55,7 +55,7 @@ namespace KenticoInspector.Reports.RobotsTxtConfigurationSummary
             return new ReportResults
             {
                 Data = string.Empty,
-                Status = found ? ReportResultsStatus.Good : ReportResultsStatus.Warning,
+                Status = found ? ResultsStatus.Good : ResultsStatus.Warning,
                 Summary = found ? Metadata.Terms.RobotsTxtFound : Metadata.Terms.RobotsTxtNotFound,
                 Type = ReportResultsType.String
             };

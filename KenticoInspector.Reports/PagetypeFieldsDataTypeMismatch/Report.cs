@@ -16,7 +16,7 @@ namespace KenticoInspector.Reports.PagetypeFieldsDataTypeMisMatch
         private readonly IDatabaseService databaseService;
         private readonly IInstanceService instanceService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IInstanceService instanceService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
             this.instanceService = instanceService;
@@ -55,12 +55,12 @@ namespace KenticoInspector.Reports.PagetypeFieldsDataTypeMisMatch
             switch (fieldErrorCount)
             {
                 case 0:
-                    results.Status = ReportResultsStatus.Good;
+                    results.Status = ResultsStatus.Good;
                     results.Summary = Metadata.Terms.Summaries.Good;
                     break;
 
                 default:
-                    results.Status = ReportResultsStatus.Information;
+                    results.Status = ResultsStatus.Information;
                     results.Summary = Metadata.Terms.Summaries.Information.With(new { fieldResultCount = fieldErrorCount });
                     break;
             }

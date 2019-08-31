@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Modules;
 using KenticoInspector.Core.Services.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;

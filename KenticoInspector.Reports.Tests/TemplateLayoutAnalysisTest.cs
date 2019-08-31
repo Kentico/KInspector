@@ -30,7 +30,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
             // Assert
             Assert.That(results.Data.Rows.Count == 5);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Status == ResultsStatus.Information);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
             // Assert
             Assert.That(results.Data.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Status == ResultsStatus.Information);
         }
 
         private IEnumerable<IdenticalPageLayouts> GetListOfLayouts()

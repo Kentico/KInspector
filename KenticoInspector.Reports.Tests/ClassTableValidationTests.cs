@@ -38,7 +38,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Data.TableResults.Rows.Count == 0);
             Assert.That(results.Data.ClassResults.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Data.TableResults.Rows.Count == 0);
             Assert.That(results.Data.ClassResults.Rows.Count == 1);
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Data.TableResults.Rows.Count == 1);
             Assert.That(results.Data.ClassResults.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         private List<ClassWithNoTable> GetCleanClassResults()

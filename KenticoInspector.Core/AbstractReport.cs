@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Modules;
 using KenticoInspector.Core.Services.Interfaces;
 
 namespace KenticoInspector.Core
 {
-    public abstract class AbstractReport<T> : IReport, IWithMetadata<T> where T : new()
+    public abstract class AbstractReport<T> : IReport, IWithModuleMetadata<T> where T : new()
     {
-        protected readonly IReportMetadataService reportMetadataService;
+        protected readonly IModuleMetadataService reportMetadataService;
 
-        private ReportMetadata<T> metadata;
+        private ModuleMetadata<T> metadata;
 
-        public AbstractReport(IReportMetadataService reportMetadataService)
+        public AbstractReport(IModuleMetadataService reportMetadataService)
         {
             this.reportMetadataService = reportMetadataService;
         }
@@ -23,11 +24,11 @@ namespace KenticoInspector.Core
 
         public virtual IList<Version> IncompatibleVersions => new List<Version>();
 
-        public ReportMetadata<T> Metadata
+        public ModuleMetadata<T> Metadata
         {
             get
             {
-                return metadata ?? (metadata = reportMetadataService.GetReportMetadata<T>(Codename));
+                return metadata ?? (metadata = reportMetadataService.GetModuleMetadata<T>(Codename));
             }
         }
 
