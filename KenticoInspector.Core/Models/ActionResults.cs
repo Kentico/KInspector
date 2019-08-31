@@ -7,7 +7,7 @@ using System.Text;
 
 namespace KenticoInspector.Core.Models
 {
-    public class ActionResult
+    public class ActionResults
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public ResultsStatus Status { get; set; }

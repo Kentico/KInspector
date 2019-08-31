@@ -13,6 +13,6 @@ namespace KenticoInspector.Core
         {
         }
 
-        public abstract ActionResult Execute<TOptions>(TOptions ActionOptions) where TOptions : new();
+        public abstract ActionResults Execute<TOptions>(TOptions ActionOptions) where TOptions : new();
     }
 }

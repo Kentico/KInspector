@@ -7,6 +7,6 @@ namespace KenticoInspector.Core.Modules
 {
     public interface IAction : IModule
     {
-        ActionResult Execute<T>(T ActionOptions) where T : new();
+        ActionResults Execute<T>(T ActionOptions) where T : new();
     }
 }

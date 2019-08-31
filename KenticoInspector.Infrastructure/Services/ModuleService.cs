@@ -8,23 +8,35 @@ using KenticoInspector.Core.Services.Interfaces;
 
 namespace KenticoInspector.Infrastructure.Services
 {
-    public class ReportService : IReportService
+    public class ModuleService : IModuleService
     {
-        private readonly IReportRepository reportRepository;
-        private readonly IInstanceService instanceService;
         private readonly IDatabaseService databaseService;
+        private readonly IInstanceService instanceService;
+        private readonly IReportRepository reportRepository;
+        private readonly IActionRepository actionRepository;
 
-        public ReportService(IReportRepository reportRepository, IInstanceService instanceService, IDatabaseService databaseService)
+        public ModuleService(IReportRepository reportRepository, IActionRepository actionRepository, IInstanceService instanceService, IDatabaseService databaseService)
         {
             this.reportRepository = reportRepository;
+            this.actionRepository = actionRepository;
             this.instanceService = instanceService;
             this.databaseService = databaseService;
         }
 
-        public IReport GetReport(string codename)
+        public ActionResults ExecuteAction<T>(string actionCodename, Guid instanceGuid, T options) where T : new()
         {
-            return reportRepository.GetReport(codename);
+            throw new NotImplementedException();
         }
+
+        public IAction GetAction(string codename) => actionRepository.GetAction(codename);
+
+        public IEnumerable<IAction> GetActions(Guid instanceGuid)
+        {
+            instanceService.SetCurrentInstance(instanceGuid);
+            return actionRepository.GetActions();
+        }
+
+        public IReport GetReport(string codename) => reportRepository.GetReport(codename);
 
         public ReportResults GetReportResults(string reportCodename, Guid instanceGuid)
         {
@@ -39,7 +51,6 @@ namespace KenticoInspector.Infrastructure.Services
         public IEnumerable<IReport> GetReports(Guid instanceGuid)
         {
             instanceService.SetCurrentInstance(instanceGuid);
-
             return reportRepository.GetReports();
         }
     }
