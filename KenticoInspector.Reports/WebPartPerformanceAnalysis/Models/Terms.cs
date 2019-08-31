@@ -2,7 +2,7 @@
 
 namespace KenticoInspector.Reports.WebPartPerformanceAnalysis.Models
 {
-    public class HeaderTerms
+    public class TableLabels
     {
         public Term DocumentSummary { get; set; }
         public Term TemplateSummary { get; set; }
@@ -11,7 +11,7 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis.Models
 
     public class Terms
     {
-        public HeaderTerms Headers { get; set; }
+        public TableLabels TableLabels { get; set; }
         public Term Summary { get; set; }
     }
 }

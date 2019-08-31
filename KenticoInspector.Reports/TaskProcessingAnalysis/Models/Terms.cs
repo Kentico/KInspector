@@ -4,6 +4,7 @@ namespace KenticoInspector.Reports.TaskProcessingAnalysis.Models
 {
     public class Terms
     {
+        public Term GoodSummary { get; set; }
         public Term CountIntegrationBusTask { get; set; }
         public Term CountScheduledTask { get; set; }
         public Term CountSearchTask { get; set; }

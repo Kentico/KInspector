@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-
+using System.Linq;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.PagetypeFieldsDataTypeMisMatch;
 using KenticoInspector.Reports.PagetypeFieldsDataTypeMisMatch.Models;
 
@@ -34,7 +35,6 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.FieldResults.Rows.Count == 0);
             Assert.That(results.Status == ReportResultsStatus.Good);
         }
 
@@ -52,7 +52,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.FieldResults.Rows.Count == 2);
+            Assert.That(results.Data.First<TableResult<ClassField>>().Rows.Count(), Is.EqualTo(2));
             Assert.That(results.Status == ReportResultsStatus.Information);
         }
 

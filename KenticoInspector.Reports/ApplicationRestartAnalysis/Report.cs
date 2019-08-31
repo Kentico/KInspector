@@ -1,7 +1,7 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ApplicationRestartAnalysis.Models;
 using System;
@@ -35,11 +35,7 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
 
         private ReportResults CompileResults(IEnumerable<ApplicationRestartEvent> applicationRestartEvents)
         {
-            var data = new TableResult<dynamic>()
-            {
-                Name = Metadata.Terms.ApplicationRestartEvents,
-                Rows = applicationRestartEvents
-            };
+            var data = applicationRestartEvents.AsResult().WithLabel(Metadata.Terms.ApplicationRestartEvents);
 
             var totalEvents = applicationRestartEvents.Count();
             var totalStartEvents = applicationRestartEvents.Where(e => e.EventCode == "STARTAPP").Count();
@@ -62,7 +58,6 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
 
             var results = new ReportResults
             {
-                Type = ReportResultsType.Table,
                 Status = ReportResultsStatus.Information,
                 Summary = $"{totalEventsText} ({totalStartEventsText}, {totalEndEventsText}) {timeSpanText}",
                 Data = data

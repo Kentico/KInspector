@@ -7,6 +7,7 @@ using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ColumnFieldValidation.Models;
 using KenticoInspector.Reports.ColumnFieldValidation.Models.Data;
@@ -221,20 +222,19 @@ namespace KenticoInspector.Reports.ColumnFieldValidation
 
             var errorReportResults = new ReportResults
             {
-                Type = ReportResultsType.TableList,
                 Status = ReportResultsStatus.Error
             };
 
-            var cmsClassesResultCount = IfAnyAddTableResult(
-                errorReportResults.Data,
-                cmsClassesWithAddedFields,
-                Metadata.Terms.TableTitles.ClassesWithAddedFields
+            var cmsClassesResultCount = cmsClassesWithAddedFields.Count();
+
+            errorReportResults.Data.Add(
+                cmsClassesWithAddedFields.AsResult().WithLabel(Metadata.Terms.TableLabels.ClassesWithAddedFields)
             );
 
-            var tablesResultCount = IfAnyAddTableResult(
-                errorReportResults.Data,
-                tablesWithAddedColumns,
-                Metadata.Terms.TableTitles.TablesWithAddedColumns
+            var tablesResultCount = tablesWithAddedColumns.Count();
+
+            errorReportResults.Data.Add(
+                tablesWithAddedColumns.AsResult().WithLabel(Metadata.Terms.TableLabels.TablesWithAddedColumns)
             );
 
             errorReportResults.Summary = Metadata.Terms.Summaries.Error.With(new
@@ -244,24 +244,6 @@ namespace KenticoInspector.Reports.ColumnFieldValidation
             });
 
             return errorReportResults;
-        }
-
-        private static int IfAnyAddTableResult<T>(dynamic data, IEnumerable<T> results, Term tableNameTerm)
-        {
-            if (results.Any())
-            {
-                var tableResult = new TableResult<T>
-                {
-                    Name = tableNameTerm,
-                    Rows = results
-                };
-
-                IDictionary<string, object> dictionaryData = data;
-
-                dictionaryData.Add(tableNameTerm, tableResult);
-            }
-
-            return results.Count();
         }
     }
 }

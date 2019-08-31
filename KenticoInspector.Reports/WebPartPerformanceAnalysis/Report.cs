@@ -1,7 +1,7 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis.Models;
 using System;
@@ -84,32 +84,15 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
 
         private ReportResults CompileResults(IEnumerable<TemplateSummary> templateSummaries)
         {
-            var templateSummaryTable = new TableResult<TemplateSummary>()
-            {
-                Name = "Template Summary",
-                Rows = templateSummaries
-            };
+            var templateSummaryTable = templateSummaries.AsResult().WithLabel(Metadata.Terms.TableLabels.TemplateSummary);
 
             var webPartSummaries = templateSummaries.SelectMany(x => x.AffectedWebParts);
-            var webPartSummaryTable = new TableResult<WebPartSummary>()
-            {
-                Name = "Web Part Summary",
-                Rows = webPartSummaries
-            };
+
+            var webPartSummaryTable = webPartSummaries.AsResult().WithLabel(Metadata.Terms.TableLabels.WebPartSummary);
 
             var documentSummaries = templateSummaries.SelectMany(x => x.AffectedDocuments);
-            var documentSummaryTable = new TableResult<Document>()
-            {
-                Name = "Document Summary",
-                Rows = documentSummaries
-            };
 
-            var data = new
-            {
-                TemplateSummaryTable = templateSummaryTable,
-                WebPartSummaryTable = webPartSummaryTable,
-                DocumentSummaryTable = documentSummaryTable
-            };
+            var documentSummaryTable = documentSummaries.AsResult().WithLabel(Metadata.Terms.TableLabels.DocumentSummary);
 
             var affectedDocumentCount = documentSummaries.Count();
             var affectedTemplateCount = templateSummaries.Count();
@@ -123,8 +106,11 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
             {
                 Status = status,
                 Summary = summary,
-                Data = data,
-                Type = ReportResultsType.TableList
+                Data = {
+                    templateSummaryTable,
+                    webPartSummaryTable,
+                    documentSummaryTable
+                }
             };
         }
     }

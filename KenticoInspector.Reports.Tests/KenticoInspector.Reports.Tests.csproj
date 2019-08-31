@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KenticoInspector.Core\KenticoInspector.Core.csproj" />
     <ProjectReference Include="..\KenticoInspector.Reports\KenticoInspector.Reports.csproj" />
   </ItemGroup>
 

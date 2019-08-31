@@ -6,7 +6,7 @@ namespace KenticoInspector.Reports.ColumnFieldValidation.Models
     {
         public Summaries Summaries { get; set; }
 
-        public TableTitles TableTitles { get; set; }
+        public TableLabels TableLabels { get; set; }
     }
 
     public class Summaries
@@ -16,7 +16,7 @@ namespace KenticoInspector.Reports.ColumnFieldValidation.Models
         public Term Good { get; set; }
     }
 
-    public class TableTitles
+    public class TableLabels
     {
         public Term ClassesWithAddedFields { get; set; }
 

@@ -8,10 +8,10 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis.Models
 
         public Term GoodSummary { get; set; }
 
-        public TableTitlesTerms TableTitles { get; set; }
+        public TableLabels TableLabels { get; set; }
     }
 
-    public class TableTitlesTerms
+    public class TableLabels
     {
         public Term EmptyPasswords { get; set; }
 

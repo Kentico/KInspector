@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.ColumnFieldValidation;
 using KenticoInspector.Reports.ColumnFieldValidation.Models;
 using KenticoInspector.Reports.ColumnFieldValidation.Models.Data;
@@ -147,7 +145,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
 
-            Assert.That(GetExpandTableResult<TableResult<CmsClassResult>>(results).Rows.Count(), Is.EqualTo(1));
+            Assert.That(results.Data.First<TableResult<CmsClassResult>>().Rows.Count(), Is.EqualTo(1));
         }
 
         [TestCase(Category = "Table has added column", TestName = "Table with added column produces an error result")]
@@ -162,7 +160,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
 
-            Assert.That(GetExpandTableResult<TableResult<TableResult>>(results).Rows.Count(), Is.EqualTo(1));
+            Assert.That(results.Data.First<TableResult<TableResult>>().Rows.Count(), Is.EqualTo(1));
         }
 
         private void ArrangeDatabaseService(IEnumerable<CmsClass> cmsClasses, IEnumerable<TableColumn> tableColumns)
@@ -178,16 +176,6 @@ namespace KenticoInspector.Reports.Tests
                 classTableNames,
                 tableColumns
                 );
-        }
-
-        private static TResult GetExpandTableResult<TResult>(ReportResults results)
-        {
-            IDictionary<string, object> dictionaryData = results.Data;
-
-            return dictionaryData
-                .Values
-                .OfType<TResult>()
-                .First();
         }
     }
 }

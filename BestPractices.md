@@ -10,10 +10,10 @@
 - `longDescription` should not duplicate `shortDescription` (due to how it appears in the UI)
 - Sort all terms alphabetically
 - Define summaries under a property named `summaries`
-- Name Summary title model class `Summaries`
+- Name Summary label model class `Summaries`
 - Recommended: Name summary terms following `[information|good|error|warning]`
-- Define table titles under a property named `tableTitles`
-- Name Table title model class `TableTitles`
+- Define table labels under a property named `tableLabels`
+- Name Table label model class `TableLabels`
 
 ## Code formatting
 - Use <tool> to format code

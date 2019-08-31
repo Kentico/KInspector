@@ -2,6 +2,7 @@
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ClassTableValidation.Models;
 using System;
@@ -41,29 +42,24 @@ namespace KenticoInspector.Reports.ClassTableValidation
 
         private ReportResults CompileResults(IEnumerable<TableWithNoClass> tablesWithMissingClass, IEnumerable<ClassWithNoTable> classesWithMissingTable)
         {
+            var tableResults = tablesWithMissingClass.AsResult().WithLabel(Metadata.Terms.DatabaseTablesWithMissingKenticoClasses);
+
             var tableErrors = tablesWithMissingClass.Count();
-            var tableResults = new TableResult<dynamic>()
-            {
-                Name = Metadata.Terms.DatabaseTablesWithMissingKenticoClasses,
-                Rows = tablesWithMissingClass
-            };
+
+            var classResults = classesWithMissingTable.AsResult().WithLabel(Metadata.Terms.KenticoClassesWithMissingDatabaseTables);
 
             var classErrors = classesWithMissingTable.Count();
-            var classResults = new TableResult<dynamic>()
-            {
-                Name = Metadata.Terms.KenticoClassesWithMissingDatabaseTables,
-                Rows = classesWithMissingTable
-            };
 
             var totalErrors = tableErrors + classErrors;
 
             var results = new ReportResults
             {
-                Type = ReportResultsType.TableList
+                Data =
+                {
+                    tableResults,
+                    classResults
+                }
             };
-
-            results.Data.TableResults = tableResults;
-            results.Data.ClassResults = classResults;
 
             switch (totalErrors)
             {

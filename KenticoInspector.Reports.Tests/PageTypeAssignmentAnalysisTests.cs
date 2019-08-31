@@ -1,8 +1,10 @@
 ﻿using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.PageTypeAssignmentAnalysis;
 using KenticoInspector.Reports.PageTypeAssignmentAnalysis.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -29,7 +31,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.Rows.Count > 0, "Expected more than 0 page types to be returned");
+            Assert.That(results.Data.First<TableResult<PageType>>().Rows.Count(), Is.GreaterThan(0));
             Assert.That(results.Status == ReportResultsStatus.Warning,$"Expected Warning status, got {results.Status} status");
         }
 
@@ -42,7 +44,6 @@ namespace KenticoInspector.Reports.Tests
             // Act
             var results = _mockReport.GetResults();
             // Assert
-            Assert.That(results.Data.Rows.Count == 0, $"Expected 0 page types to be returned, got {results.Data.Rows.Count}");
             Assert.That(results.Status == ReportResultsStatus.Good, $"Expected Good status, got {results.Status} status");
         }
 

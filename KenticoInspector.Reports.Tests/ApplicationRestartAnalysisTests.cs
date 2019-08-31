@@ -1,9 +1,11 @@
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.ApplicationRestartAnalysis;
 using KenticoInspector.Reports.ApplicationRestartAnalysis.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -32,29 +34,29 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Information));
         }
 
         [Test]
         public void Should_ReturnResult_When_DatabaseHasEvents()
         {
             // Arrange
-            var applicationRestartEvents = new List<ApplicationRestartEvent>();
-
-            applicationRestartEvents.Add(new ApplicationRestartEvent
+            var applicationRestartEvents = new List<ApplicationRestartEvent>
             {
-                EventCode = "STARTAPP",
-                EventTime = DateTime.Now.AddHours(-1),
-                EventMachineName = "Server-01"
-            });
+                new ApplicationRestartEvent
+                {
+                    EventCode = "STARTAPP",
+                    EventTime = DateTime.Now.AddHours(-1),
+                    EventMachineName = "Server-01"
+                },
 
-            applicationRestartEvents.Add(new ApplicationRestartEvent
-            {
-                EventCode = "ENDAPP",
-                EventTime = DateTime.Now.AddHours(-1).AddMinutes(-1),
-                EventMachineName = "Server-01"
-            });
+                new ApplicationRestartEvent
+                {
+                    EventCode = "ENDAPP",
+                    EventTime = DateTime.Now.AddHours(-1).AddMinutes(-1),
+                    EventMachineName = "Server-01"
+                }
+            };
 
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.ApplicationRestartEvents))
@@ -64,8 +66,8 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.Rows.Count == 2);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Data.First<TableResult<ApplicationRestartEvent>>().Rows.Count(), Is.EqualTo(2));
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Information));
         }
 
         [Test]
@@ -81,7 +83,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Type == ReportResultsType.Table);
+            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Information));
         }
     }
 }

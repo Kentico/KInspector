@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Repositories.Interfaces;
 using KenticoInspector.Core.Services.Interfaces;
 

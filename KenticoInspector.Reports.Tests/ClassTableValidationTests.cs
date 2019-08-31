@@ -1,8 +1,10 @@
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Reports.ClassTableValidation;
 using KenticoInspector.Reports.ClassTableValidation.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Reports.Tests
 {
@@ -36,8 +38,6 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.TableResults.Rows.Count == 0);
-            Assert.That(results.Data.ClassResults.Rows.Count == 0);
             Assert.That(results.Status == ReportResultsStatus.Good);
         }
 
@@ -66,8 +66,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.TableResults.Rows.Count == 0);
-            Assert.That(results.Data.ClassResults.Rows.Count == 1);
+            Assert.That(results.Data.First<TableResult<ClassWithNoTable>>().Rows.Count(), Is.EqualTo(1));
             Assert.That(results.Status == ReportResultsStatus.Error);
         }
 
@@ -94,8 +93,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Data.TableResults.Rows.Count == 1);
-            Assert.That(results.Data.ClassResults.Rows.Count == 0);
+            Assert.That(results.Data.First<TableResult<TableWithNoClass>>().Rows.Count(), Is.EqualTo(1));
             Assert.That(results.Status == ReportResultsStatus.Error);
         }
 

@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F3EF3619-F312-4B17-B5BE-5764A8010D38}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F3EF36
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5977CB97-CB8F-4C77-836E-EAC1CCD3DEED}"
 	ProjectSection(SolutionItems) = preProject
+		BestPractices.md = BestPractices.md
 		CONTRIBUTING.md = CONTRIBUTING.md
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
@@ -27,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Reports", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Reports.Tests", "KenticoInspector.Reports.Tests\KenticoInspector.Reports.Tests.csproj", "{3F359210-5970-4CAA-B442-338F2EC51729}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KenticoInspector.Infrastructure.Tests", "KenticoInspector.Infrastructure.Tests\KenticoInspector.Infrastructure.Tests.csproj", "{7C8E2AC5-5ED5-45D7-8EB4-39F3BEECCFDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Infrastructure.Tests", "KenticoInspector.Infrastructure.Tests\KenticoInspector.Infrastructure.Tests.csproj", "{7C8E2AC5-5ED5-45D7-8EB4-39F3BEECCFDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KenticoInspector.Core.Tests", "KenticoInspector.Core.Tests\KenticoInspector.Core.Tests.csproj", "{46F38A42-61A3-4FA9-9FB0-32B343CFA6A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Core.Tests", "KenticoInspector.Core.Tests\KenticoInspector.Core.Tests.csproj", "{46F38A42-61A3-4FA9-9FB0-32B343CFA6A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,7 +10,7 @@
     
     For more information, [see documentation](https://docs.kentico.com/k12sp/configuring-kentico/optimizing-performance-of-portal-engine-sites/loading-data-efficiently).
 terms:
-  headers:
+  tableLabels:
     documentSummary: Document Summary
     templateSummary: Template Summary
     webPartSummary: Web Part Summary

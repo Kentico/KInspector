@@ -8,6 +8,6 @@ terms:
   summaries:
     error: Found <cmsClassesResultCount> <cmsClassesResultCount|class|classes> with fields not in a table and <tablesResultCount> <tablesResultCount|table|tables> with columns not in a class.
     good: No issues with classes and their tables found.
-  tableTitles:
+  tableLabels:
     classesWithAddedFields: Classes with fields not in table
     tablesWithAddedColumns: Tables with columns not in class

@@ -6,6 +6,7 @@ using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.PagetypeFieldsDataTypeMisMatch.Models;
 
@@ -39,18 +40,11 @@ namespace KenticoInspector.Reports.PagetypeFieldsDataTypeMisMatch
         private ReportResults CompileResults(IEnumerable<ClassField> fieldsWithMismatchedTypes)
         {
             var fieldErrorCount = fieldsWithMismatchedTypes.Count();
-            var fieldResults = new TableResult<dynamic>()
-            {
-                Name = Metadata.Terms.TableTitles.FieldsWithMismatchedTypes,
-                Rows = fieldsWithMismatchedTypes
-            };
+            var fieldResults = fieldsWithMismatchedTypes.AsResult().WithLabel(Metadata.Terms.TableLabels.FieldsWithMismatchedTypes);
 
-            var results = new ReportResults
-            {
-                Type = ReportResultsType.TableList
-            };
+            var results = new ReportResults();
 
-            results.Data.FieldResults = fieldResults;
+            results.Data.Add(fieldResults);
 
             switch (fieldErrorCount)
             {

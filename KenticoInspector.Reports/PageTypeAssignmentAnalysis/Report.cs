@@ -1,7 +1,7 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.PageTypeAssignmentAnalysis.Models;
 using System;
@@ -40,12 +40,7 @@ namespace KenticoInspector.Reports.PageTypeAssignmentAnalysis
             {
                 Status = ReportResultsStatus.Good,
                 Summary = Metadata.Terms.NoIssuesFound,
-                Type = ReportResultsType.Table,
-                Data = new TableResult<PageType>()
-                {
-                    Name = Metadata.Terms.UnassignedPageTypesTableHeader,
-                    Rows = unassignedPageTypes
-                }
+                Data = unassignedPageTypes.AsResult().WithLabel(Metadata.Terms.UnassignedPageTypesTableHeader)
             };
 
             var unassignedPageTypeCount = unassignedPageTypes.Count();

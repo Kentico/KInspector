@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 
 namespace KenticoInspector.Core
 {

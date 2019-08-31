@@ -2,6 +2,7 @@
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DebugConfigurationAnalysis.Models;
 using System;
@@ -82,7 +83,6 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             {
                 Status = ReportResultsStatus.Information,
                 Summary = string.Empty,
-                Type = ReportResultsType.TableList
             };
 
             AnalyzeDatabaseSettingsResults(results, databaseSettingsKeys);
@@ -104,15 +104,13 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
                 results.Summary += Metadata.Terms.WebConfig.Summary.With(new { enabledSettingsText });
             }
 
-            var webconfigSettingsValues = new List<SettingsKey>();
-            webconfigSettingsValues.Add(new SettingsKey("Debug", Metadata.Terms.WebConfig.DebugKeyDisplayName, isCompilationDebugEnabled, false));
-            webconfigSettingsValues.Add(new SettingsKey("Trace", Metadata.Terms.WebConfig.TraceKeyDisplayName, isTraceEnabled, false));
-
-            results.Data.WebConfigSettingsResults = new TableResult<SettingsKey>()
+            var webconfigSettingsValues = new List<SettingsKey>
             {
-                Name = Metadata.Terms.WebConfig.OverviewTableHeader,
-                Rows = webconfigSettingsValues
+                new SettingsKey("Debug", Metadata.Terms.WebConfig.DebugKeyDisplayName, isCompilationDebugEnabled, false),
+                new SettingsKey("Trace", Metadata.Terms.WebConfig.TraceKeyDisplayName, isTraceEnabled, false)
             };
+
+            results.Data.Add(webconfigSettingsValues.AsResult().WithLabel(Metadata.Terms.WebConfig.OverviewTableHeader));
         }
 
         private void AnalyzeDatabaseSettingsResults(ReportResults results, IEnumerable<SettingsKey> databaseSettingsKeys)
@@ -128,18 +126,10 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
 
                 results.Summary += Metadata.Terms.Database.Summary.With(new { explicitlyEnabledSettingsCount });
 
-                results.Data.DatabaseSettingsEnabledNotByDefaultResults = new TableResult<SettingsKey>()
-                {
-                    Name = Metadata.Terms.Database.ExplicitlyEnabledSettingsTableHeader,
-                    Rows = explicitlyEnabledSettings
-                };
+                results.Data.Add(explicitlyEnabledSettings.AsResult().WithLabel(Metadata.Terms.Database.ExplicitlyEnabledSettingsTableHeader));
             }
 
-            results.Data.AllDatabaseSettings = new TableResult<SettingsKey>()
-            {
-                Name = Metadata.Terms.Database.OverviewTableHeader,
-                Rows = databaseSettingsKeys
-            };
+            results.Data.Add(databaseSettingsKeys.AsResult().WithLabel(Metadata.Terms.Database.OverviewTableHeader));
         }
     }
 }

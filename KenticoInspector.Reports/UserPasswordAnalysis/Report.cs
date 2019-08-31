@@ -5,7 +5,7 @@ using System.Linq;
 using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.UserPasswordAnalysis.Models;
 using KenticoInspector.Reports.UserPasswordAnalysis.Models.Data;
@@ -66,14 +66,13 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
         }
 
         private ReportResults CompileResults(
-            IEnumerable<CmsUserResult> usersWithEmptyPasswords,
+            IEnumerable<CmsUserResultWithPasswordFormat> usersWithEmptyPasswords,
             IEnumerable<CmsUserResult> usersWithPlaintextPasswords)
         {
             if (!usersWithEmptyPasswords.Any() && !usersWithPlaintextPasswords.Any())
             {
                 return new ReportResults
                 {
-                    Type = ReportResultsType.String,
                     Status = ReportResultsStatus.Good,
                     Summary = Metadata.Terms.GoodSummary
                 };
@@ -81,42 +80,24 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
 
             var errorReportResults = new ReportResults
             {
-                Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Error,
-                Data = new List<TableResult<CmsUserResult>>()
+                Status = ReportResultsStatus.Error
             };
 
-            var emptyCount = IfAnyAddTableResult(
-                errorReportResults.Data,
-                usersWithEmptyPasswords,
-                Metadata.Terms.TableTitles.EmptyPasswords
+            var emptyCount = usersWithEmptyPasswords.Count();
+
+            errorReportResults.Data.Add(
+                usersWithEmptyPasswords.AsResult().WithLabel(Metadata.Terms.TableLabels.EmptyPasswords)
                 );
 
-            var plaintextCount = IfAnyAddTableResult(
-                errorReportResults.Data,
-                usersWithPlaintextPasswords,
-                Metadata.Terms.TableTitles.PlaintextPasswords
+            var plaintextCount = usersWithPlaintextPasswords.Count();
+
+            errorReportResults.Data.Add(
+                usersWithPlaintextPasswords.AsResult().WithLabel(Metadata.Terms.TableLabels.PlaintextPasswords)
                 );
 
             errorReportResults.Summary = Metadata.Terms.ErrorSummary.With(new { emptyCount, plaintextCount });
 
             return errorReportResults;
-        }
-
-        private static int IfAnyAddTableResult<T>(dynamic data, IEnumerable<T> results, Term tableNameTerm)
-        {
-            if (results.Any())
-            {
-                var tableResult = new TableResult<T>
-                {
-                    Name = tableNameTerm,
-                    Rows = results
-                };
-
-                data.Add(tableResult);
-            }
-
-            return results.Count();
         }
     }
 }

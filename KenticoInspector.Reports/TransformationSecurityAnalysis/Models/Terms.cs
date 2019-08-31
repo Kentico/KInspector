@@ -8,12 +8,12 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models
 
         public Term GoodSummary { get; set; }
 
-        public TableTitlesTerms TableTitles { get; set; }
+        public TableLabels TableLabels { get; set; }
 
-        public IssueDescriptionsTerms IssueDescriptions { get; set; }
+        public IssueDescriptions IssueDescriptions { get; set; }
     }
 
-    public class TableTitlesTerms
+    public class TableLabels
     {
         public Term IssueTypes { get; set; }
 
@@ -24,7 +24,7 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis.Models
         public Term TemplateUsage { get; set; }
     }
 
-    public class IssueDescriptionsTerms
+    public class IssueDescriptions
     {
         public Term XssQueryHelper { get; set; }
 

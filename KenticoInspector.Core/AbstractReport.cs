@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Models.Results;
 using KenticoInspector.Core.Services.Interfaces;
 
 namespace KenticoInspector.Core
