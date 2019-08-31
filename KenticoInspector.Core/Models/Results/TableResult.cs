@@ -9,10 +9,6 @@ namespace KenticoInspector.Core.Models.Results
 
         public override bool HasData => Rows.Any();
 
-        internal TableResult()
-        {
-        }
-
         internal TableResult(IEnumerable<T> rows)
         {
             Rows = rows;
