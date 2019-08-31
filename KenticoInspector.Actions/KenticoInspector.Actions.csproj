@@ -13,7 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ResetCmsUserLogin\Scripts\" />
+    <None Update="ResetCmsUserLogin\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ResetCmsUserLogin\Scripts\ResetCmsUser.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

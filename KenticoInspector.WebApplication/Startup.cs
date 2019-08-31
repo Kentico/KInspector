@@ -45,6 +45,7 @@ namespace KenticoInspector.WebApplication
             containerBuilder.RegisterModule(new CoreModule());
             containerBuilder.RegisterModule(new InfrastructureModule());
             containerBuilder.RegisterModule(new ReportsModule());
+            containerBuilder.RegisterModule(new ActionsModule());
 
             var container = containerBuilder.Build();
             return new AutofacServiceProvider(container);

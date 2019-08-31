@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace KenticoInspector.Reports
 {
-    public class ActionssModule : Autofac.Module
+    public class ActionsModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {

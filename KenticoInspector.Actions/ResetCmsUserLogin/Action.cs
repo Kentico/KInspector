@@ -28,9 +28,9 @@ namespace KenticoInspector.Actions.ResetCmsUserLogin
             this.instanceService = instanceService;
         }
 
-        public override ActionResult Execute<TOptions>(TOptions ActionOptions)
+        public override ActionResults Execute<TOptions>(TOptions ActionOptions)
         {
-            return new ActionResult
+            return new ActionResults
             {
                 Status = ResultsStatus.NotRun,
                 Summary = "Not implemented yet"
