@@ -27,7 +27,7 @@ namespace KenticoInspector.WebApplication.Controllers
         }
 
         // POST api/values
-        [HttpGet("{codename}/execute/{instanceGuid}")]
+        [HttpPost("{codename}/execute/{instanceGuid}")]
         public ActionResult<ActionResults> Excecute(string codename, Guid instanceGuid, [FromBody] object options)
         {
             return moduleService.ExecuteAction<object>(codename, instanceGuid, options);
