@@ -17,7 +17,7 @@ namespace KenticoInspector.Infrastructure.Tests
     [TestFixture(12)]
     public class ReportMetadataServiceTests
     {
-        private readonly IReportMetadataService reportMedatadataService;
+        private readonly IModuleMetadataService moduleMedatadataService;
 
         public class TestTerms
         {
@@ -34,20 +34,20 @@ namespace KenticoInspector.Infrastructure.Tests
 
             var mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(mockInstance, mockInstanceDetails);
 
-            reportMedatadataService = new ReportMetadataService(mockInstanceService.Object);
+            moduleMedatadataService = new ModuleMetadataService(mockInstanceService.Object);
         }
 
         [TestCaseSource(typeof(YamlTestCases), nameof(YamlTestCases.YamlMatchesModel))]
         public void Should_Resolve_When_YamlMatchesModel(
             string cultureName,
             string yamlPath,
-            ReportMetadata<TestTerms> resolvedMetadata)
+            ModuleMetadata<TestTerms> resolvedMetadata)
         {
             // Arrange
             Thread.CurrentThread.CurrentCulture = new CultureInfo(cultureName);
 
             // Act
-            var metadata = reportMedatadataService.GetReportMetadata<TestTerms>(yamlPath);
+            var metadata = moduleMedatadataService.GetModuleMetadata<TestTerms>(yamlPath);
 
             // Assert
             Assert.That(metadata.Details.Name, Is.EqualTo(resolvedMetadata.Details.Name));
@@ -66,8 +66,8 @@ namespace KenticoInspector.Infrastructure.Tests
             Thread.CurrentThread.CurrentCulture = new CultureInfo(cultureName);
 
             // Act
-            ReportMetadata<TestTerms> getReportMetadata(string path) => reportMedatadataService
-                    .GetReportMetadata<TestTerms>(path);
+            ModuleMetadata<TestTerms> getReportMetadata(string path) => moduleMedatadataService
+                    .GetModuleMetadata<TestTerms>(path);
 
             // Assert
             Assert.That(() => getReportMetadata(yamlPath), Throws.Exception);
@@ -79,9 +79,9 @@ namespace KenticoInspector.Infrastructure.Tests
             {
                 get
                 {
-                    yield return GetTestCaseData("en-US", "TestData\\YamlMatches", new ReportMetadata<TestTerms>()
+                    yield return GetTestCaseData("en-US", "TestData\\YamlMatches", new ModuleMetadata<TestTerms>()
                     {
-                        Details = new ReportDetails()
+                        Details = new ModuleDetails()
                         {
                             Name = "Details name",
                             ShortDescription = "Details shortDescription",
@@ -92,9 +92,9 @@ namespace KenticoInspector.Infrastructure.Tests
                             SingleTerm = "Term value"
                         }
                     });
-                    yield return GetTestCaseData("en-GB", "TestData\\YamlMatches", new ReportMetadata<TestTerms>()
+                    yield return GetTestCaseData("en-GB", "TestData\\YamlMatches", new ModuleMetadata<TestTerms>()
                     {
-                        Details = new ReportDetails()
+                        Details = new ModuleDetails()
                         {
                             Name = "British details name",
                             ShortDescription = "Details shortDescription",
@@ -111,7 +111,7 @@ namespace KenticoInspector.Infrastructure.Tests
             private static TestCaseData GetTestCaseData(
                 string cultureCode,
                 string yamlPath,
-                ReportMetadata<TestTerms> resolvedMetadata)
+                ModuleMetadata<TestTerms> resolvedMetadata)
             {
                 return new TestCaseData(cultureCode, yamlPath, resolvedMetadata);
                 //TODO: add .SetName($"Metadata in culture \"{cultureCode}\" resolves."); once NUnit fixes https://github.com/nunit/nunit3-vs-adapter/issues/607

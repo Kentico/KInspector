@@ -32,7 +32,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.Rows.Count == 25);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Status == ResultsStatus.Information);
         }
 
         private List<DatabaseTableSizeResult> GetCleanResults()

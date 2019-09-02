@@ -35,7 +35,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
 
             var baseUri = new Uri(mockInstance.Url);
             var expectedUri = new Uri(baseUri, Constants.RobotsTxtRelativePath);
@@ -71,7 +71,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
 
             var expectedUri = new Uri($"{baseUrl}/{Constants.RobotsTxtRelativePath}");
 
@@ -88,7 +88,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         private Report ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode httpStatusCode, out Mock<HttpMessageHandler> mockHttpMessageHandler)

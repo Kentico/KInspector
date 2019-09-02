@@ -28,6 +28,14 @@ export default new Router({
       // this generates a separate chunk (instance-connect.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "reports" */ './views/reports.vue')
+    },
+    {
+      path: '/actions',
+      name: 'actions',
+      // route level code-splitting
+      // this generates a separate chunk (instance-connect.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "reports" */ './views/actions.vue')
     }
   ]
 })

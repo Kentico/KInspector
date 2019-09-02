@@ -14,7 +14,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -87,21 +87,21 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             var combinedResults = new ReportResults();
 
             combinedResults.Type = ReportResultsType.TableList;
-            combinedResults.Status = ReportResultsStatus.Good;
+            combinedResults.Status = ResultsStatus.Good;
 
             foreach (var reportResults in allReportResults)
             {
                 var name = ((string)reportResults.Data.Name);
                 // TODO: Make this WAY better
                 ((IDictionary<string, object>)combinedResults.Data).Add(reportResults.Data.Name, reportResults.Data);
-                if (reportResults.Status == ReportResultsStatus.Error)
+                if (reportResults.Status == ResultsStatus.Error)
                 {
                     combinedResults.Summary += Metadata.Terms.NameFound.With(new { name });
-                    combinedResults.Status = ReportResultsStatus.Error;
+                    combinedResults.Status = ResultsStatus.Error;
                 }
             }
 
-            if (combinedResults.Status == ReportResultsStatus.Good)
+            if (combinedResults.Status == ResultsStatus.Good)
             {
                 combinedResults.Summary = Metadata.Terms.NoContentTreeConsistencyIssuesFound;
             }
@@ -140,7 +140,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Status = data.Rows.Count() > 0 ? ResultsStatus.Error : ResultsStatus.Good,
                 Summary = string.Empty,
                 Type = ReportResultsType.Table,
             };
@@ -184,7 +184,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Status = data.Rows.Count() > 0 ? ResultsStatus.Error : ResultsStatus.Good,
                 Summary = string.Empty,
                 Type = ReportResultsType.Table,
             };

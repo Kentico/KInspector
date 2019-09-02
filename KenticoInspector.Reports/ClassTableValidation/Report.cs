@@ -15,7 +15,7 @@ namespace KenticoInspector.Reports.ClassTableValidation
         private readonly IDatabaseService databaseService;
         private readonly IInstanceService instanceService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IInstanceService instanceService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
             this.instanceService = instanceService;
@@ -68,12 +68,12 @@ namespace KenticoInspector.Reports.ClassTableValidation
             switch (totalErrors)
             {
                 case 0:
-                    results.Status = ReportResultsStatus.Good;
+                    results.Status = ResultsStatus.Good;
                     results.Summary = Metadata.Terms.NoIssuesFound;
                     break;
 
                 default:
-                    results.Status = ReportResultsStatus.Error;
+                    results.Status = ResultsStatus.Error;
                     results.Summary = Metadata.Terms.CountIssueFound.With(new { count = totalErrors });
                     break;
             }

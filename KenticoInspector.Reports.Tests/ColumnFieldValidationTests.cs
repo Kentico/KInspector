@@ -130,7 +130,7 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Good));
 
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Good.ToString()));
         }
@@ -145,7 +145,7 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Error));
 
             Assert.That(GetExpandTableResult<TableResult<CmsClassResult>>(results).Rows.Count(), Is.EqualTo(1));
         }
@@ -160,7 +160,7 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Error));
 
             Assert.That(GetExpandTableResult<TableResult<TableResult>>(results).Rows.Count(), Is.EqualTo(1));
         }

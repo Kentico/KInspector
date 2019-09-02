@@ -14,7 +14,7 @@ namespace KenticoInspector.Reports.SampleReport
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -43,7 +43,7 @@ namespace KenticoInspector.Reports.SampleReport
             {
                 Data = data,
                 Type = ReportResultsType.StringList,
-                Status = ReportResultsStatus.Information,
+                Status = ResultsStatus.Information,
                 Summary = Metadata.Terms.Summary.With(new { issueCount })
             };
         }

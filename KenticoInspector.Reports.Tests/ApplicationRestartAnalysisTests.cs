@@ -33,7 +33,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Status == ResultsStatus.Information);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.Rows.Count == 2);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Status == ResultsStatus.Information);
         }
 
         [Test]

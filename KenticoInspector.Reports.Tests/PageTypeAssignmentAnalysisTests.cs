@@ -30,7 +30,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.Rows.Count > 0, "Expected more than 0 page types to be returned");
-            Assert.That(results.Status == ReportResultsStatus.Warning,$"Expected Warning status, got {results.Status} status");
+            Assert.That(results.Status == ResultsStatus.Warning,$"Expected Warning status, got {results.Status} status");
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
             // Assert
             Assert.That(results.Data.Rows.Count == 0, $"Expected 0 page types to be returned, got {results.Data.Rows.Count}");
-            Assert.That(results.Status == ReportResultsStatus.Good, $"Expected Good status, got {results.Status} status");
+            Assert.That(results.Status == ResultsStatus.Good, $"Expected Good status, got {results.Status} status");
         }
 
         private void ArrangeDatabaseCalls(IEnumerable<PageType> unassignedPageTypes = null) {

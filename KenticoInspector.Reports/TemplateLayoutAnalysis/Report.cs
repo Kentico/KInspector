@@ -14,7 +14,7 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -40,7 +40,7 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
 
             var results = new ReportResults
             {
-                Status = ReportResultsStatus.Information,
+                Status = ResultsStatus.Information,
                 Type = ReportResultsType.Table,
                 Data = new TableResult<dynamic>()
                 {

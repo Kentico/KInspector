@@ -17,7 +17,7 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService reportMetadataService)
             : base(reportMetadataService)
         {
             this.databaseService = databaseService;
@@ -74,7 +74,7 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
                 return new ReportResults
                 {
                     Type = ReportResultsType.String,
-                    Status = ReportResultsStatus.Good,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.GoodSummary
                 };
             }
@@ -82,7 +82,7 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
             var errorReportResults = new ReportResults
             {
                 Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Error,
+                Status = ResultsStatus.Error,
                 Data = new List<TableResult<CmsUserResult>>()
             };
 

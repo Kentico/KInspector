@@ -16,7 +16,7 @@ namespace KenticoInspector.Reports.Tests
         protected InstanceDetails _mockInstanceDetails;
         protected Mock<IDatabaseService> _mockDatabaseService;
         protected Mock<IInstanceService> _mockInstanceService;
-        protected Mock<IReportMetadataService> _mockReportMetadataService;
+        protected Mock<IModuleMetadataService> _mockReportMetadataService;
         protected Mock<ICmsFileService> _mockCmsFileService;
 
         public AbstractReportTest(int majorVersion)

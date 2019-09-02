@@ -20,7 +20,7 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
         private readonly IDatabaseService databaseService;
         private readonly IInstanceService instanceService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService, IInstanceService instanceService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService reportMetadataService, IInstanceService instanceService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
             this.instanceService = instanceService;
@@ -138,7 +138,7 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
                 return new ReportResults()
                 {
                     Type = ReportResultsType.String,
-                    Status = ReportResultsStatus.Good,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.GoodSummary
                 };
             }
@@ -209,7 +209,7 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
             return new ReportResults()
             {
                 Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Warning,
+                Status = ResultsStatus.Warning,
                 Summary = Metadata.Terms.WarningSummary.With(new { summaryCount, issueTypesAsCsv }),
                 Data = new
                 {

@@ -14,7 +14,7 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService reportMetadataService) : base(reportMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -43,7 +43,7 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
                 return new ReportResults
                 {
                     Type = ReportResultsType.Table,
-                    Status = ReportResultsStatus.Error,
+                    Status = ResultsStatus.Error,
                     Summary = Metadata.Terms.CheckResultsTableForAnyIssues,
                     Data = checkDbResults
                 };
@@ -53,7 +53,7 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
                 return new ReportResults
                 {
                     Type = ReportResultsType.String,
-                    Status = ReportResultsStatus.Good,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.NoIssuesFound,
                     Data = string.Empty
                 };
