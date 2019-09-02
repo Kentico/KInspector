@@ -12,8 +12,9 @@
       </v-flex>
 
       <template v-if="isConnected">
+        <action-filters />
         <v-flex xs12>
-        Available Actions
+        <action-list :actions="filtered" />
         </v-flex>
       </template>
 
@@ -35,24 +36,32 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import  ActionList from '../components/action-list'
+import ActionFilters from '../components/action-filters'
 
 export default {
   components: {
+    ActionList,
+    ActionFilters
   },
   computed: {
     ...mapGetters('instances', [
       'connectedInstanceDetails',
       'isConnected'
-    ])
+    ]),
+    ...mapGetters('actions', {
+      tags: 'getTags',
+      filtered: 'filtered'
+    })
   },
   methods: {
-    ...mapActions('reports', {
-      getAllReports: 'getAll',
+    ...mapActions('actions', {
+      getAll: 'getAll',
       resetFilterSettings: 'resetFilterSettings'
     }),
     initPage: function() {
       if(this.isConnected) {
-                    this.getAllReports(this.connectedInstanceDetails.guid)
+        this.getAll(this.connectedInstanceDetails.guid)
         this.resetFilterSettings({ majorVersion: this.connectedInstanceDetails.databaseVersion.major })
       }
     }
