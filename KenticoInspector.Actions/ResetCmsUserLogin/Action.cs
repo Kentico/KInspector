@@ -10,7 +10,7 @@ using System.Text;
 
 namespace KenticoInspector.Actions.ResetCmsUserLogin
 {
-    public class Action : AbstractAction<Terms>
+    public class Action : AbstractAction<Terms,Options>
     {
         private IDatabaseService databaseService;
         private IInstanceService instanceService;
@@ -28,12 +28,20 @@ namespace KenticoInspector.Actions.ResetCmsUserLogin
             this.instanceService = instanceService;
         }
 
-        public override ActionResults Execute<TOptions>(TOptions ActionOptions)
+        public override ActionResults Execute(Options Options)
         {
             return new ActionResults
             {
                 Status = ResultsStatus.NotRun,
                 Summary = "Not implemented yet"
+            };
+        }
+
+        public override ActionResults GetInvalidOptionsResult()
+        {
+            return new ActionResults {
+                Status = ResultsStatus.Error,
+                Summary = Metadata.Terms.InvalidOptions
             };
         }
     }

@@ -17,6 +17,6 @@ namespace KenticoInspector.Core.Services.Interfaces
         IEnumerable<IAction> GetActions(Guid instanceGuid);
 
         IAction GetAction(string codename);
-        ActionResults ExecuteAction<T>(string actionCodename, Guid instanceGuid, T options) where T : new();
+        ActionResults ExecuteAction(string actionCodename, Guid instanceGuid, string optionsJson);
     }
 }

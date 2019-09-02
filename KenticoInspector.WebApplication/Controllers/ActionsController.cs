@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.IO;
+using System.Text;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Modules;
 using KenticoInspector.Core.Services.Interfaces;
@@ -28,9 +29,13 @@ namespace KenticoInspector.WebApplication.Controllers
 
         // POST api/values
         [HttpPost("{codename}/execute/{instanceGuid}")]
-        public ActionResult<ActionResults> Excecute(string codename, Guid instanceGuid, [FromBody] object options)
+        public ActionResult<ActionResults> Excecute(string codename, Guid instanceGuid)
         {
-            return moduleService.ExecuteAction<object>(codename, instanceGuid, options);
+            using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+            {
+                var optionsJson = reader.ReadToEnd();
+                return moduleService.ExecuteAction(codename, instanceGuid, optionsJson);
+            }
         }
     }
 }

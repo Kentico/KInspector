@@ -2,5 +2,6 @@
   name: Reset CMS User
   shortDescription: Reset a CMS user so that you can login with an empty password.
   longDescription: |
-    This ensures that a CMS user is enabled, their passowrd is blank, and their last changed date is reset to today
+    This ensures that a CMS user is enabled, their password is blank, and their last changed date is reset to today
 terms:
+  invalidOptions: The options provided were invalid.

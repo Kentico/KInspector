@@ -23,9 +23,13 @@ namespace KenticoInspector.Infrastructure.Services
             this.databaseService = databaseService;
         }
 
-        public ActionResults ExecuteAction<T>(string actionCodename, Guid instanceGuid, T options) where T : new()
+        public ActionResults ExecuteAction(string codename, Guid instanceGuid, string optionsJson)
         {
-            throw new NotImplementedException();
+            var action = actionRepository.GetAction(codename);
+            var instance = instanceService.SetCurrentInstance(instanceGuid);
+            databaseService.Configure(instance.DatabaseSettings);
+
+            return action.Execute(optionsJson);
         }
 
         public IAction GetAction(string codename) => actionRepository.GetAction(codename);
