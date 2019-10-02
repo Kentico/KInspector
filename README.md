@@ -27,8 +27,8 @@ Download the [latest release](https://github.com/Kentico/KInspector/releases/lat
 
 The application supports two modes currently: console and IIS. Console mode is useful if you just want to quickly run the tool occasionally, whereas IIS mode allows you to have it always available, for example, on a development server. In either case you need to extract the entire package in a folder.
 
-> :round_pushpin: **Note:** 
-> 
+> :round_pushpin: **Note:**
+>
 > The application needs permission to create/modify files in the directory it is run from to save instances to a file.
 
 #### Console Mode
@@ -37,7 +37,7 @@ To run in console mode simply run `KenticoInspector.WebApplication.exe` and open
 
 #### IIS Mode
 
-To run in IIS  mode point your IIS directory to the folder you extracted everything to and make sure the application pool's .NET CLR version is set to `No managed code`. Open the site in your browser.
+To run in IIS mode point your IIS directory to the folder you extracted everything to and make sure the application pool's .NET CLR version is set to `No managed code`. Open the site in your browser.
 
 ## Contributing
 
@@ -60,6 +60,7 @@ All versions below are from a known working environment. Lower versions may work
 Even if you don't plan to make any changes in the Clietn UI application, you'll need to build it before your first run and any time the client code is updated. To build the Client UI application (required anytime the client UI code is updated unless you are using the `UI Development` debug launch setting):
 
 #### Frontend build instructions
+
 1. Open Powershell/Command Prompt
 1. Change the directory to `./KenticoInspector.WebApplication/ClientApp`
 1. Run `npm i`
@@ -81,3 +82,11 @@ If you want to work on the Client UI applicaiton, there's a few additional steps
    - This runs the backend with a proxy to the running instance you started in Powershell and allows you to take advantage of the hot-reloading of the clientn application
 
 ![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/KInspector?pixel)
+
+#### Documentation build instructions
+
+1. Follow the steps in [Installation via RubyInstaller](https://jekylrb.com/docs/installation/windows/#installation-via-rubyinstaller).
+1. Open the `./docs` directory in your editor of choice (Visual Studio Code is recommended).
+1. In a terminal, run `bundle install`.
+1. In a terminal, run `bundle exec jekyll serve`.
+1. The server URL will be shown. The server will automatically rebuild on file changes. If you need to modify `./docs/_config.yml`, you will need to restart the server with the same command.
