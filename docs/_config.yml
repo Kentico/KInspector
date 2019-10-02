@@ -1,0 +1,9 @@
+baseurl: /KInspector
+defaults:
+  - scope:
+      path: '' # all files in the project
+    values:
+      layout: 'default'
+github:
+  repository_name: KInspector
+  project_tagline: KInspector is an application for analyzing health, performance and security of your Kentico solution.
