@@ -8,6 +8,7 @@ body {
     background: #262524 !important;
     padding: 0.3em 1em !important;
     display: flex;
+    color: #fff;
 
     .headline {
       text-transform: uppercase;
@@ -48,8 +49,54 @@ body {
     }
   }
 
+  .sticky {
+    padding-top: 1em;
+  }
+
+  li {
+    margin: 0.3em 0;
+  }
+
+  thead {
+    font-size: 1.2em;
+
+    &:after {
+      line-height: 1em;
+      content: '\200C';
+      display: block;
+    }
+  }
+
+  code {
+    &.highlighter-rouge {
+      background-color: #eee;
+      padding: 0.1em 0.2em;
+      border-radius: 0.2em;
+      color: #8f5536;
+      font-weight: bold;
+    }
+  }
+
+  .highlighter-rouge {
+    .highlight:not(pre) {
+      background: none;
+    }
+
+    pre {
+      border-radius: 0.5em;
+      padding: 1em;
+      background-color: #383838;
+    }
+  }
+
   blockquote {
     padding-left: 1em;
     border-left: 0.1em dotted #262524;
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    padding: 1em;
   }
 }

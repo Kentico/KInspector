@@ -1,6 +1,7 @@
 ---
 title: Installation
 mainNavigation: true
+order: 20
 ---
 
 # Installation
@@ -17,5 +18,8 @@ Kentico Inspector supports two modes: **Console mode** and **IIS mode**. Start b
 
 1. Extract package contents in any folder.
 2. Point an IIS site or application to the folder.
-3. Ensure the application pool's .NET CLR version is set to **No managed code**.
-4. Browse to the IIS site.
+3. Browse to the IIS site.
+
+## Local storage
+
+Kentico Inspector stores saved instances in the location it runs from in a file called `SavedInstances.json`.

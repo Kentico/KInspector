@@ -1,6 +1,7 @@
 ---
 title: Getting started
 mainNavigation: true
+order: 0
 ---
 
 # Getting started with Kentico Inspector
@@ -22,14 +23,20 @@ The application is Kentico-version-agnostic and has no dependencies on version-s
 
 ## Introduction to Version 4
 
-Version 4 is a complete rewrite of the tool. We wanted to create a better, more flexible codebase for both the front and back ends.
+Version 4 is a complete rewrite of the tool in .NET Core and Vue. We wanted to create a better, more flexible codebase for both the front and back ends.
 
-> Version 4 is currently ALPHA and we're still porting reports.
->
-> If you need a report that hasn't been migrated yet, please use [the latest release of V3](https://github.com/Kentico/KInspector/releases) or consider porting it and submitting a PR!
+Version 4 is currently **ALPHA**:
+
+- Not all reports are migrated.
+- Some reports may still be revised to show more useful results.
+- Core functionality is being added and internal API may change without notice.
+
+If you need a report that hasn't been migrated yet, please use [the last release of V3](https://github.com/Kentico/KInspector/releases) or consider migrating it and submitting a pull request!
 
 ## Contributing
 
-Want to improve Kentico Inspector? Great! Read the [contributing guidelines](https://github.com/Kentico/KInspector/blob/master/CONTRIBUTING.md) and then [check out the open issues](https://github.com/Kentico/KInspector/issues) (especially issues marked as **[good first issue](https://github.com/Kentico/KInspector/labels/good%20first%20issue)**) to get started.
+Want to improve Kentico Inspector? Great!
 
-If anything feels wrong or incomplete, please let us know. Create a new [issue](https://github.com/Kentico/KInspector/issues/new) or submit a [pull request](https://help.github.com/articles/using-pull-requests/).
+Read the [contributing guidelines](https://github.com/Kentico/KInspector/blob/master/CONTRIBUTING.md) and then [check out the open issues](https://github.com/Kentico/KInspector/issues) (especially **[good first issues](https://github.com/Kentico/KInspector/labels/good%20first%20issue)**) to get started.
+
+If anything feels wrong or incomplete, **please let us know**. Create a new [issue](https://github.com/Kentico/KInspector/issues/new) or submit a [pull request](https://help.github.com/articles/using-pull-requests/).
