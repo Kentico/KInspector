@@ -6,4 +6,4 @@ defaults:
       layout: 'default'
 github:
   repository_name: KInspector
-  project_tagline: KInspector is an application for analyzing health, performance and security of your Kentico solution.
+  project_tagline: KInspector is an application for analyzing the health, performance, and security of your Kentico solution.
