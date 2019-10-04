@@ -1,58 +1,74 @@
-{% assign navigationPages = site.pages | where: "mainNavigation", "true" | sort: "order" %}
 
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: 'en-US' }}">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
       integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
       crossorigin="anonymous"
-    ></script>
+      ></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 
     <link rel="stylesheet" href="{{ '/assets/style.css?v=' | append: site.github.build_revision | relative_url }}" />
     <link rel="stylesheet" href="{{ '/assets/syntax.css?v=' | append: site.github.build_revision | relative_url }}" />
-
+    
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-    <div class="top bar">
-      <div class="headline"><b>Kentico</b><span>Inspector</span></div>
-      <div class="github">
-        <a href="{{ site.github.repository_url }}">View on GitHub</a>
+      <![endif]-->
+    </head>
+    
+    <body>
+        <div class="top bar">
+            <div class="headline"><b>Kentico</b><span>Inspector</span></div>
+            <div class="github">
+                <a href="{{ site.github.repository_url }}">View on GitHub</a>
       </div>
     </div>
-
+    
     <div class="ui container">
-      <div class="ui basic segment" id="navigation">
+        <div class="ui basic segment" id="navigation">
         <div class="left ui rail">
-          <div class="ui hidden divider"></div>
-          <div class="ui hidden divider"></div>
-          <p>{{ site.description | default: site.github.project_tagline }}</p>
-
-          {% if site.show_downloads %}
-          <a class="buttons" href="{{ site.github.zip_url }}">Download ZIP</a>
-          <a class="buttons" href="{{ site.github.tar_url }}">Download TAR</a>
-          {% endif %}
-
+            <div class="ui hidden divider"></div>
+            <div class="ui hidden divider"></div>
+            <p>{{ site.description | default: site.github.project_tagline }}</p>
+            
+            {% if site.show_downloads %}
+            <a class="buttons" href="{{ site.github.zip_url }}">Download ZIP</a>
+            <a class="buttons" href="{{ site.github.tar_url }}">Download TAR</a>
+            {% endif %}
+            
           <div class="ui sticky">
-            <div class="ui secondary vertical pointing menu">
-              {% for navigationPage in navigationPages %}
-              <a
-                class="{% if page.title == navigationPage.title %}active{% endif %} item"
-                href="{{navigationPage.url | replace: '.html', '' | relative_url}}"
-              >
-                {{ navigationPage.title }}
-              </a>
+              <div class="ui secondary vertical pointing menu">
+                  {% assign navigationPages = site.pages 
+                    | where: "mainNavigation", "true" 
+                    | sort: "order" %}
+                  {% for navigationPage in navigationPages %}
+                <a
+                    class="{% if page.title == navigationPage.title %}active{% endif %} item"
+                    href="{{navigationPage.url | replace: '.html', '' | relative_url}}"
+                >
+                    {{ navigationPage.title }}
+                </a>
+                <div class="menu">
+                    {% assign navigationSubPages = site.pages 
+                        | where: "parent", navigationPage.title
+                        | sort: "order" %}
+                        
+                    {% for navigationSubPage in navigationSubPages %}
+                    <a
+                        class="{% if page.title == navigationSubPage.title %}active{% endif %} item"
+                        href="{{navigationSubPage.url | replace: '.html', '' | relative_url}}"
+                    >
+                        {{ navigationSubPage.title }}
+                    </a>
+                    {% endfor %}
+                </div>
               {% endfor %}
             </div>
           </div>
