@@ -5,8 +5,8 @@ body {
   font-family: Roboto, sans-serif;
 
   .top.bar {
-    background: #262524 !important;
-    padding: 0.3em 1em !important;
+    background: #262524;
+    padding: 0.3em 1em;
     display: flex;
     color: #fff;
 
@@ -72,7 +72,7 @@ body {
       background-color: #eee;
       padding: 0.1em 0.2em;
       border-radius: 0.2em;
-      color: #8f5536;
+      color: #a5673f;
       font-weight: bold;
     }
   }
@@ -89,9 +89,16 @@ body {
     }
   }
 
-  blockquote {
-    padding-left: 1em;
-    border-left: 0.1em dotted #262524;
+  .ui.menu .menu {
+    margin: 0 0 0 1em;
+  }
+
+  .ui.label {
+    padding: 0.3em 0.4em;
+  }
+
+  img[src*='#image'] {
+    width: 100%;
   }
 
   footer {
