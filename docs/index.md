@@ -1,4 +1,10 @@
-# Kentico Inspector
+---
+title: Getting started
+mainNavigation: true
+order: 0
+---
+
+# Getting started with Kentico Inspector
 
 [![Join the chat at https://kentico-community.slack.com](https://img.shields.io/badge/join-slack-E6186D.svg)](https://kentico-community.slack.com)
 [![Build status](https://ci.appveyor.com/api/projects/status/n3nrch61bqxh497e/branch/master?svg=true)](https://ci.appveyor.com/project/kentico/kinspector-98xj0/branch/master)
@@ -8,8 +14,6 @@
 Kentico Inspector (formerly KInspector) is an application for analyzing the health, performance, and security of **[Kentico EMS](https://www.kentico.com/)** solutions.
 
 ### Download the [latest release](https://github.com/Kentico/KInspector/releases/latest).
-
-### View installation instructions and more in [the documentation](https://kentico.github.io/KInspector/).
 
 ## History
 
@@ -36,5 +40,3 @@ Want to improve Kentico Inspector? Great!
 Read the [contributing guidelines](https://github.com/Kentico/KInspector/blob/master/CONTRIBUTING.md) and then [check out the open issues](https://github.com/Kentico/KInspector/issues) (especially **[good first issues](https://github.com/Kentico/KInspector/labels/good%20first%20issue)**) to get started.
 
 If anything feels wrong or incomplete, **please let us know**. Create a new [issue](https://github.com/Kentico/KInspector/issues/new) or submit a [pull request](https://help.github.com/articles/using-pull-requests/).
-
-![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/KInspector?pixel)
