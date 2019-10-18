@@ -9,16 +9,21 @@ body {
     padding: 0.3em 1em;
     display: flex;
     color: #fff;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    top: 0;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
 
     .headline {
       text-transform: uppercase;
       font-size: 1.7em;
-      line-height: 1em;
+      line-height: 2.5em;
       letter-spacing: 0.02em;
 
       &:before {
-        height: 1.5em;
-        width: 1.5em;
+        height: 1.7em;
+        width: 1.7em;
         content: ' ';
         background-color: #f05a22;
         background-image: url(./kentico.svg);
@@ -26,11 +31,20 @@ body {
         vertical-align: middle;
         margin: 0 0.1em 0.2em 0;
       }
+
+      .kentico {
+        font-weight: 500;
+      }
+
+      .inspector {
+        font-weight: 300;
+      }
     }
 
     .github {
       margin-left: auto;
       font-size: 1.3em;
+      line-height: 2.8em;
 
       a {
         vertical-align: sub;
@@ -47,10 +61,18 @@ body {
         }
       }
     }
+
+    + .container {
+      margin-top: 4em;
+    }
+  }
+
+  .description {
+    margin-top: 3em;
   }
 
   .sticky {
-    padding-top: 1em;
+    padding-top: 6em;
   }
 
   li {
@@ -89,12 +111,30 @@ body {
     }
   }
 
-  .ui.menu .menu {
-    margin: 0 0 0 1em;
+  .ui.menu {
+    border: none;
+    box-shadow: none !important;
+
+    .menu {
+      .item {
+        padding-left: 2em !important;
+      }
+    }
+
+    .item:before {
+      background: none !important;
+    }
   }
 
   .ui.label {
     padding: 0.3em 0.4em;
+  }
+
+  :target::before {
+    content: '';
+    display: block;
+    height: 3.5em;
+    margin: -3.5em 0 0;
   }
 
   img[src*='#image'] {

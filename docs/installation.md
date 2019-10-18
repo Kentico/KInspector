@@ -23,5 +23,3 @@ Kentico Inspector supports two modes: **Console mode** and **IIS mode**. Start b
 ## Local storage
 
 Kentico Inspector stores saved instances in the location it runs from in a file called `SavedInstances.json`.
-
-{% include nextSteps.md %}

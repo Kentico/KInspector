@@ -53,10 +53,10 @@ After running a report, it will show a color-coded summary:
 
 The summaries are colored to match the report status:
 
-<div class="ui blue label">The report is informational</div>
-<div class="ui green label">The report is good</div>
-<div class="ui yellow label">The report is a warning</div>
-<div class="ui red label">The report is an error</div>
+<div class="ui blue large label">The report is informational</div>
+<div class="ui green large label">The report is good</div>
+<div class="ui yellow large label">The report is a warning</div>
+<div class="ui red large label">The report is an error</div>
 <br/>
 
 The following actions are available:

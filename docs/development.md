@@ -36,5 +36,3 @@ The following steps should get you started with developing Kentico Inspector:
 1. Start a debug session (F5) to launch Kentico Inspector.
 
 If you have switched branches, it is a good idea to clear your browser cache when Kentico Inspector launches.
-
-{% include nextSteps.md %}
