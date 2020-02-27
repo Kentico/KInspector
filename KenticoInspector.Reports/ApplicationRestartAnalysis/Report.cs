@@ -1,12 +1,14 @@
-﻿using KenticoInspector.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ApplicationRestartAnalysis.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using KenticoInspector.Reports.ApplicationRestartAnalysis.Models.Data;
 
 namespace KenticoInspector.Reports.ApplicationRestartAnalysis
 {
@@ -14,61 +16,80 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+
+        public override IList<string> Tags => new List<string>
         {
-            this.databaseService = databaseService;
-        }
-
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11");
-
-        public override IList<string> Tags => new List<string> {
             ReportTags.EventLog,
             ReportTags.Health
         };
 
-        public override ReportResults GetResults()
+        public Report(
+            IDatabaseService databaseService,
+            IReportMetadataService reportMetadataService
+            ) : base(reportMetadataService)
         {
-            var applicationRestartEvents = databaseService.ExecuteSqlFromFile<ApplicationRestartEvent>(Scripts.ApplicationRestartEvents);
-
-            return CompileResults(applicationRestartEvents);
+            this.databaseService = databaseService;
         }
 
-        private ReportResults CompileResults(IEnumerable<ApplicationRestartEvent> applicationRestartEvents)
+        public override ReportResults GetResults()
         {
-            var data = new TableResult<dynamic>()
+            var cmsEventLogs = databaseService.ExecuteSqlFromFile<CmsEventLog>(Scripts.GetCmsEventLogsWithStartOrEndCode);
+
+            return CompileResults(cmsEventLogs);
+        }
+
+        private ReportResults CompileResults(IEnumerable<CmsEventLog> cmsEventLogs)
+        {
+            if (!cmsEventLogs.Any())
             {
-                Name = Metadata.Terms.ApplicationRestartEvents,
-                Rows = applicationRestartEvents
-            };
-
-            var totalEvents = applicationRestartEvents.Count();
-            var totalStartEvents = applicationRestartEvents.Where(e => e.EventCode == "STARTAPP").Count();
-            var totalEndEvents = applicationRestartEvents.Where(e => e.EventCode == "ENDAPP").Count();
-            var earliestTime = totalEvents > 0 ? applicationRestartEvents.Min(e => e.EventTime) : new DateTime();
-            var latestTime = totalEvents > 0 ? applicationRestartEvents.Max(e => e.EventTime) : new DateTime();
-
-            var totalEventsText = Metadata.Terms.CountTotalEvent.With(new { count = totalEvents });
-
-            var totalStartEventsText = Metadata.Terms.CountStartEvent.With(new { count = totalStartEvents });
-
-            var totalEndEventsText = Metadata.Terms.CountEndEvent.With(new { count = totalEndEvents });
-
-            string timeSpanText = string.Empty;
-
-            if (earliestTime.Year > 1)
-            {
-                timeSpanText = Metadata.Terms.SpanningEarliestLatest.With(new { earliestTime, latestTime });
+                return new ReportResults
+                {
+                    Status = ReportResultsStatus.Good,
+                    Summary = Metadata.Terms.Summaries.Good
+                };
             }
 
-            var results = new ReportResults
+            var totalEvents = cmsEventLogs.Count();
+
+            var totalStartEvents = cmsEventLogs
+                .Where(e => e.EventCode == "STARTAPP")
+                .Count();
+
+            var totalEndEvents = cmsEventLogs
+                .Where(e => e.EventCode == "ENDAPP")
+                .Count();
+
+            var earliestTime = totalEvents > 0
+                ? cmsEventLogs.Min(e => e.EventTime)
+                : new DateTime();
+
+            var latestTime = totalEvents > 0
+                ? cmsEventLogs.Max(e => e.EventTime)
+                : new DateTime();
+
+            var summary = Metadata.Terms.Summaries.Information.With(new
             {
-                Type = ReportResultsType.Table,
-                Status = ReportResultsStatus.Information,
-                Summary = $"{totalEventsText} ({totalStartEventsText}, {totalEndEventsText}) {timeSpanText}",
-                Data = data
+                earliestTime,
+                latestTime,
+                totalEndEvents,
+                totalEvents,
+                totalStartEvents
+            });
+
+            var data = new TableResult<CmsEventLog>()
+            {
+                Name = Metadata.Terms.TableTitles.ApplicationRestartEvents,
+                Rows = cmsEventLogs
             };
 
-            return results;
+            return new ReportResults
+            {
+                Data = data,
+                Status = ReportResultsStatus.Information,
+                Summary = summary,
+                Type = ReportResultsType.Table
+            };
         }
     }
 }
