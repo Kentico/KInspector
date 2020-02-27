@@ -1,7 +1,8 @@
-﻿using KenticoInspector.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+
+using KenticoInspector.Core.Models;
 
 namespace KenticoInspector.Core.Services.Interfaces
 {
@@ -17,7 +18,7 @@ namespace KenticoInspector.Core.Services.Interfaces
 
         IEnumerable<T> ExecuteSqlFromFile<T>(string relativeFilePath, IDictionary<string, string> literalReplacements, dynamic parameters);
 
-        [Obsolete("This should be a last resort when it is impossible to create a DTO or use one of the generic options")]
+        [Obsolete("A last resort when it is impossible to create a data model or use one of the generic options.")]
         DataTable ExecuteSqlFromFileAsDataTable(string relativeFilePath);
 
         IEnumerable<IDictionary<string, object>> ExecuteSqlFromFileGeneric(string relativeFilePath);

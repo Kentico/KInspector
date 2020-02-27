@@ -1,6 +1,7 @@
-﻿using KenticoInspector.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using KenticoInspector.Core.Models;
 
 namespace KenticoInspector.Core.Services.Interfaces
 {
@@ -10,6 +11,6 @@ namespace KenticoInspector.Core.Services.Interfaces
 
         ReportResults GetReportResults(string reportCodename, Guid instanceGuid);
 
-        IEnumerable<IReport> GetReports(ReportFilter reportFilter = null);
+        IEnumerable<IReport> GetReports(Guid instanceGuid);
     }
 }

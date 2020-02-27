@@ -1,9 +1,10 @@
-﻿using KenticoInspector.Core;
+using System;
+using System.Collections.Generic;
+
+using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
 using KenticoInspector.Core.Services.Interfaces;
-using System;
-using System.Collections.Generic;
 
 namespace KenticoInspector.Infrastructure.Services
 {
@@ -35,9 +36,11 @@ namespace KenticoInspector.Infrastructure.Services
             return report.GetResults();
         }
 
-        public IEnumerable<IReport> GetReports(ReportFilter reportFilter = null)
+        public IEnumerable<IReport> GetReports(Guid instanceGuid)
         {
-            return reportRepository.GetReports(reportFilter);
+            instanceService.SetCurrentInstance(instanceGuid);
+
+            return reportRepository.GetReports();
         }
     }
 }

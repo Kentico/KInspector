@@ -93,14 +93,11 @@
           <v-icon
             :color="resultIconColor"
             class="pr-1"
+            style="float: left"
             >
             {{ resultIcon }}
           </v-icon>
-          <span
-            v-html="results.summary"
-            style="position: relative;top: -2px;"
-            >
-          </span>
+        <vue-showdown :markdown="results.summary" class="summary" tag="span"/>
         </v-flex>
         <v-spacer></v-spacer>
         <v-flex shrink>
@@ -121,6 +118,16 @@
 
   </v-card>
 </template>
+
+<style>
+    .summary {
+        position: relative
+    }
+
+    .summary p {
+        margin: 0
+    }
+</style>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
