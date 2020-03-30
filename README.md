@@ -57,7 +57,7 @@ All versions below are from a known working environment. Lower versions may work
 
 ### First run
 
-Even if you don't plan to make any changes in the Clietn UI application, you'll need to build it before your first run and any time the client code is updated. To build the Client UI application (required anytime the client UI code is updated unless you are using the `UI Development` debug launch setting):
+Even if you don't plan to make any changes in the Client UI application, you'll need to build it before your first run and any time the client code is updated. To build the Client UI application (required anytime the client UI code is updated unless you are using the `UI Development` debug launch setting):
 
 #### Frontend build instructions
 1. Open Powershell/Command Prompt
@@ -78,6 +78,6 @@ If you want to work on the Client UI applicaiton, there's a few additional steps
 1. In Powershell, run `npm i` (if you haven't yet) and `npm run serve`
 1. Leave the application is running.
 1. Follow the steps to build the backend, but run it using the `UI Development` debug launch settings.
-   - This runs the backend with a proxy to the running instance you started in Powershell and allows you to take advantage of the hot-reloading of the clientn application
+   - This runs the backend with a proxy to the running instance you started in Powershell and allows you to take advantage of the hot-reloading of the client application
 
 ![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/KInspector?pixel)
