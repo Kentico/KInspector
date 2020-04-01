@@ -149,7 +149,7 @@ namespace KenticoInspector.Core.Helpers
                 var defaultObjectPropertyValue = objectTypeProperty.GetValue(defaultObject);
 
                 object overrideObjectPropertyValue = overrideObject != null
-                    ? objectTypeProperty.GetValue(overrideObject) 
+                    ? objectTypeProperty.GetValue(overrideObject) ?? defaultObjectPropertyValue
                     : defaultObjectPropertyValue;
 
                 if (objectTypePropertyType.Namespace == objectType.Namespace)
