@@ -4,6 +4,6 @@
     {
         public static string BaseDirectory = $"{nameof(ApplicationRestartAnalysis)}/Scripts";
 
-        public static string ApplicationRestartEvents = $"{BaseDirectory}/{nameof(ApplicationRestartEvents)}.sql";
+        public static string GetCmsEventLogsWithStartOrEndCode = $"{BaseDirectory}/{nameof(GetCmsEventLogsWithStartOrEndCode)}.sql";
     }
 }
