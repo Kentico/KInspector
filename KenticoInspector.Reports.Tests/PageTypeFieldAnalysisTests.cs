@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
+using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
+using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
-using KenticoInspector.Reports.PageTypeFieldAnalysis;
+using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.PageTypeFieldAnalysis.Models;
+using KenticoInspector.Reports.PageTypeFieldAnalysis;
 
 using NUnit.Framework;
 
@@ -65,7 +69,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Act
             var results = mockReport.GetResults();
-            var resultsData = results.Data as TableResult<CmsPageTypeField>;
+            var resultsData = results.Data.FieldResults as TableResult<object>;
 
             // Assert
             Assert.That(resultsData.Rows.Count(), Is.EqualTo(2));
