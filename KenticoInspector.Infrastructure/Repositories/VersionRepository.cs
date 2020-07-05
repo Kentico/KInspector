@@ -19,6 +19,10 @@ namespace KenticoInspector.Infrastructure.Services
 
         private const string _administrationDllToCheck = "CMS.DataEngine.dll";
         private const string _relativeAdministrationDllPath = "bin";
+
+        private const string _coreDllToCheck = "KenticoInspector.Core.dll";
+        private const string _relativeBinPath = "bin";
+
         private const string _relativeHotfixFileFolderPath = "App_Data\\Install";
         private const string _hotfixFile = "Hotfix.txt";
 
@@ -34,25 +38,8 @@ namespace KenticoInspector.Infrastructure.Services
 
         public Version GetKenticoAdministrationVersion(string rootPath)
         {
-            if (!Directory.Exists(rootPath))
-            {
-                return null;
-            }
-
-            var binDirectory = Path.Combine(rootPath, _relativeAdministrationDllPath);
-
-            if (!Directory.Exists(binDirectory))
-            {
-                return null;
-            }
-
-            var dllFileToCheck = Path.Combine(binDirectory, _administrationDllToCheck);
-
-            if (!File.Exists(dllFileToCheck))
-            {
-                return null;
-            }
-
+            var dllFileToCheck = GetDllFileToCheck(rootPath, _relativeAdministrationDllPath, _administrationDllToCheck);
+            if (dllFileToCheck == null) return null;
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(dllFileToCheck);
 
             var hotfix = "0";
@@ -88,6 +75,38 @@ namespace KenticoInspector.Infrastructure.Services
             var hotfix = settingsKeys[1];
 
             return new Version($"{version}.{hotfix}");
+        }
+
+        public string GetCoreProductVersion()
+        {
+            var fileToCheck = GetDllFileToCheck(AppDomain.CurrentDomain.BaseDirectory, string.Empty, _coreDllToCheck);
+            if (fileToCheck == null) return null;
+
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(fileToCheck);
+            return fileVersionInfo.ProductVersion;
+        }
+
+        private string GetDllFileToCheck(string rootPath, string relativePath, string dllName)
+        {
+            if (!Directory.Exists(rootPath))
+            {
+                return null;
+            }
+
+            var binDirectory = Path.Combine(rootPath, relativePath);
+
+            if (!Directory.Exists(binDirectory))
+            {
+                return null;
+            }
+
+            var dllFileToCheck = Path.Combine(binDirectory, dllName);
+
+            if (!File.Exists(dllFileToCheck))
+            {
+                return null;
+            }
+            return dllFileToCheck;
         }
     }
 }

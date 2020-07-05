@@ -13,5 +13,7 @@ namespace KenticoInspector.Core.Repositories.Interfaces
         Version GetKenticoDatabaseVersion(Instance instance);
 
         Version GetKenticoDatabaseVersion(DatabaseSettings databaseSettings);
+
+        string GetCoreProductVersion();
     }
 }
