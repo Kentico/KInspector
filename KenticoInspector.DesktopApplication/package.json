@@ -6,7 +6,7 @@
   "repository": "",
   "main": "main.js",
   "devDependencies": {
-    "electron": "^4.0.1"
+    "electron": "^7.2.4"
   },
   "scripts": {
     "start": "electron ."
