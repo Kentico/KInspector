@@ -5,7 +5,7 @@
 [![first-timers-only](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 [![Github All Releases](https://img.shields.io/github/downloads/kentico/kinspector/total.svg)](https://github.com/Kentico/KInspector/releases)
 
-Kentico Inspector (formerly KInspector) is an application for analyzing the health, performance and security of **[Kentico EMS](https://www.kentico.com/)** solutions.
+**Kentico Inspector** (formerly KInspector) is an application for analyzing the health, performance and security of **[Kentico EMS](https://www.kentico.com/)** solutions.
 
 Kentico Inspector was initially developed as an internal application by the Kentico consulting team to help evaluation customer's web sites. We quickly realized that the broader community would benefit from this as well, so we made it open source.
 
@@ -72,7 +72,7 @@ Even if you don't plan to make any changes in the Client UI application, you'll 
 1. Make sure the `KenticoInspector.WebApplication` project is the start up project
 1. You can run it with either the `IIS Express` or `Console` debug launch settings
 
-If you want to work on the Client UI applicaiton, there's a few additional steps to go through.
+If you want to work on the Client UI application, there's a few additional steps to go through.
 
 1. Open the `./KenticoInspector.WebApplication/ClientApp` directory in your editor of choice (Visual Studio Code is recommended) as well as in Powershell
 1. In Powershell, run `npm i` (if you haven't yet) and `npm run serve`
