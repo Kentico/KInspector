@@ -80,4 +80,3 @@ If you want to work on the Client UI applicaiton, there's a few additional steps
 1. Follow the steps to build the backend, but run it using the `UI Development` debug launch settings.
    - This runs the backend with a proxy to the running instance you started in Powershell and allows you to take advantage of the hot-reloading of the client application
 
-![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/KInspector?pixel)
