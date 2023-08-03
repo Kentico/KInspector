@@ -1,5 +1,7 @@
 ﻿using Autofac;
+
 using KenticoInspector.Core;
+
 using System.Reflection;
 
 namespace KenticoInspector.Reports

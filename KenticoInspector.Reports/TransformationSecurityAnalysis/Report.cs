@@ -42,16 +42,10 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
         public override ReportResults GetResults()
         {
             var transformationDtos = databaseService.ExecuteSqlFromFile<TransformationDto>(Scripts.GetTransformations);
-
             var transformationsWithIssues = GetTransformationsWithIssues(transformationDtos);
-
             var pageDtos = databaseService.ExecuteSqlFromFile<PageDto>(Scripts.GetPages);
-
-            var documentPageTemplateIds = pageDtos
-                .Select(pageDto => pageDto.DocumentPageTemplateID);
-
+            var documentPageTemplateIds = pageDtos.Select(pageDto => pageDto.DocumentPageTemplateID);
             var pageTemplateDtos = databaseService.ExecuteSqlFromFile<PageTemplateDto>(Scripts.GetPageTemplates, new { DocumentPageTemplateIDs = documentPageTemplateIds });
-
             var sites = instanceService
                 .GetInstanceDetails(instanceService.CurrentInstance)
                 .Sites;
@@ -86,7 +80,6 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
         private void AnalyzeTransformation(Transformation transformation)
         {
             var issueAnalyzersObject = new IssueAnalyzers(Metadata.Terms);
-
             var issueAnalyzerPublicInstanceMethods = issueAnalyzersObject
                 .GetType()
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)

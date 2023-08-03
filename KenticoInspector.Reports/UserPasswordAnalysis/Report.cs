@@ -44,7 +44,6 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
                 );
 
             var usersWithEmptyPasswords = GetUsersWithEmptyPasswords(users);
-
             var usersWithPlaintextPasswords = GetUsersWithPlaintextPasswords(users);
 
             return CompileResults(usersWithEmptyPasswords, usersWithPlaintextPasswords);

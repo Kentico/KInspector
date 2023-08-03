@@ -4,6 +4,7 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.TemplateLayoutAnalysis.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,6 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
         private ReportResults CompileResults(IEnumerable<IdenticalPageLayouts> identicalPageLayouts)
         {
             var countIdenticalPageLayouts = identicalPageLayouts.Count();
-
             var results = new ReportResults
             {
                 Status = ReportResultsStatus.Information,

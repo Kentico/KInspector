@@ -8,6 +8,7 @@ using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
@@ -90,18 +91,19 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             combinedResults.Type = ReportResultsType.TableList;
             combinedResults.Status = ReportResultsStatus.Good;
 
+            var summaryBuilder = new StringBuilder();
             foreach (var reportResults in allReportResults)
             {
                 var name = ((string)reportResults.Data.Name);
-                // TODO: Make this WAY better
                 ((IDictionary<string, object>)combinedResults.Data).Add(reportResults.Data.Name, reportResults.Data);
                 if (reportResults.Status == ReportResultsStatus.Error)
                 {
-                    combinedResults.Summary += Metadata.Terms.NameFound.With(new { name });
+                    summaryBuilder.Append(Metadata.Terms.NameFound.With(new { name }));
                     combinedResults.Status = ReportResultsStatus.Error;
                 }
             }
 
+            combinedResults.Summary = summaryBuilder.ToString();
             if (combinedResults.Status == ReportResultsStatus.Good)
             {
                 combinedResults.Summary = Metadata.Terms.NoContentTreeConsistencyIssuesFound;
@@ -141,7 +143,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Status = data.Rows.Any() ? ReportResultsStatus.Error : ReportResultsStatus.Good,
                 Summary = string.Empty,
                 Type = ReportResultsType.Table,
             };
@@ -181,7 +183,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Status = data.Rows.Any() ? ReportResultsStatus.Error : ReportResultsStatus.Good,
                 Summary = string.Empty,
                 Type = ReportResultsType.Table,
             };

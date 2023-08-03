@@ -4,6 +4,7 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.UnusedPageTypeSummary.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,6 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
         public override ReportResults GetResults()
         {
             var unusedPageTypes = databaseService.ExecuteSqlFromFile<PageType>(Scripts.GetUnusedPageTypes);
-
             var countOfUnusedPageTypes = unusedPageTypes.Count();
 
             return new ReportResults

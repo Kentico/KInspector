@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,9 +14,13 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis.Models
         public IEnumerable<WebPartSummary> AffectedWebParts { get; set; }
 
         public string TemplateCodename { get; set; }
+
         public string TemplateName { get; set; }
+
         public int TemplateID { get; set; }
+
         public int TotalAffectedDocuments => AffectedDocuments.Count();
+
         public int TotalAffectedWebParts => AffectedWebParts.Count();
     }
 }

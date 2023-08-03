@@ -31,9 +31,7 @@ namespace KenticoInspector.Reports.PageTypeFieldAnalysis
 
         public override ReportResults GetResults()
         {
-            var pagetypeFields = databaseService
-                .ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFields);
-
+            var pagetypeFields = databaseService.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFields);
             var fieldsWithMismatchedTypes = CheckForMismatchedTypes(pagetypeFields);
 
             return CompileResults(fieldsWithMismatchedTypes);
@@ -52,7 +50,6 @@ namespace KenticoInspector.Reports.PageTypeFieldAnalysis
             }
 
             var fieldResultCount = fieldsWithMismatchedTypes.Count();
-
             var fieldResults = new TableResult<dynamic>()
             {
                 Name = Metadata.Terms.TableTitles.MatchingPageTypeFieldsWithDifferentDataTypes,

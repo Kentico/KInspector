@@ -4,6 +4,7 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,6 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
             var affectedTemplates = _databaseService.ExecuteSqlFromFile<PageTemplate>(Scripts.GetAffectedTemplates);
             var affectedTemplateIds = affectedTemplates.Select(x => x.PageTemplateID).ToArray();
             var affectedDocuments = _databaseService.ExecuteSqlFromFile<Document>(Scripts.GetDocumentsByPageTemplateIds, new { IDs = affectedTemplateIds });
-
             var templateAnalysisResults = GetTemplateAnalysisResults(affectedTemplates, affectedDocuments);
 
             return CompileResults(templateAnalysisResults);
@@ -44,7 +44,6 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
         private IEnumerable<TemplateSummary> GetTemplateAnalysisResults(IEnumerable<PageTemplate> affectedTemplates, IEnumerable<Document> affectedDocuments)
         {
             var results = new List<TemplateSummary>();
-
             foreach (var template in affectedTemplates)
             {
                 var documents = affectedDocuments.Where(x => x.DocumentPageTemplateID == template.PageTemplateID);
@@ -114,10 +113,8 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
             var affectedDocumentCount = documentSummaries.Count();
             var affectedTemplateCount = templateSummaries.Count();
             var affectedWebPartCount = webPartSummaries.Count();
-
             var summary = Metadata.Terms.Summary.With(new { affectedDocumentCount, affectedTemplateCount, affectedWebPartCount });
-
-            var status = templateSummaries.Count() > 0 ? ReportResultsStatus.Warning : ReportResultsStatus.Good;
+            var status = templateSummaries.Any() ? ReportResultsStatus.Warning : ReportResultsStatus.Good;
 
             return new ReportResults
             {

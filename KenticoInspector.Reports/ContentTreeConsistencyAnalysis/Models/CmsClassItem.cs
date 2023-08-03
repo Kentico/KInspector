@@ -6,13 +6,17 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
 {
     public class CmsClassItem
     {
-        private List<CmsClassField> _classFields = null;
         private string _classIdColumn = null;
-
+        private List<CmsClassField> _classFields = null;
+        
         public string ClassDisplayName { get; set; }
+
         public XmlDocument ClassFormDefinitionXml { get; set; }
+
         public int ClassID { get; set; }
+
         public string ClassName { get; set; }
+
         public string ClassTableName { get; set; }
 
         public List<CmsClassField> ClassFields

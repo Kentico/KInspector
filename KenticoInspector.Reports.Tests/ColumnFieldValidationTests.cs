@@ -115,8 +115,7 @@ namespace KenticoInspector.Reports.Tests
         {
             mockReport = new Report(
                 _mockDatabaseService.Object,
-                _mockReportMetadataService.Object,
-                _mockInstanceService.Object
+                _mockReportMetadataService.Object
                 );
         }
 

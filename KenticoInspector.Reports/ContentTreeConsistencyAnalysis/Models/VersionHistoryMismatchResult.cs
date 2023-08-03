@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+
 using System;
 using System.Globalization;
 
@@ -6,16 +7,12 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
 {
     public class VersionHistoryMismatchResult
     {
-        public VersionHistoryMismatchResult(int documentID, string fieldName, string fieldType, string versionHistoryXmlValue, object coupledDataColumnValue)
-        {
-            DocumentNodeId = documentID;
-            FieldName = fieldName;
-            ProcessItemValues(fieldType, versionHistoryXmlValue, coupledDataColumnValue);
-        }
-
         public int DocumentNodeId { get; set; }
+
         public string FieldName { get; set; }
+
         public string DocumentValue { get; set; }
+
         public string VersionHistoryValue { get; set; }
 
         [JsonIgnore]
@@ -27,6 +24,13 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
             }
         }
 
+        public VersionHistoryMismatchResult(int documentID, string fieldName, string fieldType, string versionHistoryXmlValue, object coupledDataColumnValue)
+        {
+            DocumentNodeId = documentID;
+            FieldName = fieldName;
+            ProcessItemValues(fieldType, versionHistoryXmlValue, coupledDataColumnValue);
+        }
+        
         private void ProcessItemValues(string fieldType, string versionHistoryXmlValue, object coupledDataColumnValue)
         {
             var hasAtLeastOneNullValue = versionHistoryXmlValue == null || coupledDataColumnValue == null;
@@ -34,8 +38,6 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
             {
                 DocumentValue = coupledDataColumnValue?.ToString();
                 VersionHistoryValue = versionHistoryXmlValue;
-
-                var areBothValuesNull = versionHistoryXmlValue == null && coupledDataColumnValue == null;
             }
             else
             {

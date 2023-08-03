@@ -1,6 +1,6 @@
 ﻿namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
-    public class FieldTypes
+    public static class FieldTypes
     {
         public const string Boolean = "boolean";
         public const string DateTime = "datetime";

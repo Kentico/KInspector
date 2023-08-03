@@ -51,15 +51,8 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             }
 
             var totalEvents = cmsEventLogs.Count();
-
-            var totalStartEvents = cmsEventLogs
-                .Where(e => e.EventCode == "STARTAPP")
-                .Count();
-
-            var totalEndEvents = cmsEventLogs
-                .Where(e => e.EventCode == "ENDAPP")
-                .Count();
-
+            var totalStartEvents = cmsEventLogs.Count(e => e.EventCode == "STARTAPP");
+            var totalEndEvents = cmsEventLogs.Count(e => e.EventCode == "ENDAPP");
             var earliestTime = totalEvents > 0
                 ? cmsEventLogs.Min(e => e.EventTime)
                 : new DateTime();

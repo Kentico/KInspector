@@ -4,6 +4,7 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.DebugConfigurationAnalysis.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,7 +118,7 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
 
         private void AnalyzeDatabaseSettingsResults(ReportResults results, IEnumerable<SettingsKey> databaseSettingsKeys)
         {
-            var explicitlyEnabledSettings = databaseSettingsKeys.Where(x => x.KeyValue == true && x.KeyDefaultValue == false);
+            var explicitlyEnabledSettings = databaseSettingsKeys.Where(x => x.KeyValue && !x.KeyDefaultValue);
             var explicitlyEnabledSettingsCount = explicitlyEnabledSettings.Count();
             if (explicitlyEnabledSettingsCount > 0)
             {
