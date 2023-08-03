@@ -4,6 +4,7 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.SampleReport.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,9 +30,7 @@ namespace KenticoInspector.Reports.SampleReport
         {
             var random = new Random();
             var issueCount = random.Next(0, 3);
-
             var data = new List<string>();
-
             for (int i = 0; i < issueCount; i++)
             {
                 var name = $"test-{i}";

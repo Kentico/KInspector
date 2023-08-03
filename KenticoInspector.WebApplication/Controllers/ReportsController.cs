@@ -26,7 +26,6 @@ namespace KenticoInspector.WebApplication.Controllers
             return Ok(_reportService.GetReports(instanceGuid));
         }
 
-        // POST api/values
         [HttpGet("{codename}/results/{instanceGuid}")]
         public ActionResult<ReportResults> Get(string codename, Guid instanceGuid)
         {
