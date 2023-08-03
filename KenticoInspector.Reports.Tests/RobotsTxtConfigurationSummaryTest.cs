@@ -41,7 +41,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Status == ReportResultsStatus.Good);
 
-            var baseUri = new Uri(mockInstance.Url);
+            var baseUri = new Uri(mockInstance.AdminUrl);
             var expectedUri = new Uri(baseUri, Constants.RobotsTxtRelativePath);
 
             AssertUrlCalled(mockHttpMessageHandler, expectedUri);
@@ -68,8 +68,8 @@ namespace KenticoInspector.Reports.Tests
             _mockReport = ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode.OK, out Mock<HttpMessageHandler> mockHttpMessageHandler);
             var mockInstance = _mockInstanceService.Object.CurrentInstance;
 
-            var baseUrl = mockInstance.Url;
-            mockInstance.Url += "/subdirectory";
+            var baseUrl = mockInstance.AdminUrl;
+            mockInstance.AdminUrl += "/subdirectory";
 
             // Act
             var results = _mockReport.GetResults();

@@ -5,5 +5,7 @@
         public string ProcessName { get; set; }
 
         public string TriggerName { get; set; }
+
+        public string Macro { get; set; }
     }
 }

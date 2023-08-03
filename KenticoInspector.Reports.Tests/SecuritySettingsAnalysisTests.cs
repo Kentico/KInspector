@@ -300,11 +300,11 @@ namespace KenticoInspector.Reports.Tests
             webConfig.Load(webConfigPath);
 
             _mockCmsFileService
-                .Setup(p => p.GetXmlDocument(_mockInstance.Path, DefaultKenticoPaths.WebConfigFile))
+                .Setup(p => p.GetXmlDocument(_mockInstance.AdminPath, DefaultKenticoPaths.WebConfigFile))
                 .Returns(webConfig);
 
             _mockCmsFileService
-                .Setup(p => p.GetResourceStringsFromResx(_mockInstance.Path, DefaultKenticoPaths.PrimaryResxFile))
+                .Setup(p => p.GetResourceStringsFromResx(_mockInstance.AdminPath, DefaultKenticoPaths.PrimaryResxFile))
                 .Returns(new Dictionary<string, string>());
         }
 

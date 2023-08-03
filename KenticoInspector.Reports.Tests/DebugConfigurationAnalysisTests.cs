@@ -121,7 +121,7 @@ namespace KenticoInspector.Reports.Tests
         private void ArrangeResourceStringsMethods()
         {
             _mockCmsFileService
-                .Setup(p => p.GetResourceStringsFromResx(_mockInstance.Path, DefaultKenticoPaths.PrimaryResxFile))
+                .Setup(p => p.GetResourceStringsFromResx(_mockInstance.AdminPath, DefaultKenticoPaths.PrimaryResxFile))
                 .Returns(new Dictionary<string, string>());
         }
 
@@ -140,7 +140,7 @@ namespace KenticoInspector.Reports.Tests
             webConfig.LoadXml(webconfigXml);
 
             _mockCmsFileService
-                .Setup(p => p.GetXmlDocument(_mockInstance.Path, DefaultKenticoPaths.WebConfigFile))
+                .Setup(p => p.GetXmlDocument(_mockInstance.AdminPath, DefaultKenticoPaths.WebConfigFile))
                 .Returns(webConfig);
         }
 

@@ -30,7 +30,7 @@ namespace KenticoInspector.Reports.OnlineMarketingMacroAnalysis
             var contactGroups = databaseService.ExecuteSqlFromFile<ContactGroupResult>(Scripts.GetManualContactGroupMacroConditions);
             var automationTriggers = databaseService.ExecuteSqlFromFile<AutomationTriggerResult>(Scripts.GetManualTimeBasedTriggerMacroConditions);
             var scoreRules = databaseService.ExecuteSqlFromFile<ScoreRuleResult>(Scripts.GetManualScoreRuleMacroConditions);
-            if (!contactGroups.Any() && !automationTriggers.Any())
+            if (!contactGroups.Any() && !automationTriggers.Any() && !scoreRules.Any())
             {
                 return new ReportResults
                 {
