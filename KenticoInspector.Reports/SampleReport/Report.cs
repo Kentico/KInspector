@@ -1,6 +1,5 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.SampleReport.Models;
@@ -20,7 +19,8 @@ namespace KenticoInspector.Reports.SampleReport
             this.databaseService = databaseService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
+        // Hide sample report in UI
+        public override IList<Version> CompatibleVersions => new Version[0];
 
         public override IList<string> Tags => new List<string> {
             ReportTags.Consistency
