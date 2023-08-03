@@ -1,7 +1,9 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+
 using Moq;
+
 using System;
 using System.Reflection;
 
@@ -29,7 +31,6 @@ namespace KenticoInspector.Reports.Tests.Helpers
         public static Mock<IReportMetadataService> GetBasicReportMetadataService<T>(string reportCodename) where T : new()
         {
             var mockReportMetadataService = GetReportMetadataService();
-
             SetupReportMetadataServiceInternal<T>(reportCodename, mockReportMetadataService);
 
             return mockReportMetadataService;
@@ -43,14 +44,12 @@ namespace KenticoInspector.Reports.Tests.Helpers
             };
 
             UpdatePropertiesOfObject(fakeMetadata.Terms);
-
             mockReportMetadataService.Setup(p => p.GetReportMetadata<T>(reportCodename)).Returns(fakeMetadata);
         }
 
         private static void UpdatePropertiesOfObject<T>(T objectToUpdate) where T : new()
         {
             var objectProperties = objectToUpdate.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
             foreach (var property in objectProperties)
             {
                 if (property.PropertyType == typeof(Term))

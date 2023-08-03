@@ -2,7 +2,9 @@
 using KenticoInspector.Reports.Tests.Helpers;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis.Models;
+
 using NUnit.Framework;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -11,9 +13,11 @@ namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
+    [TestFixture(12)]
+    [TestFixture(13)]
     public class WebPartPerformanceAnalysisTest : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public WebPartPerformanceAnalysisTest(int majorVersion) : base(majorVersion)
         {

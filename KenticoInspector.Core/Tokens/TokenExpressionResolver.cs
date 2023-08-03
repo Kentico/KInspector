@@ -51,9 +51,7 @@ namespace KenticoInspector.Core.Tokens
                 .Where(pattern => !string.IsNullOrEmpty(pattern));
 
             var joinedTokenExpressionPatterns = string.Join(Constants.Pipe, allTokenExpressionPatterns);
-
             var tokenDictionary = GetValuesDictionary(tokenValues);
-
             var resolvedExpressions = Regex.Split(term, joinedTokenExpressionPatterns)
                 .Select(tokenExpression => ResolveTokenExpression(tokenExpression, tokenDictionary));
 
@@ -83,9 +81,7 @@ namespace KenticoInspector.Core.Tokens
         private static string ResolveTokenExpression(string tokenExpression, IDictionary<string, object> tokenDictionary)
         {
             var (leadingChar, innerTokenExpression, trailingChar) = GetSplitExpression(tokenExpression);
-
             string resolvedExpression = null;
-
             foreach (var (tokenExpressionType, pattern) in TokenExpressionTypePatterns)
             {
                 if (Regex.IsMatch(innerTokenExpression, pattern))
@@ -112,15 +108,12 @@ namespace KenticoInspector.Core.Tokens
         {
             char? leadingChar = null;
             char? trailingChar = null;
-
             var leadingChars = new[] { Constants.Space };
             var trailingChars = new[] { Constants.Space, Constants.Period, Constants.Colon };
-
             if (tokenExpression.Any())
             {
                 var firstChar = tokenExpression.First();
                 var lastChar = tokenExpression.Last();
-
                 foreach (var item in leadingChars)
                 {
                     if (firstChar == item) leadingChar = item;

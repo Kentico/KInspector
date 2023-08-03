@@ -1,7 +1,9 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.PageTypeAssignmentAnalysis;
 using KenticoInspector.Reports.PageTypeAssignmentAnalysis.Models;
+
 using NUnit.Framework;
+
 using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.Tests
@@ -9,9 +11,10 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public class PageTypeAssignmentAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public PageTypeAssignmentAnalysisTests(int majorVersion) : base(majorVersion)
         {

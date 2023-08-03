@@ -19,7 +19,7 @@ namespace KenticoInspector.Reports.Tests
         protected Mock<IReportMetadataService> _mockReportMetadataService;
         protected Mock<ICmsFileService> _mockCmsFileService;
 
-        public AbstractReportTest(int majorVersion)
+        protected AbstractReportTest(int majorVersion)
         {
             var reportCodename = AbstractReport<TermsType>.GetCodename(typeof(ReportType));
 

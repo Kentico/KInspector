@@ -3,7 +3,9 @@ using KenticoInspector.Core.Models;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using KenticoInspector.Reports.Tests.Helpers;
+
 using NUnit.Framework;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +16,10 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public class ContentTreeConsistencyAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public ContentTreeConsistencyAnalysisTests(int majorVersion) : base(majorVersion)
         {
@@ -141,7 +144,6 @@ namespace KenticoInspector.Reports.Tests
 
             var resultsData = (IDictionary<string, object>)results.Data;
             var workflowData = resultsData.First(t => t.Value.GetType() == typeof(TableResult<VersionHistoryMismatchResult>)).Value as TableResult<VersionHistoryMismatchResult>;
-
             var rowCount = workflowData.Rows.Count();
             Assert.That(rowCount == 4, $"There were {rowCount} rows instead 4 as expected");
         }

@@ -27,7 +27,6 @@ namespace KenticoInspector.Core.Helpers
             where T : new()
         {
             var metadataDirectory = $"{DirectoryHelper.GetExecutingDirectory()}\\{reportCodename}\\Metadata\\";
-
             var currentMetadata = DeserializeMetadataFromYamlFile<ReportMetadata<T>>(
                 metadataDirectory,
                 CurrentCultureName,
@@ -35,9 +34,7 @@ namespace KenticoInspector.Core.Helpers
             );
 
             var currentCultureIsDefaultCulture = CurrentCultureName == DefaultCultureName;
-
             var mergedMetadata = new ReportMetadata<T>();
-
             if (!currentCultureIsDefaultCulture)
             {
                 var defaultMetadata = DeserializeMetadataFromYamlFile<ReportMetadata<T>>(
@@ -50,9 +47,7 @@ namespace KenticoInspector.Core.Helpers
             }
 
             var reportMetadata = currentCultureIsDefaultCulture ? currentMetadata : mergedMetadata;
-
             var instanceDetails = instanceService.GetInstanceDetails(instanceService.CurrentInstance);
-
             var commonData = new
             {
                 instanceUrl = instanceService.CurrentInstance.Url,
@@ -61,15 +56,10 @@ namespace KenticoInspector.Core.Helpers
             };
 
             Term name = reportMetadata.Details.Name;
-
             reportMetadata.Details.Name = name.With(commonData);
-
             Term shortDescription = reportMetadata.Details.ShortDescription;
-
             reportMetadata.Details.ShortDescription = shortDescription.With(commonData);
-
             Term longDescription = reportMetadata.Details.LongDescription;
-
             reportMetadata.Details.LongDescription = longDescription.With(commonData);
 
             return reportMetadata;
@@ -82,9 +72,7 @@ namespace KenticoInspector.Core.Helpers
             where T : new()
         {
             var reportMetadataPath = $"{metadataDirectory}{cultureName}.yaml";
-
             var reportMetadataPathExists = File.Exists(reportMetadataPath);
-
             if (reportMetadataPathExists)
             {
                 var fileText = File.ReadAllText(reportMetadataPath);
@@ -141,13 +129,10 @@ namespace KenticoInspector.Core.Helpers
             object targetObject)
         {
             var objectTypeProperties = objectType.GetProperties();
-
             foreach (var objectTypeProperty in objectTypeProperties)
             {
                 var objectTypePropertyType = objectTypeProperty.PropertyType;
-
                 var defaultObjectPropertyValue = objectTypeProperty.GetValue(defaultObject);
-
                 object overrideObjectPropertyValue = overrideObject != null
                     ? objectTypeProperty.GetValue(overrideObject) ?? defaultObjectPropertyValue
                     : defaultObjectPropertyValue;
@@ -155,9 +140,7 @@ namespace KenticoInspector.Core.Helpers
                 if (objectTypePropertyType.Namespace == objectType.Namespace)
                 {
                     var targetObjectPropertyValue = Activator.CreateInstance(objectTypePropertyType);
-
                     objectTypeProperty.SetValue(targetObject, targetObjectPropertyValue);
-
                     RecursivelySetPropertyValues(
                         objectTypePropertyType,
                         defaultObjectPropertyValue,

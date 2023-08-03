@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
@@ -19,6 +17,7 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public class ColumnFieldValidationTests : AbstractReportTest<Report, Terms>
     {
         private readonly Report mockReport;
@@ -130,7 +129,6 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
-
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Good.ToString()));
         }
 
@@ -145,7 +143,6 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
-
             Assert.That(GetExpandTableResult<TableResult<CmsClassResult>>(results).Rows.Count(), Is.EqualTo(1));
         }
 
@@ -160,7 +157,6 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
-
             Assert.That(GetExpandTableResult<TableResult<TableResult>>(results).Rows.Count(), Is.EqualTo(1));
         }
 

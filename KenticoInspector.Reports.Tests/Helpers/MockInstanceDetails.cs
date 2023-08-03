@@ -1,4 +1,5 @@
 ﻿using KenticoInspector.Core.Models;
+
 using System;
 using System.Collections.Generic;
 
@@ -46,6 +47,16 @@ namespace KenticoInspector.Reports.Tests.Helpers
             }
         };
 
+        public static InstanceDetails Kentico13 = new InstanceDetails
+        {
+            AdministrationVersion = new Version("13.0"),
+            DatabaseVersion = new Version("13.0"),
+            Sites = new List<Site>
+            {
+                new Site { DomainName = "kentico13.com" }
+            }
+        };
+
         public static InstanceDetails Get(int majorVersion, Instance instance)
         {
             InstanceDetails instanceDetails = null;
@@ -55,17 +66,17 @@ namespace KenticoInspector.Reports.Tests.Helpers
                 case 9:
                     instanceDetails = Kentico9;
                     break;
-
                 case 10:
                     instanceDetails = Kentico10;
                     break;
-
                 case 11:
                     instanceDetails = Kentico11;
                     break;
-
                 case 12:
                     instanceDetails = Kentico12;
+                    break;
+                case 13:
+                    instanceDetails = Kentico13;
                     break;
             }
 

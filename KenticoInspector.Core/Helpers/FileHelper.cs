@@ -15,11 +15,8 @@ namespace KenticoInspector.Core.Helpers
         public static string GetSqlQueryText(string relativeFilePath, IDictionary<string, string> literalReplacements = null)
         {
             var executingDirectory = DirectoryHelper.GetExecutingDirectory();
-
             var fullPathToScript = $"{executingDirectory}/{relativeFilePath}";
-
             var query = File.ReadAllText(fullPathToScript);
-
             if (literalReplacements != null)
             {
                 foreach (var replacement in literalReplacements)

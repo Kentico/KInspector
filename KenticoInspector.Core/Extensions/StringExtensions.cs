@@ -7,7 +7,6 @@ namespace KenticoInspector.Core.Extensions
         public static (string first, string second) SplitAtFirst(this string source, char splitChar)
         {
             var index = source.IndexOf(splitChar);
-
             if (index < 0)
             {
                 return (source, null);

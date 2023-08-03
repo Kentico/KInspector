@@ -44,6 +44,7 @@ namespace KenticoInspector.Core
         {
             var fullNameSpace = reportType.Namespace;
             var indexAfterLastPeriod = fullNameSpace.LastIndexOf('.') + 1;
+
             return fullNameSpace.Substring(indexAfterLastPeriod, fullNameSpace.Length - indexAfterLastPeriod);
         }
     }

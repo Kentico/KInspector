@@ -1,7 +1,9 @@
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.TaskProcessingAnalysis;
 using KenticoInspector.Reports.TaskProcessingAnalysis.Models;
+
 using NUnit.Framework;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,9 +11,11 @@ namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
+    [TestFixture(12)]
+    [TestFixture(13)]
     public class TaskProcessingAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public TaskProcessingAnalysisTests(int majorVersion) : base(majorVersion)
         {
@@ -110,7 +114,7 @@ namespace KenticoInspector.Reports.Tests
         }
 
         private void SetupAllDatabaseQueries(
-                    int unprocessedIntegrationBusTasks = 0,
+            int unprocessedIntegrationBusTasks = 0,
             int unprocessedScheduledTasks = 0,
             int unprocessedSearchTasks = 0,
             int unprocessedStagingTasks = 0,

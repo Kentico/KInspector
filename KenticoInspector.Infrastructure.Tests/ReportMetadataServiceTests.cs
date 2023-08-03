@@ -15,6 +15,7 @@ namespace KenticoInspector.Infrastructure.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public class ReportMetadataServiceTests
     {
         private readonly IReportMetadataService reportMedatadataService;
@@ -29,9 +30,7 @@ namespace KenticoInspector.Infrastructure.Tests
             TokenExpressionResolver.RegisterTokenExpressions(typeof(Term).Assembly);
 
             var mockInstance = MockInstances.Get(majorVersion);
-
             var mockInstanceDetails = MockInstanceDetails.Get(majorVersion, mockInstance);
-
             var mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(mockInstance, mockInstanceDetails);
 
             reportMedatadataService = new ReportMetadataService(mockInstanceService.Object);
@@ -53,7 +52,6 @@ namespace KenticoInspector.Infrastructure.Tests
             Assert.That(metadata.Details.Name, Is.EqualTo(resolvedMetadata.Details.Name));
             Assert.That(metadata.Details.ShortDescription, Is.EqualTo(resolvedMetadata.Details.ShortDescription));
             Assert.That(metadata.Details.LongDescription, Is.EqualTo(resolvedMetadata.Details.LongDescription));
-
             Assert.That(metadata.Terms.SingleTerm.ToString(), Is.EqualTo(resolvedMetadata.Terms.SingleTerm.ToString()));
         }
 
@@ -73,7 +71,7 @@ namespace KenticoInspector.Infrastructure.Tests
             Assert.That(() => getReportMetadata(yamlPath), Throws.Exception);
         }
 
-        public class YamlTestCases
+        public static class YamlTestCases
         {
             public static IEnumerable<TestCaseData> YamlMatchesModel
             {

@@ -18,6 +18,7 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public
     class SecuritySettingsAnalysisTests : AbstractReportTest<Report, Terms>
     {
@@ -206,7 +207,6 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
-
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Good.ToString()));
         }
 
@@ -225,9 +225,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
-
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Warning.ToString()));
-
             Assert.That(GetResult<TableResult<CmsSettingsKeyResult>>(results).Rows.Count(), Is.EqualTo(5));
         }
 
@@ -246,9 +244,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
-
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Warning.ToString()));
-
             Assert.That(GetResult<TableResult<WebConfigSettingResult>>(results).Rows.Count(), Is.EqualTo(8));
         }
 
@@ -267,9 +263,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
-
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Warning.ToString()));
-
             Assert.That(GetResult<TableResult<CmsSettingsKeyResult>>(results).Rows.Count(), Is.EqualTo(5));
             Assert.That(GetResult<TableResult<WebConfigSettingResult>>(results).Rows.Count(), Is.EqualTo(8));
         }

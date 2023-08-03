@@ -2,9 +2,12 @@
 using KenticoInspector.Reports.RobotsTxtConfigurationSummary;
 using KenticoInspector.Reports.RobotsTxtConfigurationSummary.Models;
 using KenticoInspector.Reports.Tests.Helpers;
+
 using Moq;
 using Moq.Protected;
+
 using NUnit.Framework;
+
 using System;
 using System.Net;
 using System.Net.Http;
@@ -15,7 +18,8 @@ namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
-    [TestFixture(12)]
+    [TestFixture(11)]
+    [TestFixture(13)]
     public class RobotsTxtConfigurationSummaryTest : AbstractReportTest<Report, Terms>
     {
         private Report _mockReport;
@@ -106,9 +110,7 @@ namespace KenticoInspector.Reports.Tests
                 .Verifiable();
 
             var httpClient = new HttpClient(mockHttpMessageHandler.Object);
-
             var report = new Report(_mockInstanceService.Object, _mockReportMetadataService.Object, httpClient);
-
             MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, report);
 
             return report;

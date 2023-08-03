@@ -2,9 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Dapper;
 
-using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
 using KenticoInspector.Core.Services.Interfaces;
@@ -40,25 +38,20 @@ namespace KenticoInspector.Infrastructure.Services
             }
 
             var binDirectory = Path.Combine(rootPath, _relativeAdministrationDllPath);
-
             if (!Directory.Exists(binDirectory))
             {
                 return null;
             }
 
             var dllFileToCheck = Path.Combine(binDirectory, _administrationDllToCheck);
-
             if (!File.Exists(dllFileToCheck))
             {
                 return null;
             }
 
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(dllFileToCheck);
-
             var hotfix = "0";
-
             var hotfixDirectory = Path.Combine(rootPath, _relativeHotfixFileFolderPath);
-
             if (Directory.Exists(hotfixDirectory))
             {
                 var hotfixFile = Path.Combine(hotfixDirectory, _hotfixFile);

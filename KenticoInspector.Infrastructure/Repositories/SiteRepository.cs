@@ -1,7 +1,9 @@
 ﻿using Dapper;
+
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Repositories.Interfaces;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ namespace KenticoInspector.Infrastructure.Repositories
 {
     public class SiteRepository : ISiteRepository
     {
-        public Site GetSite(Instance instance, int siteID)
+        public Site GetSite(Instance instance, int siteId)
         {
             throw new NotImplementedException();
         }
@@ -29,6 +31,7 @@ namespace KenticoInspector.Infrastructure.Repositories
                     FROM CMS_Site";
                 var connection = DatabaseHelper.GetSqlConnection(instance.DatabaseSettings);
                 var sites = connection.Query<Site>(query).ToList();
+
                 return sites;
             }
             catch

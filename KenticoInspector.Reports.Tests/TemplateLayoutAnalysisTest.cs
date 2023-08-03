@@ -1,7 +1,9 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.TemplateLayoutAnalysis;
 using KenticoInspector.Reports.TemplateLayoutAnalysis.Models;
+
 using NUnit.Framework;
+
 using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.Tests
@@ -9,9 +11,10 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public class TemplateLayoutAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public TemplateLayoutAnalysisTests(int majorVersion) : base(majorVersion)
         {
@@ -26,8 +29,10 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts))
                 .Returns(identicalPageLayouts);
+
             // Act
             var results = _mockReport.GetResults();
+
             // Assert
             Assert.That(results.Data.Rows.Count == 5);
             Assert.That(results.Status == ReportResultsStatus.Information);
@@ -41,8 +46,10 @@ namespace KenticoInspector.Reports.Tests
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<IdenticalPageLayouts>(Scripts.GetIdenticalLayouts))
                 .Returns(identicalPageLayouts);
+
             // Act
             var results = _mockReport.GetResults();
+
             // Assert
             Assert.That(results.Data.Rows.Count == 0);
             Assert.That(results.Status == ReportResultsStatus.Information);
