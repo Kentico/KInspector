@@ -15,12 +15,13 @@ details:
       * `KeyName` is not like **%all%** *(Ignore the settings for enabling debug in the admin)*
       * `KeyName` is not **CMSDebugMacrosDetailed** *(Ignore the settings for enabling more details in macro debugging)*
 terms:
+  checkResultsTableForAnyIssues: Check results table for any issues.
   database:
     explicitlyEnabledSettingsTableHeader: Explicitly enabled settings
     overviewTableHeader: Database settings overview
     summary: <explicitlyEnabledSettingsCount> database <explicitlyEnabledSettingsCount|setting|settings> explicitly enabled
   webConfig:
-    debugKeyDisplayName: Compilation Debug
+    debugKeyDisplayName: Compilation Debug,
     overviewTableHeader: Web.config settings overview
     summary: <enabledSettingsText> enabled in web.config
     traceKeyDisplayName: Application Tracing

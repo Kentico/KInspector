@@ -50,7 +50,7 @@ namespace KenticoInspector.Core.Helpers
             var instanceDetails = instanceService.GetInstanceDetails(instanceService.CurrentInstance);
             var commonData = new
             {
-                instanceUrl = instanceService.CurrentInstance.Url,
+                instanceUrl = instanceService.CurrentInstance.AdminUrl,
                 administrationVersion = instanceDetails.AdministrationVersion,
                 databaseVersion = instanceDetails.DatabaseVersion
             };

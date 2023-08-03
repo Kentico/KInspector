@@ -27,7 +27,7 @@ namespace KenticoInspector.Infrastructure.Services
 
         public Version GetKenticoAdministrationVersion(Instance instance)
         {
-            return GetKenticoAdministrationVersion(instance.Path);
+            return GetKenticoAdministrationVersion(instance.AdminPath);
         }
 
         public Version GetKenticoAdministrationVersion(string rootPath)

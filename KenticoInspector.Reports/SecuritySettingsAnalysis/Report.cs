@@ -73,7 +73,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
                     Name = Metadata.Terms.GlobalSiteName
                 });
 
-            var instancePath = instanceService.CurrentInstance.Path;
+            var instancePath = instanceService.CurrentInstance.AdminPath;
 
             var resxValues = cmsFileService.GetResourceStringsFromResx(instancePath);
 

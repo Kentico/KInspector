@@ -10,7 +10,7 @@ namespace KenticoInspector.Reports.Tests.Helpers
         {
             Name = "K9 Test Instance",
             Guid = Guid.NewGuid(),
-            Path = "C:\\inetpub\\wwwroot\\Kentico9",
+            AdminPath = "C:\\inetpub\\wwwroot\\Kentico9",
             Url = "http://kentico9.com",
             DatabaseSettings = null
         };
@@ -19,7 +19,7 @@ namespace KenticoInspector.Reports.Tests.Helpers
         {
             Name = "K10 Test Instance",
             Guid = Guid.NewGuid(),
-            Path = "C:\\inetpub\\wwwroot\\Kentico10",
+            AdminPath = "C:\\inetpub\\wwwroot\\Kentico10",
             Url = "http://kentico10.com",
             DatabaseSettings = null
         };
@@ -28,7 +28,7 @@ namespace KenticoInspector.Reports.Tests.Helpers
         {
             Name = "K11 Test Instance",
             Guid = Guid.NewGuid(),
-            Path = "C:\\inetpub\\wwwroot\\Kentico11",
+            AdminPath = "C:\\inetpub\\wwwroot\\Kentico11",
             Url = "http://kentico11.com",
             DatabaseSettings = null
         };
@@ -37,7 +37,7 @@ namespace KenticoInspector.Reports.Tests.Helpers
         {
             Name = "K12 Test Instance",
             Guid = Guid.NewGuid(),
-            Path = "C:\\inetpub\\wwwroot\\Kentico12",
+            AdminPath = "C:\\inetpub\\wwwroot\\Kentico12",
             Url = "http://kentico12.com",
             DatabaseSettings = null
         };
@@ -46,7 +46,7 @@ namespace KenticoInspector.Reports.Tests.Helpers
         {
             Name = "K13 Test Instance",
             Guid = Guid.NewGuid(),
-            Path = "C:\\inetpub\\wwwroot\\Kentico13",
+            AdminPath = "C:\\inetpub\\wwwroot\\Kentico13",
             Url = "http://kentico13.com",
             DatabaseSettings = null
         };

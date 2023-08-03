@@ -16,6 +16,8 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis.Models
         public DatabaseTerms Database { get; set; }
 
         public WebConfigTerms WebConfig { get; set; }
+
+        public Term CheckResultsTableForAnyIssues { get; set; }
     }
 
     public class WebConfigTerms

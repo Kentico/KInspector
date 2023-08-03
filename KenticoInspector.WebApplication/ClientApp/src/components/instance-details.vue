@@ -9,7 +9,7 @@
       <v-list-tile-content>
         <v-list-tile-title>
           <a
-            :href="instance.url"
+            :href="instance.adminUrl"
             target="_blank"
             >
             {{displayName}}
@@ -46,8 +46,8 @@
     </template>
     <v-list-tile>
       <v-list-tile-content>
-        <v-list-tile-title>{{instance.path}}</v-list-tile-title>
-        <v-list-tile-sub-title>Path</v-list-tile-sub-title>
+        <v-list-tile-title>{{instance.adminPath}}</v-list-tile-title>
+        <v-list-tile-sub-title>Administration path</v-list-tile-sub-title>
       </v-list-tile-content>
     </v-list-tile>
     <v-subheader>Database Configuration</v-subheader>

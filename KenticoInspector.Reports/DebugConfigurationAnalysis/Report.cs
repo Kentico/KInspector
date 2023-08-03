@@ -41,7 +41,7 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             var databaseSettingsValues = _databaseService.ExecuteSqlFromFile<SettingsKey>(Scripts.GetDebugSettingsValues);
             ResolveSettingsDisplayNames(instance, databaseSettingsValues);
 
-            var webConfig = _cmsFileService.GetXmlDocument(instance.Path, DefaultKenticoPaths.WebConfigFile);
+            var webConfig = _cmsFileService.GetXmlDocument(instance.AdminPath, DefaultKenticoPaths.WebConfigFile);
             var isCompilationDebugEnabled = GetBooleanValueofSectionAttribute(webConfig, "/configuration/system.web/compilation", "debug");
             var isTraceEnabled = GetBooleanValueofSectionAttribute(webConfig, "/configuration/system.web/trace", "enabled");
 
@@ -62,7 +62,7 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
 
         private void ResolveSettingsDisplayNames(Instance instance, IEnumerable<SettingsKey> databaseSettingsValues)
         {
-            var resxValues = _cmsFileService.GetResourceStringsFromResx(instance.Path);
+            var resxValues = _cmsFileService.GetResourceStringsFromResx(instance.AdminPath);
 
             foreach (var databaseSettingsValue in databaseSettingsValues)
             {
@@ -83,7 +83,7 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             var results = new ReportResults()
             {
                 Status = ReportResultsStatus.Information,
-                Summary = string.Empty,
+                Summary = Metadata.Terms.CheckResultsTableForAnyIssues,
                 Type = ReportResultsType.TableList
             };
 

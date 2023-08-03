@@ -50,16 +50,16 @@
         </div>
 
         <v-text-field
-          v-model="instance.url"
-          :rules="[v => !!v || 'Site URL is required']"
-          label="Site URL"
-          placeholder="https:\\localhost\DancingGoat"
+          v-model="instance.adminUrl"
+          :rules="[v => !!v || 'Administration URL is required']"
+          label="Administration URL"
+          placeholder="https:\\localhost\DancingGoat\Admin"
           required
           clearable
           />
 
         <v-text-field
-          v-model="instance.path"
+          v-model="instance.adminPath"
           :rules="[v => !!v || 'Administration instance root folder is required']"
           label="Administration instance root folder"
           placeholder="C:\inetpub\wwwroot\DancingGoat\CMS"

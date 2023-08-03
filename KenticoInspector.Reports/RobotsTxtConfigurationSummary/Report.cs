@@ -46,7 +46,7 @@ namespace KenticoInspector.Reports.RobotsTxtConfigurationSummary
 
         public override ReportResults GetResults()
         {
-            var instanceUri = new Uri(instanceService.CurrentInstance.Url);
+            var instanceUri = new Uri(instanceService.CurrentInstance.AdminUrl);
             var testUri = new Uri(instanceUri, Constants.RobotsTxtRelativePath);
             var found = ConfirmUriStatusCode(testUri, HttpStatusCode.OK).Result;
 
