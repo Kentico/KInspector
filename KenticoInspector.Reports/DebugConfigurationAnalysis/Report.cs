@@ -56,6 +56,7 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
                 .InnerText;
             var value = false;
             bool.TryParse(valueRaw, out value);
+
             return value;
         }
 
