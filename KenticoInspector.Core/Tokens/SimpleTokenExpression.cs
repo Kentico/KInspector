@@ -186,12 +186,9 @@ namespace KenticoInspector.Core.Tokens
         {
             var expressionCaseValueIsBool = bool.TryParse(expressionCaseValue, out bool boolExpressionCaseValue);
 
-            if (expressionCaseValueIsBool)
+            if (expressionCaseValueIsBool && token == boolExpressionCaseValue)
             {
-                if (token == boolExpressionCaseValue)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;

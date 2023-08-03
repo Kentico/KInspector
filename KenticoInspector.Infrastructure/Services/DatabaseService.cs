@@ -35,6 +35,7 @@ namespace KenticoInspector.Infrastructure.Services
 
         public IEnumerable<T> ExecuteSqlFromFile<T>(string relativeFilePath)
         {
+            //TODO: Catch exceptions
             return ExecuteSqlFromFile<T>(relativeFilePath, null, null);
         }
 

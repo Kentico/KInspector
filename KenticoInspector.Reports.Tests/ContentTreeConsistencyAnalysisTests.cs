@@ -162,8 +162,8 @@ namespace KenticoInspector.Reports.Tests
         private List<CmsDocumentNode> GetBadDocumentNodes()
         {
             return new List<CmsDocumentNode>() {
-                new CmsDocumentNode { DocumentID = 100, DocumentName = "Bad 100", DocumentNamePath = "/bad-100", DocumentNodeID = 100 },
-                new CmsDocumentNode { DocumentID = 150, DocumentName = "Bad 150", DocumentNamePath = "/bad-150", DocumentNodeID = 150 }
+                new CmsDocumentNode { DocumentID = 100, DocumentName = "Bad 100", DocumentNodeID = 100 },
+                new CmsDocumentNode { DocumentID = 150, DocumentName = "Bad 150", DocumentNodeID = 150 }
             };
         }
 

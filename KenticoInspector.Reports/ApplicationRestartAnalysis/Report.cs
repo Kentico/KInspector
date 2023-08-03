@@ -16,7 +16,7 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string>
         {

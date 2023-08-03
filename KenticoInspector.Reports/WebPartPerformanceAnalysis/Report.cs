@@ -14,15 +14,15 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
     public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService _databaseService;
-        private readonly IInstanceService _instanceService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
         {
             _databaseService = databaseService;
-            _instanceService = instanceService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+
+        public override IList<Version> IncompatibleVersions => VersionHelper.GetVersionList("13");
 
         public override IList<string> Tags => new List<string> {
             ReportTags.PortalEngine,

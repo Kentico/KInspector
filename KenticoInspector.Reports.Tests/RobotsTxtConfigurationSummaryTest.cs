@@ -107,7 +107,7 @@ namespace KenticoInspector.Reports.Tests
 
             var httpClient = new HttpClient(mockHttpMessageHandler.Object);
 
-            var report = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object, httpClient);
+            var report = new Report(_mockInstanceService.Object, _mockReportMetadataService.Object, httpClient);
 
             MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, report);
 

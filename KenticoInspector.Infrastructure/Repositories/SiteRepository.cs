@@ -25,8 +25,7 @@ namespace KenticoInspector.Infrastructure.Repositories
                         SiteName as Name,
                         SiteGUID as Guid,
                         SiteDomainName as DomainName,
-                        SitePresentationURL as PresentationUrl,
-                        SiteIsContentOnly as ContentOnly
+                        SitePresentationURL as PresentationUrl
                     FROM CMS_Site";
                 var connection = DatabaseHelper.GetSqlConnection(instance.DatabaseSettings);
                 var sites = connection.Query<Site>(query).ToList();
@@ -34,7 +33,7 @@ namespace KenticoInspector.Infrastructure.Repositories
             }
             catch
             {
-                return null;
+                return new Site[] { };
             }
         }
     }

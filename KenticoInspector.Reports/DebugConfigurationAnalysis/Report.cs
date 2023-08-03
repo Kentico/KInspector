@@ -28,7 +28,7 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             _cmsFileService = cmsFileService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string> {
            ReportTags.Health

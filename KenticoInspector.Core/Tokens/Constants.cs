@@ -1,6 +1,6 @@
 ﻿namespace KenticoInspector.Core.Tokens
 {
-    internal class Constants
+    internal static class Constants
     {
         public const char Space = ' ';
         public const char Pipe = '|';

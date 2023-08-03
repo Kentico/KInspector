@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace KenticoInspector.Core.Helpers
 {
-    public class DirectoryHelper
+    public static class DirectoryHelper
     {
         private const string filePrefix = "file:\\";
 

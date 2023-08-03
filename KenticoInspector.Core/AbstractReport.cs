@@ -12,7 +12,7 @@ namespace KenticoInspector.Core
 
         private ReportMetadata<T> metadata;
 
-        public AbstractReport(IReportMetadataService reportMetadataService)
+        protected AbstractReport(IReportMetadataService reportMetadataService)
         {
             this.reportMetadataService = reportMetadataService;
         }

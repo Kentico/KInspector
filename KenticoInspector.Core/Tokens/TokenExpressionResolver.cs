@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace KenticoInspector.Core.Tokens
 {
-    public class TokenExpressionResolver
+    public static class TokenExpressionResolver
     {
         private static IEnumerable<(Type tokenExpressionType, string pattern)> TokenExpressionTypePatterns { get; set; }
 

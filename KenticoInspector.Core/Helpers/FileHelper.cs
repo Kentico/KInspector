@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace KenticoInspector.Core.Helpers
 {
-    public class FileHelper
+    public static class FileHelper
     {
         /// <summary>
         /// Reads file located at <paramref name="relativeFilePath"/> using <see cref="DirectoryHelper.GetExecutingDirectory"/> as the root location.

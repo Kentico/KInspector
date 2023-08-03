@@ -4,6 +4,7 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             this.databaseService = databaseService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string>()
         {
@@ -161,10 +162,6 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
         {
             var versionHistoryItems = GetVersionHistoryItems();
             var cmsClassItems = GetCmsClassItems(versionHistoryItems);
-            // TODO: Use later?
-            // var allDocumentNodeIds = versionHistoryItems.Select(x => x.DocumentID);
-            // var allDocumentNodes = _databaseService.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, new { IDs = allDocumentNodeIds.ToArray() });
-
             var comparisonResults = new List<VersionHistoryMismatchResult>();
             foreach (var cmsClass in cmsClassItems)
             {
