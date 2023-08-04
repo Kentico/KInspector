@@ -13,5 +13,6 @@
         public const string Transformations = "Transformations";
         public const string WebParts = "Web Parts";
         public const string Configuration = "Configuration";
+        public const string OnlineMarketing = "On-line Marketing";
     }
 }

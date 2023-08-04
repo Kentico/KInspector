@@ -3,6 +3,7 @@ using KenticoInspector.Reports.OnlineMarketingMacroAnalysis;
 using KenticoInspector.Reports.OnlineMarketingMacroAnalysis.Models;
 
 using NUnit.Framework;
+
 using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.Tests
