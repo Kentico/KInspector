@@ -21,6 +21,12 @@ namespace KenticoInspector.Core
 
         public abstract IList<Version> CompatibleVersions { get; }
 
+        /// <summary>
+        /// Set to <c>true</c> if the report modifies any data. If <c>true</c>, the report
+        /// appears in the "Tools" menu of the UI.
+        /// </summary>
+        public abstract bool ModifiesData { get; }
+
         public virtual IList<Version> IncompatibleVersions => new List<Version>();
 
         public ReportMetadata<T> Metadata

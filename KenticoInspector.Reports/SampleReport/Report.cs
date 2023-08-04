@@ -19,6 +19,8 @@ namespace KenticoInspector.Reports.SampleReport
             this.databaseService = databaseService;
         }
 
+        public override bool ModifiesData => false;
+
         // Hide sample report in UI
         public override IList<Version> CompatibleVersions => new Version[0];
 

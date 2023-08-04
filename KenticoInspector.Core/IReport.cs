@@ -13,6 +13,8 @@ namespace KenticoInspector.Core
 
         IList<Version> IncompatibleVersions { get; }
 
+        bool ModifiesData { get; }
+
         IList<string> Tags { get; }
 
         ReportResults GetResults();

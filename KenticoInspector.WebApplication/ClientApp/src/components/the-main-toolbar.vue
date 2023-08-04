@@ -37,6 +37,15 @@
         <v-icon>mdi-file-chart</v-icon>
       </v-btn>
 
+       <v-btn
+        flat
+        icon
+        to="/tools"
+        :disabled="!isConnected"
+        >
+        <v-icon>mdi-toolbox</v-icon>
+      </v-btn>
+
       <v-spacer></v-spacer>
       <connection-status-indicator></connection-status-indicator>
     </v-toolbar>

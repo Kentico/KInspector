@@ -12,7 +12,7 @@
       </v-flex>
 
       <template v-if="isConnected">
-        <report-filters />
+        <report-filters :showTools="false" />
         <v-flex xs12>
           <report-list :reports="filteredReports" />
         </v-flex>
@@ -61,7 +61,7 @@ export default {
     }),
     initPage: function() {
       if(this.isConnected) {
-                    this.getAllReports(this.connectedInstanceDetails.guid)
+        this.getAllReports(this.connectedInstanceDetails.guid)
         this.resetFilterSettings({ majorVersion: this.connectedInstanceDetails.databaseVersion.major })
       }
     }

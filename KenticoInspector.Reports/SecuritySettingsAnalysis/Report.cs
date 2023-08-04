@@ -30,6 +30,8 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
             ReportTags.Configuration
         };
 
+        public override bool ModifiesData => false;
+
         public Report(
             IDatabaseService databaseService,
             IInstanceService instanceService,

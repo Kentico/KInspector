@@ -24,6 +24,8 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             ReportTags.Health
         };
 
+        public override bool ModifiesData => false;
+
         public Report(
             IDatabaseService databaseService,
             IReportMetadataService reportMetadataService

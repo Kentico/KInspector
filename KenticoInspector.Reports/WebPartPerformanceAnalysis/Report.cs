@@ -21,6 +21,8 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
             _databaseService = databaseService;
         }
 
+        public override bool ModifiesData => false;
+
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
         public override IList<Version> IncompatibleVersions => VersionHelper.GetVersionList("13");
