@@ -17,13 +17,11 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService)
-            : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService)
+            : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
-
-        public override bool ModifiesData => false;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
@@ -74,16 +72,16 @@ namespace KenticoInspector.Reports.UserPasswordAnalysis
             {
                 return new ReportResults
                 {
-                    Type = ReportResultsType.String,
-                    Status = ReportResultsStatus.Good,
+                    Type = ResultsType.String,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.GoodSummary
                 };
             }
 
             var errorReportResults = new ReportResults
             {
-                Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Error,
+                Type = ResultsType.TableList,
+                Status = ResultsStatus.Error,
                 Data = new List<TableResult<CmsUserResult>>()
             };
 

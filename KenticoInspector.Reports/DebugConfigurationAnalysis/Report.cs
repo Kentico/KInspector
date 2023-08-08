@@ -21,15 +21,13 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             IDatabaseService databaseService,
             IInstanceService instanceService,
             ICmsFileService cmsFileService,
-            IReportMetadataService reportMetadataService
-        ) : base(reportMetadataService)
+            IModuleMetadataService moduleMetadataService
+        ) : base(moduleMetadataService)
         {
             _databaseService = databaseService;
             _instanceService = instanceService;
             _cmsFileService = cmsFileService;
         }
-
-        public override bool ModifiesData => false;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
@@ -84,9 +82,9 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
         {
             var results = new ReportResults()
             {
-                Status = ReportResultsStatus.Information,
+                Status = ResultsStatus.Information,
                 Summary = Metadata.Terms.CheckResultsTableForAnyIssues,
-                Type = ReportResultsType.TableList
+                Type = ResultsType.TableList
             };
 
             AnalyzeDatabaseSettingsResults(results, databaseSettingsKeys);
@@ -100,7 +98,7 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             var isDebugOrTraceEnabledInWebConfig = isCompilationDebugEnabled || isTraceEnabled;
             if (isDebugOrTraceEnabledInWebConfig)
             {
-                results.Status = ReportResultsStatus.Error;
+                results.Status = ResultsStatus.Error;
 
                 var enabledSettingsText = isCompilationDebugEnabled ? "`Debug`" : string.Empty;
                 enabledSettingsText += isCompilationDebugEnabled && isTraceEnabled ? " &amp; " : string.Empty;
@@ -125,9 +123,9 @@ namespace KenticoInspector.Reports.DebugConfigurationAnalysis
             var explicitlyEnabledSettingsCount = explicitlyEnabledSettings.Count();
             if (explicitlyEnabledSettingsCount > 0)
             {
-                if (results.Status != ReportResultsStatus.Error)
+                if (results.Status != ResultsStatus.Error)
                 {
-                    results.Status = ReportResultsStatus.Warning;
+                    results.Status = ResultsStatus.Warning;
                 }
 
                 results.Summary += Metadata.Terms.Database.Summary.With(new { explicitlyEnabledSettingsCount });

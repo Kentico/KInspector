@@ -15,12 +15,10 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
-
-        public override bool ModifiesData => false;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
@@ -45,8 +43,8 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
             {
                 return new ReportResults
                 {
-                    Type = ReportResultsType.Table,
-                    Status = ReportResultsStatus.Error,
+                    Type = ResultsType.Table,
+                    Status = ResultsStatus.Error,
                     Summary = Metadata.Terms.CheckResultsTableForAnyIssues,
                     Data = checkDbResults
                 };
@@ -55,8 +53,8 @@ namespace KenticoInspector.Reports.DatabaseConsistencyCheck
             {
                 return new ReportResults
                 {
-                    Type = ReportResultsType.String,
-                    Status = ReportResultsStatus.Good,
+                    Type = ResultsType.String,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.NoIssuesFound,
                     Data = string.Empty
                 };

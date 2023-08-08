@@ -30,12 +30,12 @@ export default new Router({
       component: () => import(/* webpackChunkName: "reports" */ './views/reports.vue')
     },
     {
-      path: '/tools',
-      name: 'tools',
+      path: '/actions',
+      name: 'actions',
       // route level code-splitting
       // this generates a separate chunk (instance-connect.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "reports" */ './views/tools.vue')
+      component: () => import(/* webpackChunkName: "reports" */ './views/actions.vue')
     }
   ]
 })

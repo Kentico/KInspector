@@ -20,13 +20,11 @@ namespace KenticoInspector.Reports.ColumnFieldValidation
 
         public Report(
             IDatabaseService databaseService,
-            IReportMetadataService reportMetadataService
-            ) : base(reportMetadataService)
+            IModuleMetadataService moduleMetadataService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
-
-        public override bool ModifiesData => false;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
@@ -212,15 +210,15 @@ namespace KenticoInspector.Reports.ColumnFieldValidation
             {
                 return new ReportResults()
                 {
-                    Status = ReportResultsStatus.Good,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.Summaries.Good
                 };
             }
 
             var errorReportResults = new ReportResults
             {
-                Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Error
+                Type = ResultsType.TableList,
+                Status = ResultsStatus.Error
             };
 
             var cmsClassesResultCount = IfAnyAddTableResult(

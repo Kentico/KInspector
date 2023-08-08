@@ -36,14 +36,13 @@
         >
         <v-icon>mdi-file-chart</v-icon>
       </v-btn>
-
-       <v-btn
+      <v-btn
         flat
         icon
-        to="/tools"
+        to="/actions"
         :disabled="!isConnected"
         >
-        <v-icon>mdi-toolbox</v-icon>
+        <v-icon>mdi-flash</v-icon>
       </v-btn>
 
       <v-spacer></v-spacer>

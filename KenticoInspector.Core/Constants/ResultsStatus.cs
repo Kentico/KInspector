@@ -1,6 +1,6 @@
 ﻿namespace KenticoInspector.Core.Constants
 {
-    public enum ReportResultsStatus
+    public enum ResultsStatus
     {
         /// <summary>
         /// Used in cases when displaying general information.

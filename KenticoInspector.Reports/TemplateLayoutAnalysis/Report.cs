@@ -15,12 +15,10 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
-
-        public override bool ModifiesData => false;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
@@ -42,8 +40,8 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
             var countIdenticalPageLayouts = identicalPageLayouts.Count();
             var results = new ReportResults
             {
-                Status = ReportResultsStatus.Information,
-                Type = ReportResultsType.Table,
+                Status = ResultsStatus.Information,
+                Type = ResultsType.Table,
                 Data = new TableResult<dynamic>()
                 {
                     Name = Metadata.Terms.IdenticalPageLayouts,

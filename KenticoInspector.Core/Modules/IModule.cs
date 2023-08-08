@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 using KenticoInspector.Core.Models;
 
-namespace KenticoInspector.Core
+namespace KenticoInspector.Core.Modules
 {
-    public interface IReport
+    public interface IModule
     {
         string Codename { get; }
 
@@ -13,10 +13,6 @@ namespace KenticoInspector.Core
 
         IList<Version> IncompatibleVersions { get; }
 
-        bool ModifiesData { get; }
-
         IList<string> Tags { get; }
-
-        ReportResults GetResults();
     }
 }

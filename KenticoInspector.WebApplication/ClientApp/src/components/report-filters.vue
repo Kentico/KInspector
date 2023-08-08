@@ -47,9 +47,6 @@
 import { mapGetters, mapState, mapMutations } from 'vuex';
 
 export default {
-  props: {
-    showTools: Boolean
-  },
   computed: {
     ...mapGetters('reports', {
       tags: 'getTags'
@@ -81,16 +78,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('reports', ['setFilterSetting']),
-    initPage: function() {
-      this.setFilterSetting({ name: 'showTools', value: this.showTools })
-    }
-  },
-  watch: {
-    '$route': {
-      handler: 'initPage',
-      immediate: true
-    }
+    ...mapMutations('reports', ['setFilterSetting'])
   }
 }
 </script>

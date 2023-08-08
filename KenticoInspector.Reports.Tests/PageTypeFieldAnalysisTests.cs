@@ -38,7 +38,7 @@ namespace KenticoInspector.Reports.Tests
 
         public PageTypeFieldAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
+            mockReport = new Report(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
         }
 
         [TestCase(Category = "Matching fields have save data types", TestName = "Page type fields with matching names and data types produce a good result")]
@@ -53,7 +53,7 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Good));
         }
 
         [TestCase(Category = "Matching fields have different data types", TestName = "Page type fields with matching names and different data types produce an information result")]
@@ -70,7 +70,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(resultsData.Rows.Count(), Is.EqualTo(2));
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Information));
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Information));
         }
     }
 }

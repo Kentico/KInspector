@@ -30,14 +30,12 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
             ReportTags.Configuration
         };
 
-        public override bool ModifiesData => false;
-
         public Report(
             IDatabaseService databaseService,
             IInstanceService instanceService,
             ICmsFileService cmsFileService,
-            IReportMetadataService reportMetadataService
-            ) : base(reportMetadataService)
+            IModuleMetadataService moduleMetadataService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
             this.instanceService = instanceService;
@@ -197,15 +195,15 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
             {
                 return new ReportResults
                 {
-                    Status = ReportResultsStatus.Good,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.Summaries.Good
                 };
             }
 
             var errorReportResults = new ReportResults
             {
-                Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Warning
+                Type = ResultsType.TableList,
+                Status = ResultsStatus.Warning
             };
 
             var cmsSettingsKeyResultsCount = IfAnyAddTableResult(

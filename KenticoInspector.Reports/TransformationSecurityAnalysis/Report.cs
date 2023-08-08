@@ -20,13 +20,15 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
         private readonly IDatabaseService databaseService;
         private readonly IInstanceService instanceService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService, IInstanceService instanceService) : base(reportMetadataService)
+        public Report(
+            IDatabaseService databaseService,
+            IModuleMetadataService moduleMetadataService,
+            IInstanceService instanceService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
             this.instanceService = instanceService;
         }
-
-        public override bool ModifiesData => false;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
@@ -134,8 +136,8 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
             {
                 return new ReportResults()
                 {
-                    Type = ReportResultsType.String,
-                    Status = ReportResultsStatus.Good,
+                    Type = ResultsType.String,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.GoodSummary
                 };
             }
@@ -205,8 +207,8 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
 
             return new ReportResults()
             {
-                Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Warning,
+                Type = ResultsType.TableList,
+                Status = ResultsStatus.Warning,
                 Summary = Metadata.Terms.WarningSummary.With(new { summaryCount, issueTypesAsCsv }),
                 Data = new
                 {

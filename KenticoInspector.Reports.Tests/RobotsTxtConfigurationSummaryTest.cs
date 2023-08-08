@@ -19,7 +19,7 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(11)]
-    [TestFixture(13)]
+    [TestFixture(12)]
     public class RobotsTxtConfigurationSummaryTest : AbstractReportTest<Report, Terms>
     {
         private Report _mockReport;
@@ -39,7 +39,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
 
             var baseUri = new Uri(mockInstance.AdminUrl);
             var expectedUri = new Uri(baseUri, Constants.RobotsTxtRelativePath);
@@ -75,7 +75,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
 
             var expectedUri = new Uri($"{baseUrl}/{Constants.RobotsTxtRelativePath}");
 
@@ -92,7 +92,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         private Report ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode httpStatusCode, out Mock<HttpMessageHandler> mockHttpMessageHandler)
@@ -110,8 +110,8 @@ namespace KenticoInspector.Reports.Tests
                 .Verifiable();
 
             var httpClient = new HttpClient(mockHttpMessageHandler.Object);
-            var report = new Report(_mockInstanceService.Object, _mockReportMetadataService.Object, httpClient);
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, report);
+            var report = new Report(_mockInstanceService.Object, _mockModuleMetadataService.Object, httpClient);
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockModuleMetadataService, report);
 
             return report;
         }

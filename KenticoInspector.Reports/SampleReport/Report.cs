@@ -14,12 +14,10 @@ namespace KenticoInspector.Reports.SampleReport
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
-
-        public override bool ModifiesData => false;
 
         // Hide sample report in UI
         public override IList<Version> CompatibleVersions => new Version[0];
@@ -43,8 +41,8 @@ namespace KenticoInspector.Reports.SampleReport
             return new ReportResults()
             {
                 Data = data,
-                Type = ReportResultsType.StringList,
-                Status = ReportResultsStatus.Information,
+                Type = ResultsType.StringList,
+                Status = ResultsStatus.Information,
                 Summary = Metadata.Terms.Summary.With(new { issueCount })
             };
         }

@@ -1,6 +1,6 @@
 ﻿using Autofac;
 
-using KenticoInspector.Core;
+using KenticoInspector.Core.Modules;
 
 using System.Reflection;
 

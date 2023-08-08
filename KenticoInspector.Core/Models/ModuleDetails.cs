@@ -1,6 +1,6 @@
 ﻿namespace KenticoInspector.Core.Models
 {
-    public class ReportDetails
+    public class ModuleDetails
     {
         public string LongDescription { get; set; }
 

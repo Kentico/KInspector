@@ -21,7 +21,7 @@ namespace KenticoInspector.Reports.Tests
 
         public WebPartPerformanceAnalysisTest(int majorVersion) : base(majorVersion)
         {
-            _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good, $"Expected status when no web parts have unspecified columns is 'Good' not '{results.Status}'.");
+            Assert.That(results.Status == ResultsStatus.Good, $"Expected status when no web parts have unspecified columns is 'Good' not '{results.Status}'.");
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Warning, $"Expected status when web parts have unspecified columns is 'Warning' not '{results.Status}'.");
+            Assert.That(results.Status == ResultsStatus.Warning, $"Expected status when web parts have unspecified columns is 'Warning' not '{results.Status}'.");
         }
 
         private void ArrangeAllQueries(List<PageTemplate> affectedTemplates = null)

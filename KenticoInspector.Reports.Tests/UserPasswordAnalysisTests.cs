@@ -57,7 +57,7 @@ namespace KenticoInspector.Reports.Tests
             int majorVersion)
             : base(majorVersion)
         {
-            mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
+            mockReport = new Report(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Good));
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.GoodSummary.ToString()));
         }
 
@@ -87,7 +87,7 @@ namespace KenticoInspector.Reports.Tests
             var secondResultRowCount = resultsData[1].Rows.Count();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Error));
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
             Assert.That(resultsData.Count, Is.EqualTo(2));
             Assert.That(firstResultRowCount, Is.EqualTo(1));
@@ -106,7 +106,7 @@ namespace KenticoInspector.Reports.Tests
             var firstResultRowCount = resultsData[0].Rows.Count();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Error));
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Error));
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.ErrorSummary.ToString()));
             Assert.That(resultsData.Count, Is.EqualTo(1));
             Assert.That(firstResultRowCount, Is.EqualTo(1));

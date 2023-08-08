@@ -14,12 +14,10 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
-
-        public override bool ModifiesData => false;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
@@ -33,8 +31,8 @@ namespace KenticoInspector.Reports.DatabaseTableSizeAnalysis
 
             return new ReportResults
             {
-                Type = ReportResultsType.Table,
-                Status = ReportResultsStatus.Information,
+                Type = ResultsType.Table,
+                Status = ResultsStatus.Information,
                 Summary = Metadata.Terms.CheckResultsTableForAnyIssues,
                 Data = new TableResult<DatabaseTableSizeResult>()
                 {

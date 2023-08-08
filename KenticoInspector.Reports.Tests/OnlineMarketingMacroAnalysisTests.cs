@@ -18,7 +18,7 @@ namespace KenticoInspector.Reports.Tests
 
         public OnlineMarketingMacroAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
             Assert.That(results.Summary == _mockReport.Metadata.Terms.Good);
         }
 
@@ -64,7 +64,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.ContactGroupTable.Rows.Count == 2);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.AutomationTriggerTable.Rows.Count == 3);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.ScoreRuleTable.Rows.Count == 1);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         private IEnumerable<AutomationTriggerResult> GetListOfAutomationTriggers()

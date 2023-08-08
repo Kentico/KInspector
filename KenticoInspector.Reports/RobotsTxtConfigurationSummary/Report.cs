@@ -21,9 +21,9 @@ namespace KenticoInspector.Reports.RobotsTxtConfigurationSummary
 
         public Report(
             IInstanceService instanceService,
-            IReportMetadataService reportMetadataService,
+            IModuleMetadataService moduleMetadataService,
             HttpClient httpClient = null
-        ) : base(reportMetadataService)
+        ) : base(moduleMetadataService)
 
         {
             this.instanceService = instanceService;
@@ -33,8 +33,6 @@ namespace KenticoInspector.Reports.RobotsTxtConfigurationSummary
                 _httpClient = httpClient;
             }
         }
-
-        public override bool ModifiesData => false;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
@@ -55,9 +53,9 @@ namespace KenticoInspector.Reports.RobotsTxtConfigurationSummary
             return new ReportResults
             {
                 Data = string.Empty,
-                Status = found ? ReportResultsStatus.Good : ReportResultsStatus.Warning,
+                Status = found ? ResultsStatus.Good : ResultsStatus.Warning,
                 Summary = found ? Metadata.Terms.RobotsTxtFound : Metadata.Terms.RobotsTxtNotFound,
-                Type = ReportResultsType.String
+                Type = ResultsType.String
             };
         }
 

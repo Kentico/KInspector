@@ -16,12 +16,10 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
     {
         private readonly IDatabaseService _databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             _databaseService = databaseService;
         }
-
-        public override bool ModifiesData => false;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
 
@@ -116,14 +114,14 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
             var affectedTemplateCount = templateSummaries.Count();
             var affectedWebPartCount = webPartSummaries.Count();
             var summary = Metadata.Terms.Summary.With(new { affectedDocumentCount, affectedTemplateCount, affectedWebPartCount });
-            var status = templateSummaries.Any() ? ReportResultsStatus.Warning : ReportResultsStatus.Good;
+            var status = templateSummaries.Any() ? ResultsStatus.Warning : ResultsStatus.Good;
 
             return new ReportResults
             {
                 Status = status,
                 Summary = summary,
                 Data = data,
-                Type = ReportResultsType.TableList
+                Type = ResultsType.TableList
             };
         }
     }

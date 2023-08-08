@@ -20,7 +20,7 @@ namespace KenticoInspector.Reports.Tests
 
         public DebugConfigurationAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockCmsFileService.Object, _mockReportMetadataService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockCmsFileService.Object, _mockModuleMetadataService.Object);
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error, "When debug is enabled in the web.config, the report status should be 'error'");
+            Assert.That(results.Status == ResultsStatus.Error, "When debug is enabled in the web.config, the report status should be 'error'");
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error, "When trace is enabled in the web.config, the report status should be 'error'");
+            Assert.That(results.Status == ResultsStatus.Error, "When trace is enabled in the web.config, the report status should be 'error'");
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Information, "When the results are clean, the report status should be 'information'");
+            Assert.That(results.Status == ResultsStatus.Information, "When the results are clean, the report status should be 'information'");
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Warning, "When any database setting is set to true and that isn't the default value, the report status should be 'warning'");
+            Assert.That(results.Status == ResultsStatus.Warning, "When any database setting is set to true and that isn't the default value, the report status should be 'warning'");
         }
 
         private void AddDefaultDatabaseSettingsKeyValues(List<SettingsKey> results)

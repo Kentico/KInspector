@@ -16,12 +16,10 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
-
-        public override bool ModifiesData => false;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
@@ -90,23 +88,23 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
         {
             var combinedResults = new ReportResults();
 
-            combinedResults.Type = ReportResultsType.TableList;
-            combinedResults.Status = ReportResultsStatus.Good;
+            combinedResults.Type = ResultsType.TableList;
+            combinedResults.Status = ResultsStatus.Good;
 
             var summaryBuilder = new StringBuilder();
             foreach (var reportResults in allReportResults)
             {
                 var name = ((string)reportResults.Data.Name);
                 ((IDictionary<string, object>)combinedResults.Data).Add(reportResults.Data.Name, reportResults.Data);
-                if (reportResults.Status == ReportResultsStatus.Error)
+                if (reportResults.Status == ResultsStatus.Error)
                 {
                     summaryBuilder.Append(Metadata.Terms.NameFound.With(new { name }));
-                    combinedResults.Status = ReportResultsStatus.Error;
+                    combinedResults.Status = ResultsStatus.Error;
                 }
             }
 
             combinedResults.Summary = summaryBuilder.ToString();
-            if (combinedResults.Status == ReportResultsStatus.Good)
+            if (combinedResults.Status == ResultsStatus.Good)
             {
                 combinedResults.Summary = Metadata.Terms.NoContentTreeConsistencyIssuesFound;
             }
@@ -145,9 +143,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = data.Rows.Any() ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Status = data.Rows.Any() ? ResultsStatus.Error : ResultsStatus.Good,
                 Summary = string.Empty,
-                Type = ReportResultsType.Table,
+                Type = ResultsType.Table,
             };
         }
 
@@ -185,9 +183,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = data.Rows.Any() ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Status = data.Rows.Any() ? ResultsStatus.Error : ResultsStatus.Good,
                 Summary = string.Empty,
-                Type = ReportResultsType.Table,
+                Type = ResultsType.Table,
             };
         }
     }

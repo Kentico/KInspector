@@ -16,7 +16,7 @@ namespace KenticoInspector.Reports.Tests
         protected InstanceDetails _mockInstanceDetails;
         protected Mock<IDatabaseService> _mockDatabaseService;
         protected Mock<IInstanceService> _mockInstanceService;
-        protected Mock<IReportMetadataService> _mockReportMetadataService;
+        protected Mock<IModuleMetadataService> _mockModuleMetadataService;
         protected Mock<ICmsFileService> _mockCmsFileService;
 
         protected AbstractReportTest(int majorVersion)
@@ -35,7 +35,7 @@ namespace KenticoInspector.Reports.Tests
             _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
             _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
             _mockCmsFileService = MockCmsFileServiceHelper.SetupMockCmsFileService();
-            _mockReportMetadataService = MockReportMetadataServiceHelper.GetBasicReportMetadataService<TermsType>(reportCodename);
+            _mockModuleMetadataService = MockReportMetadataServiceHelper.GetBasicReportMetadataService<TermsType>(reportCodename);
         }
     }
 }

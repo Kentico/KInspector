@@ -24,12 +24,10 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             ReportTags.Health
         };
 
-        public override bool ModifiesData => false;
-
         public Report(
             IDatabaseService databaseService,
-            IReportMetadataService reportMetadataService
-            ) : base(reportMetadataService)
+            IModuleMetadataService moduleMetadataService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -47,7 +45,7 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             {
                 return new ReportResults
                 {
-                    Status = ReportResultsStatus.Good,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.Summaries.Good
                 };
             }
@@ -81,9 +79,9 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = ReportResultsStatus.Information,
+                Status = ResultsStatus.Information,
                 Summary = summary,
-                Type = ReportResultsType.Table
+                Type = ResultsType.Table
             };
         }
     }
