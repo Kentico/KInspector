@@ -19,7 +19,7 @@ You can download the [latest release](https://github.com/Kentico/KInspector/rele
 > 
 > The application needs permission to create/modify files in the directory it is run from to save instances to a file.
 
-Or, you can close this repository and follow [these instructions](#local-development) to run the application locally.
+Or, you can clone this repository and follow [these instructions](#local-development) to run the application locally.
 
 ### Console mode
 
