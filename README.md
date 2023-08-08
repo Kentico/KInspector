@@ -11,33 +11,23 @@ Kentico Inspector was initially developed as an internal application by the Kent
 
 The application is Kentico version agnostic and has no dependencies on version-specific DLLs. Most modules are designed to support version 10 and later, but some will work on older versions as well.
 
-## Get the application
+## Running Kentico Inspector
 
-### Introduction to V4
-
-Version 4 is a complete rewrite of the tool. We wanted to create a better, more flexible codebase for both the front and back ends.
-
-Download the [latest release](https://github.com/Kentico/KInspector/releases/latest).
-
-> :warning: V4 is currently ALPHA and we're still porting reports.
->
-> If you need a report that hasn't been migrated yet, please use [the latest release of V3](https://github.com/Kentico/KInspector/releases) or consider porting it and submitting a PR!
-
-### Running the tool
-
-The application supports two modes currently: console and IIS. Console mode is useful if you just want to quickly run the tool occasionally, whereas IIS mode allows you to have it always available, for example, on a development server. In either case you need to extract the entire package in a folder.
+You can download the [latest release](https://github.com/Kentico/KInspector/releases/latest) and extract the contents to a local directory to use [console](#console-mode) or [IIS](#iis-mode) mode.
 
 > :round_pushpin: **Note:** 
 > 
 > The application needs permission to create/modify files in the directory it is run from to save instances to a file.
 
-#### Console Mode
+Or, you can close this repository and follow [these instructions](#local-development) to run the application locally.
 
-To run in console mode simply run `KenticoInspector.WebApplication.exe` and open your browser to either https://localhost:5001 or http://localhost:5000.
+### Console mode
 
-#### IIS Mode
+Console mode is useful if you just want to quickly run the tool occasionally. To use console mode, run `KenticoInspector.WebApplication.exe` and open your browser to either https://localhost:5001 or http://localhost:5000.
 
-To run in IIS  mode point your IIS directory to the folder you extracted everything to and make sure the application pool's .NET CLR version is set to `No managed code`. Open the site in your browser.
+### IIS mode
+
+IIS mode allows you to have the tool always available, for example, on a development server. To use IIS mode, point your IIS directory to the folder you extracted everything to and make sure the application pool's .NET CLR version is set to `No managed code`. Open the site in your browser.
 
 ## Contributing
 
@@ -45,7 +35,9 @@ Want to improve the Kentico Inspector? Great! Read the [contributing guidelines]
 
 If anything feels wrong or incomplete, please let us know. Create a new [issue](https://github.com/Kentico/KInspector/issues/new) or submit a [pull request](https://help.github.com/articles/using-pull-requests/).
 
-## Development Requirements
+## Local development
+
+### Requirements
 
 All versions below are from a known working environment. Lower versions may work but are not tested.
 
@@ -57,7 +49,7 @@ All versions below are from a known working environment. Lower versions may work
 
 ### First run
 
-Even if you don't plan to make any changes in the Client UI application, you'll need to build it before your first run and any time the client code is updated. To build the Client UI application (required anytime the client UI code is updated unless you are using the `UI Development` debug launch setting):
+Even if you don't plan to make any changes in the Client UI application, you'll need to build it before your first run and any time the client code is updated. To build the Client UI application:
 
 #### Frontend build instructions
 1. Open Powershell/Command Prompt
@@ -72,11 +64,13 @@ Even if you don't plan to make any changes in the Client UI application, you'll 
 1. Make sure the `KenticoInspector.WebApplication` project is the start up project
 1. You can run it with either the `IIS Express` or `Console` debug launch settings
 
-If you want to work on the Client UI applicaiton, there's a few additional steps to go through.
+If you want to work on the Client UI applicaiton without running `npm run build` any time the code changes, you can set up an automatic build process:
 
-1. Open the `./KenticoInspector.WebApplication/ClientApp` directory in your editor of choice (Visual Studio Code is recommended) as well as in Powershell
-1. In Powershell, run `npm i` (if you haven't yet) and `npm run serve`
-1. Leave the application is running.
+1. Open Powershell/Command Prompt
+1. Change the directory to `./KenticoInspector.WebApplication/ClientApp`
+1. Run `npm i` (if you haven't already)
+1. Run `npm run serve`
+1. Leave the terminal open
 1. Follow the steps to build the backend, but run it using the `UI Development` debug launch settings.
    - This runs the backend with a proxy to the running instance you started in Powershell and allows you to take advantage of the hot-reloading of the client application
 
