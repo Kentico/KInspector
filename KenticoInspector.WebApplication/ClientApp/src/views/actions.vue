@@ -20,7 +20,7 @@
               Data Modification Notice</span>
           </v-card-title>
           <v-card-text class="title font-weight-light">
-            Actions modify data when options are provided! It is not recommended to use run this in production.
+            Actions modify data when options are provided! It is not recommended to run this in production.
           </v-card-text>
         </v-card>
       </v-flex>
