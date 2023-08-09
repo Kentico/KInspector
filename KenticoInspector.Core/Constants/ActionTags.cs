@@ -5,6 +5,7 @@
         public const string Reset = "Reset";
         public const string User = "User";
         public const string Site = "Site";
+        public const string Configuration = "Configuration";
 
     }
 }

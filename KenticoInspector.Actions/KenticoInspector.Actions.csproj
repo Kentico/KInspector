@@ -31,6 +31,15 @@
     <None Update="SiteStatusSummary\Scripts\GetSiteSummary.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="WebFarmServerSummary\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WebFarmServerSummary\Scripts\DisableServer.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WebFarmServerSummary\Scripts\GetWebFarmServerSummary.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

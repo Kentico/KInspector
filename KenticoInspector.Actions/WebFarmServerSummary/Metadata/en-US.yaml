@@ -1,0 +1,12 @@
+﻿details:
+  name: Web Farm Server Summary
+  shortDescription: Review and disable web farm servers.
+  longDescription: |
+    Displays all web farm servers, and allows you to disable them.
+
+    Run the action without options to view the web farm server. To disable a server, re-run the action with the server ID below. Servers disabled by this action have the *.disabled* prefix applied to their name, so you can identify which servers were disabled by this action and which were disabled manually.
+terms:
+  tableTitle: Web farm servers
+  invalidOptions: The server ID must be an integer greater than zero.
+  listSummary: Set the server ID you wish to disable and re-run
+  serverDisabled: Server ID <serverId> was disabled
