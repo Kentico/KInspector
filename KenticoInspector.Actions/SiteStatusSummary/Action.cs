@@ -1,4 +1,4 @@
-﻿using KenticoInspector.Actions.GlobalAdminSummary.Models;
+﻿using KenticoInspector.Actions.SiteStatusSummary.Models;
 using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
@@ -8,17 +8,17 @@ using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 
-namespace KenticoInspector.Actions.GlobalAdminSummary
+namespace KenticoInspector.Actions.SiteStatusSummary
 {
     public class Action : AbstractAction<Terms,Options>
     {
         private IDatabaseService databaseService;
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("12", "13");
 
         public override IList<string> Tags => new List<string> {
-            ActionTags.Reset,
-            ActionTags.User
+            ActionTags.Site,
+            ActionTags.Reset
         };
 
         public Action(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
@@ -28,22 +28,23 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
 
         public override ActionResults Execute(Options options)
         {
-            // No user provided, list users
-            if (options.UserId == 0)
+            // No site provided, list sites
+            if (options.SiteId == 0)
             {
                 return GetListingResult();
             }
 
-            if (options.UserId < 0)
+            if (options.SiteId < 0)
             {
                 return GetInvalidOptionsResult();
             }
 
-            // Reset provided user
-            databaseService.ExecuteSqlFromFileGeneric(Scripts.ResetAndEnableUser, new { UserID = options.UserId });
+            // Stop provided site
+            databaseService.ExecuteSqlFromFileGeneric(Scripts.StopSite, new { SiteID = options.SiteId });
             var result = GetListingResult();
-            result.Summary = Metadata.Terms.UserReset.With(new {
-                userId = options.UserId
+            result.Summary = Metadata.Terms.SiteStopped.With(new
+            {
+                siteId = options.SiteId
             });
 
             return result;
@@ -59,11 +60,11 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
 
         private ActionResults GetListingResult()
         {
-            var administratorUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators);
-            var data = new TableResult<CmsUser>()
+            var sites = databaseService.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary);
+            var data = new TableResult<CmsSite>()
             {
                 Name = Metadata.Terms.TableTitle,
-                Rows = administratorUsers
+                Rows = sites
             };
 
             return new ActionResults
