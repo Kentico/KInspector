@@ -23,9 +23,9 @@ namespace KenticoInspector.Infrastructure.Services
             this.databaseService = databaseService;
         }
 
-        public ActionResults ExecuteAction(string codename, Guid instanceGuid, string optionsJson)
+        public ActionResults ExecuteAction(string actionCodename, Guid instanceGuid, string optionsJson)
         {
-            var action = actionRepository.GetAction(codename);
+            var action = actionRepository.GetAction(actionCodename);
             var instance = instanceService.SetCurrentInstance(instanceGuid);
             databaseService.Configure(instance.DatabaseSettings);
 

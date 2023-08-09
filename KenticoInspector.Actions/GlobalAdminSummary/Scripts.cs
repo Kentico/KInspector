@@ -2,7 +2,7 @@
 {
     public static class Scripts
     {
-        public static string BaseDirectory = $"{nameof(GlobalAdminSummary)}/Scripts";
+        public static string BaseDirectory => $"{nameof(GlobalAdminSummary)}/Scripts";
 
         public static string GetAdministrators => $"{BaseDirectory}/{nameof(GetAdministrators)}.sql";
 
