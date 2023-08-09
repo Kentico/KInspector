@@ -12,7 +12,7 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
 {
     public class Action : AbstractAction<Terms,Options>
     {
-        private IDatabaseService databaseService;
+        private readonly IDatabaseService databaseService;
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
