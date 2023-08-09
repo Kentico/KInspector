@@ -13,13 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ResetCmsUserLogin\Metadata\en-US.yaml">
+    <None Update="GlobalAdminSummary\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ResetCmsUserLogin\Scripts\GetAdministrators.sql">
+    <None Update="GlobalAdminSummary\Scripts\GetAdministrators.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ResetCmsUserLogin\Scripts\ResetAndEnableUser.sql">
+    <None Update="GlobalAdminSummary\Scripts\ResetAndEnableUser.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

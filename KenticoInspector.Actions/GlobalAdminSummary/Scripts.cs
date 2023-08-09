@@ -1,8 +1,8 @@
-﻿namespace KenticoInspector.Actions.ResetCmsUserLogin
+﻿namespace KenticoInspector.Actions.GlobalAdminSummary
 {
     public static class Scripts
     {
-        public static string BaseDirectory = $"{nameof(ResetCmsUserLogin)}/Scripts";
+        public static string BaseDirectory = $"{nameof(GlobalAdminSummary)}/Scripts";
 
         public static string GetAdministrators => $"{BaseDirectory}/{nameof(GetAdministrators)}.sql";
 

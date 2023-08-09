@@ -1,4 +1,4 @@
-﻿namespace KenticoInspector.Actions.ResetCmsUserLogin.Models
+﻿namespace KenticoInspector.Actions.GlobalAdminSummary.Models
 {
     public class CmsUser
     {

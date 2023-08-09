@@ -1,4 +1,4 @@
-﻿using KenticoInspector.Actions.ResetCmsUserLogin.Models;
+﻿using KenticoInspector.Actions.GlobalAdminSummary.Models;
 using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
@@ -8,7 +8,7 @@ using KenticoInspector.Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 
-namespace KenticoInspector.Actions.ResetCmsUserLogin
+namespace KenticoInspector.Actions.GlobalAdminSummary
 {
     public class Action : AbstractAction<Terms,Options>
     {
