@@ -17,8 +17,8 @@ namespace KenticoInspector.Actions.SiteStatusSummary
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("12", "13");
 
         public override IList<string> Tags => new List<string> {
-            ActionTags.Site,
-            ActionTags.Reset
+            ModuleTags.Site,
+            ModuleTags.Configuration
         };
 
         public Action(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)

@@ -24,8 +24,8 @@ namespace KenticoInspector.Reports.PageTypeAssignmentAnalysis
 
         public override IList<string> Tags => new List<string>
         {
-            ReportTags.Health,
-            ReportTags.Consistency
+            ModuleTags.Health,
+            ModuleTags.Consistency
         };
 
         public override ReportResults GetResults()

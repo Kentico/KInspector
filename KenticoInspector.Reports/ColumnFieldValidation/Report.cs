@@ -30,8 +30,8 @@ namespace KenticoInspector.Reports.ColumnFieldValidation
 
         public override IList<string> Tags => new List<string>
         {
-            ReportTags.Consistency,
-            ReportTags.Health
+            ModuleTags.Consistency,
+            ModuleTags.Health
         };
 
         public override ReportResults GetResults()

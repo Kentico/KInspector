@@ -17,7 +17,8 @@ namespace KenticoInspector.Actions.WebFarmServerSummary
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("12", "13");
 
         public override IList<string> Tags => new List<string> {
-            ActionTags.Configuration
+            ModuleTags.Configuration,
+            ModuleTags.WebFarms
         };
 
         public Action(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)

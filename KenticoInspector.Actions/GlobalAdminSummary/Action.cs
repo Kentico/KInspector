@@ -17,8 +17,8 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string> {
-            ActionTags.Reset,
-            ActionTags.User
+            ModuleTags.Reset,
+            ModuleTags.User
         };
 
         public Action(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)

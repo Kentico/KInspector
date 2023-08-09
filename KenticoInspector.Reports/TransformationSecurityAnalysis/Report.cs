@@ -36,11 +36,11 @@ namespace KenticoInspector.Reports.TransformationSecurityAnalysis
 
         public override IList<string> Tags => new List<string>
         {
-            ReportTags.Information,
-            ReportTags.PortalEngine,
-            ReportTags.Transformations,
-            ReportTags.Health,
-            ReportTags.Security
+            ModuleTags.Information,
+            ModuleTags.PortalEngine,
+            ModuleTags.Transformations,
+            ModuleTags.Health,
+            ModuleTags.Security
         };
 
         public override ReportResults GetResults()

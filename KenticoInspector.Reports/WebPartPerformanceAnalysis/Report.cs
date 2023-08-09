@@ -26,9 +26,9 @@ namespace KenticoInspector.Reports.WebPartPerformanceAnalysis
         public override IList<Version> IncompatibleVersions => VersionHelper.GetVersionList("13");
 
         public override IList<string> Tags => new List<string> {
-            ReportTags.PortalEngine,
-            ReportTags.Performance,
-            ReportTags.WebParts,
+            ModuleTags.PortalEngine,
+            ModuleTags.Performance,
+            ModuleTags.WebParts,
         };
 
         public override ReportResults GetResults()
