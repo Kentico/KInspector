@@ -1,8 +1,8 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Modules.Tests.Helpers;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
-using KenticoInspector.Reports.Tests.Helpers;
 
 using NUnit.Framework;
 
@@ -11,13 +11,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
-namespace KenticoInspector.Reports.Tests
+namespace KenticoInspector.Modules.Tests.Reports
 {
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
-    public class ContentTreeConsistencyAnalysisTests : AbstractReportTest<Report, Terms>
+    public class ContentTreeConsistencyAnalysisTests : AbstractModuleTest<Report, Terms>
     {
         private readonly Report _mockReport;
 

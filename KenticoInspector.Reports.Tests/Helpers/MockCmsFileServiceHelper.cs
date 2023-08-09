@@ -2,7 +2,7 @@
 
 using Moq;
 
-namespace KenticoInspector.Reports.Tests.Helpers
+namespace KenticoInspector.Modules.Tests.Helpers
 {
     public static class MockCmsFileServiceHelper
     {

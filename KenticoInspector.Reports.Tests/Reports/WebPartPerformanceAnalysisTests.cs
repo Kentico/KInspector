@@ -1,5 +1,5 @@
 ﻿using KenticoInspector.Core.Constants;
-using KenticoInspector.Reports.Tests.Helpers;
+using KenticoInspector.Modules.Tests.Helpers;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis.Models;
 
@@ -9,13 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace KenticoInspector.Reports.Tests
+namespace KenticoInspector.Modules.Tests.Reports
 {
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
-    public class WebPartPerformanceAnalysisTest : AbstractReportTest<Report, Terms>
+    public class WebPartPerformanceAnalysisTest : AbstractModuleTest<Report, Terms>
     {
         private readonly Report _mockReport;
 

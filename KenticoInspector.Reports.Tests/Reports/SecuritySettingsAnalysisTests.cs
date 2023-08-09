@@ -4,23 +4,23 @@ using System.Xml;
 
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Modules.Tests.Helpers;
 using KenticoInspector.Reports.SecuritySettingsAnalysis;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Data;
 using KenticoInspector.Reports.SecuritySettingsAnalysis.Models.Results;
-using KenticoInspector.Reports.Tests.Helpers;
 
 using NUnit.Framework;
 
-namespace KenticoInspector.Reports.Tests
+namespace KenticoInspector.Modules.Tests.Reports
 {
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
     public
-    class SecuritySettingsAnalysisTests : AbstractReportTest<Report, Terms>
+    class SecuritySettingsAnalysisTests : AbstractModuleTest<Report, Terms>
     {
         private readonly Report mockReport;
 

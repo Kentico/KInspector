@@ -5,7 +5,7 @@ using System.Linq;
 
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Models;
-using KenticoInspector.Reports.Tests.Helpers;
+using KenticoInspector.Modules.Tests.Helpers;
 using KenticoInspector.Reports.TransformationSecurityAnalysis;
 using KenticoInspector.Reports.TransformationSecurityAnalysis.Models;
 using KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Data;
@@ -13,13 +13,13 @@ using KenticoInspector.Reports.TransformationSecurityAnalysis.Models.Results;
 
 using NUnit.Framework;
 
-namespace KenticoInspector.Reports.Tests
+namespace KenticoInspector.Modules.Tests.Reports
 {
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
-    public class TransformationSecurityAnalysisTests : AbstractReportTest<Report, Terms>
+    public class TransformationSecurityAnalysisTests : AbstractModuleTest<Report, Terms>
     {
         private readonly Report mockReport;
 

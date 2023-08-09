@@ -2,14 +2,14 @@
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Core.Tokens;
-using KenticoInspector.Reports.Tests.Helpers;
+using KenticoInspector.Modules.Tests.Helpers;
 
 using Moq;
 
-namespace KenticoInspector.Reports.Tests
+namespace KenticoInspector.Modules.Tests
 {
-    public abstract class AbstractReportTest<ReportType, TermsType>
-        where ReportType : AbstractReport<TermsType>
+    public abstract class AbstractModuleTest<ModuleType, TermsType>
+        where ModuleType : AbstractModule<TermsType>
         where TermsType : new()
     {
         protected Instance _mockInstance;
@@ -19,23 +19,23 @@ namespace KenticoInspector.Reports.Tests
         protected Mock<IModuleMetadataService> _mockModuleMetadataService;
         protected Mock<ICmsFileService> _mockCmsFileService;
 
-        protected AbstractReportTest(int majorVersion)
+        protected AbstractModuleTest(int majorVersion)
         {
-            var reportCodename = AbstractReport<TermsType>.GetCodename(typeof(ReportType));
+            var reportCodename = AbstractModule<TermsType>.GetCodename(typeof(ModuleType));
 
             TokenExpressionResolver.RegisterTokenExpressions(typeof(TokenExpressionResolver).Assembly);
 
             InitializeCommonMocks(majorVersion, reportCodename);
         }
 
-        protected virtual void InitializeCommonMocks(int majorVersion, string reportCodename)
+        protected virtual void InitializeCommonMocks(int majorVersion, string moduleCodename)
         {
             _mockInstance = MockInstances.Get(majorVersion);
             _mockInstanceDetails = MockInstanceDetails.Get(majorVersion, _mockInstance);
             _mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(_mockInstance, _mockInstanceDetails);
             _mockDatabaseService = MockDatabaseServiceHelper.SetupMockDatabaseService(_mockInstance);
             _mockCmsFileService = MockCmsFileServiceHelper.SetupMockCmsFileService();
-            _mockModuleMetadataService = MockReportMetadataServiceHelper.GetBasicReportMetadataService<TermsType>(reportCodename);
+            _mockModuleMetadataService = MockModuleMetadataServiceHelper.GetBasicModuleMetadataService<TermsType>(moduleCodename);
         }
     }
 }

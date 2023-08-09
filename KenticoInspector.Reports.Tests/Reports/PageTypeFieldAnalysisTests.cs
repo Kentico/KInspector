@@ -8,13 +8,13 @@ using KenticoInspector.Reports.PageTypeFieldAnalysis;
 
 using NUnit.Framework;
 
-namespace KenticoInspector.Reports.Tests
+namespace KenticoInspector.Modules.Tests.Reports
 {
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
-    public class PageTypeFieldAnalysisTests : AbstractReportTest<Report, Terms>
+    public class PageTypeFieldAnalysisTests : AbstractModuleTest<Report, Terms>
     {
         private readonly Report mockReport;
 

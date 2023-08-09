@@ -4,21 +4,21 @@ using System.Linq;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Modules.Tests.Helpers;
 using KenticoInspector.Reports.ColumnFieldValidation;
 using KenticoInspector.Reports.ColumnFieldValidation.Models;
 using KenticoInspector.Reports.ColumnFieldValidation.Models.Data;
 using KenticoInspector.Reports.ColumnFieldValidation.Models.Results;
-using KenticoInspector.Reports.Tests.Helpers;
 
 using NUnit.Framework;
 
-namespace KenticoInspector.Reports.Tests
+namespace KenticoInspector.Modules.Tests.Reports
 {
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
-    public class ColumnFieldValidationTests : AbstractReportTest<Report, Terms>
+    public class ColumnFieldValidationTests : AbstractModuleTest<Report, Terms>
     {
         private readonly Report mockReport;
 

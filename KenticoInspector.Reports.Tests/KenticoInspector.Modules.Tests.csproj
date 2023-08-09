@@ -26,40 +26,40 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestData\classFormDefinitionXml_Clean_5512.xml">
+    <None Update="Reports\TestData\classFormDefinitionXml_Clean_5512.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\CMS\WebConfig\webConfigWithoutRecommendedValues.xml">
+    <None Update="Reports\TestData\CMS\WebConfig\webConfigWithoutRecommendedValues.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\CMS\WebConfig\webConfigWithRecommendedValues.xml">
+    <None Update="Reports\TestData\CMS\WebConfig\webConfigWithRecommendedValues.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\CMS_Class\Class1\ClassXmlSchema.xml">
+    <None Update="Reports\TestData\CMS_Class\Class1\ClassXmlSchema.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\CMS_Class\Class1\ClassXmlSchemaWithAddedField.xml">
+    <None Update="Reports\TestData\CMS_Class\Class1\ClassXmlSchemaWithAddedField.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\CMS_PageTemplate\PageTemplateWebParts\CleanAscx.xml">
+    <None Update="Reports\TestData\CMS_PageTemplate\PageTemplateWebParts\CleanAscx.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\CMS_PageTemplate\PageTemplateWebParts\CleanText.xml">
+    <None Update="Reports\TestData\CMS_PageTemplate\PageTemplateWebParts\CleanText.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\CMS_Transformation\TransformationCode\CleanASCX.txt">
+    <None Update="Reports\TestData\CMS_Transformation\TransformationCode\CleanASCX.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\CMS_Transformation\TransformationCode\CleanText.txt">
+    <None Update="Reports\TestData\CMS_Transformation\TransformationCode\CleanText.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\CMS_Transformation\TransformationCode\WithXssQueryHelperIssueASCX.txt">
+    <None Update="Reports\TestData\CMS_Transformation\TransformationCode\WithXssQueryHelperIssueASCX.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\VersionHistoryItem_Clean_518.xml">
+    <None Update="Reports\TestData\VersionHistoryItem_Clean_518.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\VersionHistoryItem_Corrupt_519.xml">
+    <None Update="Reports\TestData\VersionHistoryItem_Corrupt_519.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

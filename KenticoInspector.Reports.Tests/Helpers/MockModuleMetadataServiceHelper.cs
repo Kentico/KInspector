@@ -7,37 +7,37 @@ using Moq;
 using System;
 using System.Reflection;
 
-namespace KenticoInspector.Reports.Tests.Helpers
+namespace KenticoInspector.Modules.Tests.Helpers
 {
-    public static class MockReportMetadataServiceHelper
+    public static class MockModuleMetadataServiceHelper
     {
-        public static Mock<IModuleMetadataService> GetReportMetadataService()
+        public static Mock<IModuleMetadataService> GetModuleMetadataService()
         {
             return new Mock<IModuleMetadataService>(MockBehavior.Strict);
         }
 
         /// <summary>
         /// Sets up <see cref="IModuleMetadataService"/> to return a new <see cref="Labels"/> instead of the real metadata.
-        /// This is because the metadata does not influence the data retrieved by the report.
+        /// This is because the metadata does not influence the data retrieved by the module.
         /// </summary>
-        /// <param name="mockReportMetadataService">Mocked <see cref="IModuleMetadataService"/>.</param>
-        /// <param name="report"><see cref="IReport"/> being tested.</param>
-        /// <returns><see cref="IModuleMetadataService"/> configured for the <see cref="IReport"/>.</returns>
-        public static void SetupReportMetadataService<T>(Mock<IModuleMetadataService> mockReportMetadataService, IReport report) where T : new()
+        /// <param name="mockModuleMetadataService">Mocked <see cref="IModuleMetadataService"/>.</param>
+        /// <param name="module"><see cref="IModule"/> being tested.</param>
+        /// <returns><see cref="IModuleMetadataService"/> configured for the <see cref="IModule"/>.</returns>
+        public static void SetupModuleMetadataService<T>(Mock<IModuleMetadataService> mockModuleMetadataService, IModule module) where T : new()
         {
-            SetupReportMetadataServiceInternal<T>(report.Codename, mockReportMetadataService);
+            SetupModuleMetadataServiceInternal<T>(module.Codename, mockModuleMetadataService);
         }
 
-        public static Mock<IModuleMetadataService> GetBasicReportMetadataService<T>(string reportCodename) where T : new()
+        public static Mock<IModuleMetadataService> GetBasicModuleMetadataService<T>(string moduleCodename) where T : new()
         {
-            var mockReportMetadataService = GetReportMetadataService();
+            var mockModuleMetadataService = GetModuleMetadataService();
 
-            SetupReportMetadataServiceInternal<T>(reportCodename, mockReportMetadataService);
+            SetupModuleMetadataServiceInternal<T>(moduleCodename, mockModuleMetadataService);
 
-            return mockReportMetadataService;
+            return mockModuleMetadataService;
         }
 
-        private static void SetupReportMetadataServiceInternal<T>(string reportCodename, Mock<IModuleMetadataService> mockReportMetadataService) where T : new()
+        private static void SetupModuleMetadataServiceInternal<T>(string moduleCodename, Mock<IModuleMetadataService> mockModuleMetadataService) where T : new()
         {
             var fakeMetadata = new ModuleMetadata<T>()
             {
@@ -46,7 +46,7 @@ namespace KenticoInspector.Reports.Tests.Helpers
 
             UpdatePropertiesOfObject(fakeMetadata.Terms);
 
-            mockReportMetadataService.Setup(p => p.GetModuleMetadata<T>(reportCodename)).Returns(fakeMetadata);
+            mockModuleMetadataService.Setup(p => p.GetModuleMetadata<T>(moduleCodename)).Returns(fakeMetadata);
         }
 
         private static void UpdatePropertiesOfObject<T>(T objectToUpdate) where T : new()

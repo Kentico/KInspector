@@ -5,7 +5,7 @@ using Moq;
 
 using System.Collections.Generic;
 
-namespace KenticoInspector.Reports.Tests.Helpers
+namespace KenticoInspector.Modules.Tests.Helpers
 {
     public static class MockDatabaseServiceHelper
     {

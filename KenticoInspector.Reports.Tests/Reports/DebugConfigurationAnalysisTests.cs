@@ -8,13 +8,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
-namespace KenticoInspector.Reports.Tests
+namespace KenticoInspector.Modules.Tests.Reports
 {
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
-    public class DebugConfigurationAnalysisTests : AbstractReportTest<Report, Terms>
+    public class DebugConfigurationAnalysisTests : AbstractModuleTest<Report, Terms>
     {
         private readonly Report _mockReport;
 

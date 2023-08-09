@@ -7,13 +7,13 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace KenticoInspector.Reports.Tests
+namespace KenticoInspector.Modules.Tests.Reports
 {
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
-    public class TaskProcessingAnalysisTests : AbstractReportTest<Report, Terms>
+    public class TaskProcessingAnalysisTests : AbstractModuleTest<Report, Terms>
     {
         private readonly Report _mockReport;
 
