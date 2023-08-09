@@ -2,6 +2,6 @@
 {
     public class Options
     {
-        public int ServerID { get; set; }
+        public int? ServerId { get; set; }
     }
 }

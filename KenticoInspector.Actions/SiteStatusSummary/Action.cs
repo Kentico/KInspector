@@ -7,6 +7,7 @@ using KenticoInspector.Core.Services.Interfaces;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Actions.SiteStatusSummary
 {
@@ -29,12 +30,15 @@ namespace KenticoInspector.Actions.SiteStatusSummary
         public override ActionResults Execute(Options options)
         {
             // No site provided, list sites
-            if (options.SiteId == 0)
+            if (options.SiteId == null)
             {
                 return GetListingResult();
             }
 
-            if (options.SiteId < 0)
+            // Validate options
+            var sites = databaseService.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary);
+            if (options.SiteId <= 0 ||
+                !sites.Select(s => s?.ID).Contains(options.SiteId))
             {
                 return GetInvalidOptionsResult();
             }
@@ -52,10 +56,11 @@ namespace KenticoInspector.Actions.SiteStatusSummary
 
         public override ActionResults GetInvalidOptionsResult()
         {
-            return new ActionResults {
-                Status = ResultsStatus.Error,
-                Summary = Metadata.Terms.InvalidOptions
-            };
+            var result = GetListingResult();
+            result.Status = ResultsStatus.Error;
+            result.Summary = Metadata.Terms.InvalidOptions;
+
+            return result;
         }
 
         private ActionResults GetListingResult()

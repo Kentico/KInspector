@@ -6,6 +6,6 @@
 
         public string Name { get; internal set; }
 
-        public string Enabled { get; internal set; }
+        public bool Enabled { get; internal set; }
     }
 }

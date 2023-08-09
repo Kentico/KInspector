@@ -7,6 +7,7 @@ using KenticoInspector.Core.Services.Interfaces;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Actions.WebFarmServerSummary
 {
@@ -29,22 +30,25 @@ namespace KenticoInspector.Actions.WebFarmServerSummary
         public override ActionResults Execute(Options options)
         {
             // No server provided, list servers
-            if (options.ServerID == 0)
+            if (options.ServerId == null)
             {
                 return GetListingResult();
             }
 
-            if (options.ServerID < 0)
-            {
+            // Validate options
+            var servers = databaseService.ExecuteSqlFromFile<WebFarmServer>(Scripts.GetWebFarmServerSummary);
+            if (options.ServerId <= 0 ||
+                !servers.Select(s => s?.ID).Contains(options.ServerId) ||
+                !servers.FirstOrDefault(s => s.ID == options.ServerId).Enabled) {
                 return GetInvalidOptionsResult();
             }
 
             // Disable provided server
-            databaseService.ExecuteSqlFromFileGeneric(Scripts.DisableServer, new { ServerID = options.ServerID });
+            databaseService.ExecuteSqlFromFileGeneric(Scripts.DisableServer, new { ServerID = options.ServerId });
             var result = GetListingResult();
             result.Summary = Metadata.Terms.ServerDisabled.With(new
             {
-                serverId = options.ServerID
+                serverId = options.ServerId
             });
 
             return result;
@@ -52,10 +56,11 @@ namespace KenticoInspector.Actions.WebFarmServerSummary
 
         public override ActionResults GetInvalidOptionsResult()
         {
-            return new ActionResults {
-                Status = ResultsStatus.Error,
-                Summary = Metadata.Terms.InvalidOptions
-            };
+            var result = GetListingResult();
+            result.Status = ResultsStatus.Error;
+            result.Summary = Metadata.Terms.InvalidOptions;
+
+            return result;
         }
 
         private ActionResults GetListingResult()

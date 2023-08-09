@@ -7,6 +7,7 @@ using KenticoInspector.Core.Services.Interfaces;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KenticoInspector.Actions.GlobalAdminSummary
 {
@@ -29,12 +30,15 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
         public override ActionResults Execute(Options options)
         {
             // No user provided, list users
-            if (options.UserId == 0)
+            if (options.UserId == null)
             {
                 return GetListingResult();
             }
 
-            if (options.UserId < 0)
+            // Validate options
+            var administratorUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators);
+            if (options.UserId <= 0 ||
+                !administratorUsers.Select(u => u?.UserID).Contains(options.UserId))
             {
                 return GetInvalidOptionsResult();
             }
@@ -51,10 +55,11 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
 
         public override ActionResults GetInvalidOptionsResult()
         {
-            return new ActionResults {
-                Status = ResultsStatus.Error,
-                Summary = Metadata.Terms.InvalidOptions
-            };
+            var result = GetListingResult();
+            result.Status = ResultsStatus.Error;
+            result.Summary = Metadata.Terms.InvalidOptions;
+
+            return result;
         }
 
         private ActionResults GetListingResult()

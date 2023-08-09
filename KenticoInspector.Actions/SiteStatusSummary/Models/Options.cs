@@ -2,6 +2,6 @@
 {
     public class Options
     {
-        public int SiteId { get; set; }
+        public int? SiteId { get; set; }
     }
 }

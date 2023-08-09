@@ -12,6 +12,6 @@
 
         public string PresentationUrl { get; internal set; }
 
-        public string IsRunning { get; internal set; }
+        public bool Running { get; internal set; }
     }
 }
