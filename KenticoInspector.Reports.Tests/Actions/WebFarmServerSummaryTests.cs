@@ -45,11 +45,13 @@ namespace KenticoInspector.Modules.Tests.Actions
             _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(It.IsAny<string>()), Times.Never());
         }
 
-        [Test]
-        public void Should_NotModifyData_When_InvalidOptions()
+        [TestCase(0)]
+        [TestCase(2)]
+        [TestCase(3)]
+        public void Should_NotModifyData_When_InvalidOptions(int serverId)
         {
             // Arrange
-            var options = new Options { ServerId = 5 };
+            var options = new Options { ServerId = serverId };
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<WebFarmServer>(Scripts.GetWebFarmServerSummary))

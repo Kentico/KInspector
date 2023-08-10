@@ -1,5 +1,5 @@
-﻿using KenticoInspector.Actions.SiteStatusSummary;
-using KenticoInspector.Actions.SiteStatusSummary.Models;
+﻿using KenticoInspector.Actions.StagingServerSummary;
+using KenticoInspector.Actions.StagingServerSummary.Models;
 using KenticoInspector.Core.Constants;
 
 using Moq;
@@ -16,11 +16,11 @@ namespace KenticoInspector.Modules.Tests.Actions
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
-    public class SiteStatusSummaryTests : AbstractActionTest<Action, Terms, Options>
+    public class StagingServerSummaryTests : AbstractActionTest<Action, Terms, Options>
     {
         private readonly Action _mockAction;
 
-        public SiteStatusSummaryTests(int majorVersion) : base(majorVersion)
+        public StagingServerSummaryTests(int majorVersion) : base(majorVersion)
         {
             _mockAction = new Action(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
         }
@@ -29,10 +29,10 @@ namespace KenticoInspector.Modules.Tests.Actions
         public void Should_NotModifyData_When_OptionsNull()
         {
             // Arrange
-            var options = new Options { SiteId = null };
+            var options = new Options { ServerId = null };
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary))
+                .Setup(p => p.ExecuteSqlFromFile<StagingServer>(Scripts.GetStagingServerSummary))
                 .Returns(tableResults);
 
             // Act
@@ -48,13 +48,13 @@ namespace KenticoInspector.Modules.Tests.Actions
         [TestCase(0)]
         [TestCase(2)]
         [TestCase(3)]
-        public void Should_NotModifyData_When_InvalidOptions(int siteId)
+        public void Should_NotModifyData_When_InvalidOptions(int serverId)
         {
             // Arrange
-            var options = new Options { SiteId = siteId };
+            var options = new Options { ServerId = serverId };
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary))
+                .Setup(p => p.ExecuteSqlFromFile<StagingServer>(Scripts.GetStagingServerSummary))
                 .Returns(tableResults);
 
             // Act
@@ -71,14 +71,14 @@ namespace KenticoInspector.Modules.Tests.Actions
         public void Should_ModifyData_When_ValidOptions()
         {
             // Arrange
-            var options = new Options { SiteId = 1 };
+            var options = new Options { ServerId = 1 };
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary))
+                .Setup(p => p.ExecuteSqlFromFile<StagingServer>(Scripts.GetStagingServerSummary))
                 .Returns(tableResults);
 
             _mockDatabaseService
-                .Setup(p => p.ExecuteSqlFromFileGeneric(Scripts.StopSite, It.IsAny<object>()))
+                .Setup(p => p.ExecuteSqlFromFileGeneric(Scripts.DisableServer, It.IsAny<object>()))
                 .Returns(It.IsAny<IEnumerable<Dictionary<string, object>>>());
 
             // Act
@@ -91,19 +91,19 @@ namespace KenticoInspector.Modules.Tests.Actions
             _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(It.IsAny<string>(), It.IsAny<object>()), Times.Once());
         }
 
-        private List<CmsSite> GetCleanTableResults()
+        private List<StagingServer> GetCleanTableResults()
         {
-            return new List<CmsSite>
+            return new List<StagingServer>
             {
-                new CmsSite
+                new StagingServer
                 {
                     ID = 1,
-                    Running = true
+                    Enabled = true
                 },
-                new CmsSite
+                new StagingServer
                 {
                     ID = 2,
-                    Running = false
+                    Enabled = false
                 }
             };
         }

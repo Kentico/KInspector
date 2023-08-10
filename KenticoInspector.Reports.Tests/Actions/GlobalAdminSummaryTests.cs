@@ -40,16 +40,18 @@ namespace KenticoInspector.Modules.Tests.Actions
             var results = _mockAction.Execute(optionJson);
 
             // Assert
-            Assert.That(results.Data.Rows.Count == 2);
+            Assert.That(results.Data.Rows.Count == 4);
             Assert.That(results.Status == ResultsStatus.Information);
             _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(It.IsAny<string>()), Times.Never());
         }
 
-        [Test]
-        public void Should_NotModifyData_When_InvalidOptions()
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(5)]
+        public void Should_NotModifyData_When_InvalidOptions(int userId)
         {
             // Arrange
-            var options = new Options { UserId = 5 };
+            var options = new Options { UserId = userId };
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators))
@@ -60,21 +62,24 @@ namespace KenticoInspector.Modules.Tests.Actions
             var results = _mockAction.Execute(optionJson);
 
             // Assert
-            Assert.That(results.Data.Rows.Count == 2);
+            Assert.That(results.Data.Rows.Count == 4);
             Assert.That(results.Status == ResultsStatus.Error);
             _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(It.IsAny<string>()), Times.Never());
         }
 
-        [Test]
-        public void Should_ModifyData_When_ValidOptions()
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        public void Should_ModifyData_When_ValidOptions(int userId)
         {
             // Arrange
-            var options = new Options { UserId = 1 };
+            var options = new Options { UserId = userId };
             var tableResults = GetCleanTableResults();
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators))
                 .Returns(tableResults);
 
+            _mockDatabaseService.Invocations.Clear();
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFileGeneric(Scripts.ResetAndEnableUser, It.IsAny<object>()))
                 .Returns(It.IsAny<IEnumerable<Dictionary<string, object>>>());
@@ -84,7 +89,7 @@ namespace KenticoInspector.Modules.Tests.Actions
             var results = _mockAction.Execute(optionJson);
 
             // Assert
-            Assert.That(results.Data.Rows.Count == 2);
+            Assert.That(results.Data.Rows.Count == 4);
             Assert.That(results.Status == ResultsStatus.Good);
             _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(It.IsAny<string>(), It.IsAny<object>()), Times.Once());
         }
@@ -102,6 +107,18 @@ namespace KenticoInspector.Modules.Tests.Actions
                 new CmsUser
                 {
                     UserID = 2,
+                    Password = "",
+                    Enabled = false
+                },
+                new CmsUser
+                {
+                    UserID = 3,
+                    Password = "testpassword2",
+                    Enabled = true
+                },
+                new CmsUser
+                {
+                    UserID = 4,
                     Password = "testpassword2",
                     Enabled = false
                 }
