@@ -7,6 +7,6 @@
     Run the action without options to view the global administrator accounts. To reset a user account, re-run the action with their user ID below.
 terms:
   tableTitle: Global administrators
-  invalidOptions: Invalid user ID. Ensure that the user ID is listed in the results below.
+  invalidOptions: Invalid user ID. Ensure that the user ID is listed in the results below, and either has a password or is disabled.
   listSummary: Set the user ID you wish to reset and re-run
   userReset: User ID <userId> was reset

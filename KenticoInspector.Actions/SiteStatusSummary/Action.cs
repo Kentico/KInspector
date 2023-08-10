@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace KenticoInspector.Actions.SiteStatusSummary
 {
-    public class Action : AbstractAction<Terms,Options>
+    public class Action : AbstractAction<Terms, Options>
     {
         private readonly IDatabaseService databaseService;
 
@@ -77,7 +77,9 @@ namespace KenticoInspector.Actions.SiteStatusSummary
         {
             var sites = databaseService.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary);
 
-            return options.SiteId > 0 && sites.Any(s => s.ID == options.SiteId);
+            return options.SiteId > 0 &&
+                sites.Any(s => s.ID == options.SiteId) &&
+                sites.FirstOrDefault(s => s.ID == options.SiteId).Running;
         }
     }
 }

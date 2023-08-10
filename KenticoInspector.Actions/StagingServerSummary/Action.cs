@@ -1,4 +1,4 @@
-﻿using KenticoInspector.Actions.GlobalAdminSummary.Models;
+﻿using KenticoInspector.Actions.StagingServerSummary.Models;
 using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
@@ -9,17 +9,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace KenticoInspector.Actions.GlobalAdminSummary
+namespace KenticoInspector.Actions.StagingServerSummary
 {
     public class Action : AbstractAction<Terms, Options>
     {
         private readonly IDatabaseService databaseService;
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("12", "13");
 
         public override IList<string> Tags => new List<string> {
-            ModuleTags.Reset,
-            ModuleTags.User
+            ModuleTags.Configuration,
+            ModuleTags.Staging
         };
 
         public Action(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
@@ -29,12 +29,12 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
 
         public override ActionResults Execute(Options options)
         {
-            databaseService.ExecuteSqlFromFileGeneric(Scripts.ResetAndEnableUser, new { UserID = options.UserId });
+            databaseService.ExecuteSqlFromFileGeneric(Scripts.DisableServer, new { ServerID = options.ServerId });
             var result = ExecuteListing();
             result.Status = ResultsStatus.Good;
-            result.Summary = Metadata.Terms.UserReset.With(new
+            result.Summary = Metadata.Terms.ServerDisabled.With(new
             {
-                userId = options.UserId
+                serverId = options.ServerId
             });
 
             return result;
@@ -48,11 +48,11 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
 
         public override ActionResults ExecuteListing()
         {
-            var administratorUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators);
-            var data = new TableResult<CmsUser>()
+            var servers = databaseService.ExecuteSqlFromFile<StagingServer>(Scripts.GetStagingServerSummary);
+            var data = new TableResult<StagingServer>()
             {
                 Name = Metadata.Terms.TableTitle,
-                Rows = administratorUsers
+                Rows = servers
             };
 
             return new ActionResults
@@ -75,14 +75,11 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
 
         public override bool ValidateOptions(Options options)
         {
-            var administratorUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators);
+            var servers = databaseService.ExecuteSqlFromFile<StagingServer>(Scripts.GetStagingServerSummary);
 
-            return options.UserId > 0 &&
-                administratorUsers.Any(u => u.UserID == options.UserId) &&
-                (
-                    !administratorUsers.FirstOrDefault(u => u.UserID == options.UserId).Enabled ||
-                    !String.IsNullOrEmpty(administratorUsers.FirstOrDefault(u => u.UserID == options.UserId).Password)
-                );
+            return options.ServerId > 0 &&
+                servers.Any(s => s.ID == options.ServerId) &&
+                servers.FirstOrDefault(s => s.ID == options.ServerId).Enabled;
         }
     }
 }

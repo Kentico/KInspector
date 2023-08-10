@@ -18,5 +18,6 @@
         public const string User = "User";
         public const string Site = "Site";
         public const string WebFarms = "Web farms";
+        public const string Staging = "Content staging";
     }
 }
