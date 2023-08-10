@@ -29,23 +29,8 @@ namespace KenticoInspector.Actions.WebFarmServerSummary
 
         public override ActionResults Execute(Options options)
         {
-            // No server provided, list servers
-            if (options.ServerId == null)
-            {
-                return GetListingResult();
-            }
-
-            // Validate options
-            var servers = databaseService.ExecuteSqlFromFile<WebFarmServer>(Scripts.GetWebFarmServerSummary);
-            if (options.ServerId <= 0 ||
-                !servers.Select(s => s?.ID).Contains(options.ServerId) ||
-                !servers.FirstOrDefault(s => s.ID == options.ServerId).Enabled) {
-                return GetInvalidOptionsResult();
-            }
-
-            // Disable provided server
             databaseService.ExecuteSqlFromFileGeneric(Scripts.DisableServer, new { ServerID = options.ServerId });
-            var result = GetListingResult();
+            var result = ExecuteListing();
             result.Summary = Metadata.Terms.ServerDisabled.With(new
             {
                 serverId = options.ServerId
@@ -54,16 +39,13 @@ namespace KenticoInspector.Actions.WebFarmServerSummary
             return result;
         }
 
-        public override ActionResults GetInvalidOptionsResult()
+        public override ActionResults ExecutePartial(Options options)
         {
-            var result = GetListingResult();
-            result.Status = ResultsStatus.Error;
-            result.Summary = Metadata.Terms.InvalidOptions;
-
-            return result;
+            // All options are required for this action
+            throw new NotImplementedException();
         }
 
-        private ActionResults GetListingResult()
+        public override ActionResults ExecuteListing()
         {
             var servers = databaseService.ExecuteSqlFromFile<WebFarmServer>(Scripts.GetWebFarmServerSummary);
             var data = new TableResult<WebFarmServer>()
@@ -79,6 +61,24 @@ namespace KenticoInspector.Actions.WebFarmServerSummary
                 Summary = Metadata.Terms.ListSummary,
                 Data = data
             };
+        }
+
+        public override ActionResults GetInvalidOptionsResult()
+        {
+            var result = ExecuteListing();
+            result.Status = ResultsStatus.Error;
+            result.Summary = Metadata.Terms.InvalidOptions;
+
+            return result;
+        }
+
+        public override bool ValidateOptions(Options options)
+        {
+            var servers = databaseService.ExecuteSqlFromFile<WebFarmServer>(Scripts.GetWebFarmServerSummary);
+
+            return options.ServerId > 0 &&
+                servers.Any(s => s.ID == options.ServerId) &&
+                servers.FirstOrDefault(s => s.ID == options.ServerId).Enabled;
         }
     }
 }

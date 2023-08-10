@@ -29,23 +29,8 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
 
         public override ActionResults Execute(Options options)
         {
-            // No user provided, list users
-            if (options.UserId == null)
-            {
-                return GetListingResult();
-            }
-
-            // Validate options
-            var administratorUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators);
-            if (options.UserId <= 0 ||
-                !administratorUsers.Select(u => u?.UserID).Contains(options.UserId))
-            {
-                return GetInvalidOptionsResult();
-            }
-
-            // Reset provided user
             databaseService.ExecuteSqlFromFileGeneric(Scripts.ResetAndEnableUser, new { UserID = options.UserId });
-            var result = GetListingResult();
+            var result = ExecuteListing();
             result.Summary = Metadata.Terms.UserReset.With(new {
                 userId = options.UserId
             });
@@ -53,16 +38,13 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
             return result;
         }
 
-        public override ActionResults GetInvalidOptionsResult()
+        public override ActionResults ExecutePartial(Options options)
         {
-            var result = GetListingResult();
-            result.Status = ResultsStatus.Error;
-            result.Summary = Metadata.Terms.InvalidOptions;
-
-            return result;
+            // All options are required for this action
+            throw new NotImplementedException();
         }
 
-        private ActionResults GetListingResult()
+        public override ActionResults ExecuteListing()
         {
             var administratorUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators);
             var data = new TableResult<CmsUser>()
@@ -78,6 +60,22 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
                 Summary = Metadata.Terms.ListSummary,
                 Data = data
             };
+        }
+
+        public override ActionResults GetInvalidOptionsResult()
+        {
+            var result = ExecuteListing();
+            result.Status = ResultsStatus.Error;
+            result.Summary = Metadata.Terms.InvalidOptions;
+
+            return result;
+        }
+
+        public override bool ValidateOptions(Options options)
+        {
+            var administratorUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators);
+
+            return options.UserId > 0 && administratorUsers.Any(u => u.UserID == options.UserId);
         }
     }
 }

@@ -29,23 +29,8 @@ namespace KenticoInspector.Actions.SiteStatusSummary
 
         public override ActionResults Execute(Options options)
         {
-            // No site provided, list sites
-            if (options.SiteId == null)
-            {
-                return GetListingResult();
-            }
-
-            // Validate options
-            var sites = databaseService.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary);
-            if (options.SiteId <= 0 ||
-                !sites.Select(s => s?.ID).Contains(options.SiteId))
-            {
-                return GetInvalidOptionsResult();
-            }
-
-            // Stop provided site
             databaseService.ExecuteSqlFromFileGeneric(Scripts.StopSite, new { SiteID = options.SiteId });
-            var result = GetListingResult();
+            var result = ExecuteListing();
             result.Summary = Metadata.Terms.SiteStopped.With(new
             {
                 siteId = options.SiteId
@@ -54,16 +39,13 @@ namespace KenticoInspector.Actions.SiteStatusSummary
             return result;
         }
 
-        public override ActionResults GetInvalidOptionsResult()
+        public override ActionResults ExecutePartial(Options options)
         {
-            var result = GetListingResult();
-            result.Status = ResultsStatus.Error;
-            result.Summary = Metadata.Terms.InvalidOptions;
-
-            return result;
+            // All options are required for this action
+            throw new NotImplementedException();
         }
 
-        private ActionResults GetListingResult()
+        public override ActionResults ExecuteListing()
         {
             var sites = databaseService.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary);
             var data = new TableResult<CmsSite>()
@@ -79,6 +61,22 @@ namespace KenticoInspector.Actions.SiteStatusSummary
                 Summary = Metadata.Terms.ListSummary,
                 Data = data
             };
+        }
+
+        public override ActionResults GetInvalidOptionsResult()
+        {
+            var result = ExecuteListing();
+            result.Status = ResultsStatus.Error;
+            result.Summary = Metadata.Terms.InvalidOptions;
+
+            return result;
+        }
+
+        public override bool ValidateOptions(Options options)
+        {
+            var sites = databaseService.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary);
+
+            return options.SiteId > 0 && sites.Any(s => s.ID == options.SiteId);
         }
     }
 }
