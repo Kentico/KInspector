@@ -75,20 +75,26 @@ namespace KenticoInspector.Core
         public abstract bool ValidateOptions(TOptions options);
 
         /// <summary>
-        /// Returns <c>true</c> if at least one option has a value.
+        /// Returns <c>true</c> if at least one option has a value and one doesn't.
         /// </summary>
         private bool OptionsPartial(TOptions options)
         {
+            var hasNull = false;
+            var hasValue = false;
             PropertyInfo[] properties = typeof(TOptions).GetProperties();
             foreach (PropertyInfo property in properties)
             {
-                if (property.GetValue(options) != null)
+                if (property.GetValue(options) == null)
                 {
-                    return true;
+                    hasNull = true;
+                }
+                else
+                {
+                    hasValue = true;
                 }
             }
 
-            return false;
+            return hasNull && hasValue;
         }
 
         /// <summary>
