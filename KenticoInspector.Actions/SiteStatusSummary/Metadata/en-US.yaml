@@ -7,6 +7,6 @@
     Run the action without options to view the site summary. To stop a site, re-run the action with the site ID below.
 terms:
   tableTitle: Sites
-  invalidOptions: Invalid site ID. Ensure that the site ID is listed in the results below.
+  invalidOptions: Invalid site ID. Ensure that the site ID is listed in the results below, and the site is running.
   listSummary: Set the site ID you wish to stop and re-run
   siteStopped: Site ID <siteId> was stopped

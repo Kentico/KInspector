@@ -77,7 +77,12 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
         {
             var administratorUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators);
 
-            return options.UserId > 0 && administratorUsers.Any(u => u.UserID == options.UserId);
+            return options.UserId > 0 &&
+                administratorUsers.Any(u => u.UserID == options.UserId) &&
+                (
+                    !administratorUsers.FirstOrDefault(u => u.UserID == options.UserId).Enabled ||
+                    !String.IsNullOrEmpty(administratorUsers.FirstOrDefault(u => u.UserID == options.UserId).Password)
+                );
         }
     }
 }
