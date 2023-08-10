@@ -2,10 +2,10 @@
 {
     public class WebFarmServer
     {
-        public int ID { get; internal set; }
+        public int ID { get; set; }
 
-        public string Name { get; internal set; }
+        public string Name { get; set; }
 
-        public bool Enabled { get; internal set; }
+        public bool Enabled { get; set; }
     }
 }

@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace KenticoInspector.Actions.GlobalAdminSummary
 {
-    public class Action : AbstractAction<Terms,Options>
+    public class Action : AbstractAction<Terms, Options>
     {
         private readonly IDatabaseService databaseService;
 
@@ -31,7 +31,9 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
         {
             databaseService.ExecuteSqlFromFileGeneric(Scripts.ResetAndEnableUser, new { UserID = options.UserId });
             var result = ExecuteListing();
-            result.Summary = Metadata.Terms.UserReset.With(new {
+            result.Status = ResultsStatus.Good;
+            result.Summary = Metadata.Terms.UserReset.With(new
+            {
                 userId = options.UserId
             });
 

@@ -1,4 +1,4 @@
-﻿using KenticoInspector.Actions.SiteStatusSummary.Models;
+﻿using KenticoInspector.Actions.StagingServerSummary.Models;
 using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Helpers;
@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace KenticoInspector.Actions.SiteStatusSummary
+namespace KenticoInspector.Actions.StagingServerSummary
 {
     public class Action : AbstractAction<Terms, Options>
     {
@@ -18,8 +18,8 @@ namespace KenticoInspector.Actions.SiteStatusSummary
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("12", "13");
 
         public override IList<string> Tags => new List<string> {
-            ModuleTags.Site,
-            ModuleTags.Configuration
+            ModuleTags.Configuration,
+            ModuleTags.Staging
         };
 
         public Action(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
@@ -29,12 +29,12 @@ namespace KenticoInspector.Actions.SiteStatusSummary
 
         public override ActionResults Execute(Options options)
         {
-            databaseService.ExecuteSqlFromFileGeneric(Scripts.StopSite, new { SiteID = options.SiteId });
+            databaseService.ExecuteSqlFromFileGeneric(Scripts.DisableServer, new { ServerID = options.ServerId });
             var result = ExecuteListing();
             result.Status = ResultsStatus.Good;
-            result.Summary = Metadata.Terms.SiteStopped.With(new
+            result.Summary = Metadata.Terms.ServerDisabled.With(new
             {
-                siteId = options.SiteId
+                serverId = options.ServerId
             });
 
             return result;
@@ -48,11 +48,11 @@ namespace KenticoInspector.Actions.SiteStatusSummary
 
         public override ActionResults ExecuteListing()
         {
-            var sites = databaseService.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary);
-            var data = new TableResult<CmsSite>()
+            var servers = databaseService.ExecuteSqlFromFile<StagingServer>(Scripts.GetStagingServerSummary);
+            var data = new TableResult<StagingServer>()
             {
                 Name = Metadata.Terms.TableTitle,
-                Rows = sites
+                Rows = servers
             };
 
             return new ActionResults
@@ -75,9 +75,11 @@ namespace KenticoInspector.Actions.SiteStatusSummary
 
         public override bool ValidateOptions(Options options)
         {
-            var sites = databaseService.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary);
+            var servers = databaseService.ExecuteSqlFromFile<StagingServer>(Scripts.GetStagingServerSummary);
 
-            return options.SiteId > 0 && sites.Any(s => s.ID == options.SiteId);
+            return options.ServerId > 0 &&
+                servers.Any(s => s.ID == options.ServerId) &&
+                servers.FirstOrDefault(s => s.ID == options.ServerId).Enabled;
         }
     }
 }
