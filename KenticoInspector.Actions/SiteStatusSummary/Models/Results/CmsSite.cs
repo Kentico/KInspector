@@ -2,16 +2,16 @@
 {
     public class CmsSite
     {
-        public int ID { get; internal set; }
+        public int ID { get; set; }
 
-        public string DisplayName { get; internal set; }
+        public string DisplayName { get; set; }
 
-        public string Description { get; internal set; }
+        public string Description { get; set; }
 
-        public string AdministrationDomain { get; internal set; }
+        public string AdministrationDomain { get; set; }
 
-        public string PresentationUrl { get; internal set; }
+        public string PresentationUrl { get; set; }
 
-        public bool Running { get; internal set; }
+        public bool Running { get; set; }
     }
 }

@@ -31,6 +31,7 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
         {
             databaseService.ExecuteSqlFromFileGeneric(Scripts.ResetAndEnableUser, new { UserID = options.UserId });
             var result = ExecuteListing();
+            result.Status = ResultsStatus.Good;
             result.Summary = Metadata.Terms.UserReset.With(new {
                 userId = options.UserId
             });

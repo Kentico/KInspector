@@ -31,6 +31,7 @@ namespace KenticoInspector.Actions.SiteStatusSummary
         {
             databaseService.ExecuteSqlFromFileGeneric(Scripts.StopSite, new { SiteID = options.SiteId });
             var result = ExecuteListing();
+            result.Status = ResultsStatus.Good;
             result.Summary = Metadata.Terms.SiteStopped.With(new
             {
                 siteId = options.SiteId

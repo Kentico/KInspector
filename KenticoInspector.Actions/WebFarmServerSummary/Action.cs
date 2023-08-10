@@ -31,6 +31,7 @@ namespace KenticoInspector.Actions.WebFarmServerSummary
         {
             databaseService.ExecuteSqlFromFileGeneric(Scripts.DisableServer, new { ServerID = options.ServerId });
             var result = ExecuteListing();
+            result.Status = ResultsStatus.Good;
             result.Summary = Metadata.Terms.ServerDisabled.With(new
             {
                 serverId = options.ServerId
