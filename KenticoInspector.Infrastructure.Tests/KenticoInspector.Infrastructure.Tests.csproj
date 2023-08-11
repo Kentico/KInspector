@@ -16,7 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\KenticoInspector.Core\KenticoInspector.Core.csproj" />
     <ProjectReference Include="..\KenticoInspector.Infrastructure\KenticoInspector.Infrastructure.csproj" />
-    <ProjectReference Include="..\KenticoInspector.Reports.Tests\KenticoInspector.Modules.Tests.csproj" />
+    <ProjectReference Include="..\KenticoInspector.Modules.Tests\KenticoInspector.Modules.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

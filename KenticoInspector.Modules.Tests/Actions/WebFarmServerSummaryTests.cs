@@ -25,6 +25,12 @@ namespace KenticoInspector.Modules.Tests.Actions
             _mockAction = new Action(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
         }
 
+        [SetUp]
+        public void SetUp()
+        {
+            _mockDatabaseService.Invocations.Clear();
+        }
+
         [Test]
         public void Should_NotModifyData_When_OptionsNull()
         {

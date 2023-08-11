@@ -42,7 +42,7 @@ namespace KenticoInspector.Modules.Tests.Actions
             // Assert
             Assert.That(results.Data.Rows.Count == 2);
             Assert.That(results.Status == ResultsStatus.Information);
-            _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(It.IsAny<string>()), Times.Never());
+            _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(Scripts.StopSite, It.IsAny<object>()), Times.Never());
         }
 
         [TestCase(0)]
@@ -64,7 +64,7 @@ namespace KenticoInspector.Modules.Tests.Actions
             // Assert
             Assert.That(results.Data.Rows.Count == 2);
             Assert.That(results.Status == ResultsStatus.Error);
-            _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(It.IsAny<string>()), Times.Never());
+            _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(Scripts.StopSite, It.IsAny<object>()), Times.Never());
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace KenticoInspector.Modules.Tests.Actions
             // Assert
             Assert.That(results.Data.Rows.Count == 2);
             Assert.That(results.Status == ResultsStatus.Good);
-            _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(It.IsAny<string>(), It.IsAny<object>()), Times.Once());
+            _mockDatabaseService.Verify(m => m.ExecuteSqlFromFileGeneric(Scripts.StopSite, It.IsAny<object>()), Times.Once());
         }
 
         private List<CmsSite> GetCleanTableResults()

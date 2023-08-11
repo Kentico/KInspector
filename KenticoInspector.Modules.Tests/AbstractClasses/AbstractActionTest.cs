@@ -1,5 +1,7 @@
 ﻿using KenticoInspector.Core;
 
+using NUnit.Framework;
+
 namespace KenticoInspector.Modules.Tests
 {
     public class AbstractActionTest<ModuleType, TermsType, OptionsType> : AbstractModuleTest<ModuleType, TermsType>
@@ -9,6 +11,12 @@ namespace KenticoInspector.Modules.Tests
     {
         public AbstractActionTest(int majorVersion) : base(majorVersion)
         {
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            _mockDatabaseService.Invocations.Clear();
         }
     }
 }
