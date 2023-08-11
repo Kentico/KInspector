@@ -1,0 +1,1 @@
+﻿UPDATE CMS_SMTPServer SET ServerName = ServerName + '.disabled', ServerEnabled = 0 WHERE ServerID = @ServerID

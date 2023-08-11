@@ -1,0 +1,15 @@
+﻿details:
+  name: SMTP Server Summary
+  shortDescription: Review and disable SMTP servers.
+  longDescription: |
+    Displays all SMTP servers, and allows you to disable them.
+
+    Run the action without options to view the SMTP servers. To disable a server, re-run the action with the server ID below, or a site ID to disable the SMTP server registered in the **Settings** application for that site.
+    Servers disabled by this action have the **.disabled** prefix applied to their name, so you can identify which servers were disabled by this action and which were disabled manually.
+terms:
+  serversFromSettingsTable: SMTP servers from settings keys
+  serversFromSmtpTable: SMTP servers from SMTP servers application
+  invalidOptions: Invalid options. Only provide one option, and ensure the ID is listed below and enabled.
+  listSummary: Set the SMTP server ID or site ID you wish to disable and re-run
+  serverDisabled: SMTP server ID <serverId> was disabled
+  siteSettingDisabled: SMTP server in site <siteId> settings was disabled

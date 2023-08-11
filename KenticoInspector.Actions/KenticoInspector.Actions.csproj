@@ -31,6 +31,21 @@
     <None Update="SiteStatusSummary\Scripts\GetSiteSummary.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="SmtpServerSummary\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SmtpServerSummary\Scripts\DisableSmtpServer.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SmtpServerSummary\Scripts\DisableSiteSmtpServer.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SmtpServerSummary\Scripts\GetSmtpFromSmtpServers.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SmtpServerSummary\Scripts\GetSmtpFromSettingsKeys.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="StagingServerSummary\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

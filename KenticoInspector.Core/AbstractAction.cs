@@ -31,11 +31,6 @@ namespace KenticoInspector.Core
                     return ExecutePartial(options);
                 }
 
-                if (!ValidateOptions(options))
-                {
-                    return GetInvalidOptionsResult();
-                }
-
                 return Execute(options);
             }
             catch
@@ -45,12 +40,12 @@ namespace KenticoInspector.Core
         }
 
         /// <summary>
-        /// Executed when all options are populated and validated.
+        /// Executed when all options are populated.
         /// </summary>
         public abstract ActionResults Execute(TOptions options);
 
         /// <summary>
-        /// Executed when at least one option is populated, but not validated.
+        /// Executed when at least one option has a value and one doesn't.
         /// This could be a valid scenario where an option is hidden and not needed when another option
         /// is set to a specific value.
         /// </summary>
@@ -62,17 +57,7 @@ namespace KenticoInspector.Core
         /// </summary>
         public abstract ActionResults ExecuteListing();
 
-        /// <summary>
-        /// Returned when <see cref="ValidateOptions(TOptions)"/> fails, or there is an exception during
-        /// <see cref="Execute(TOptions)"/>.
-        /// </summary>
-        /// <returns></returns>
         public abstract ActionResults GetInvalidOptionsResult();
-
-        /// <summary>
-        /// Returns <c>true</c> if all options are valid before calling <see cref="Execute(TOptions)"/>.
-        /// </summary>
-        public abstract bool ValidateOptions(TOptions options);
 
         /// <summary>
         /// Returns <c>true</c> if at least one option has a value and one doesn't.

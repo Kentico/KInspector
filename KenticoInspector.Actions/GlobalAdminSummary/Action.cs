@@ -29,6 +29,11 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
 
         public override ActionResults Execute(Options options)
         {
+            if (!UserIsValid(options.UserId))
+            {
+                return GetInvalidOptionsResult();
+            }
+
             databaseService.ExecuteSqlFromFileGeneric(Scripts.ResetAndEnableUser, new { UserID = options.UserId });
             var result = ExecuteListing();
             result.Status = ResultsStatus.Good;
@@ -73,15 +78,15 @@ namespace KenticoInspector.Actions.GlobalAdminSummary
             return result;
         }
 
-        public override bool ValidateOptions(Options options)
+        private bool UserIsValid(int? userId)
         {
             var administratorUsers = databaseService.ExecuteSqlFromFile<CmsUser>(Scripts.GetAdministrators);
 
-            return options.UserId > 0 &&
-                administratorUsers.Any(u => u.UserID == options.UserId) &&
+            return userId > 0 &&
+                administratorUsers.Any(u => u.UserID == userId) &&
                 (
-                    !administratorUsers.FirstOrDefault(u => u.UserID == options.UserId).Enabled ||
-                    !String.IsNullOrEmpty(administratorUsers.FirstOrDefault(u => u.UserID == options.UserId).Password)
+                    !administratorUsers.FirstOrDefault(u => u.UserID == userId).Enabled ||
+                    !String.IsNullOrEmpty(administratorUsers.FirstOrDefault(u => u.UserID == userId).Password)
                 );
         }
     }

@@ -29,8 +29,14 @@ namespace KenticoInspector.Actions.WebFarmServerSummary
 
         public override ActionResults Execute(Options options)
         {
+            if (!ServerIsValid(options.ServerId))
+            {
+                return GetInvalidOptionsResult();
+            }
+
             databaseService.ExecuteSqlFromFileGeneric(Scripts.DisableServer, new { ServerID = options.ServerId });
             var result = ExecuteListing();
+            result.Status = ResultsStatus.Good;
             result.Summary = Metadata.Terms.ServerDisabled.With(new
             {
                 serverId = options.ServerId
@@ -72,13 +78,13 @@ namespace KenticoInspector.Actions.WebFarmServerSummary
             return result;
         }
 
-        public override bool ValidateOptions(Options options)
+        private bool ServerIsValid(int? serverId)
         {
             var servers = databaseService.ExecuteSqlFromFile<WebFarmServer>(Scripts.GetWebFarmServerSummary);
 
-            return options.ServerId > 0 &&
-                servers.Any(s => s.ID == options.ServerId) &&
-                servers.FirstOrDefault(s => s.ID == options.ServerId).Enabled;
+            return serverId > 0 &&
+                servers.Any(s => s.ID == serverId) &&
+                servers.FirstOrDefault(s => s.ID == serverId).Enabled;
         }
     }
 }
