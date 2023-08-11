@@ -29,6 +29,11 @@ namespace KenticoInspector.Actions.SiteStatusSummary
 
         public override ActionResults Execute(Options options)
         {
+            if (!SiteIsValid(options.SiteId))
+            {
+                return GetInvalidOptionsResult();
+            }
+
             databaseService.ExecuteSqlFromFileGeneric(Scripts.StopSite, new { SiteID = options.SiteId });
             var result = ExecuteListing();
             result.Status = ResultsStatus.Good;
@@ -73,13 +78,13 @@ namespace KenticoInspector.Actions.SiteStatusSummary
             return result;
         }
 
-        public override bool ValidateOptions(Options options)
+        private bool SiteIsValid(int? siteId)
         {
             var sites = databaseService.ExecuteSqlFromFile<CmsSite>(Scripts.GetSiteSummary);
 
-            return options.SiteId > 0 &&
-                sites.Any(s => s.ID == options.SiteId) &&
-                sites.FirstOrDefault(s => s.ID == options.SiteId).Running;
+            return siteId > 0 &&
+                sites.Any(s => s.ID == siteId) &&
+                sites.FirstOrDefault(s => s.ID == siteId).Running;
         }
     }
 }
