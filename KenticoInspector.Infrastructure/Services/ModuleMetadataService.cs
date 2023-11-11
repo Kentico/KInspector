@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 using KenticoInspector.Core.Models;
@@ -12,9 +14,11 @@ namespace KenticoInspector.Core.Helpers
 {
     public class ModuleMetadataService : IModuleMetadataService
     {
-        private readonly IInstanceService instanceService;
+        private const string DEFAULT_CULTURE_NAME = "en-US";
 
-        public string DefaultCultureName => "en-US";
+        private readonly IInstanceService instanceService;              
+
+        public string DefaultCultureName => DEFAULT_CULTURE_NAME;
 
         public string CurrentCultureName => Thread.CurrentThread.CurrentCulture.Name;
 
@@ -34,7 +38,7 @@ namespace KenticoInspector.Core.Helpers
                 false
             );
 
-            var currentCultureIsDefaultCulture = CurrentCultureName == DefaultCultureName;
+            var currentCultureIsDefaultCulture = CurrentCultureName == DEFAULT_CULTURE_NAME;
 
             var mergedMetadata = new ModuleMetadata<T>();
 
@@ -81,11 +85,11 @@ namespace KenticoInspector.Core.Helpers
             bool ignoreUnmatchedProperties)
             where T : new()
         {
-            var ModuleMetadataPath = $"{metadataDirectory}{cultureName}.yaml";
+            var ModuleMetadataPath = new List<string> { cultureName, DEFAULT_CULTURE_NAME }
+                .Select(culture => $"{metadataDirectory}{culture}.yaml")
+                .FirstOrDefault(path => File.Exists(path));
 
-            var ModuleMetadataPathExists = File.Exists(ModuleMetadataPath);
-
-            if (ModuleMetadataPathExists)
+            if (!String.IsNullOrEmpty(ModuleMetadataPath))
             {
                 var fileText = File.ReadAllText(ModuleMetadataPath);
 
