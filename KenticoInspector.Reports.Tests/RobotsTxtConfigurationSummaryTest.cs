@@ -18,7 +18,6 @@ namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
-    [TestFixture(11)]
     [TestFixture(12)]
     public class RobotsTxtConfigurationSummaryTest : AbstractReportTest<Report, Terms>
     {
