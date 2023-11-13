@@ -4,9 +4,11 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
 {
@@ -14,12 +16,12 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string>()
         {
@@ -86,22 +88,23 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
         {
             var combinedResults = new ReportResults();
 
-            combinedResults.Type = ReportResultsType.TableList;
-            combinedResults.Status = ReportResultsStatus.Good;
+            combinedResults.Type = ResultsType.TableList;
+            combinedResults.Status = ResultsStatus.Good;
 
+            var summaryBuilder = new StringBuilder();
             foreach (var reportResults in allReportResults)
             {
                 var name = ((string)reportResults.Data.Name);
-                // TODO: Make this WAY better
                 ((IDictionary<string, object>)combinedResults.Data).Add(reportResults.Data.Name, reportResults.Data);
-                if (reportResults.Status == ReportResultsStatus.Error)
+                if (reportResults.Status == ResultsStatus.Error)
                 {
-                    combinedResults.Summary += Metadata.Terms.NameFound.With(new { name });
-                    combinedResults.Status = ReportResultsStatus.Error;
+                    summaryBuilder.Append(Metadata.Terms.NameFound.With(new { name }));
+                    combinedResults.Status = ResultsStatus.Error;
                 }
             }
 
-            if (combinedResults.Status == ReportResultsStatus.Good)
+            combinedResults.Summary = summaryBuilder.ToString();
+            if (combinedResults.Status == ResultsStatus.Good)
             {
                 combinedResults.Summary = Metadata.Terms.NoContentTreeConsistencyIssuesFound;
             }
@@ -140,9 +143,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Status = data.Rows.Any() ? ResultsStatus.Error : ResultsStatus.Good,
                 Summary = string.Empty,
-                Type = ReportResultsType.Table,
+                Type = ResultsType.Table,
             };
         }
 
@@ -161,10 +164,6 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
         {
             var versionHistoryItems = GetVersionHistoryItems();
             var cmsClassItems = GetCmsClassItems(versionHistoryItems);
-            // TODO: Use later?
-            // var allDocumentNodeIds = versionHistoryItems.Select(x => x.DocumentID);
-            // var allDocumentNodes = _databaseService.ExecuteSqlFromFile<CmsDocumentNode>(Scripts.GetDocumentNodeDetails, new { IDs = allDocumentNodeIds.ToArray() });
-
             var comparisonResults = new List<VersionHistoryMismatchResult>();
             foreach (var cmsClass in cmsClassItems)
             {
@@ -184,9 +183,9 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = data.Rows.Count() > 0 ? ReportResultsStatus.Error : ReportResultsStatus.Good,
+                Status = data.Rows.Any() ? ResultsStatus.Error : ResultsStatus.Good,
                 Summary = string.Empty,
-                Type = ReportResultsType.Table,
+                Type = ResultsType.Table,
             };
         }
     }

@@ -4,6 +4,7 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.ClassTableValidation.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,17 @@ namespace KenticoInspector.Reports.ClassTableValidation
         private readonly IDatabaseService databaseService;
         private readonly IInstanceService instanceService;
 
-        public Report(IDatabaseService databaseService, IInstanceService instanceService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(
+            IDatabaseService databaseService,
+            IInstanceService instanceService,
+            IModuleMetadataService moduleMetadataService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
             this.instanceService = instanceService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string> {
             ReportTags.Health,
@@ -59,7 +64,7 @@ namespace KenticoInspector.Reports.ClassTableValidation
 
             var results = new ReportResults
             {
-                Type = ReportResultsType.TableList
+                Type = ResultsType.TableList
             };
 
             results.Data.TableResults = tableResults;
@@ -68,12 +73,12 @@ namespace KenticoInspector.Reports.ClassTableValidation
             switch (totalErrors)
             {
                 case 0:
-                    results.Status = ReportResultsStatus.Good;
+                    results.Status = ResultsStatus.Good;
                     results.Summary = Metadata.Terms.NoIssuesFound;
                     break;
 
                 default:
-                    results.Status = ReportResultsStatus.Error;
+                    results.Status = ResultsStatus.Error;
                     results.Summary = Metadata.Terms.CountIssueFound.With(new { count = totalErrors });
                     break;
             }

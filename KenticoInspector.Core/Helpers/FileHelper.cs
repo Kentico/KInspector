@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace KenticoInspector.Core.Helpers
 {
-    public class FileHelper
+    public static class FileHelper
     {
         /// <summary>
         /// Reads file located at <paramref name="relativeFilePath"/> using <see cref="DirectoryHelper.GetExecutingDirectory"/> as the root location.
@@ -15,11 +15,8 @@ namespace KenticoInspector.Core.Helpers
         public static string GetSqlQueryText(string relativeFilePath, IDictionary<string, string> literalReplacements = null)
         {
             var executingDirectory = DirectoryHelper.GetExecutingDirectory();
-
             var fullPathToScript = $"{executingDirectory}/{relativeFilePath}";
-
             var query = File.ReadAllText(fullPathToScript);
-
             if (literalReplacements != null)
             {
                 foreach (var replacement in literalReplacements)

@@ -17,19 +17,16 @@ namespace KenticoInspector.Reports.ColumnFieldValidation
     public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
-        private readonly IInstanceService instanceService;
 
         public Report(
             IDatabaseService databaseService,
-            IReportMetadataService reportMetadataService,
-            IInstanceService instanceService
-            ) : base(reportMetadataService)
+            IModuleMetadataService moduleMetadataService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
-            this.instanceService = instanceService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string>
         {
@@ -155,8 +152,7 @@ namespace KenticoInspector.Reports.ColumnFieldValidation
 
             var childElementWithType = element
                 .Descendants()
-                .Where(childElement => childElement.Name.LocalName == "restriction")
-                .FirstOrDefault();
+                .FirstOrDefault(childElement => childElement.Name.LocalName == "restriction");
 
             if (childElementWithType?.Attribute("base") != null)
             {
@@ -214,15 +210,15 @@ namespace KenticoInspector.Reports.ColumnFieldValidation
             {
                 return new ReportResults()
                 {
-                    Status = ReportResultsStatus.Good,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.Summaries.Good
                 };
             }
 
             var errorReportResults = new ReportResults
             {
-                Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Error
+                Type = ResultsType.TableList,
+                Status = ResultsStatus.Error
             };
 
             var cmsClassesResultCount = IfAnyAddTableResult(

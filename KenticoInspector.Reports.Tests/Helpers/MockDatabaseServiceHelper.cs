@@ -1,6 +1,8 @@
 ﻿using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+
 using Moq;
+
 using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.Tests.Helpers
@@ -61,6 +63,7 @@ namespace KenticoInspector.Reports.Tests.Helpers
         {
             var mockDatabaseService = new Mock<IDatabaseService>(MockBehavior.Strict);
             mockDatabaseService.Setup(p => p.Configure(instance.DatabaseSettings));
+
             return mockDatabaseService;
         }
     }

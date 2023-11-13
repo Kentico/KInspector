@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace KenticoInspector.Core.Helpers
 {
-    public class VersionHelper
+    public static class VersionHelper
     {
         public static IList<Version> GetVersionList(params string[] versions)
         {
@@ -22,7 +22,6 @@ namespace KenticoInspector.Core.Helpers
 
         public static string ExpandVersionString(string version)
         {
-            var periodCount = version.Count(x => x == '.');
             for (int i = 0; i < 2; i++)
             {
                 version += ".0";

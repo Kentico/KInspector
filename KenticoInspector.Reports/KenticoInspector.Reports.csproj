@@ -19,6 +19,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="OnlineMarketingMacroAnalysis\Scripts\GetManualScoreRuleMacroConditions.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OnlineMarketingMacroAnalysis\Scripts\GetManualTimeBasedTriggerMacroConditions.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OnlineMarketingMacroAnalysis\Scripts\GetManualContactGroupMacroConditions.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="PageTypeFieldAnalysis\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -29,6 +38,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ApplicationRestartAnalysis\Scripts\GetCmsEventLogsWithStartOrEndCode.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OnlineMarketingMacroAnalysis\Metadata\en-US.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SecuritySettingsAnalysis\Metadata\en-US.yaml">

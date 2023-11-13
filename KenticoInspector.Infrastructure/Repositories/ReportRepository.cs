@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using KenticoInspector.Core;
-using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Modules;
 using KenticoInspector.Core.Repositories.Interfaces;
 
 namespace KenticoInspector.Infrastructure.Repositories
@@ -29,7 +28,7 @@ namespace KenticoInspector.Infrastructure.Repositories
 
         private IEnumerable<IReport> LoadReports()
         {
-            return reports;
+            return reports.OrderBy(r => r.Codename);
         }
     }
 }

@@ -10,16 +10,15 @@
 
         public override bool Equals(object obj)
         {
-            if (obj is CmsPageTypeField)
+            var comparingField = obj as CmsPageTypeField;
+            if (comparingField == null)
             {
-                CmsPageTypeField comparingField = (CmsPageTypeField)obj;
-
-                var fieldsAreEqual = comparingField.FieldName == FieldName && comparingField.FieldDataType == FieldDataType;
-
-                return fieldsAreEqual;
+                return base.Equals(obj);
             }
 
-            return base.Equals(obj);
+            var fieldsAreEqual = comparingField.FieldName == FieldName && comparingField.FieldDataType == FieldDataType;
+
+            return fieldsAreEqual;
         }
 
         public override int GetHashCode()

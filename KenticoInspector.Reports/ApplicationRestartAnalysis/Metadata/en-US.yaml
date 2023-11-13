@@ -7,6 +7,6 @@
 terms:
   summaries:
     good: No restart events found.
-    information: '<totalEvents> total <totalEvents:event|events> (<totalStartEvents> <totalStartEvents:start|starts>, <totalEndEvents> <totalEndEvents:end|ends>) spanning <earliestTime> - <latestTime>.'
+    information: '<totalEvents> total <totalEvents|event|events> (<totalStartEvents> STARTAPP, <totalEndEvents> ENDAPP) spanning <earliestTime> - <latestTime>.'
   tableTitles:
     applicationRestartEvents: Application restart events

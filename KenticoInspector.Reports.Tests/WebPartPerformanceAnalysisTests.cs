@@ -2,7 +2,9 @@
 using KenticoInspector.Reports.Tests.Helpers;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis;
 using KenticoInspector.Reports.WebPartPerformanceAnalysis.Models;
+
 using NUnit.Framework;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -11,13 +13,15 @@ namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
+    [TestFixture(12)]
+    [TestFixture(13)]
     public class WebPartPerformanceAnalysisTest : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public WebPartPerformanceAnalysisTest(int majorVersion) : base(majorVersion)
         {
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
         }
 
         [Test]
@@ -30,7 +34,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good, $"Expected status when no web parts have unspecified columns is 'Good' not '{results.Status}'.");
+            Assert.That(results.Status == ResultsStatus.Good, $"Expected status when no web parts have unspecified columns is 'Good' not '{results.Status}'.");
         }
 
         [Test]
@@ -52,7 +56,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Warning, $"Expected status when web parts have unspecified columns is 'Warning' not '{results.Status}'.");
+            Assert.That(results.Status == ResultsStatus.Warning, $"Expected status when web parts have unspecified columns is 'Warning' not '{results.Status}'.");
         }
 
         private void ArrangeAllQueries(List<PageTemplate> affectedTemplates = null)

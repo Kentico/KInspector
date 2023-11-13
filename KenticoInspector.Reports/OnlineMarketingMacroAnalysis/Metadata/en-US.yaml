@@ -1,0 +1,16 @@
+﻿details:
+  name: On-line marketing macro analysis
+  shortDescription: Analyses the performance of macros used in On-line marketing.
+  longDescription: |
+    Searches for manual macro conditions in the following objects:
+     * Contact group macros
+     * Marketing automation triggers
+     * Scoring rules
+  
+    See [Improving custom macro performance in marketing conditions](https://docs.xperience.io/on-line-marketing-features/configuring-and-customizing-your-on-line-marketing-features/on-line-marketing-macros/improving-custom-macro-performance-in-marketing-conditions).
+terms:
+  good: No unoptimized macros found.
+  issuesFound: <totalIssues> <totalIssues|issue|issues> found.
+  contactGroupTable: Unoptimized contact groups
+  automationTriggerTable: Unoptimized Marketing automation triggers
+  scoreRuleTable: Unoptimized scoring rules

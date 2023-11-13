@@ -1,8 +1,11 @@
 import axios from "axios";
 import { arrayToObject } from '../helpers'
+import { actionService } from './action-service'
 import { reportService } from './report-service'
 
 export default {
+  actionService,
+  reportService,
   getInstances () {
     return new Promise((resolve)=>{
       axios.get("/api/instances")
@@ -46,7 +49,5 @@ export default {
         resolve(result)
       })
     })
-  },
-
-  reportService
+  }
 }

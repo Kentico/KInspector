@@ -45,7 +45,7 @@ namespace KenticoInspector.Core.Tests
         }
     }
 
-    public class TokenValues
+    public static class TokenValues
     {
         public static object IsUndefined => new { };
 
@@ -73,7 +73,7 @@ namespace KenticoInspector.Core.Tests
     // TODO: Add valid expressions with contains url case
     // TODO: Add valid expressions with multiple tokens
 
-    public class TokenExpressionTestCases
+    public static class TokenExpressionTestCases
     {
         private static string category;
         private static string tokenExpression;

@@ -16,7 +16,7 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string>
         {
@@ -26,8 +26,8 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
 
         public Report(
             IDatabaseService databaseService,
-            IReportMetadataService reportMetadataService
-            ) : base(reportMetadataService)
+            IModuleMetadataService moduleMetadataService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
@@ -45,21 +45,14 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             {
                 return new ReportResults
                 {
-                    Status = ReportResultsStatus.Good,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.Summaries.Good
                 };
             }
 
             var totalEvents = cmsEventLogs.Count();
-
-            var totalStartEvents = cmsEventLogs
-                .Where(e => e.EventCode == "STARTAPP")
-                .Count();
-
-            var totalEndEvents = cmsEventLogs
-                .Where(e => e.EventCode == "ENDAPP")
-                .Count();
-
+            var totalStartEvents = cmsEventLogs.Count(e => e.EventCode == "STARTAPP");
+            var totalEndEvents = cmsEventLogs.Count(e => e.EventCode == "ENDAPP");
             var earliestTime = totalEvents > 0
                 ? cmsEventLogs.Min(e => e.EventTime)
                 : new DateTime();
@@ -86,9 +79,9 @@ namespace KenticoInspector.Reports.ApplicationRestartAnalysis
             return new ReportResults
             {
                 Data = data,
-                Status = ReportResultsStatus.Information,
+                Status = ResultsStatus.Information,
                 Summary = summary,
-                Type = ReportResultsType.Table
+                Type = ResultsType.Table
             };
         }
     }

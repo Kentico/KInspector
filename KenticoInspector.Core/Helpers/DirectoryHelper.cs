@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace KenticoInspector.Core.Helpers
 {
-    public class DirectoryHelper
+    public static class DirectoryHelper
     {
         private const string filePrefix = "file:\\";
 
@@ -14,7 +14,6 @@ namespace KenticoInspector.Core.Helpers
         public static string GetExecutingDirectory()
         {
             var assemblyPath = Assembly.GetExecutingAssembly().CodeBase;
-
             var assemblyDirectory = Path.GetDirectoryName(assemblyPath);
 
             return assemblyDirectory.Substring(filePrefix.Length);

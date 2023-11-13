@@ -1,5 +1,6 @@
 ﻿using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
+
 using Moq;
 
 namespace KenticoInspector.Reports.Tests.Helpers
@@ -12,6 +13,7 @@ namespace KenticoInspector.Reports.Tests.Helpers
             mockInstanceService.Setup(p => p.CurrentInstance).Returns(instance);
             mockInstanceService.Setup(p => p.GetInstance(instance.Guid)).Returns(instance);
             mockInstanceService.Setup(p => p.GetInstanceDetails(instance)).Returns(instanceDetails);
+
             return mockInstanceService;
         }
     }

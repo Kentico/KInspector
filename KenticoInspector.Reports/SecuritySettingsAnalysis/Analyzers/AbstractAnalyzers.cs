@@ -13,7 +13,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
 
         public abstract IEnumerable<Expression<Func<TData, TResult>>> Analyzers { get; }
 
-        public AbstractAnalyzers(Terms reportTerms)
+        protected AbstractAnalyzers(Terms reportTerms)
         {
             ReportTerms = reportTerms;
         }
@@ -25,14 +25,12 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
             )
         {
             TResult result = null;
-
             foreach (var setting in settings)
             {
                 var expectedSettingName = analyzer.Parameters[0].Name;
-
                 if (Match(expectedSettingName, getSettingName(setting)))
                 {
-                    result = analyzer.Compile()(setting) as TResult ?? result;
+                    result = analyzer.Compile()(setting) ?? result;
                 }
             }
 

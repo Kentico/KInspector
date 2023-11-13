@@ -17,9 +17,7 @@ namespace KenticoInspector.Core.Tokens
         public string Resolve(string tokenExpression, IDictionary<string, object> tokenDictionary)
         {
             var trimmedTokenExpression = tokenExpression.Trim(expressionBoundary);
-
             var expression = GetExpression(trimmedTokenExpression);
-
             if (tokenDictionary.TryGetValue(expression.token, out object token))
             {
                 foreach (var (value, operation, result) in expression.cases)
@@ -53,12 +51,10 @@ namespace KenticoInspector.Core.Tokens
                 throw new ArgumentException($"'{tokenExpression}' looks like a simple token expression but does not contain a token.");
 
             var segments = tokenExpression.Split(Constants.Pipe);
-
             if (segments[0].Contains(Constants.Colon))
                 throw new FormatException($"Simple token expression token '{segments[0]}' must not contain a {Constants.Colon}.");
 
             var cases = new List<(string, char, string)>();
-
             string defaultValue = null;
 
             switch (segments.Length)
@@ -88,18 +84,14 @@ namespace KenticoInspector.Core.Tokens
         private static (string, char, string) GetCase(string expressionCase)
         {
             var operation = Constants.Equals;
-
             var pair = expressionCase.SplitAtFirst(Constants.Colon);
-
             if (!expressionCase.Contains(Constants.Colon))
             {
                 return (null, operation, pair.first);
             }
 
             var firstChar = pair.first[0];
-
             var operationChars = new[] { Constants.MoreThan, Constants.LessThan };
-
             if (!operationChars.Contains(firstChar))
             {
                 return (pair.first, operation, pair.second);
@@ -123,7 +115,6 @@ namespace KenticoInspector.Core.Tokens
         {
             var resolved = false;
             resolvedValue = null;
-
             if (token == null)
             {
                 return resolved;
@@ -164,7 +155,6 @@ namespace KenticoInspector.Core.Tokens
         private static bool TryResolveDoubleToken(double token, string expressionCaseValue, char operation)
         {
             var expressionCaseValueIsDouble = double.TryParse(expressionCaseValue, out double doubleExpressionCaseValue);
-
             if (expressionCaseValueIsDouble)
             {
                 if (operation == Constants.Equals && token == doubleExpressionCaseValue
@@ -185,13 +175,9 @@ namespace KenticoInspector.Core.Tokens
         private static bool TryResolveBoolToken(bool token, string expressionCaseValue)
         {
             var expressionCaseValueIsBool = bool.TryParse(expressionCaseValue, out bool boolExpressionCaseValue);
-
-            if (expressionCaseValueIsBool)
+            if (expressionCaseValueIsBool && token == boolExpressionCaseValue)
             {
-                if (token == boolExpressionCaseValue)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;

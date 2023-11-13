@@ -1,0 +1,1 @@
+﻿SELECT UserID, UserName, UserPassword AS 'Password', UserEnabled AS 'Enabled' FROM CMS_User WHERE UserPrivilegeLevel = 3

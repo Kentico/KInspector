@@ -1,7 +1,9 @@
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.ClassTableValidation;
 using KenticoInspector.Reports.ClassTableValidation.Models;
+
 using NUnit.Framework;
+
 using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.Tests
@@ -9,13 +11,14 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public class ClassTableValidationTests : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public ClassTableValidationTests(int majorVersion) : base(majorVersion)
         {
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockModuleMetadataService.Object);
         }
 
         [Test]
@@ -38,7 +41,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Data.TableResults.Rows.Count == 0);
             Assert.That(results.Data.ClassResults.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
         }
 
         [Test]
@@ -68,7 +71,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Data.TableResults.Rows.Count == 0);
             Assert.That(results.Data.ClassResults.Rows.Count == 1);
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -96,7 +99,7 @@ namespace KenticoInspector.Reports.Tests
             // Assert
             Assert.That(results.Data.TableResults.Rows.Count == 1);
             Assert.That(results.Data.ClassResults.Rows.Count == 0);
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         private List<ClassWithNoTable> GetCleanClassResults()

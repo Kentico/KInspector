@@ -18,7 +18,7 @@
         <span class="mr-2">Source on Github</span>
         <v-icon>mdi-github-box</v-icon>
       </v-btn>
-      <div>Version 4.0 Alpha</div>
+      <div>Version 4.0.0</div>
     </v-footer>
   </v-app>
 </template>

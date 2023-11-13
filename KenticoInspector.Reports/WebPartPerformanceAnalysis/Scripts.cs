@@ -2,8 +2,10 @@
 {
     public static class Scripts
     {
-        public readonly static string BaseDirectory = $"{nameof(WebPartPerformanceAnalysis)}/Scripts/";
-        public readonly static string GetAffectedTemplates = $"{BaseDirectory}{nameof(GetAffectedTemplates)}.sql";
-        public readonly static string GetDocumentsByPageTemplateIds = $"{BaseDirectory}{nameof(GetDocumentsByPageTemplateIds)}.sql";
+        public static string BaseDirectory => $"{nameof(WebPartPerformanceAnalysis)}/Scripts/";
+
+        public static string GetAffectedTemplates => $"{BaseDirectory}{nameof(GetAffectedTemplates)}.sql";
+
+        public static string GetDocumentsByPageTemplateIds => $"{BaseDirectory}{nameof(GetDocumentsByPageTemplateIds)}.sql";
     }
 }

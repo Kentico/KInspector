@@ -2,9 +2,12 @@
 using KenticoInspector.Reports.RobotsTxtConfigurationSummary;
 using KenticoInspector.Reports.RobotsTxtConfigurationSummary.Models;
 using KenticoInspector.Reports.Tests.Helpers;
+
 using Moq;
 using Moq.Protected;
+
 using NUnit.Framework;
+
 using System;
 using System.Net;
 using System.Net.Http;
@@ -35,9 +38,9 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
 
-            var baseUri = new Uri(mockInstance.Url);
+            var baseUri = new Uri(mockInstance.AdminUrl);
             var expectedUri = new Uri(baseUri, Constants.RobotsTxtRelativePath);
 
             AssertUrlCalled(mockHttpMessageHandler, expectedUri);
@@ -64,14 +67,14 @@ namespace KenticoInspector.Reports.Tests
             _mockReport = ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode.OK, out Mock<HttpMessageHandler> mockHttpMessageHandler);
             var mockInstance = _mockInstanceService.Object.CurrentInstance;
 
-            var baseUrl = mockInstance.Url;
-            mockInstance.Url += "/subdirectory";
+            var baseUrl = mockInstance.AdminUrl;
+            mockInstance.AdminUrl += "/subdirectory";
 
             // Act
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
 
             var expectedUri = new Uri($"{baseUrl}/{Constants.RobotsTxtRelativePath}");
 
@@ -88,7 +91,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         private Report ConfigureReportAndHandlerWithHttpClientReturning(HttpStatusCode httpStatusCode, out Mock<HttpMessageHandler> mockHttpMessageHandler)
@@ -106,10 +109,8 @@ namespace KenticoInspector.Reports.Tests
                 .Verifiable();
 
             var httpClient = new HttpClient(mockHttpMessageHandler.Object);
-
-            var report = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockReportMetadataService.Object, httpClient);
-
-            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockReportMetadataService, report);
+            var report = new Report(_mockInstanceService.Object, _mockModuleMetadataService.Object, httpClient);
+            MockReportMetadataServiceHelper.SetupReportMetadataService<Terms>(_mockModuleMetadataService, report);
 
             return report;
         }

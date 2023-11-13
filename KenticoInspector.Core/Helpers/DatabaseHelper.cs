@@ -5,7 +5,7 @@ using KenticoInspector.Core.Models;
 
 namespace KenticoInspector.Core.Helpers
 {
-    public class DatabaseHelper
+    public static class DatabaseHelper
     {
         public static IDbConnection GetSqlConnection(DatabaseSettings databaseSettings)
         {

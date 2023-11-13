@@ -1,9 +1,9 @@
 ﻿using KenticoInspector.Core;
 using KenticoInspector.Core.Constants;
-using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.SampleReport.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,12 +14,13 @@ namespace KenticoInspector.Reports.SampleReport
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        // Hide sample report in UI
+        public override IList<Version> CompatibleVersions => new Version[0];
 
         public override IList<string> Tags => new List<string> {
             ReportTags.Consistency
@@ -29,9 +30,7 @@ namespace KenticoInspector.Reports.SampleReport
         {
             var random = new Random();
             var issueCount = random.Next(0, 3);
-
             var data = new List<string>();
-
             for (int i = 0; i < issueCount; i++)
             {
                 var name = $"test-{i}";
@@ -42,8 +41,8 @@ namespace KenticoInspector.Reports.SampleReport
             return new ReportResults()
             {
                 Data = data,
-                Type = ReportResultsType.StringList,
-                Status = ReportResultsStatus.Information,
+                Type = ResultsType.StringList,
+                Status = ResultsStatus.Information,
                 Summary = Metadata.Terms.Summary.With(new { issueCount })
             };
         }

@@ -1,5 +1,6 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Core.Services.Interfaces;
+
 using System.Collections.Generic;
 using System.Xml;
 
@@ -11,7 +12,6 @@ namespace KenticoInspector.Core.Helpers
         {
             var resourceXml = GetXmlDocument(instanceRoot, relativeResxFilePath);
             var resourceStringNodes = resourceXml?.SelectNodes("/root/data");
-
             var results = new Dictionary<string, string>();
             foreach (XmlNode resourceStringNode in resourceStringNodes)
             {
@@ -27,6 +27,7 @@ namespace KenticoInspector.Core.Helpers
         {
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(instanceRoot + relativeFilePath);
+
             return xmlDocument;
         }
     }
