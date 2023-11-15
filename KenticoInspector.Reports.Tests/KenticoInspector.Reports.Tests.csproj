@@ -1,16 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-
+    <TargetFramework>net7.0</TargetFramework>
     <IsPackable>false</IsPackable>
-
-    <LangVersion>7.1</LangVersion>
-    <Version />
-    <PackageVersion />
-    <AssemblyVersion />
-    <FileVersion />
-    <InformationalVersion />
+	<LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

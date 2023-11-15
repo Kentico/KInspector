@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
@@ -21,9 +22,9 @@ namespace KenticoInspector.WebApplication.Controllers
         }
 
         [HttpGet("details/{instanceGuid}")]
-        public ActionResult<InstanceDetails> Details(Guid instanceGuid)
+        public Task<InstanceDetails> Details(Guid instanceGuid)
         {
-            return _instanceService.GetInstanceDetails(instanceGuid);
+            return Task.FromResult(_instanceService.GetInstanceDetails(instanceGuid));
         }
 
         [HttpDelete("{instanceGuid}")]
@@ -33,22 +34,22 @@ namespace KenticoInspector.WebApplication.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Instance>> Get()
+        public Task<List<Instance>> Get()
         {
             var instances = _instanceService.GetInstances();
-            return instances.ToList();
+            return Task.FromResult(instances.ToList());
         }
 
         [HttpGet("{instanceGuid}")]
-        public ActionResult<Instance> Get(Guid instanceGuid)
+        public Task<Instance> Get(Guid instanceGuid)
         {
-            return _instanceService.GetInstance(instanceGuid);
+            return Task.FromResult(_instanceService.GetInstance(instanceGuid));
         }
 
         [HttpPost]
-        public Instance Post([FromBody] Instance instance)
+        public Task<Instance> Post([FromBody] Instance instance)
         {
-            return _instanceService.UpsertInstance(instance);
+            return Task.FromResult(_instanceService.UpsertInstance(instance));
         }
     }
 }

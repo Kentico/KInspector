@@ -2,14 +2,15 @@
 using Autofac.Extensions.DependencyInjection;
 
 using KenticoInspector.Core;
+using KenticoInspector.Core.Converters;
 using KenticoInspector.Infrastructure;
 using KenticoInspector.Reports;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using System;
 
@@ -26,8 +27,9 @@ namespace KenticoInspector.WebApplication
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            services.AddMvc(o => o.EnableEndpointRouting = false).AddNewtonsoftJson(options =>
+                options.SerializerSettings.Converters.Add(new VersionConverter())
+            );
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
@@ -51,7 +53,7 @@ namespace KenticoInspector.WebApplication
             return new AutofacServiceProvider(container);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
