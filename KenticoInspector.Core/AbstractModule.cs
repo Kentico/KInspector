@@ -28,7 +28,7 @@ namespace KenticoInspector.Core
         {
             get
             {
-                return metadata ?? (metadata = moduleMetadataService.GetModuleMetadata<T>(Codename));
+                return metadata ??= moduleMetadataService.GetModuleMetadata<T>(Codename);
             }
         }
 
@@ -44,7 +44,7 @@ namespace KenticoInspector.Core
             var fullNameSpace = reportType.Namespace;
             var indexAfterLastPeriod = fullNameSpace.LastIndexOf('.') + 1;
 
-            return fullNameSpace.Substring(indexAfterLastPeriod, fullNameSpace.Length - indexAfterLastPeriod);
+            return fullNameSpace[indexAfterLastPeriod..];
         }
     }
 }

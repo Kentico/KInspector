@@ -53,7 +53,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
             foreach (XmlNode field in fieldsXml)
             {
                 var isIdColumnRaw = field.Attributes["isPK"]?.Value;
-                var isIdColumn = !string.IsNullOrWhiteSpace(isIdColumnRaw) ? bool.Parse(isIdColumnRaw) : false;
+                var isIdColumn = !string.IsNullOrWhiteSpace(isIdColumnRaw) && bool.Parse(isIdColumnRaw);
 
                 fields.Add(new CmsClassField
                 {

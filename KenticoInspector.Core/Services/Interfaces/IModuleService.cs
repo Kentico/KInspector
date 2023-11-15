@@ -10,13 +10,14 @@ namespace KenticoInspector.Core.Services.Interfaces
     {
         IReport GetReport(string codename);
 
-        ReportResults GetReportResults(string reportCodename, Guid instanceGuid);
+        ReportResults GetReportResults(string codename, Guid instanceGuid);
 
         IEnumerable<IReport> GetReports(Guid instanceGuid);
 
         IEnumerable<IAction> GetActions(Guid instanceGuid);
 
         IAction GetAction(string codename);
-        ActionResults ExecuteAction(string actionCodename, Guid instanceGuid, string optionsJson);
+
+        ActionResults ExecuteAction(string codename, Guid instanceGuid, string optionsJson);
     }
 }

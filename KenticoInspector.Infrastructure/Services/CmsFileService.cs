@@ -10,9 +10,14 @@ namespace KenticoInspector.Core.Helpers
     {
         public Dictionary<string, string> GetResourceStringsFromResx(string instanceRoot, string relativeResxFilePath = DefaultKenticoPaths.PrimaryResxFile)
         {
+            var results = new Dictionary<string, string>();
             var resourceXml = GetXmlDocument(instanceRoot, relativeResxFilePath);
             var resourceStringNodes = resourceXml?.SelectNodes("/root/data");
-            var results = new Dictionary<string, string>();
+            if (resourceStringNodes is null)
+            {
+                return results;
+            }
+            
             foreach (XmlNode resourceStringNode in resourceStringNodes)
             {
                 var key = resourceStringNode.Attributes["name"].InnerText.ToLowerInvariant();

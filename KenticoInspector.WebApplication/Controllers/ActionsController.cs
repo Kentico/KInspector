@@ -32,11 +32,9 @@ namespace KenticoInspector.WebApplication.Controllers
         [HttpPost("{codename}/execute/{instanceGuid}")]
         public async Task<ActionResults> Excecute(string codename, Guid instanceGuid)
         {
-            using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
-            {
-                var optionsJson = await reader.ReadToEndAsync();
-                return moduleService.ExecuteAction(codename, instanceGuid, optionsJson);
-            }
+            using StreamReader reader = new(Request.Body, Encoding.UTF8);
+            var optionsJson = await reader.ReadToEndAsync();
+            return moduleService.ExecuteAction(codename, instanceGuid, optionsJson);
         }
     }
 }

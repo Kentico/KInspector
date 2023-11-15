@@ -2,6 +2,7 @@
 
 using System;
 using System.Globalization;
+using System.Text;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
 {
@@ -74,13 +75,13 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
 
             var versionHistoryValue = decimal.Parse(versionHistoryXmlValue);
 
-            var formatting = "0.";
+            var formatting = new StringBuilder("0.");
             for (int i = 0; i < precision; i++)
             {
-                formatting += "0";
+                formatting.Append('0');
             }
 
-            VersionHistoryValue = versionHistoryValue.ToString(formatting);
+            VersionHistoryValue = versionHistoryValue.ToString(formatting.ToString());
         }
 
         private void ProcessDateTimeValues(string versionHistoryXmlValue, object coupledDataColumnValue)

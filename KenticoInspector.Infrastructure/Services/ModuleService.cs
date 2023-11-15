@@ -42,9 +42,9 @@ namespace KenticoInspector.Infrastructure.Services
 
         public IReport GetReport(string codename) => reportRepository.GetReport(codename);
 
-        public ReportResults GetReportResults(string reportCodename, Guid instanceGuid)
+        public ReportResults GetReportResults(string codename, Guid instanceGuid)
         {
-            var report = reportRepository.GetReport(reportCodename);
+            var report = reportRepository.GetReport(codename);
             var instance = instanceService.SetCurrentInstance(instanceGuid);
 
             databaseService.Configure(instance.DatabaseSettings);

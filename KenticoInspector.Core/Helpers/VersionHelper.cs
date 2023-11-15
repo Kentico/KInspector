@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace KenticoInspector.Core.Helpers
 {
@@ -22,12 +23,13 @@ namespace KenticoInspector.Core.Helpers
 
         public static string ExpandVersionString(string version)
         {
+            var sb = new StringBuilder(version);
             for (int i = 0; i < 2; i++)
             {
-                version += ".0";
+                sb.Append(".0");
             }
 
-            return version;
+            return sb.ToString();
         }
     }
 }

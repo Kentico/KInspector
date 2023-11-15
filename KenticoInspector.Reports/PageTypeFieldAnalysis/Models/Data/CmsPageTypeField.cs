@@ -11,11 +11,6 @@
         public override bool Equals(object obj)
         {
             var comparingField = obj as CmsPageTypeField;
-            if (comparingField == null)
-            {
-                return base.Equals(obj);
-            }
-
             var fieldsAreEqual = comparingField.FieldName == FieldName && comparingField.FieldDataType == FieldDataType;
 
             return fieldsAreEqual;
