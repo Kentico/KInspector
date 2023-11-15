@@ -178,9 +178,9 @@ namespace KenticoInspector.Modules.Tests.Reports
             }
         };
 
-        public string WebConfigWithRecommendedValues => @"TestData\CMS\WebConfig\webConfigWithRecommendedValues.xml";
+        public string WebConfigWithRecommendedValues => @"Reports\TestData\CMS\WebConfig\webConfigWithRecommendedValues.xml";
 
-        public string WebConfigWithoutRecommendedValues => @"TestData\CMS\WebConfig\webConfigWithoutRecommendedValues.xml";
+        public string WebConfigWithoutRecommendedValues => @"Reports\TestData\CMS\WebConfig\webConfigWithoutRecommendedValues.xml";
 
         public SecuritySettingsAnalysisTests(int majorVersion) : base(majorVersion)
         {

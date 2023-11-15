@@ -53,13 +53,13 @@ namespace KenticoInspector.Modules.Tests.Reports
             new PageTemplateDto()
             {
                 PageTemplateID = 1,
-                PageTemplateWebParts = FromFile(@"TestData\CMS_PageTemplate\PageTemplateWebParts\CleanAscx.xml"),
+                PageTemplateWebParts = FromFile(@"Reports\TestData\CMS_PageTemplate\PageTemplateWebParts\CleanAscx.xml"),
                 PageTemplateCodeName = "PageTemplateASCX"
             },
             new PageTemplateDto()
             {
                 PageTemplateID = 2,
-                PageTemplateWebParts = FromFile(@"TestData\CMS_PageTemplate\PageTemplateWebParts\CleanText.xml"),
+                PageTemplateWebParts = FromFile(@"Reports\TestData\CMS_PageTemplate\PageTemplateWebParts\CleanText.xml"),
                 PageTemplateCodeName = "PageTemplateText"
             }
         };
@@ -69,21 +69,21 @@ namespace KenticoInspector.Modules.Tests.Reports
             new TransformationDto()
             {
                 TransformationName = "ASCXTransformation",
-                TransformationCode = FromFile(@"TestData\CMS_Transformation\TransformationCode\CleanASCX.txt"),
+                TransformationCode = FromFile(@"Reports\TestData\CMS_Transformation\TransformationCode\CleanASCX.txt"),
                 ClassName = "PageType1",
                 Type = TransformationType.ASCX
             },
             new TransformationDto()
             {
                 TransformationName = "JQueryTransformation",
-                TransformationCode = FromFile(@"TestData\CMS_Transformation\TransformationCode\CleanText.txt"),
+                TransformationCode = FromFile(@"Reports\TestData\CMS_Transformation\TransformationCode\CleanText.txt"),
                 ClassName = "PageType1",
                 Type = TransformationType.JQuery
             },
             new TransformationDto()
             {
                 TransformationName = "TextTransformation",
-                TransformationCode = FromFile(@"TestData\CMS_Transformation\TransformationCode\CleanText.txt"),
+                TransformationCode = FromFile(@"Reports\TestData\CMS_Transformation\TransformationCode\CleanText.txt"),
                 ClassName = "PageType2",
                 Type = TransformationType.Text
             }
@@ -114,7 +114,7 @@ namespace KenticoInspector.Modules.Tests.Reports
         }
 
         [Test]
-        public void Should_ReturnWarningStatus_WhenTransformationsHaveSingleXssQueryHelperIssue() => TestSingleIssue(@"TestData\CMS_Transformation\TransformationCode\WithXssQueryHelperIssueASCX.txt", (r, d) => d.XssQueryHelper != string.Empty && r.Uses == 2);
+        public void Should_ReturnWarningStatus_WhenTransformationsHaveSingleXssQueryHelperIssue() => TestSingleIssue(@"Reports\TestData\CMS_Transformation\TransformationCode\WithXssQueryHelperIssueASCX.txt", (r, d) => d.XssQueryHelper != string.Empty && r.Uses == 2);
 
         public void TestSingleIssue(string transformationCodeFilePath, Func<TransformationResult, dynamic, bool> transformationResultEvaluator)
         {

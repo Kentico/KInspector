@@ -28,7 +28,7 @@ namespace KenticoInspector.Modules.Tests.Reports
             {
                 ClassName = "Class.1",
                 ClassTableName = "Class1",
-                ClassXmlSchema = FileHelper.GetXDocumentFromFile(@"TestData\CMS_Class\Class1\ClassXmlSchema.xml")
+                ClassXmlSchema = FileHelper.GetXDocumentFromFile(@"Reports\TestData\CMS_Class\Class1\ClassXmlSchema.xml")
             }
         };
 
@@ -38,7 +38,7 @@ namespace KenticoInspector.Modules.Tests.Reports
             {
                 ClassName = "Class.1",
                 ClassTableName = "Class1",
-                ClassXmlSchema = FileHelper.GetXDocumentFromFile(@"TestData\CMS_Class\Class1\ClassXmlSchemaWithAddedField.xml")
+                ClassXmlSchema = FileHelper.GetXDocumentFromFile(@"Reports\TestData\CMS_Class\Class1\ClassXmlSchemaWithAddedField.xml")
             }
         };
 

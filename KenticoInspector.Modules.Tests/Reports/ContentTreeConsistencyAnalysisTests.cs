@@ -296,7 +296,7 @@ namespace KenticoInspector.Modules.Tests.Reports
             {
                 CmsClassItems = new List<CmsClassItem>();
                 var classFormDefinitionXml5512 = new XmlDocument();
-                classFormDefinitionXml5512.Load("TestData/classFormDefinitionXml_Clean_5512.xml");
+                classFormDefinitionXml5512.Load("Reports/TestData/classFormDefinitionXml_Clean_5512.xml");
 
                 CmsClassItems.Add(new CmsClassItem
                 {
@@ -313,7 +313,7 @@ namespace KenticoInspector.Modules.Tests.Reports
                 if (clean)
                 {
                     var versionHistoryXml = new XmlDocument();
-                    versionHistoryXml.Load("TestData/VersionHistoryItem_Clean_518.xml");
+                    versionHistoryXml.Load("Reports/TestData/VersionHistoryItem_Clean_518.xml");
 
                     CmsVersionHistoryItems.Add(new CmsVersionHistoryItem
                     {
@@ -342,7 +342,7 @@ namespace KenticoInspector.Modules.Tests.Reports
                 else
                 {
                     var versionHistoryXml = new XmlDocument();
-                    versionHistoryXml.Load("TestData/VersionHistoryItem_Corrupt_519.xml");
+                    versionHistoryXml.Load("Reports/TestData/VersionHistoryItem_Corrupt_519.xml");
 
                     CmsVersionHistoryItems.Add(new CmsVersionHistoryItem
                     {
