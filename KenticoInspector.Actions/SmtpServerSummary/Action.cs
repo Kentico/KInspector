@@ -55,6 +55,7 @@ namespace KenticoInspector.Actions.SmtpServerSummary
             {
                 var serversFromSettings = databaseService.ExecuteSqlFromFile<SmtpFromSettings>(Scripts.GetSmtpFromSettingsKeys);
                 if (!serversFromSettings.Any(s => s.SiteID == options.SiteId) ||
+                    serversFromSettings.FirstOrDefault(s => s.SiteID == options.SiteId).Server is null ||
                     serversFromSettings.FirstOrDefault(s => s.SiteID == options.SiteId).Server.EndsWith(".disabled"))
                 {
                     return GetInvalidOptionsResult();
