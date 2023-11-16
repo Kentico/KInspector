@@ -14,5 +14,13 @@ export default new Vuex.Store({
     instances,
     reports
   },
+  state: {
+    packageVersion: process.env.PACKAGE_VERSION || '0'
+  },
+  getters: {
+    appVersion: (state) => {
+      return state.packageVersion
+    }
+  },
   strict: debug
 })
