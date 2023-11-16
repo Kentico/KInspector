@@ -1,0 +1,57 @@
+name: .NET Core Desktop
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        configuration: [Release]
+        node-version: [16.x]
+
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: KInspector.sln
+      Wap_Project_Directory: KenticoInspector.WebApplication
+      Wap_Project_Path: KenticoInspector.WebApplication\KenticoInspector.WebApplication.csproj
+      FrontEnd_Directory: KenticoInspector.WebApplication\ClientApp
+      
+    steps:
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
+      
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '2.2.x'
+    - run: dotnet restore -r win-x64
+      working-directory: .\KenticoInspector.WebApplication
+    
+    - run: npm i
+      working-directory: .\KenticoInspector.WebApplication\ClientApp
+    - run: npm run build
+      working-directory: .\KenticoInspector.WebApplication\ClientApp
+
+    - run: dotnet publish KenticoInspector.WebApplication.csproj /p:PublishDir=..\publish -c Release -r win-x64 --self-contained true
+      working-directory: .\KenticoInspector.WebApplication
+   
+    - run: mkdir "..\..\publish\ClientApp\dist"
+      working-directory: .\KenticoInspector.WebApplication\ClientApp
+      
+    - run: Copy-Item ".\dist\*" -Recurse -Destination "..\..\publish\ClientApp\dist\"
+      working-directory: .\KenticoInspector.WebApplication\ClientApp
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: KInspector
+        path: .\publish
