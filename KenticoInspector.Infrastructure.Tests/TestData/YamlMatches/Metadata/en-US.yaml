@@ -1,0 +1,7 @@
+﻿details:
+  name: Details name
+  shortDescription: Details shortDescription
+  longDescription: |
+    Details longDescription
+terms:
+  singleTerm: Term value

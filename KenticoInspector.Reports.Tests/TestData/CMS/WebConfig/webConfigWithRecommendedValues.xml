@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <appSettings>
+    <add key="CMSRenewSessionAuthChange" value="true" />
+    <add key="CMSHashStringSalt" value="521f9e88-44bb-477a-b5b4-d60e6c2292c6" />
+  </appSettings>
+  <connectionStrings>
+    <clear />
+    <add name="CMSConnectionString" connectionString="Data Source=.;Initial Catalog=Kentico;Integrated Security=True;Persist Security Info=False;Connect Timeout=60;Encrypt=False;Current Language=English;" />
+  </connectionStrings>
+  <system.web>
+    <pages validateRequest="false" clientIDMode="AutoID">
+    </pages>
+    <customErrors mode="RemoteOnly">
+    </customErrors>
+    <authentication mode="Forms">
+      <forms loginUrl="CMSPages/logon.aspx" defaultUrl="Default.aspx" name=".ASPXFORMSAUTH" timeout="60000" slidingExpiration="true" />
+    </authentication>
+    <compilation debug="false" numRecompilesBeforeAppRestart="100" targetFramework="4.6.1">
+    </compilation>
+    <httpCookies httpOnlyCookies="true" />
+  </system.web>
+</configuration>

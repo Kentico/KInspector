@@ -1,36 +1,76 @@
-# KInspector
+# Kentico Inspector
 
-[![Join the chat at https://gitter.im/Kentico/KInspector](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Kentico/KInspector?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build status](https://ci.appveyor.com/api/projects/status/udykjx510v83w9y6?svg=true)](https://ci.appveyor.com/project/kentico/kinspector)
+[![Join the chat at https://kentico-community.slack.com](https://img.shields.io/badge/join-slack-E6186D.svg)](https://kentico-community.slack.com)
+[![Build status](https://ci.appveyor.com/api/projects/status/n3nrch61bqxh497e/branch/master?svg=true)](https://ci.appveyor.com/project/kentico/kinspector-98xj0/branch/master)
 [![first-timers-only](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 [![Github All Releases](https://img.shields.io/github/downloads/kentico/kinspector/total.svg)](https://github.com/Kentico/KInspector/releases)
 
-KInspector is an application for analyzing health, performance and security of your **Kentico** solution. 
+Kentico Inspector (formerly KInspector) is an application for analyzing the health, performance and security of **[Kentico EMS](https://www.kentico.com/)** solutions.
 
-KInspector was developed by the consulting department in Kentico to improve the web sites of our customers. Initially, it was an internal application, but we think that every Kentico user can benefit from this app and that's why we made it an open source. 
+Kentico Inspector was initially developed as an internal application by the Kentico consulting team to help evaluation customer's web sites. We quickly realized that the broader community would benefit from this as well, so we made it open source.
 
-The application contains three types of modules:
-- **Setup** modules help you prepare your instance for testing. You can disable SMTP servers, web farm servers, add a localhost license and so on.
-- **Analysis** modules check health and performance. These modules test the database for consistency issues, display common event log errors and recommend some best practices.
-- **Security** modules scan for potential security issues, like XSS or SQL injection, throughout the system.
+The application is Kentico version agnostic and has no dependencies on version-specific DLLs. Most modules are designed to support version 10 and later, but some will work on older versions as well.
 
-The best thing about KInspector is that it can analyze **any version** of Kentico. 
+## Running Kentico Inspector
 
-## Get the application
+You can download the [latest release](https://github.com/Kentico/KInspector/releases/latest) and extract the contents to a local directory to use [console](#console-mode) or [IIS](#iis-mode) mode.
 
-Download the [latest release](https://github.com/Kentico/KInspector/releases/latest) zip package, unpack it and run the ```Start.cmd```. It automatically opens a new browser window with the [target setup](http://i.imgur.com/D5C0Tbn.png) page. 
-> Make sure that you provide all fields with correct values. Some modules work with the database and some with the code. If you don't fill the values correctly, the application will probably throw an error.
+> :round_pushpin: **Note:** 
+> 
+> The application needs permission to create/modify files in the directory it is run from to save instances to a file.
 
-Once you pass the setup page, you're ready to start the analysis. On the [main menu](http://i.imgur.com/H7zBQOZ.png) page, select the ```Analysis``` category and run the modules. You will see a page similar to this one:
+Or, you can clone this repository and follow [these instructions](#local-development) to run the application locally.
 
-[![Module results](http://i.imgur.com/UUdTlNL.png)](http://i.imgur.com/Vti1Fo7.png)
+### Console mode
 
-Now you can start implementing the suggested improvements.
+Console mode is useful if you just want to quickly run the tool occasionally. To use console mode, run `KenticoInspector.WebApplication.exe` and open your browser to either https://localhost:5001 or http://localhost:5000.
+
+### IIS mode
+
+IIS mode allows you to have the tool always available, for example, on a development server. To use IIS mode, point your IIS directory to the folder you extracted everything to and make sure the application pool's .NET CLR version is set to `No managed code`. Open the site in your browser.
 
 ## Contributing
-Want to improve the KInspector? Great! Read the [contributing guidelines](https://github.com/Kentico/KInspector/blob/master/CONTRIBUTING.md) and then [write your first module](https://github.com/Kentico/KInspector/wiki/Writing-a-custom-module) or improve an existing one.
 
-### Watch how to contribute to KInspector on YouTube
-[![Check out KInspector on YouTube!](http://img.youtube.com/vi/ixGakcfITe8/0.jpg)](http://www.youtube.com/watch?v=ixGakcfITe8)
+Want to improve the Kentico Inspector? Great! Read the [contributing guidelines](https://github.com/Kentico/KInspector/blob/master/CONTRIBUTING.md) and then [check out the open issues](https://github.com/Kentico/KInspector/issues) (especially issues marked as "[good first issue](https://github.com/Kentico/KInspector/labels/good%20first%20issue)") to get started.
 
 If anything feels wrong or incomplete, please let us know. Create a new [issue](https://github.com/Kentico/KInspector/issues/new) or submit a [pull request](https://help.github.com/articles/using-pull-requests/).
+
+## Local development
+
+### Requirements
+
+All versions below are from a known working environment. Lower versions may work but are not tested.
+
+- [Visual Studio 2017 updated to 15.9.11 or later](https://visualstudio.microsoft.com/vs/)
+- [.NET Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2)
+- [Node for Windows (10.15.X+)](https://nodejs.org/en/)
+- [NPM (6.4.X+) (included with Node)](https://www.npmjs.com/)
+- [Vue CLI (3.x)](https://cli.vuejs.org/)
+
+### First run
+
+Even if you don't plan to make any changes in the Client UI application, you'll need to build it before your first run and any time the client code is updated. To build the Client UI application:
+
+#### Frontend build instructions
+1. Open Powershell/Command Prompt
+1. Change the directory to `./KenticoInspector.WebApplication/ClientApp`
+1. Run `npm i`
+1. Run `npm run build`
+
+#### Backend build instructions
+
+1. Open `KInspector.sln` in Visual Studio
+1. Do a build
+1. Make sure the `KenticoInspector.WebApplication` project is the start up project
+1. You can run it with either the `IIS Express` or `Console` debug launch settings
+
+If you want to work on the Client UI applicaiton without running `npm run build` any time the code changes, you can set up an automatic build process:
+
+1. Open Powershell/Command Prompt
+1. Change the directory to `./KenticoInspector.WebApplication/ClientApp`
+1. Run `npm i` (if you haven't already)
+1. Run `npm run serve`
+1. Leave the terminal open
+1. Follow the steps to build the backend, but run it using the `UI Development` debug launch settings.
+   - This runs the backend with a proxy to the running instance you started in Powershell and allows you to take advantage of the hot-reloading of the client application
+

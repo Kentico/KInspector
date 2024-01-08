@@ -1,7 +1,6 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F3EF3619-F312-4B17-B5BE-5764A8010D38}"
 	ProjectSection(SolutionItems) = preProject
@@ -10,16 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F3EF36
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentico.KInspector.Core", "KInspector.Core\Kentico.KInspector.Core.csproj", "{83C55B9E-F597-4941-A41A-932154E256D4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentico.KInspector.Modules", "KInspector.Modules\Kentico.KInspector.Modules.csproj", "{1D75B5FF-71B8-403F-8AED-84B1F32D6617}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentico.KInspector.Tests", "KInspector.Tests\Kentico.KInspector.Tests.csproj", "{0CD9708F-1740-4585-A9AE-B681C9F030E6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{68B3CDB1-A97C-4733-A672-56F2EE39D121}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kentico.KInspector.Web", "KInspector.Web\Kentico.KInspector.Web.csproj", "{94C43526-335E-43F1-A5D6-020FB0A98E85}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5977CB97-CB8F-4C77-836E-EAC1CCD3DEED}"
 	ProjectSection(SolutionItems) = preProject
 		CONTRIBUTING.md = CONTRIBUTING.md
@@ -27,33 +16,65 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.WebApplication", "KenticoInspector.WebApplication\KenticoInspector.WebApplication.csproj", "{0C9FB1D4-87F2-48A0-81CD-45D5D2EF6C05}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Core", "KenticoInspector.Core\KenticoInspector.Core.csproj", "{0F0CD079-3395-4241-8C13-1CE284C4FDE1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Infrastructure", "KenticoInspector.Infrastructure\KenticoInspector.Infrastructure.csproj", "{E73A8C85-381C-4707-927D-D0D311A0B9A6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Reports", "KenticoInspector.Reports\KenticoInspector.Reports.csproj", "{4790028D-24BB-4BFC-98BA-C25AB5F682C5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Reports.Tests", "KenticoInspector.Reports.Tests\KenticoInspector.Reports.Tests.csproj", "{3F359210-5970-4CAA-B442-338F2EC51729}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Infrastructure.Tests", "KenticoInspector.Infrastructure.Tests\KenticoInspector.Infrastructure.Tests.csproj", "{7C8E2AC5-5ED5-45D7-8EB4-39F3BEECCFDA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Core.Tests", "KenticoInspector.Core.Tests\KenticoInspector.Core.Tests.csproj", "{46F38A42-61A3-4FA9-9FB0-32B343CFA6A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KenticoInspector.Actions", "KenticoInspector.Actions\KenticoInspector.Actions.csproj", "{29948680-57BC-487A-A8E5-F68674CEB694}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{83C55B9E-F597-4941-A41A-932154E256D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83C55B9E-F597-4941-A41A-932154E256D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83C55B9E-F597-4941-A41A-932154E256D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83C55B9E-F597-4941-A41A-932154E256D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D75B5FF-71B8-403F-8AED-84B1F32D6617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D75B5FF-71B8-403F-8AED-84B1F32D6617}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D75B5FF-71B8-403F-8AED-84B1F32D6617}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D75B5FF-71B8-403F-8AED-84B1F32D6617}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0CD9708F-1740-4585-A9AE-B681C9F030E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94C43526-335E-43F1-A5D6-020FB0A98E85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C9FB1D4-87F2-48A0-81CD-45D5D2EF6C05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C9FB1D4-87F2-48A0-81CD-45D5D2EF6C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C9FB1D4-87F2-48A0-81CD-45D5D2EF6C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C9FB1D4-87F2-48A0-81CD-45D5D2EF6C05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F0CD079-3395-4241-8C13-1CE284C4FDE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F0CD079-3395-4241-8C13-1CE284C4FDE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F0CD079-3395-4241-8C13-1CE284C4FDE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F0CD079-3395-4241-8C13-1CE284C4FDE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E73A8C85-381C-4707-927D-D0D311A0B9A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E73A8C85-381C-4707-927D-D0D311A0B9A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E73A8C85-381C-4707-927D-D0D311A0B9A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E73A8C85-381C-4707-927D-D0D311A0B9A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4790028D-24BB-4BFC-98BA-C25AB5F682C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4790028D-24BB-4BFC-98BA-C25AB5F682C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4790028D-24BB-4BFC-98BA-C25AB5F682C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4790028D-24BB-4BFC-98BA-C25AB5F682C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F359210-5970-4CAA-B442-338F2EC51729}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F359210-5970-4CAA-B442-338F2EC51729}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F359210-5970-4CAA-B442-338F2EC51729}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F359210-5970-4CAA-B442-338F2EC51729}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C8E2AC5-5ED5-45D7-8EB4-39F3BEECCFDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C8E2AC5-5ED5-45D7-8EB4-39F3BEECCFDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C8E2AC5-5ED5-45D7-8EB4-39F3BEECCFDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C8E2AC5-5ED5-45D7-8EB4-39F3BEECCFDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46F38A42-61A3-4FA9-9FB0-32B343CFA6A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46F38A42-61A3-4FA9-9FB0-32B343CFA6A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46F38A42-61A3-4FA9-9FB0-32B343CFA6A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46F38A42-61A3-4FA9-9FB0-32B343CFA6A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29948680-57BC-487A-A8E5-F68674CEB694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29948680-57BC-487A-A8E5-F68674CEB694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29948680-57BC-487A-A8E5-F68674CEB694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29948680-57BC-487A-A8E5-F68674CEB694}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{0CD9708F-1740-4585-A9AE-B681C9F030E6} = {68B3CDB1-A97C-4733-A672-56F2EE39D121}
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F97074A-AB88-4F8F-AC4A-32A6C4CED4C1}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,57 @@
+﻿<NewDataSet>
+  <KIN_VersioningDataTest>
+    <NodeID>517</NodeID>
+    <NodeAliasPath>/VDT-Server-Timezone</NodeAliasPath>
+    <NodeName>VDT - Server Timezone</NodeName>
+    <NodeAlias>VDT-Server-Timezone</NodeAlias>
+    <NodeClassID>5512</NodeClassID>
+    <NodeParentID>1</NodeParentID>
+    <NodeLevel>1</NodeLevel>
+    <NodeACLID>1</NodeACLID>
+    <NodeSiteID>1</NodeSiteID>
+    <NodeGUID>3142f1a6-4d5e-47dd-a7b3-e3d64c068dd6</NodeGUID>
+    <NodeOrder>18</NodeOrder>
+    <NodeInheritPageLevels />
+    <NodeOwner>53</NodeOwner>
+    <NodeTemplateForAllCultures>true</NodeTemplateForAllCultures>
+    <NodeHasChildren>false</NodeHasChildren>
+    <NodeHasLinks>false</NodeHasLinks>
+    <NodeOriginalNodeID>517</NodeOriginalNodeID>
+    <NodeIsContentOnly>false</NodeIsContentOnly>
+    <NodeIsACLOwner>false</NodeIsACLOwner>
+    <DocumentID>518</DocumentID>
+    <DocumentName>VDT - Server Timezone</DocumentName>
+    <DocumentNamePath>/VDT - Server Timezone</DocumentNamePath>
+    <DocumentModifiedWhen>2019-06-06T11:58:46.8756495-07:00</DocumentModifiedWhen>
+    <DocumentModifiedByUserID>53</DocumentModifiedByUserID>
+    <DocumentForeignKeyValue>5</DocumentForeignKeyValue>
+    <DocumentCreatedByUserID>53</DocumentCreatedByUserID>
+    <DocumentCreatedWhen>2019-06-06T11:58:46.8756495-07:00</DocumentCreatedWhen>
+    <DocumentCheckedOutVersionHistoryID>17</DocumentCheckedOutVersionHistoryID>
+    <DocumentWorkflowStepID>254</DocumentWorkflowStepID>
+    <DocumentUrlPath />
+    <DocumentCulture>en-US</DocumentCulture>
+    <DocumentNodeID>517</DocumentNodeID>
+    <DocumentShowInSiteMap>true</DocumentShowInSiteMap>
+    <DocumentMenuItemHideInNavigation>false</DocumentMenuItemHideInNavigation>
+    <DocumentUseNamePathForUrlPath>false</DocumentUseNamePathForUrlPath>
+    <DocumentContent />
+    <DocumentWildcardRule />
+    <DocumentPriority>0</DocumentPriority>
+    <DocumentLastVersionNumber>0.1</DocumentLastVersionNumber>
+    <DocumentIsArchived>false</DocumentIsArchived>
+    <DocumentGUID>622563f9-9402-4e0f-a51f-9af23cdded3d</DocumentGUID>
+    <DocumentWorkflowCycleGUID>877af381-c69b-4768-8faf-dfca01c4f9ad</DocumentWorkflowCycleGUID>
+    <DocumentCanBePublished>false</DocumentCanBePublished>
+    <DocumentInheritsStylesheet>true</DocumentInheritsStylesheet>
+    <VersioningDataTestID>5</VersioningDataTestID>
+    <BoolNoDefault>false</BoolNoDefault>
+    <BoolDefaultTrue>true</BoolDefaultTrue>
+    <BoolDefaultFalse>false</BoolDefaultFalse>
+    <DateTimeHardDefault>2019-06-06T11:31:17-07:00</DateTimeHardDefault>
+    <DateTimeMacroDefault>2019-06-06T11:58:33-07:00</DateTimeMacroDefault>
+    <TextHardDefault>This is the default</TextHardDefault>
+    <DecimalHardDefault>1.75</DecimalHardDefault>
+    <ClassName>KIN.VersioningDataTest</ClassName>
+  </KIN_VersioningDataTest>
+</NewDataSet>

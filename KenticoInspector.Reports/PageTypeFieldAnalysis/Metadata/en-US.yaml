@@ -1,0 +1,19 @@
+﻿details:
+  name: Page type field analysis
+  shortDescription: Checks for cases where two or more page types have a field with the same name but mismatched data types
+  longDescription: |
+    This report shows fields with duplicated names, their SQL data types, and their associated page types.
+    
+    Two or more page types with fields with the same name, but different data types, cause several issues within kentico, not limited to the following:
+    - Exporting/importing a site 
+    - Working with web parts or widgets that list more than one page type
+    
+    The best way to fix this issue is to prepend the page type code name to the field name: `CustomPageTypeA_FieldName`.
+    
+    For more information, see [this article](https://devnet.kentico.com/articles/conversion-failed-when-converting-from-a-character-string-to-uniqueidentifier).
+terms:
+  summaries:
+    information: Found <fieldResultCount> <fieldResultCount|field|fields> that had matching names but different data types. 
+    good: No issues with fields with matching names.
+  tableTitles:
+    matchingPageTypeFieldsWithDifferentDataTypes: Matching page type fields with different data types

@@ -1,0 +1,14 @@
+{
+  "name": "kentico-inspector",
+  "version": "4.0.0",
+  "description": "Kentico Inspector",
+  "author": "Kentico",
+  "repository": "",
+  "main": "main.js",
+  "devDependencies": {
+    "electron": "^4.0.1"
+  },
+  "scripts": {
+    "start": "electron ."
+  }
+}

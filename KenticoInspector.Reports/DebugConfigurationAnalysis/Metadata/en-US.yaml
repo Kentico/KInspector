@@ -1,0 +1,27 @@
+details:
+  name: Debug Configuration Analysis
+  shortDescription: Shows status of debug settings in the database and web.config file.
+  longDescription: |
+    This report analyzes debug settings in the database that match the following criteria:
+      * `KeyName` is **CMSDisableDebug**
+        
+        OR
+        
+      * `KeyType` is **boolean** *(Only the on/off settings, not log length)*
+      * `KeyName` is like **CMSDebug%** *(Only debug settings)*
+      * `KeyName` is not like **%all%** *(Ignore the settings for enabling debug in the admin)*
+      * `KeyName` is not like **%live%** *(Ignore the settings for enabling showing debug on the live site)*
+      * `KeyName` is not like **%stack%** *(Ignore the settings for enabling displaying stack information in the admin)*
+      * `KeyName` is not like **%all%** *(Ignore the settings for enabling debug in the admin)*
+      * `KeyName` is not **CMSDebugMacrosDetailed** *(Ignore the settings for enabling more details in macro debugging)*
+terms:
+  checkResultsTableForAnyIssues: Check results table for any issues.
+  database:
+    explicitlyEnabledSettingsTableHeader: Explicitly enabled settings
+    overviewTableHeader: Database settings overview
+    summary: <explicitlyEnabledSettingsCount> database <explicitlyEnabledSettingsCount|setting|settings> explicitly enabled
+  webConfig:
+    debugKeyDisplayName: Compilation Debug,
+    overviewTableHeader: Web.config settings overview
+    summary: <enabledSettingsText> enabled in web.config
+    traceKeyDisplayName: Application Tracing
