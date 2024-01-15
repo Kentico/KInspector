@@ -8,6 +8,8 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  workflow_dispatch:
+
 
 jobs:
   build:
@@ -20,9 +22,15 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+        node-version: 20.7.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
+    - name: Build front-end app
+      run: |
+        cd ./KenticoInspector.WebApplication/ClientApp
+        npm i
+        npm run build
+    - name: Build dotnet app
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
