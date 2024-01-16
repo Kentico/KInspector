@@ -2,10 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
-    <LangVersion>7.1</LangVersion>
+	<LangVersion>9.0</LangVersion>
     <Version />
     <PackageVersion />
     <AssemblyVersion />

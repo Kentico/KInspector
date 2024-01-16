@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Modules;
@@ -21,16 +22,15 @@ namespace KenticoInspector.WebApplication.Controllers
         }
 
         [HttpGet("{instanceGuid}")]
-        public ActionResult<IEnumerable<IReport>> Get(Guid instanceGuid)
+        public Task<IEnumerable<IReport>> Get(Guid instanceGuid)
         {
-            return Ok(moduleService.GetReports(instanceGuid));
+            return Task.FromResult(moduleService.GetReports(instanceGuid));
         }
 
-        // POST api/values
         [HttpGet("{codename}/results/{instanceGuid}")]
-        public ActionResult<ReportResults> Get(string codename, Guid instanceGuid)
+        public Task<ReportResults> Get(string codename, Guid instanceGuid)
         {
-            return moduleService.GetReportResults(codename, instanceGuid);
+            return Task.FromResult(moduleService.GetReportResults(codename, instanceGuid));
         }
     }
 }
