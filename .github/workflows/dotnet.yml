@@ -17,6 +17,8 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -34,9 +36,7 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
-    - name: Publish dist
+    - name: Publish client application
       run: |
         cd .\KenticoInspector.WebApplication
         dotnet publish KenticoInspector.WebApplication.csproj /p:PublishDir=..\publish -c Release -r win-x64 --self-contained true
