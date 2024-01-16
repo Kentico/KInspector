@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace KenticoInspector.WebApplication
 {
-    //Testing appveyor commit 2
+    //Testing appveyor commit 1
 
     public static class Program
     {
