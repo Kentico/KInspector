@@ -15,13 +15,13 @@ namespace KenticoInspector.Reports.PageTypeFieldAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) 
-            : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) 
+            : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string>
         {
@@ -31,9 +31,7 @@ namespace KenticoInspector.Reports.PageTypeFieldAnalysis
 
         public override ReportResults GetResults()
         {
-            var pagetypeFields = databaseService
-                .ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFields);
-
+            var pagetypeFields = databaseService.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFields);
             var fieldsWithMismatchedTypes = CheckForMismatchedTypes(pagetypeFields);
 
             return CompileResults(fieldsWithMismatchedTypes);
@@ -46,13 +44,12 @@ namespace KenticoInspector.Reports.PageTypeFieldAnalysis
             {
                 return new ReportResults
                 {
-                    Status = ReportResultsStatus.Good,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.Summaries.Good
                 };
             }
 
             var fieldResultCount = fieldsWithMismatchedTypes.Count();
-
             var fieldResults = new TableResult<dynamic>()
             {
                 Name = Metadata.Terms.TableTitles.MatchingPageTypeFieldsWithDifferentDataTypes,
@@ -61,8 +58,8 @@ namespace KenticoInspector.Reports.PageTypeFieldAnalysis
 
             var results = new ReportResults
             {
-                Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Information,
+                Type = ResultsType.TableList,
+                Status = ResultsStatus.Information,
                 Summary = Metadata.Terms.Summaries.Information.With(new { fieldResultCount }),
                 
             };

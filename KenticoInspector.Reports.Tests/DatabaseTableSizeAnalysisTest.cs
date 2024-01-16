@@ -1,7 +1,9 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.DatabaseTableSizeAnalysis;
 using KenticoInspector.Reports.DatabaseTableSizeAnalysis.Models;
+
 using NUnit.Framework;
+
 using System.Collections.Generic;
 
 namespace KenticoInspector.Reports.Tests
@@ -9,13 +11,14 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public class DatabaseTableSizeAnalysisTest : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public DatabaseTableSizeAnalysisTest(int majorVersion) : base(majorVersion)
         {
-            _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
         }
 
         [Test]
@@ -32,7 +35,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             Assert.That(results.Data.Rows.Count == 25);
-            Assert.That(results.Status == ReportResultsStatus.Information);
+            Assert.That(results.Status == ResultsStatus.Information);
         }
 
         private List<DatabaseTableSizeResult> GetCleanResults()

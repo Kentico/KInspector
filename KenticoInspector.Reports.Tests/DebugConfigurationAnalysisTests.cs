@@ -1,7 +1,9 @@
 ﻿using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.DebugConfigurationAnalysis;
 using KenticoInspector.Reports.DebugConfigurationAnalysis.Models;
+
 using NUnit.Framework;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -11,13 +13,14 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public class DebugConfigurationAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public DebugConfigurationAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockCmsFileService.Object, _mockReportMetadataService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockInstanceService.Object, _mockCmsFileService.Object, _mockModuleMetadataService.Object);
         }
 
         [Test]
@@ -31,7 +34,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error, "When debug is enabled in the web.config, the report status should be 'error'");
+            Assert.That(results.Status == ResultsStatus.Error, "When debug is enabled in the web.config, the report status should be 'error'");
         }
 
         [Test]
@@ -45,7 +48,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error, "When trace is enabled in the web.config, the report status should be 'error'");
+            Assert.That(results.Status == ResultsStatus.Error, "When trace is enabled in the web.config, the report status should be 'error'");
         }
 
         [Test]
@@ -58,7 +61,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Information, "When the results are clean, the report status should be 'information'");
+            Assert.That(results.Status == ResultsStatus.Information, "When the results are clean, the report status should be 'information'");
         }
 
         [Test]
@@ -72,7 +75,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Warning, "When any database setting is set to true and that isn't the default value, the report status should be 'warning'");
+            Assert.That(results.Status == ResultsStatus.Warning, "When any database setting is set to true and that isn't the default value, the report status should be 'warning'");
         }
 
         private void AddDefaultDatabaseSettingsKeyValues(List<SettingsKey> results)
@@ -118,7 +121,7 @@ namespace KenticoInspector.Reports.Tests
         private void ArrangeResourceStringsMethods()
         {
             _mockCmsFileService
-                .Setup(p => p.GetResourceStringsFromResx(_mockInstance.Path, DefaultKenticoPaths.PrimaryResxFile))
+                .Setup(p => p.GetResourceStringsFromResx(_mockInstance.AdminPath, DefaultKenticoPaths.PrimaryResxFile))
                 .Returns(new Dictionary<string, string>());
         }
 
@@ -137,7 +140,7 @@ namespace KenticoInspector.Reports.Tests
             webConfig.LoadXml(webconfigXml);
 
             _mockCmsFileService
-                .Setup(p => p.GetXmlDocument(_mockInstance.Path, DefaultKenticoPaths.WebConfigFile))
+                .Setup(p => p.GetXmlDocument(_mockInstance.AdminPath, DefaultKenticoPaths.WebConfigFile))
                 .Returns(webConfig);
         }
 

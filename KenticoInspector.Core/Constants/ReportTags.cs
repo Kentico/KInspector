@@ -1,6 +1,6 @@
 ﻿namespace KenticoInspector.Core.Constants
 {
-    public class ReportTags
+    public static class ReportTags
     {
         public const string Consistency = "Consistency";
         public const string EventLog = "Event Log";
@@ -13,5 +13,6 @@
         public const string Transformations = "Transformations";
         public const string WebParts = "Web Parts";
         public const string Configuration = "Configuration";
+        public const string OnlineMarketing = "On-line Marketing";
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace KenticoInspector.Core.Constants
 {
-    public enum ReportResultsType
+    public enum ResultsType
     {
         String,
         StringList,

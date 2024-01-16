@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-using KenticoInspector.Core;
 using KenticoInspector.Core.Models;
+using KenticoInspector.Core.Modules;
 using KenticoInspector.Core.Services.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
@@ -13,24 +14,23 @@ namespace KenticoInspector.WebApplication.Controllers
     [ApiController]
     public class ReportsController : ControllerBase
     {
-        private readonly IReportService _reportService;
+        private readonly IModuleService moduleService;
 
-        public ReportsController(IReportService reportService)
+        public ReportsController(IModuleService moduleService)
         {
-            _reportService = reportService;
+            this.moduleService = moduleService;
         }
 
         [HttpGet("{instanceGuid}")]
-        public ActionResult<IEnumerable<IReport>> Get(Guid instanceGuid)
+        public Task<IEnumerable<IReport>> Get(Guid instanceGuid)
         {
-            return Ok(_reportService.GetReports(instanceGuid));
+            return Task.FromResult(moduleService.GetReports(instanceGuid));
         }
 
-        // POST api/values
         [HttpGet("{codename}/results/{instanceGuid}")]
-        public ActionResult<ReportResults> Get(string codename, Guid instanceGuid)
+        public Task<ReportResults> Get(string codename, Guid instanceGuid)
         {
-            return _reportService.GetReportResults(codename, instanceGuid);
+            return Task.FromResult(moduleService.GetReportResults(codename, instanceGuid));
         }
     }
 }

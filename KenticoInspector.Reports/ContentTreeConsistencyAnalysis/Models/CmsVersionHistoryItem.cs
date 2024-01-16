@@ -8,9 +8,13 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
         private int _coupledDataId = -1;
 
         public int VersionHistoryID { get; set; }
+
         public int DocumentID { get; set; }
+
         public XmlDocument NodeXml { get; set; }
+
         public int VersionClassID { get; set; }
+
         public DateTime WasPublishedFrom { get; set; }
 
         public int CoupledDataID

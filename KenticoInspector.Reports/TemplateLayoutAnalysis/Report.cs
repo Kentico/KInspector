@@ -4,6 +4,7 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.TemplateLayoutAnalysis.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,12 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string>
         {
@@ -37,11 +38,10 @@ namespace KenticoInspector.Reports.TemplateLayoutAnalysis
         private ReportResults CompileResults(IEnumerable<IdenticalPageLayouts> identicalPageLayouts)
         {
             var countIdenticalPageLayouts = identicalPageLayouts.Count();
-
             var results = new ReportResults
             {
-                Status = ReportResultsStatus.Information,
-                Type = ReportResultsType.Table,
+                Status = ResultsStatus.Information,
+                Type = ResultsType.Table,
                 Data = new TableResult<dynamic>()
                 {
                     Name = Metadata.Terms.IdenticalPageLayouts,

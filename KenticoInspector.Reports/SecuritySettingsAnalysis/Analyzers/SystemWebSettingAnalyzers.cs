@@ -64,8 +64,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
 
         protected override bool Match(string analyzerName, string name)
         {
-            return analyzerName
-                .Equals(name, StringComparison.InvariantCultureIgnoreCase);
+            return analyzerName.Equals(name, StringComparison.InvariantCultureIgnoreCase);
         }
 
         protected override WebConfigSettingResult AnalyzeUsingExpression(
@@ -76,10 +75,12 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
             )
         {
             string attributeName = valueIsRecommended.Parameters[0].Name;
-
             string keyValue = systemWebSetting.Attribute(attributeName)?.Value;
 
-            if (valueIsRecommended.Compile()(keyValue)) return null;
+            if (valueIsRecommended.Compile()(keyValue))
+            {
+                return null;
+            }
 
             return new WebConfigSettingResult(systemWebSetting, attributeName, keyValue, recommendedValue, recommendationReason);
         }

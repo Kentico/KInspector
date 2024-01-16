@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KenticoInspector.Core.Converters;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace KenticoInspector.Core.Models
@@ -7,8 +9,10 @@ namespace KenticoInspector.Core.Models
     {
         public Guid Guid { get; set; }
 
+        [JsonConverter(typeof(VersionObjectConverter))]
         public Version AdministrationVersion { get; set; }
 
+        [JsonConverter(typeof(VersionObjectConverter))]
         public Version DatabaseVersion { get; set; }
 
         public IEnumerable<Site> Sites { get; set; }

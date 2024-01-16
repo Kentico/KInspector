@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using KenticoInspector.Core.Modules;
 
-using KenticoInspector.Core.Models;
+using System.Collections.Generic;
 
 namespace KenticoInspector.Core.Repositories.Interfaces
 {

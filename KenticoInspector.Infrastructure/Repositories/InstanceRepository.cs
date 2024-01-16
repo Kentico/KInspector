@@ -38,10 +38,8 @@ namespace KenticoInspector.Infrastructure.Repositories
         public Instance UpsertInstance(Instance instance)
         {
             instance.Guid = instance.Guid == Guid.Empty ? Guid.NewGuid() : instance.Guid;
-
             var savedInstanceSettings = LoadSavedInstances();
             var existingSettingsIndex = savedInstanceSettings.FindIndex(x => x.Guid == instance.Guid);
-
             if (existingSettingsIndex == -1)
             {
                 savedInstanceSettings.Add(instance);
@@ -73,7 +71,6 @@ namespace KenticoInspector.Infrastructure.Repositories
         private void SaveInstances(IList<Instance> instances)
         {
             var jsonText = JsonConvert.SerializeObject(instances, Formatting.Indented);
-
             File.WriteAllText(_saveFileLocation, jsonText);
         }
     }

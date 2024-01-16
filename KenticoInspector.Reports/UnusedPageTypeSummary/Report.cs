@@ -4,6 +4,7 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.UnusedPageTypeSummary.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,12 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string>
         {
@@ -29,13 +30,12 @@ namespace KenticoInspector.Reports.UnusedPageTypeSummary
         public override ReportResults GetResults()
         {
             var unusedPageTypes = databaseService.ExecuteSqlFromFile<PageType>(Scripts.GetUnusedPageTypes);
-
             var countOfUnusedPageTypes = unusedPageTypes.Count();
 
             return new ReportResults
             {
-                Type = ReportResultsType.Table,
-                Status = ReportResultsStatus.Information,
+                Type = ResultsType.Table,
+                Status = ResultsStatus.Information,
                 Summary = Metadata.Terms.CountUnusedPageType.With(new { count = countOfUnusedPageTypes }),
                 Data = new TableResult<PageType>()
                 {

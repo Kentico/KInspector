@@ -1,4 +1,5 @@
 ﻿using KenticoInspector.Core.Models;
+
 using System;
 
 namespace KenticoInspector.Reports.Tests.Helpers
@@ -9,8 +10,8 @@ namespace KenticoInspector.Reports.Tests.Helpers
         {
             Name = "K9 Test Instance",
             Guid = Guid.NewGuid(),
-            Path = "C:\\inetpub\\wwwroot\\Kentico9",
-            Url = "http://kentico9.com",
+            AdminPath = "C:\\inetpub\\wwwroot\\Kentico9",
+            AdminUrl = "http://kentico9.com",
             DatabaseSettings = null
         };
 
@@ -18,8 +19,8 @@ namespace KenticoInspector.Reports.Tests.Helpers
         {
             Name = "K10 Test Instance",
             Guid = Guid.NewGuid(),
-            Path = "C:\\inetpub\\wwwroot\\Kentico10",
-            Url = "http://kentico10.com",
+            AdminPath = "C:\\inetpub\\wwwroot\\Kentico10",
+            AdminUrl = "http://kentico10.com",
             DatabaseSettings = null
         };
 
@@ -27,17 +28,26 @@ namespace KenticoInspector.Reports.Tests.Helpers
         {
             Name = "K11 Test Instance",
             Guid = Guid.NewGuid(),
-            Path = "C:\\inetpub\\wwwroot\\Kentico11",
-            Url = "http://kentico11.com",
+            AdminPath = "C:\\inetpub\\wwwroot\\Kentico11",
+            AdminUrl = "http://kentico11.com",
             DatabaseSettings = null
         };
 
         public static Instance Kentico12 = new Instance
         {
-            Name = "K11 Test Instance",
+            Name = "K12 Test Instance",
             Guid = Guid.NewGuid(),
-            Path = "C:\\inetpub\\wwwroot\\Kentico12",
-            Url = "http://kentico12.com",
+            AdminPath = "C:\\inetpub\\wwwroot\\Kentico12",
+            AdminUrl = "http://kentico12.com",
+            DatabaseSettings = null
+        };
+
+        public static Instance Kentico13 = new Instance
+        {
+            Name = "K13 Test Instance",
+            Guid = Guid.NewGuid(),
+            AdminPath = "C:\\inetpub\\wwwroot\\Kentico13",
+            AdminUrl = "http://kentico13.com",
             DatabaseSettings = null
         };
 
@@ -47,15 +57,14 @@ namespace KenticoInspector.Reports.Tests.Helpers
             {
                 case 9:
                     return Kentico9;
-
                 case 10:
                     return Kentico10;
-
                 case 11:
                     return Kentico11;
-
                 case 12:
                     return Kentico12;
+                case 13:
+                    return Kentico13;
             }
 
             return null;

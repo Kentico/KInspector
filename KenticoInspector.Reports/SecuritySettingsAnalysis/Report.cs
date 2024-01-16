@@ -22,7 +22,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
         private readonly IInstanceService instanceService;
         private readonly ICmsFileService cmsFileService;
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string>
         {
@@ -34,8 +34,8 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
             IDatabaseService databaseService,
             IInstanceService instanceService,
             ICmsFileService cmsFileService,
-            IReportMetadataService reportMetadataService
-            ) : base(reportMetadataService)
+            IModuleMetadataService moduleMetadataService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
             this.instanceService = instanceService;
@@ -73,7 +73,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
                     Name = Metadata.Terms.GlobalSiteName
                 });
 
-            var instancePath = instanceService.CurrentInstance.Path;
+            var instancePath = instanceService.CurrentInstance.AdminPath;
 
             var resxValues = cmsFileService.GetResourceStringsFromResx(instancePath);
 
@@ -195,15 +195,15 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis
             {
                 return new ReportResults
                 {
-                    Status = ReportResultsStatus.Good,
+                    Status = ResultsStatus.Good,
                     Summary = Metadata.Terms.Summaries.Good
                 };
             }
 
             var errorReportResults = new ReportResults
             {
-                Type = ReportResultsType.TableList,
-                Status = ReportResultsStatus.Warning
+                Type = ResultsType.TableList,
+                Status = ResultsStatus.Warning
             };
 
             var cmsSettingsKeyResultsCount = IfAnyAddTableResult(

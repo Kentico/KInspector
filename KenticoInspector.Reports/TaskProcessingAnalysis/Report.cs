@@ -4,6 +4,7 @@ using KenticoInspector.Core.Helpers;
 using KenticoInspector.Core.Models;
 using KenticoInspector.Core.Services.Interfaces;
 using KenticoInspector.Reports.TaskProcessingAnalysis.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,12 @@ namespace KenticoInspector.Reports.TaskProcessingAnalysis
     {
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IReportMetadataService reportMetadataService) : base(reportMetadataService)
+        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
         public override IList<string> Tags => new List<string> {
            ReportTags.Health
@@ -84,9 +85,9 @@ namespace KenticoInspector.Reports.TaskProcessingAnalysis
                 Data = taskResults
                     .Where(x => x.Value > 0)
                     .Select(AsTaskCountLabel),
-                Status = totalUnprocessedTasks > 0 ? ReportResultsStatus.Warning : ReportResultsStatus.Good,
+                Status = totalUnprocessedTasks > 0 ? ResultsStatus.Warning : ResultsStatus.Good,
                 Summary = Metadata.Terms.CountUnprocessedTask.With(new { count = totalUnprocessedTasks }),
-                Type = ReportResultsType.StringList
+                Type = ResultsType.StringList
             };
         }
     }

@@ -2,7 +2,8 @@
 {
     public static class Scripts
     {
-        public const string BaseDirectory = "DebugConfigurationAnalysis/Scripts/";
-        public const string GetDebugSettingsValues = BaseDirectory + "GetDebugSettingsValues.sql";
+        public static string BaseDirectory => $"{nameof(DebugConfigurationAnalysis)}/Scripts";
+
+        public static string GetDebugSettingsValues => $"{BaseDirectory}/{nameof(GetDebugSettingsValues)}.sql";
     }
 }

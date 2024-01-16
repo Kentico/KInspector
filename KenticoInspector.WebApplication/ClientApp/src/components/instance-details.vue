@@ -9,7 +9,7 @@
       <v-list-tile-content>
         <v-list-tile-title>
           <a
-            :href="instance.url"
+            :href="instance.adminUrl"
             target="_blank"
             >
             {{displayName}}
@@ -43,19 +43,11 @@
           <v-list-tile-sub-title>Site Count</v-list-tile-sub-title>
         </v-list-tile-content>
       </v-list-tile>
-      <v-list-tile>
-        <v-list-tile-content>
-          <v-list-tile-title>
-              {{currentInstanceDetails.sites.length}}
-          </v-list-tile-title>
-          <v-list-tile-sub-title>Site Count</v-list-tile-sub-title>
-        </v-list-tile-content>
-      </v-list-tile>
     </template>
     <v-list-tile>
       <v-list-tile-content>
-        <v-list-tile-title>{{instance.path}}</v-list-tile-title>
-        <v-list-tile-sub-title>Path</v-list-tile-sub-title>
+        <v-list-tile-title>{{instance.adminPath}}</v-list-tile-title>
+        <v-list-tile-sub-title>Administration path</v-list-tile-sub-title>
       </v-list-tile-content>
     </v-list-tile>
     <v-subheader>Database Configuration</v-subheader>
@@ -71,18 +63,20 @@
         <v-list-tile-sub-title>Database</v-list-tile-sub-title>
       </v-list-tile-content>
     </v-list-tile>
-    <v-list-tile>
-      <v-list-tile-content>
-        <v-list-tile-title>{{instance.databaseSettings.user}}</v-list-tile-title>
-        <v-list-tile-sub-title>User</v-list-tile-sub-title>
-      </v-list-tile-content>
-    </v-list-tile>
-    <v-list-tile>
-      <v-list-tile-content>
-        <v-list-tile-title>{{instance.databaseSettings.password}}</v-list-tile-title>
-        <v-list-tile-sub-title>Password</v-list-tile-sub-title>
-      </v-list-tile-content>
-    </v-list-tile>
+    <template v-if="!instance.databaseSettings.integratedSecurity">
+        <v-list-tile>
+          <v-list-tile-content>
+            <v-list-tile-title>{{instance.databaseSettings.user}}</v-list-tile-title>
+            <v-list-tile-sub-title>User</v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+          <v-list-tile-content>
+            <v-list-tile-title>{{instance.databaseSettings.password}}</v-list-tile-title>
+            <v-list-tile-sub-title>Password</v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+    </template>
     <v-list-tile>
       <v-list-tile-content>
         <v-list-tile-title>{{instance.databaseSettings.integratedSecurity}}</v-list-tile-title>

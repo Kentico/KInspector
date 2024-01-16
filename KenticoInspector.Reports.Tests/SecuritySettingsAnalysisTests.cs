@@ -18,6 +18,7 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public
     class SecuritySettingsAnalysisTests : AbstractReportTest<Report, Terms>
     {
@@ -187,7 +188,7 @@ namespace KenticoInspector.Reports.Tests
                 _mockDatabaseService.Object,
                 _mockInstanceService.Object,
                 _mockCmsFileService.Object,
-                _mockReportMetadataService.Object
+                _mockModuleMetadataService.Object
                 );
         }
 
@@ -205,8 +206,7 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Good));
-
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Good));
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Good.ToString()));
         }
 
@@ -224,10 +224,8 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
-
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Warning));
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Warning.ToString()));
-
             Assert.That(GetResult<TableResult<CmsSettingsKeyResult>>(results).Rows.Count(), Is.EqualTo(5));
         }
 
@@ -245,10 +243,8 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
-
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Warning));
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Warning.ToString()));
-
             Assert.That(GetResult<TableResult<WebConfigSettingResult>>(results).Rows.Count(), Is.EqualTo(8));
         }
 
@@ -266,10 +262,8 @@ namespace KenticoInspector.Reports.Tests
             var results = mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status, Is.EqualTo(ReportResultsStatus.Warning));
-
+            Assert.That(results.Status, Is.EqualTo(ResultsStatus.Warning));
             Assert.That(results.Summary, Is.EqualTo(mockReport.Metadata.Terms.Summaries.Warning.ToString()));
-
             Assert.That(GetResult<TableResult<CmsSettingsKeyResult>>(results).Rows.Count(), Is.EqualTo(5));
             Assert.That(GetResult<TableResult<WebConfigSettingResult>>(results).Rows.Count(), Is.EqualTo(8));
         }
@@ -306,11 +300,11 @@ namespace KenticoInspector.Reports.Tests
             webConfig.Load(webConfigPath);
 
             _mockCmsFileService
-                .Setup(p => p.GetXmlDocument(_mockInstance.Path, DefaultKenticoPaths.WebConfigFile))
+                .Setup(p => p.GetXmlDocument(_mockInstance.AdminPath, DefaultKenticoPaths.WebConfigFile))
                 .Returns(webConfig);
 
             _mockCmsFileService
-                .Setup(p => p.GetResourceStringsFromResx(_mockInstance.Path, DefaultKenticoPaths.PrimaryResxFile))
+                .Setup(p => p.GetResourceStringsFromResx(_mockInstance.AdminPath, DefaultKenticoPaths.PrimaryResxFile))
                 .Returns(new Dictionary<string, string>());
         }
 

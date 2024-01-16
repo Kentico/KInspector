@@ -27,9 +27,6 @@
             <v-tab key="new">
               New Connection
             </v-tab>
-            <v-tab key="iis">
-              IIS Connection
-            </v-tab>
           </v-tabs>
 
           <v-tabs-items
@@ -48,14 +45,6 @@
                 </v-layout>
             </v-tab-item>
 
-            <v-tab-item key="iis">
-              <v-layout>
-                <v-flex>
-                  <card-coming-soon />
-                </v-flex>
-              </v-layout>
-            </v-tab-item>
-
           </v-tabs-items>
 
         </v-flex>
@@ -66,14 +55,12 @@
 </template>
 
 <script>
-import CardComingSoon from '../components/card-coming-soon'
 import InstanceConnectFormManual from '../components/instance-connect-form-manual'
 import InstanceConnectionList from '../components/instance-connection-list'
 import ModalInstanceConnecting from '../components/modal-instance-connecting'
 
 export default {
   components: {
-    CardComingSoon,
     InstanceConnectFormManual,
     InstanceConnectionList,
     ModalInstanceConnecting

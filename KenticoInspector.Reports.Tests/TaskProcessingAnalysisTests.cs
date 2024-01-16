@@ -1,7 +1,9 @@
 using KenticoInspector.Core.Constants;
 using KenticoInspector.Reports.TaskProcessingAnalysis;
 using KenticoInspector.Reports.TaskProcessingAnalysis.Models;
+
 using NUnit.Framework;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,13 +11,15 @@ namespace KenticoInspector.Reports.Tests
 {
     [TestFixture(10)]
     [TestFixture(11)]
+    [TestFixture(12)]
+    [TestFixture(13)]
     public class TaskProcessingAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public TaskProcessingAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
         }
 
         [Test]
@@ -28,7 +32,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
         }
 
         [Test]
@@ -42,7 +46,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.IntegrationBusTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         [Test]
@@ -56,7 +60,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.ScheduledTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         [Test]
@@ -70,7 +74,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.SearchTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         [Test]
@@ -84,7 +88,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.StagingTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         [Test]
@@ -98,7 +102,7 @@ namespace KenticoInspector.Reports.Tests
 
             // Assert
             AssertThatResultsDataIncludesTaskTypeDetails(results.Data, TaskType.WebFarmTask);
-            Assert.That(results.Status == ReportResultsStatus.Warning);
+            Assert.That(results.Status == ResultsStatus.Warning);
         }
 
         private static void AssertThatResultsDataIncludesTaskTypeDetails(dynamic data, TaskType taskType)
@@ -110,7 +114,7 @@ namespace KenticoInspector.Reports.Tests
         }
 
         private void SetupAllDatabaseQueries(
-                    int unprocessedIntegrationBusTasks = 0,
+            int unprocessedIntegrationBusTasks = 0,
             int unprocessedScheduledTasks = 0,
             int unprocessedSearchTasks = 0,
             int unprocessedStagingTasks = 0,

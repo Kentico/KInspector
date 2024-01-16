@@ -20,16 +20,15 @@ const getters = {
       const showIncompatible = state.filterSettings.showIncompatible
       const showUntested = state.filterSettings.showUntested
       const taggedWith = state.filterSettings.taggedWith
-
       const isCompatible = version > 0 && item.compatibleVersions.filter(x => x.major === version).length > 0
       const isIncompatible = item.incompatibleVersions.filter(x => x.major === version).length > 0
       const isUntested = !isCompatible && !isIncompatible
 
       const meetsCompatibilityFilters = isCompatible || (showIncompatible && isIncompatible) || (showUntested && isUntested)
-
       const meetsTagFilter = taggedWith.length == 0 || item.tags.some(t=>taggedWith.includes(t))
+      const meetsToolFilter = item.modifiesData === state.filterSettings.showTools
 
-      return meetsCompatibilityFilters && meetsTagFilter
+      return meetsCompatibilityFilters && meetsTagFilter && meetsToolFilter
     })
 
     return items

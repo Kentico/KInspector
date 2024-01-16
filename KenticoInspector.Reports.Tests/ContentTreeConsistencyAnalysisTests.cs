@@ -3,7 +3,9 @@ using KenticoInspector.Core.Models;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis;
 using KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models;
 using KenticoInspector.Reports.Tests.Helpers;
+
 using NUnit.Framework;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +16,14 @@ namespace KenticoInspector.Reports.Tests
     [TestFixture(10)]
     [TestFixture(11)]
     [TestFixture(12)]
+    [TestFixture(13)]
     public class ContentTreeConsistencyAnalysisTests : AbstractReportTest<Report, Terms>
     {
-        private Report _mockReport;
+        private readonly Report _mockReport;
 
         public ContentTreeConsistencyAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            _mockReport = new Report(_mockDatabaseService.Object, _mockReportMetadataService.Object);
+            _mockReport = new Report(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
         }
 
         [Test]
@@ -33,7 +36,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -46,7 +49,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -59,7 +62,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -72,7 +75,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -85,7 +88,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -98,7 +101,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -111,7 +114,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -124,7 +127,7 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error);
+            Assert.That(results.Status == ResultsStatus.Error);
         }
 
         [Test]
@@ -137,11 +140,10 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Error, $"Status was '{results.Status}' instead of 'Error'");
+            Assert.That(results.Status == ResultsStatus.Error, $"Status was '{results.Status}' instead of 'Error'");
 
             var resultsData = (IDictionary<string, object>)results.Data;
             var workflowData = resultsData.First(t => t.Value.GetType() == typeof(TableResult<VersionHistoryMismatchResult>)).Value as TableResult<VersionHistoryMismatchResult>;
-
             var rowCount = workflowData.Rows.Count();
             Assert.That(rowCount == 4, $"There were {rowCount} rows instead 4 as expected");
         }
@@ -156,14 +158,14 @@ namespace KenticoInspector.Reports.Tests
             var results = _mockReport.GetResults();
 
             // Assert
-            Assert.That(results.Status == ReportResultsStatus.Good);
+            Assert.That(results.Status == ResultsStatus.Good);
         }
 
         private List<CmsDocumentNode> GetBadDocumentNodes()
         {
             return new List<CmsDocumentNode>() {
-                new CmsDocumentNode { DocumentID = 100, DocumentName = "Bad 100", DocumentNamePath = "/bad-100", DocumentNodeID = 100 },
-                new CmsDocumentNode { DocumentID = 150, DocumentName = "Bad 150", DocumentNamePath = "/bad-150", DocumentNodeID = 150 }
+                new CmsDocumentNode { DocumentID = 100, DocumentName = "Bad 100", DocumentNodeID = 100 },
+                new CmsDocumentNode { DocumentID = 150, DocumentName = "Bad 150", DocumentNodeID = 150 }
             };
         }
 

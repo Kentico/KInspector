@@ -3,8 +3,11 @@
     public class SettingsKey
     {
         public string KeyName { get; set; }
+
         public string KeyDisplayName { get; set; }
+
         public bool KeyValue { get; set; }
+
         public bool KeyDefaultValue { get; set; }
 
         public SettingsKey()

@@ -12,8 +12,7 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
 {
     public class SettingsKeyAnalyzers : AbstractAnalyzers<CmsSettingsKey, CmsSettingsKeyResult>
     {
-        private readonly IEnumerable<string> dangerousExtensions
-            = new[] { "exe", "src", "cs", "dll", "aspx", "ascx", "msi", "bat" };
+        private readonly IEnumerable<string> dangerousExtensions = new[] { "exe", "src", "cs", "dll", "aspx", "ascx", "msi", "bat" };
 
         public override IEnumerable<Expression<Func<CmsSettingsKey, CmsSettingsKeyResult>>> Analyzers
             => new List<Expression<Func<CmsSettingsKey, CmsSettingsKeyResult>>>
@@ -143,8 +142,10 @@ namespace KenticoInspector.Reports.SecuritySettingsAnalysis.Analyzers
             )
         {
             string keyValue = cmsSettingsKey.KeyValue;
-
-            if (valueIsRecommended.Compile()(keyValue)) return null;
+            if (valueIsRecommended.Compile()(keyValue))
+            {
+                return null;
+            }
 
             return new CmsSettingsKeyResult(cmsSettingsKey, recommendedValue, recommendationReason);
         }
