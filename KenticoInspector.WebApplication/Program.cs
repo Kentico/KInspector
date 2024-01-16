@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace KenticoInspector.WebApplication
 {
+    //Testing appveyor commit 1
+
     public static class Program
     {
         public static void Main(string[] args)
