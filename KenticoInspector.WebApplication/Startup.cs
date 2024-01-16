@@ -7,9 +7,9 @@ using KenticoInspector.Reports;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using System;
 
@@ -26,7 +26,8 @@ namespace KenticoInspector.WebApplication
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options => options.EnableEndpointRouting = false)
+                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddSpaStaticFiles(configuration =>
             {
@@ -36,7 +37,7 @@ namespace KenticoInspector.WebApplication
             return ConfigureAutofac(services);
         }
 
-        private IServiceProvider ConfigureAutofac(IServiceCollection services)
+        private AutofacServiceProvider ConfigureAutofac(IServiceCollection services)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -51,7 +52,7 @@ namespace KenticoInspector.WebApplication
             return new AutofacServiceProvider(container);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

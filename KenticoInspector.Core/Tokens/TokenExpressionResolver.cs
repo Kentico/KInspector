@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace KenticoInspector.Core.Tokens
@@ -86,7 +86,7 @@ namespace KenticoInspector.Core.Tokens
             {
                 if (Regex.IsMatch(innerTokenExpression, pattern))
                 {
-                    var expressionObject = FormatterServices.GetUninitializedObject(tokenExpressionType) as ITokenExpression;
+                    var expressionObject = RuntimeHelpers.GetUninitializedObject(tokenExpressionType) as ITokenExpression;
 
                     resolvedExpression = expressionObject.Resolve(innerTokenExpression, tokenDictionary);
 
