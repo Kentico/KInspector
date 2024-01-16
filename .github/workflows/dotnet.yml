@@ -34,3 +34,17 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
+    - name: Publish dist
+      run: |
+        cd .\KenticoInspector.WebApplication
+        dotnet publish KenticoInspector.WebApplication.csproj /p:PublishDir=..\publish -c Release -r win-x64 --self-contained true
+        mkdir "..\publish\ClientApp\dist"
+        cd .\ClientApp
+        Copy-Item ".\dist\*" -Recurse -Destination "..\publish\ClientApp\dist\"
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: KInspector
+        path: .\publish
