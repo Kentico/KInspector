@@ -37,7 +37,7 @@ namespace KenticoInspector.WebApplication
             return ConfigureAutofac(services);
         }
 
-        private IServiceProvider ConfigureAutofac(IServiceCollection services)
+        private AutofacServiceProvider ConfigureAutofac(IServiceCollection services)
         {
             var containerBuilder = new ContainerBuilder();
 
