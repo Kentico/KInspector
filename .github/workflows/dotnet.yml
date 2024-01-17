@@ -42,7 +42,7 @@ jobs:
         dotnet publish KenticoInspector.WebApplication.csproj /p:PublishDir=..\publish -c Release -r win-x64 --self-contained true
         mkdir "..\publish\ClientApp\dist"
         cd .\ClientApp
-        Copy-Item ".\dist\*" -Recurse -Destination "..\publish\ClientApp\dist\"
+        Copy-Item ".\dist\*" -Recurse -Destination "..\..\publish\ClientApp\dist\"
     - name: Upload build artifact
       uses: actions/upload-artifact@v3
       with:
