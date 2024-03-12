@@ -2,6 +2,7 @@
 
 using System;
 using System.Globalization;
+using System.Text;
 
 namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
 {
@@ -30,7 +31,7 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
             FieldName = fieldName;
             ProcessItemValues(fieldType, versionHistoryXmlValue, coupledDataColumnValue);
         }
-        
+
         private void ProcessItemValues(string fieldType, string versionHistoryXmlValue, object coupledDataColumnValue)
         {
             var hasAtLeastOneNullValue = versionHistoryXmlValue == null || coupledDataColumnValue == null;
@@ -74,22 +75,31 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis.Models
 
             var versionHistoryValue = decimal.Parse(versionHistoryXmlValue);
 
-            var formatting = "0.";
+            var formatting = new StringBuilder("0.");
             for (int i = 0; i < precision; i++)
             {
-                formatting += "0";
+                formatting.Append('0');
             }
 
-            VersionHistoryValue = versionHistoryValue.ToString(formatting);
+            VersionHistoryValue = versionHistoryValue.ToString(formatting.ToString());
         }
 
         private void ProcessDateTimeValues(string versionHistoryXmlValue, object coupledDataColumnValue)
         {
-            var versionHistoryValue = DateTimeOffset.Parse(versionHistoryXmlValue);
-            var assumedOffset = versionHistoryValue.Offset;
-            var documentValueAdjusted = new DateTimeOffset((DateTime)coupledDataColumnValue, assumedOffset);
-            DocumentValue = documentValueAdjusted.ToString();
-            VersionHistoryValue = versionHistoryValue.ToString();
+            DateTimeOffset versionHistoryValue;
+            DateTime coupledDataDateTime = DateTime.Parse(coupledDataColumnValue.ToString());
+            if (DateTimeOffset.TryParse(versionHistoryXmlValue, out versionHistoryValue) && coupledDataDateTime.Year != 1)
+            {
+                var assumedOffset = versionHistoryValue.Offset;
+                var documentValueAdjusted = new DateTimeOffset(coupledDataDateTime, assumedOffset);
+                DocumentValue = documentValueAdjusted.ToString();
+                VersionHistoryValue = versionHistoryValue.ToString();
+            }
+            else
+            {
+                DocumentValue = versionHistoryXmlValue.ToString();
+                VersionHistoryValue = versionHistoryXmlValue.ToString();
+            }
         }
 
         private void ProcessBoolValues(string versionHistoryXmlValue, object coupledDataColumnValue)
