@@ -168,7 +168,12 @@ namespace KenticoInspector.Reports.ContentTreeConsistencyAnalysis
             foreach (var cmsClass in cmsClassItems)
             {
                 var cmsClassVersionHistoryItems = versionHistoryItems.Where(vhi => vhi.VersionClassID == cmsClass.ClassID);
-                var coupledDataIds = cmsClassVersionHistoryItems.Select(x => x.CoupledDataID);
+                var coupledDataIds = cmsClassVersionHistoryItems.Select(x => x.CoupledDataID).Where(x => x > 0);
+                if (!coupledDataIds.Any())
+                {
+                    continue;
+                }
+
                 var coupledData = GetCoupledData(cmsClass, coupledDataIds);
                 var classComparisionResults = CompareVersionHistoryItemsWithPublishedItems(versionHistoryItems, coupledData, cmsClass.ClassFields);
                 comparisonResults.AddRange(classComparisionResults);
