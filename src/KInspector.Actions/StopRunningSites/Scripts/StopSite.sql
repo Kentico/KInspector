@@ -1,0 +1,1 @@
+﻿UPDATE CMS_Site SET SiteStatus = 'STOPPED' WHERE SiteID = @SiteID

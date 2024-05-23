@@ -1,0 +1,12 @@
+﻿details:
+  name: Disable content staging servers
+  shortDescription: Review and disable staging servers.
+  longDescription: |
+    Displays all staging servers, and allows you to disable them.
+
+    Run the action without options to view the staging servers. To disable a server, re-run the action with the server ID. Servers disabled by this action have the **.disabled** prefix applied to their name, so you can identify which servers were disabled by this action and which were disabled manually.
+terms:
+  tableTitle: Content staging servers
+  invalidOptions: The server ID must be an integer greater than zero and present in the database.
+  listSummary: Set the server ID you wish to disable and re-run
+  serverDisabled: Server ID <serverId> was disabled

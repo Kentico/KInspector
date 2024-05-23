@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>KInspector.Blazor</RootNamespace>
+	<TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0" />
+	<PackageReference Include="Markdig" Version="0.37.0" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\KInspector.Actions\KInspector.Actions.csproj" />
+    <ProjectReference Include="..\KInspector.Infrastructure\KInspector.Infrastructure.csproj" />
+    <ProjectReference Include="..\KInspector.Reports\KInspector.Reports.csproj" />
+  </ItemGroup>
+</Project>

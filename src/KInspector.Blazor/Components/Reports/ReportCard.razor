@@ -1,0 +1,72 @@
+﻿@using KInspector.Blazor.Services
+@using KInspector.Core.Constants
+@using KInspector.Core.Models
+@using KInspector.Core.Modules
+@using KInspector.Core.Services.Interfaces
+@using Markdig
+@using Newtonsoft.Json
+@implements IDisposable
+@inject StateContainer stateContainer
+@inject IModuleService moduleService
+@inject IModuleMetadataService moduleMetadataService
+
+<div class="w-full module-card bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <ModuleHeader Module="@Report" Handler="RunReport" />
+    <ResultStatus Result="Results" />
+    <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+        <ul class="flex flex-wrap -mb-px" data-tabs-toggle="#module-content-@Report!.Codename" role="tablist">
+            <li class="me-2" role="presentation">
+                <button id="@(Report!.Codename)-description-tab" data-tabs-target="#@(Report!.Codename)-description"
+                    type="button" role="tab" aria-controls="@(Report!.Codename)-description" aria-selected="false"
+                    class="inline-block p-4 border-b-2 border-blue-600 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
+                    Summary
+                </button>
+            </li>
+            <li class="me-2" role="presentation">
+                <button id="@(Report!.Codename)-results-tab" data-tabs-target="#@(Report!.Codename)-results"
+                    type="button" role="tab" aria-controls="@(Report!.Codename)-results" aria-selected="false"
+                    class="inline-block p-4 border-b-2 border-blue-600 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
+                    Results
+                </button>
+            </li>
+        </ul>
+    </div>
+    <div id="module-content-@Report!.Codename">
+        <div class="hidden w-1/2 module-description text-gray-700 dark:text-white p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="@(Report!.Codename)-description"
+            role="tabpanel" aria-labelledby="@(Report!.Codename)-description-tab">
+            @LongDescription
+        </div>
+        <div class="hidden module-results text-gray-700 dark:text-white p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="@(Report!.Codename)-results"
+            role="tabpanel" aria-labelledby="@(Report!.Codename)-results-tab">
+            <ModuleResult Results="Results" />
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private ModuleDetails? moduleDetails;
+
+    [Parameter, EditorRequired]
+    public IReport? Report { get; set; }
+
+    public ModuleResults Results { get; set; } = new();
+
+    private ModuleDetails ModuleDetails => moduleDetails ??= moduleMetadataService.GetModuleDetails(Report!.Codename);
+
+    private MarkupString LongDescription => new MarkupString(Markdown.ToHtml(ModuleDetails.LongDescription ?? string.Empty));
+
+    protected override void OnInitialized() => stateContainer.OnChange += StateHasChanged;
+
+    public void Dispose() => stateContainer.OnChange -= StateHasChanged;
+
+    private Task RunReport()
+    {
+        stateContainer.AddModule(Report!.Codename);
+        return moduleService.GetReportResults(Report!, results =>
+        {
+            Results = results;
+            stateContainer.RemoveModule(Report!.Codename);
+        });
+    }
+}

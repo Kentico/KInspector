@@ -1,0 +1,42 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+    - name: Build Blazor app
+      run: |
+        cd ./src/KInspector.Blazor
+        npm i
+        npm run css
+        dotnet build
+    - name: Test
+      run: |
+        cd ./test
+        dotnet test --verbosity normal
+    - name: Publish Blazor app
+      run: |
+        cd ./src/KInspector.Blazor
+        dotnet publish KInspector.Blazor.csproj /p:PublishDir=..\..\publish -c Release -r win-x64 --self-contained true
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: KInspector
+        path: .\publish
