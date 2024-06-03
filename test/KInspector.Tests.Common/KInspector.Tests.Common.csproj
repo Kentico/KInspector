@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <RootNamespace>KInspector.Tests.Common</RootNamespace>
+	  <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Moq" Version="4.10.1" />
+	<PackageReference Include="nunit" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\KInspector.Core\KInspector.Core.csproj" />
+  </ItemGroup>
+
+</Project>

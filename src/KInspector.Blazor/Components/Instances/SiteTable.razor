@@ -1,0 +1,52 @@
+﻿@using KInspector.Core.Models
+
+<div class="relative overflow-x-auto">
+    <table class="w-2/3 text-sm text-left rtl:text-right">
+        <thead class="text-xs text-gray-900 uppercase dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    ID
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Administration
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Live site
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var site in Sites!)
+            {
+                <tr class="bg-white dark:bg-gray-800">
+                    <td class="px-6 py-4">
+                        @site.Id
+                    </td>
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        @site.Name
+                    </th>
+                    <td class="px-6 py-4">
+                        <a href="https://@(site.DomainName)" target="_blank" class="underline">https://@(site.DomainName)</a>
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="@site.PresentationUrl" target="_blank" class="underline">@site.PresentationUrl</a>
+                    </td>
+                    <td class="px-6 py-4">
+                        @site.Status
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public IEnumerable<Site>? Sites { get; set; }
+}

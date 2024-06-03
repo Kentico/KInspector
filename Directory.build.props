@@ -1,0 +1,21 @@
+<Project>
+	<PropertyGroup>
+		<Company>Kentico Software</Company>
+		<Authors>$(Company)</Authors>
+		<Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year)</Copyright>
+		<Trademark>$(Company)™</Trademark>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<VersionPrefix>5.0.0</VersionPrefix>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
+
+    <ItemGroup Label="StaticCodeAnalysis">
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.41.0.50478">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+  </ItemGroup>
+</Project>

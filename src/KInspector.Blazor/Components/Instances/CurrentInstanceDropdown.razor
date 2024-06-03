@@ -1,0 +1,94 @@
+﻿@using KInspector.Core.Helpers
+@using KInspector.Core.Models
+@using KInspector.Core.Services.Interfaces
+@inject IInstanceService instanceService
+@inject IConfigService configService
+@inject NavigationManager navigationManager
+
+@if (Instance is null)
+{
+    <button type="button"
+        class="pointer-events-none text-gray-400 border border-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:focus:ring-gray-800">
+        Connected: None
+    </button>
+}
+else
+{
+    <button id="currentInstanceButton" data-dropdown-toggle="dropdownInformation" type="button" data-dropdown-offset-distance="20" data-dropdown-offset-skidding="200"
+        class="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">
+        Connected: @Instance.Name
+    </button>
+    <div id="dropdownInformation" class="instance-dropdown z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-lg dark:bg-gray-700 dark:divide-gray-600">
+        <div class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+            <a class="text-sm font-light" href="@Instance.AdministrationUrl" target="_blank">@Instance.AdministrationUrl</a>
+        </div>
+        <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+            <div class="mb-2 underline">Kentico</div>
+            <ul class="text-left">
+                <li>
+                    Database: v@(InstanceDetails.AdministrationDatabaseVersion)
+                </li>
+                <li>
+                    Administration: v@(InstanceDetails.AdministrationVersion)
+                </li>
+                <li>
+                    Admin path: @Instance.AdministrationPath
+                </li>
+            </ul>
+        </div>
+        <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+            <div class="mb-2 underline">Database</div>
+            <ul class="text-left">
+                <li>
+                    Database: @DatabaseName
+                </li>
+                <li>
+                    Server: @ServerName
+                </li>
+                <li>
+                    Workstation: @sqlWorkstation
+                </li>
+                <li>
+                    Version: @serverVersion
+                </li>
+            </ul>
+        </div>
+        <div class="py-2">
+            <a href="#" @onclick="DisconnectInstance"
+               class="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500">Disconnect</a>
+        </div>
+    </div>
+}
+
+@code {
+    private InstanceDetails? instanceDetails;
+    private string serverVersion = "Loading...";
+    private string sqlWorkstation = "Loading...";
+
+    [Parameter, EditorRequired]
+    public Instance? Instance { get; set; }
+
+    private InstanceDetails InstanceDetails => instanceDetails ??= instanceService.GetInstanceDetails(Instance);
+
+    private string DatabaseName => DatabaseHelper.GetSqlConnection(Instance!.DatabaseSettings).Database;
+
+    private string ServerName => DatabaseHelper.GetSqlConnection(Instance!.DatabaseSettings).DataSource;
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (Instance is not null)
+        {
+            var conn = DatabaseHelper.GetSqlConnection(Instance!.DatabaseSettings);
+            await conn.OpenAsync();
+            serverVersion = conn.ServerVersion;
+            sqlWorkstation = conn.WorkstationId;
+            await conn.DisposeAsync();
+        }
+    }
+
+    private void DisconnectInstance()
+    {
+        configService.SetCurrentInstance(null);
+        navigationManager.NavigateTo("/instances", true);
+    }
+}

@@ -1,0 +1,13 @@
+﻿details:
+  name: Sample Report
+  shortDescription: Very basic sample report.
+  longDescription: |
+    This report is a basic sample report that exists only to be an example/template for creating actual reports.
+    It generates a random number of issues to report on.
+    This description supports [Markdown](https://daringfireball.net/projects/markdown/) in [YAML](https://learn-the-web.algonquindesign.ca/topics/yaml/).
+    
+    Some reference materials:
+      * [YAML/Markdown Cheatsheet](https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/)
+terms:
+  detailedResult: <name> reported <problem>.
+  summary: <issueCount> <issueCount|issue|issues> found.

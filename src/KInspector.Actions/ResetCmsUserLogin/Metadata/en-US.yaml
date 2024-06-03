@@ -1,0 +1,12 @@
+﻿details:
+  name: Reset global administrator
+  shortDescription: Reset a global administrator so that you can login with an empty password.
+  longDescription: |
+    This action ensures that the global administrator user is enabled, their password is blank, and their last changed date is reset to today.
+
+    Run the action without options to view the global administrator accounts. To reset a user account, re-run the action with their user ID.
+terms:
+  tableTitle: Global administrators
+  invalidOptions: The user ID must be an integer greater than zero and present in the database.
+  listSummary: Set the user ID you wish to reset and re-run
+  userReset: User ID <userId> was reset

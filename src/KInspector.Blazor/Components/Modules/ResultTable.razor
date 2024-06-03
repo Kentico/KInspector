@@ -1,0 +1,145 @@
+﻿@using System.Reflection
+@using KInspector.Core.Models
+
+<div class="relative result-table w-full overflow-x-auto sm:rounded-lg">
+    <div class="w-full max-w-screen-xlmx-auto">
+        <div class="relative overflow-hidden bg-white dark:bg-gray-700">
+            <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                <div>
+                    <h5 class="mr-3 font-semibold dark:text-white">@Table!.Name</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-400">
+            <tr>
+                @foreach (var header in Headers)
+                {
+                    <th scope="col" class="px-6 py-3">
+                        @header
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in GetPagedObjects(currentPage))
+            {
+                <tr class="bg-white border-b dark:bg-gray-700 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    @foreach (var value in GetRowValues(row))
+                    {
+                        <td class="px-6 py-4">
+                            @if (value is null)
+                            {
+                                <span>null</span>
+                            }
+                            else
+                            {
+                                <span>@value</span>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    <nav class="pagination flex p-2 items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+            Showing <span class="font-semibold text-gray-900 dark:text-white">@CurrentPageStartingIndex-@CurrentPageEndingIndex</span>
+            of <span class="font-semibold text-gray-900 dark:text-white">@RowCount</span>
+        </span>
+        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+            <li>
+                <a @onclick="() => SetPage(PreviousPage)"
+                    class="flex items-center cursor-pointer justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+            </li>
+            @for (int i = 0; i < PageCount; i++)
+            {
+                var page = i;
+                @if (currentPage == page)
+                {
+                    <li>
+                        <a aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">
+                            @(i + 1)
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a @onclick="() => SetPage(page)"
+                           class="flex items-center cursor-pointer justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            @(i + 1)
+                        </a>
+                    </li>
+                }
+            }
+            <li>
+                <a @onclick="() => SetPage(NextPage)"
+                    class="flex items-center cursor-pointer justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@code {
+    private int currentPage = 0;
+    private readonly int PAGE_SIZE = 10;
+
+    [Parameter, EditorRequired]
+    public TableResult? Table { get; set; }
+
+    private IEnumerable<string> Headers
+    {
+        get
+        {
+            var firstItem = Table!.Rows.FirstOrDefault();
+            if (firstItem is null)
+            {
+                return Enumerable.Empty<string>();
+            }
+
+            IEnumerable<PropertyInfo> properties = firstItem.GetType().GetProperties();
+
+            return properties.Select(prop => prop.Name);
+        }
+    }
+
+    private int NextPage => currentPage == PageCount - 1 ? currentPage : currentPage + 1;
+
+    private int PreviousPage => currentPage == 0 ? 0 : currentPage - 1;
+
+    private int CurrentPageStartingIndex => (currentPage * PAGE_SIZE) + 1;
+
+    private int CurrentPageEndingIndex
+    {
+        get
+        {
+            var index = (currentPage * PAGE_SIZE) + PAGE_SIZE;
+            if (index > RowCount)
+            {
+                index = RowCount;
+            }
+
+            return index;
+        }
+    }
+
+    private int PageCount => Convert.ToInt32(Math.Ceiling(RowCount / Convert.ToDecimal(PAGE_SIZE)));
+
+    private int RowCount => Table!.Rows.Count();
+
+    private void SetPage(int page) => currentPage = page;
+
+    private IEnumerable<dynamic> GetPagedObjects(int page = 0) =>
+        Table!.Rows.AsEnumerable<dynamic>()
+          .Skip(PAGE_SIZE * page)
+          .Take(PAGE_SIZE);
+
+    private IEnumerable<object> GetRowValues(dynamic row)
+    {
+        IEnumerable<PropertyInfo> properties = row.GetType().GetProperties();
+
+        return properties.Select(prop => prop.GetValue(row));
+    }
+}

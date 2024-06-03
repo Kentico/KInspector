@@ -1,0 +1,86 @@
+﻿@using KInspector.Core.Constants
+@using KInspector.Core.Models
+
+<div class="flex items-center p-2 pl-4 text-sm space-x-2 @TextColor @BackgroundColor">
+    @switch (Result!.Status)
+    {
+        case ResultsStatus.Good:
+            <svg class="w-4 h-4" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clip-rule="evenodd" />
+            </svg>
+            break;
+        case ResultsStatus.Information:
+            <svg class="w-4 h-4" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm9.408-5.5a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM10 10a1 1 0 1 0 0 2h1v3h-1a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2h-1v-4a1 1 0 0 0-1-1h-2Z" clip-rule="evenodd" />
+            </svg>
+            break;
+        case ResultsStatus.Warning:
+            <svg class="w-4 h-4" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z" clip-rule="evenodd" />
+            </svg>
+            break;
+        case ResultsStatus.Error:
+            <svg class="w-4 h-4" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z" clip-rule="evenodd" />
+            </svg>
+            break;
+        case ResultsStatus.NotRun:
+            <svg class="w-4 h-4" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z" clip-rule="evenodd" />
+            </svg>
+            break;
+    }
+
+    @if (Result.Status == ResultsStatus.NotRun)
+    {
+        <span>Not run yet</span>
+    }
+    else
+    {
+        <span>@Result.Summary</span>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public ModuleResults? Result { get; set; }
+
+    private string TextColor
+    {
+        get
+        {
+            if (Result!.Status == ResultsStatus.NotRun)
+            {
+                return "text-gray-500 dark:text-gray-400";
+            }
+
+            return "text-gray-700";
+        }
+    }
+
+    private string BackgroundColor
+    {
+        get
+        {
+            switch (Result!.Status)
+            {
+                case ResultsStatus.Good:
+                    return Constants.COLOR_GOOD;
+                case ResultsStatus.Error:
+                    return Constants.COLOR_ERROR;
+                case ResultsStatus.Information:
+                    return Constants.COLOR_INFO;
+                case ResultsStatus.Warning:
+                    return Constants.COLOR_WARN;
+                default:
+                case ResultsStatus.NotRun:
+                    return "bg-gray-100 dark:bg-gray-700";
+            }
+        }
+    }
+}

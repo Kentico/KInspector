@@ -1,0 +1,53 @@
+﻿@using KInspector.Core.Modules
+@using KInspector.Core.Repositories.Interfaces
+@using KInspector.Core.Services.Interfaces
+@inject IJSRuntime js
+@inject IModuleService moduleService
+@inject IActionRepository actionRepository
+
+<ModuleFilters Tags="UsedTags" FiltersChanged="StateHasChanged" @ref="Filters" />
+
+<div class="space-y-8">
+    @foreach (var action in Actions)
+    {
+        <ActionCard Action="@action" />
+    }
+</div>
+
+@code {
+    ModuleFilters? Filters;
+
+    private IEnumerable<string> UsedTags
+    {
+        get
+        {
+            var actions = actionRepository.GetActions();
+            var tags = Enumerable.Empty<string>();
+            foreach (var a in actions)
+            {
+                tags = tags.Union(a.Tags);
+            }
+
+            return tags;
+        }
+    }
+
+    private IEnumerable<IAction> Actions
+    {
+        get
+        {
+            var tag = Filters?.SelectedTag;
+            var showUntested = Filters?.ShowUntested ?? false;
+            var showIncompatible = Filters?.ShowIncompatible ?? false;
+            var nameFilter = Filters?.NameFilter;
+
+            return moduleService.GetActions(showUntested, showIncompatible, tag, nameFilter);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool isFirstRender)
+    {
+        // Init Flowbite every time, not just first load as elements added to the layout dynamically don't function without Flowbite
+        await js.InvokeVoidAsync("window.initializeFlowbite");
+    }
+}
