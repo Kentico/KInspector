@@ -45,14 +45,12 @@
 
 
 @code {
-    private ModuleDetails? moduleDetails;
-
     [Parameter, EditorRequired]
     public IReport? Report { get; set; }
 
     public ModuleResults Results { get; set; } = new();
 
-    private ModuleDetails ModuleDetails => moduleDetails ??= moduleMetadataService.GetModuleDetails(Report!.Codename);
+    private ModuleDetails ModuleDetails => moduleMetadataService.GetModuleDetails(Report!.Codename);
 
     private MarkupString LongDescription => new MarkupString(Markdown.ToHtml(ModuleDetails.LongDescription ?? string.Empty));
 
