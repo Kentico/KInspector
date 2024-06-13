@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KInspector.Blazor", "KInspector.Blazor\KInspector.Blazor.csproj", "{CB4EB16C-D1EB-4CF7-BBBF-80CD7EFB71D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KInspector.Blazor", "src\KInspector.Blazor\KInspector.Blazor.csproj", "{CB4EB16C-D1EB-4CF7-BBBF-80CD7EFB71D6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KInspector.Core", "KInspector.Core\KInspector.Core.csproj", "{E4687562-9C81-499D-B413-C2212500A8F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KInspector.Core", "src\KInspector.Core\KInspector.Core.csproj", "{E4687562-9C81-499D-B413-C2212500A8F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KInspector.Infrastructure", "KInspector.Infrastructure\KInspector.Infrastructure.csproj", "{7D2BC8C1-D4E1-4FB2-B74D-E31D0B6854D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KInspector.Infrastructure", "src\KInspector.Infrastructure\KInspector.Infrastructure.csproj", "{7D2BC8C1-D4E1-4FB2-B74D-E31D0B6854D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KInspector.Reports", "KInspector.Reports\KInspector.Reports.csproj", "{87834840-0776-4C9D-BB29-4FA93E00E1C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KInspector.Reports", "src\KInspector.Reports\KInspector.Reports.csproj", "{87834840-0776-4C9D-BB29-4FA93E00E1C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KInspector.Actions", "KInspector.Actions\KInspector.Actions.csproj", "{CFBDF275-BB6A-4285-BC63-56274A3C4411}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KInspector.Actions", "src\KInspector.Actions\KInspector.Actions.csproj", "{CFBDF275-BB6A-4285-BC63-56274A3C4411}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
