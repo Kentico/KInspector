@@ -1,0 +1,27 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.navigation .instance-dropdown {
+    width: 350px;
+}
+
+.navigation .instance-dropdown ul,
+.module-card .module-description ul,
+.module-card .module-results ul {
+    list-style-type: disc;
+    list-style-position: inside;
+    margin-left: .5em;
+}
+
+.module-card .module-results .result-table .pagination ul {
+    list-style-type: none;
+}
+
+.module-card .module-description p {
+    padding: .5em;
+}
+
+.module-card .module-description a {
+    text-decoration: underline;
+}

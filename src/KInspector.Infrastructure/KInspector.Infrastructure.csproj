@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.1.0" />
+    <PackageReference Include="Dapper" Version="1.60.1" />
+    <PackageReference Include="Dapper.FluentMap" Version="1.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="YamlDotNet" Version="6.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KInspector.Core\KInspector.Core.csproj" />
+  </ItemGroup>
+
+</Project>

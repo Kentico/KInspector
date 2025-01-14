@@ -1,0 +1,41 @@
+﻿@using KInspector.Core.Constants
+@using KInspector.Core.Models
+
+@if (ShowNoResults)
+{
+    <span>No results</span>
+}
+else
+{
+    @switch (Results!.Type)
+    {
+        case ResultsType.TableList:
+            foreach (var table in Results!.TableResults)
+            {
+                if (!table.Rows.Any()) continue;
+
+                <ResultTable Table="@table" />
+            }
+            break;
+        case ResultsType.StringList:
+            if (Results!.StringResults.Any())
+            {
+                <ul class="w-full overflow-x-auto">
+                    @foreach (var str in Results!.StringResults)
+                    {
+                        <li>@str</li>
+                    }
+                </ul>
+            }
+            break;
+    }
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public ModuleResults? Results { get; set; }
+
+    private bool ShowNoResults => Results!.Type == ResultsType.NoResults
+        || (Results!.Type == ResultsType.TableList && !Results!.TableResults.Any(t => t.Rows.Any()))
+        || (Results!.Type == ResultsType.StringList && !Results!.StringResults.Any());
+}

@@ -1,0 +1,204 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<RootNamespace>KInspector.Reports</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KInspector.Core\KInspector.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="OnlineMarketingMacroAnalysis\Scripts\GetManualScoreRuleMacroConditions.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OnlineMarketingMacroAnalysis\Scripts\GetManualTimeBasedTriggerMacroConditions.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OnlineMarketingMacroAnalysis\Scripts\GetManualContactGroupMacroConditions.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PageTypeFieldAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PageTypeFieldAnalysis\Scripts\GetCmsPageTypeFields.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugConfigurationAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ApplicationRestartAnalysis\Scripts\GetCmsEventLogsWithStartOrEndCode.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OnlineMarketingMacroAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SecuritySettingsAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SecuritySettingsAnalysis\Scripts\GetCmsSettingsCategories.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SecuritySettingsAnalysis\Scripts\GetSecurityCmsSettings.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="UserPasswordAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SampleReport\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ApplicationRestartAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ApplicationRestartAnalysis\Scripts\ApplicationRestartEvents.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ClassTableValidation\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ClassTableValidation\Scripts\ClassesWithNoTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ClassTableValidation\Scripts\TablesWithNoClass.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetCmsClassItems.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetCmsDocumentCoupledDataItems.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetDocumentIdsWithMissingTreeNode.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetDocumentNodeDetails.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetLatestVersionHistoryIdForAllDocuments.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeDetails.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithBadParentNodeId.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithBadParentSiteId.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithDuplicatedAliasPath.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithLevelMismatchByAliasPathTest.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithLevelMismatchByNodeLevelTest.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithMissingDocument.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetTreeNodeIdsWithPageTypeNotAssignedToSite.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ContentTreeConsistencyAnalysis\Scripts\GetVersionHistoryDetails.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DatabaseConsistencyCheck\Scripts\GetCheckDbResults.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DatabaseConsistencyCheck\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DatabaseTableSizeAnalysis\Scripts\GetTop25LargestTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DatabaseTableSizeAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RobotsTxtConfigurationSummary\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugConfigurationAnalysis\Scripts\GetDebugSettingsValues.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedIntegrationBusTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedScheduledTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedSearchTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedStagingTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TaskProcessingAnalysis\Scripts\GetCountOfUnprocessedWebFarmTasks.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PageTypeAssignmentAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="PageTypeAssignmentAnalysis\Scripts\GetPageTypesNotAssignedToSite.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TemplateLayoutAnalysis\Scripts\GetIdenticalLayouts.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TemplateLayoutAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ColumnFieldValidation\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ColumnFieldValidation\Scripts\GetCmsClasses.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ColumnFieldValidation\Scripts\GetTableColumns.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TransformationSecurityAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TransformationSecurityAnalysis\Scripts\GetPages.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TransformationSecurityAnalysis\Scripts\GetPageTemplates.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TransformationSecurityAnalysis\Scripts\GetTransformations.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="UnusedPageTypeSummary\Scripts\GetUnusedPageTypes.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="UnusedPageTypeSummary\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="UserPasswordAnalysis\Scripts\GetEnabledAndNotExternalUsers.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WebPartPerformanceAnalysis\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WebPartPerformanceAnalysis\Scripts\GetAffectedTemplates.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="WebPartPerformanceAnalysis\Scripts\GetDocumentsByPageTemplateIDs.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

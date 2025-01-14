@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <RootNamespace>KInspector.Actions</RootNamespace>
+	  <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KInspector.Core\KInspector.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ResetCmsUserLogin\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ResetCmsUserLogin\Scripts\GetAdministrators.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ResetCmsUserLogin\Scripts\ResetAndEnableUser.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StopRunningSites\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StopRunningSites\Scripts\GetSiteSummary.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StopRunningSites\Scripts\StopSite.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableSmtpServers\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableSmtpServers\Scripts\DisableSiteSmtpServer.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableSmtpServers\Scripts\DisableSmtpServer.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableSmtpServers\Scripts\GetSmtpFromSettingsKeys.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableSmtpServers\Scripts\GetSmtpFromSmtpServers.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableStagingServers\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableStagingServers\Scripts\DisableServer.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableStagingServers\Scripts\GetStagingServerSummary.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableWebFarmServers\Metadata\en-US.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableWebFarmServers\Scripts\DisableServer.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DisableWebFarmServers\Scripts\GetWebFarmServerSummary.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

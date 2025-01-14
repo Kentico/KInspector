@@ -1,0 +1,12 @@
+﻿details:
+  name: Stop running sites
+  shortDescription: Review and stop running sites.
+  longDescription: |
+    Displays all sites registered in the instance and their configuration, and allows you to stop running sites.
+
+    Run the action without options to view the site summary. To stop a site, re-run the action with the site ID.
+terms:
+  tableTitle: Sites
+  invalidOptions: The site ID must be an integer greater than zero and present in the database.
+  listSummary: Set the site ID you wish to stop and re-run
+  siteStopped: Site ID <siteId> was stopped

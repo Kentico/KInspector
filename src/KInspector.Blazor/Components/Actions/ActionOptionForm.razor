@@ -1,0 +1,45 @@
+﻿@using System.Reflection
+@using Newtonsoft.Json.Linq
+@using System.ComponentModel
+
+<div>
+    @foreach (var prop in OptionsType!.GetProperties())
+    {
+        var displayName = GetDisplayName(prop) ?? prop.Name;
+        var description = GetDescription(prop);
+
+        <div class="mb-5">
+            <label for="@prop.Name" class="block text-sm font-medium text-gray-900 dark:text-white">@displayName</label>
+            @if (!string.IsNullOrEmpty(description))
+            {
+                <span class="text-sm font-light">@description</span>
+            }
+            <input type="text" id="@prop.Name"
+                @oninput="(e) => SetValue(prop.Name, e.Value)"
+                   class="max-w-sm mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+        </div>
+    }
+</div>
+
+@code {
+    private JObject? options;
+
+    [Parameter, EditorRequired]
+    public Type? OptionsType { get; set; }
+
+    public JObject Options => options ??= new();
+
+    private void SetValue(string propName, object? value)
+    {
+        if (value is null)
+        {
+            return;
+        }
+
+        Options[propName] = JToken.FromObject(value);
+    }
+
+    private string? GetDisplayName(PropertyInfo property) => property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+
+    private string? GetDescription(PropertyInfo property) => property.GetCustomAttribute<DescriptionAttribute>()?.Description;
+}
