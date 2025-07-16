@@ -16,7 +16,7 @@ namespace KInspector.Reports.DatabaseTableSizeAnalysis
             this.databaseService = databaseService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13", "30");
 
         public override IList<string> Tags => new List<string> {
             ModuleTags.Health
