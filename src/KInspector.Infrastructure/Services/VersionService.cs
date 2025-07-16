@@ -2,6 +2,7 @@
 
 using KInspector.Core.Models;
 using KInspector.Core.Services.Interfaces;
+using KInspector.Infrastructure.Models.Data;
 
 namespace KInspector.Infrastructure.Services
 {
@@ -10,6 +11,9 @@ namespace KInspector.Infrastructure.Services
         private readonly IDatabaseService databaseService;
 
         private static readonly string getCmsSettingsPath = @"Scripts/GetCmsSettings.sql";
+
+        private const string _DBMajorVersionKeyName = "CMSDBVersion";
+        private const string _DMHotfixVersionKeyName = "CMSHotfixVersion";
 
         private const string _administrationDllToCheck = "CMS.DataEngine.dll";
         private const string _relativeAdministrationDllPath = "bin";
@@ -66,16 +70,33 @@ namespace KInspector.Infrastructure.Services
         public Version? GetKenticoDatabaseVersion(DatabaseSettings databaseSettings)
         {
             databaseService.Configure(databaseSettings);
-            var settingsKeys = databaseService.ExecuteSqlFromFile<string>(getCmsSettingsPath).ConfigureAwait(false).GetAwaiter().GetResult();
-            var settingsList = settingsKeys.ToList();
-            var version = settingsList[0];
-            var hotfix = settingsList[1];
 
-            if (version is null || hotfix is null) {
-                return null;
+            var settingsKeys = databaseService.ExecuteSqlFromFile<CmsSettingsKey>(getCmsSettingsPath)
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult()
+                .ToList();
+
+            var majorVersionString = settingsKeys.FirstOrDefault(key => key.KeyName == _DBMajorVersionKeyName)?.KeyValue;
+            var hotfixVersionString = settingsKeys.FirstOrDefault(key => key.KeyName == _DMHotfixVersionKeyName)?.KeyValue;
+
+            if (majorVersionString is null)
+            {
+                throw new InvalidDataException("Database Major version unknown. CMSDBVersion not found in table CMS_SettingsKey.");
             }
 
-            return new Version($"{version}.{hotfix}");
+            var version = new Version(majorVersionString);
+            if (version.Major > 13)
+            {
+                return version;
+            }
+
+            if (hotfixVersionString is null)
+            {
+                throw new InvalidDataException("Database Hotfix version unknown. CMSHotfixVersion not found in table CMS_SettingsKey.");
+            }
+
+            return new Version($"{majorVersionString}.{hotfixVersionString}");
         }
     }
 }
