@@ -15,10 +15,12 @@ The __Instances__ tab allows you to create and delete instances, and choose whic
 Click the __New instance__ button to add a new Kentico instance. You must supply the following parameters:
 
 - __Name__: An arbitrary name for the instance
-- __Administration path__: The full path to the __CMS__ folder of the Kentico administration, e.g. "C:\inetpub\wwwroot\MySite\CMS"
-- __Administration URL__: The URL of the Kentico administration website
+- __XBK Project or Administration path__: The full path to the Xperience by Kentico project, or __CMS__ folder of the Kentico Xperience administration project, e.g.:
+  - "C:\inetpub\wwwroot\MySite\"
+  - "C:\inetpub\wwwroot\MySite\CMS"
+- __XBK Project or Administration URL__: The URL of the Xperience by Kentico website, or Kentico Xperience administration app
 
-The application should automatically detect the connection string from the `web.config` at the root of the administration path. If not, you will need to provide details to connect to the Kentico database.
+For Kentico Xperience projects, the application should automatically detect the connection string from the `web.config` at the root of the administration path. If not, or for Xperience by Kentico projects, you will need to provide details to connect to the Kentico database.
 
 ## Reports
 
