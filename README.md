@@ -7,9 +7,11 @@
 
 ## Description
 
-KInspector is an application for analyzing the health, performance and security of **[Kentico EMS](https://www.kentico.com/)** solutions.
+KInspector is an application for analyzing the health, performance and security of **[Xperience by Kentico and Kentico Xperience](https://www.kentico.com/)** solutions.
 
-The application is Kentico version agnostic and has no dependencies on version-specific DLLs. Most modules are designed to support Kentico 12 and 13, but some will work on older versions as well.
+The application is Kentico version agnostic and has no dependencies on version-specific DLLs.
+Initial support for Xperience by Kentico has been added.
+Most modules are designed to support Kentico 12 and 13, but some will work on older versions as well.
 
 ## Quick Start
 
