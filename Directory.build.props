@@ -5,7 +5,7 @@
 		<Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year)</Copyright>
 		<Trademark>$(Company)™</Trademark>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<VersionPrefix>5.0.0</VersionPrefix>
+		<VersionPrefix>5.1.0</VersionPrefix>
 		<LangVersion>10.0</LangVersion>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
