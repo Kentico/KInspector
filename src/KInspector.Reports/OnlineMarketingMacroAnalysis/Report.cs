@@ -18,6 +18,8 @@ namespace KInspector.Reports.OnlineMarketingMacroAnalysis
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
 
+        public override IList<Version> IncompatibleVersions => VersionHelper.GetVersionsGreaterThan(13);
+
         public override IList<string> Tags => new List<string> {
             ModuleTags.Performance,
             ModuleTags.OnlineMarketing

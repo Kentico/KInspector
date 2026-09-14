@@ -10,6 +10,8 @@ namespace KInspector.Tests.Common.Reports
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
+    [TestFixture(30)]
+    [TestFixture(31)]
     public class ClassTableValidationTests : AbstractModuleTest<Report, Terms>
     {
         private readonly Report _mockReport;
@@ -32,6 +34,10 @@ namespace KInspector.Tests.Common.Reports
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
                 .Returns(Task.FromResult(classResults));
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTableXbK))
+                .Returns(Task.FromResult(classResults));
+
 
             // Act
             var results = await _mockReport.GetResults();
@@ -60,6 +66,9 @@ namespace KInspector.Tests.Common.Reports
 
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
+                .Returns(Task.FromResult(classResults.AsEnumerable()));
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTableXbK))
                 .Returns(Task.FromResult(classResults.AsEnumerable()));
 
             // Act
@@ -92,6 +101,9 @@ namespace KInspector.Tests.Common.Reports
             var classResults = GetCleanClassResults();
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable))
+                .Returns(Task.FromResult(classResults));
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTableXbK))
                 .Returns(Task.FromResult(classResults));
 
             // Act

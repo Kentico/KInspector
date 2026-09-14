@@ -5,5 +5,7 @@
         public static string BaseDirectory => $"{nameof(PageTypeFieldAnalysis)}/Scripts";
 
         public static string GetCmsPageTypeFields => $"{BaseDirectory}/{nameof(GetCmsPageTypeFields)}.sql";
+
+        public static string GetCmsPageTypeFieldsXbK => $"{BaseDirectory}/{nameof(GetCmsPageTypeFieldsXbK)}.sql";
     }
 }

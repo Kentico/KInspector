@@ -11,6 +11,14 @@ namespace KInspector.Core.Helpers
                 .ToList();
         }
 
+        public static IList<Version> GetVersionsGreaterThan(int majorVersion)
+        {
+            return Enumerable.Range(majorVersion + 1, majorVersion + 100)
+                .Select(v => v.ToString())
+                .Select(GetVersionFromShortString)
+                .ToList();
+        }
+
         public static Version GetVersionFromShortString(string version)
         {
             var expandedVersionString = ExpandVersionString(version);

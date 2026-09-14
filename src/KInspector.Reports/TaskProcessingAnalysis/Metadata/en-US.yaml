@@ -2,8 +2,8 @@
   name: Task processing analysis
   shortDescription: Checks system queues for tasks that appear stuck for more than 24 hours.
   longDescription: |
-    The following queues are reviewed for stuck tasks:
-      * Scheduled tasks (ignores recurring)
+    The following queues are reviewed for stuck tasks, depending on the version you are using:
+      * Single-run Scheduled tasks
       * Web Farm tasks
       * Integration Bus tasks
       * Staging tasks

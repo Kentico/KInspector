@@ -4,7 +4,8 @@
     {
         public static string BaseDirectory => $"{nameof(UnusedPageTypeSummary)}/Scripts";
 
-
         public static string GetUnusedPageTypes => $"{BaseDirectory}/{nameof(GetUnusedPageTypes)}.sql";
+
+        public static string GetUnusedPageTypesXbK => $"{BaseDirectory}/{nameof(GetUnusedPageTypesXbK)}.sql";
     }
 }

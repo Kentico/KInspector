@@ -25,7 +25,7 @@ namespace KInspector.Reports.ClassTableValidation
             this.configService = configService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13", "30", "31");
 
         public override IList<string> Tags => new List<string> {
             ModuleTags.Health,
@@ -35,8 +35,10 @@ namespace KInspector.Reports.ClassTableValidation
         {
             var instance = configService.GetCurrentInstance();
             var instanceDetails = instanceService.GetInstanceDetails(instance);
+            bool isXbK = instanceDetails?.AdministrationDatabaseVersion?.Major > 13;
+
             var tablesWithMissingClass = await GetResultsForTables(instanceDetails);
-            var classesWithMissingTable = await GetResultsForClasses();
+            var classesWithMissingTable = await GetResultsForClasses(isXbK);
 
             return CompileResults(tablesWithMissingClass, classesWithMissingTable);
         }
@@ -79,7 +81,9 @@ namespace KInspector.Reports.ClassTableValidation
             return results;
         }
 
-        private Task<IEnumerable<ClassWithNoTable>> GetResultsForClasses() => databaseService.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable);
+        private Task<IEnumerable<ClassWithNoTable>> GetResultsForClasses(bool isXbK) => isXbK ?
+            databaseService.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTableXbK)
+            : databaseService.ExecuteSqlFromFile<ClassWithNoTable>(Scripts.ClassesWithNoTable);
 
         private async Task<IEnumerable<TableWithNoClass>> GetResultsForTables(InstanceDetails instanceDetails)
         {
@@ -101,6 +105,10 @@ namespace KInspector.Reports.ClassTableValidation
             if (version?.Major >= 10)
             {
                 whitelist.Add("CI_Migration");
+            }
+            if (version?.Major >= 30)
+            {
+                whitelist.Add("CD_Migration");
             }
 
             return whitelist;

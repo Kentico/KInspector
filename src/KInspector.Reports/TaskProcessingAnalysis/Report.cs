@@ -9,14 +9,23 @@ namespace KInspector.Reports.TaskProcessingAnalysis
 {
     public class Report : AbstractReport<Terms>
     {
+        private readonly IConfigService configService;
+        private readonly IInstanceService instanceService;
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
+        public Report(
+            IDatabaseService databaseService,
+            IInstanceService instanceService,
+            IConfigService configService,
+            IModuleMetadataService moduleMetadataService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
+            this.instanceService = instanceService;
+            this.configService = configService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13", "30", "31");
 
         public override IList<string> Tags => new List<string> {
            ModuleTags.Health
@@ -24,20 +33,34 @@ namespace KInspector.Reports.TaskProcessingAnalysis
 
         public async override Task<ModuleResults> GetResults()
         {
-            var unprocessedIntegrationBusTasks = await databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedIntegrationBusTasks);
-            var unprocessedScheduledTasks = await databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedScheduledTasks);
-            var unprocessedSearchTasks = await databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedSearchTasks);
-            var unprocessedStagingTasks = await databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedStagingTasks);
             var unprocessedWebFarmTasks = await databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedWebFarmTasks);
-
             var rawResults = new Dictionary<TaskType, int>
             {
-                { TaskType.IntegrationBusTask, unprocessedIntegrationBusTasks },
-                { TaskType.ScheduledTask, unprocessedScheduledTasks },
-                { TaskType.SearchTask, unprocessedSearchTasks },
-                { TaskType.StagingTask, unprocessedStagingTasks },
                 { TaskType.WebFarmTask, unprocessedWebFarmTasks }
             };
+
+            var instance = configService.GetCurrentInstance();
+            var instanceDetails = instanceService.GetInstanceDetails(instance);
+            bool isKentico13OrOlder = instanceDetails?.AdministrationDatabaseVersion?.Major <= 13;
+            if (isKentico13OrOlder)
+            {
+                var unprocessedIntegrationBusTasks = await databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedIntegrationBusTasks);
+                rawResults.Add(TaskType.IntegrationBusTask, unprocessedIntegrationBusTasks);
+
+                var unprocessedSearchTasks = await databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedSearchTasks);
+                rawResults.Add(TaskType.SearchTask, unprocessedSearchTasks);
+
+                var unprocessedStagingTasks = await databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedStagingTasks);
+                rawResults.Add(TaskType.StagingTask, unprocessedStagingTasks);
+
+                var unprocessedScheduledTasks = await databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedScheduledTasks);
+                rawResults.Add(TaskType.ScheduledTask, unprocessedScheduledTasks);
+            }
+            else
+            {
+                var unprocessedScheduledTasks = await databaseService.ExecuteSqlFromFileScalar<int>(Scripts.GetCountOfUnprocessedScheduledTasksXbK);
+                rawResults.Add(TaskType.ScheduledTask, unprocessedScheduledTasks);
+            }
 
             return CompileResults(rawResults);
         }

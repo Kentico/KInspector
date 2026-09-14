@@ -10,13 +10,22 @@ namespace KInspector.Reports.UnusedPageTypeSummary
     public class Report : AbstractReport<Terms>
     {
         private readonly IDatabaseService databaseService;
+        private readonly IInstanceService instanceService;
+        private readonly IConfigService configService;
 
-        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) : base(moduleMetadataService)
+        public Report(
+            IDatabaseService databaseService,
+            IInstanceService instanceService,
+            IModuleMetadataService moduleMetadataService,
+            IConfigService configService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
+            this.instanceService = instanceService;
+            this.configService = configService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13", "30", "31");
 
         public override IList<string> Tags => new List<string>
         {
@@ -25,7 +34,12 @@ namespace KInspector.Reports.UnusedPageTypeSummary
 
         public async override Task<ModuleResults> GetResults()
         {
-            var unusedPageTypes = await databaseService.ExecuteSqlFromFile<PageType>(Scripts.GetUnusedPageTypes);
+            var instance = configService.GetCurrentInstance();
+            var instanceDetails = instanceService.GetInstanceDetails(instance);
+            bool isXbK = instanceDetails?.AdministrationDatabaseVersion?.Major > 13;
+
+            var script = isXbK ? Scripts.GetUnusedPageTypesXbK : Scripts.GetUnusedPageTypes;
+            var unusedPageTypes = await databaseService.ExecuteSqlFromFile<PageType>(script);
             var countOfUnusedPageTypes = unusedPageTypes.Count();
 
             var results = new ModuleResults

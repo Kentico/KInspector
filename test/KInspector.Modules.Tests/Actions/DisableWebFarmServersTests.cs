@@ -16,6 +16,8 @@ namespace KInspector.Tests.Common.Actions
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
+    [TestFixture(30)]
+    [TestFixture(31)]
     public class DisableWebFarmServersTests : AbstractActionTest<Action, Terms, Options>
     {
         private readonly Action _mockAction;

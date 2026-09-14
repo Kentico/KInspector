@@ -54,6 +54,18 @@ namespace KInspector.Tests.Common.Helpers
             }
         };
 
+        public static InstanceDetails XbK30 = new()
+        {
+            AdministrationVersion = new Version("30.0"),
+            AdministrationDatabaseVersion = new Version("30.0")
+        };
+
+        public static InstanceDetails XbK31 = new()
+        {
+            AdministrationVersion = new Version("31.0"),
+            AdministrationDatabaseVersion = new Version("31.0")
+        };
+
         public static InstanceDetails Get(int majorVersion)
         {
             InstanceDetails? instanceDetails = majorVersion switch
@@ -63,6 +75,8 @@ namespace KInspector.Tests.Common.Helpers
                 11 => Kentico11,
                 12 => Kentico12,
                 13 => Kentico13,
+                30 => XbK30,
+                31 => XbK31,
                 _ => throw new NotImplementedException(),
             };
 

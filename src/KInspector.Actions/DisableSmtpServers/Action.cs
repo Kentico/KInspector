@@ -13,6 +13,8 @@ namespace KInspector.Actions.DisableSmtpServers
 
         public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("12", "13");
 
+        public override IList<Version> IncompatibleVersions => VersionHelper.GetVersionsGreaterThan(13);
+
         public override IList<string> Tags => new List<string> {
             ModuleTags.Configuration,
             ModuleTags.Emails

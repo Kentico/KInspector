@@ -44,23 +44,35 @@ namespace KInspector.Tests.Common.Helpers
             AdministrationUrl = "http://kentico13.com"
         };
 
+        public static Instance XbK30 = new()
+        {
+            Name = "XbK 30 Test Instance",
+            Guid = Guid.NewGuid(),
+            AdministrationPath = "C:\\inetpub\\wwwroot\\XbK30",
+            AdministrationUrl = "http://xbk30.com"
+        };
+
+        public static Instance XbK31 = new()
+        {
+            Name = "XbK 31 Test Instance",
+            Guid = Guid.NewGuid(),
+            AdministrationPath = "C:\\inetpub\\wwwroot\\XbK31",
+            AdministrationUrl = "http://xbk31.com"
+        };
+
         public static Instance Get(int majorVersion)
         {
-            switch (majorVersion)
+            return majorVersion switch
             {
-                case 9:
-                    return Kentico9;
-                case 10:
-                    return Kentico10;
-                case 11:
-                    return Kentico11;
-                case 12:
-                    return Kentico12;
-                case 13:
-                    return Kentico13;
-                default:
-                    throw new NotImplementedException();
-            }
+                9 => Kentico9,
+                10 => Kentico10,
+                11 => Kentico11,
+                12 => Kentico12,
+                13 => Kentico13,
+                30 => XbK30,
+                31 => XbK31,
+                _ => throw new NotImplementedException(),
+            };
         }
     }
 }

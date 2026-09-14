@@ -8,6 +8,8 @@
 
         public static string GetCountOfUnprocessedScheduledTasks => $"{BaseDirectory}/{nameof(GetCountOfUnprocessedScheduledTasks)}.sql";
 
+        public static string GetCountOfUnprocessedScheduledTasksXbK => $"{BaseDirectory}/{nameof(GetCountOfUnprocessedScheduledTasksXbK)}.sql";
+
         public static string GetCountOfUnprocessedSearchTasks => $"{BaseDirectory}/{nameof(GetCountOfUnprocessedSearchTasks)}.sql";
 
         public static string GetCountOfUnprocessedStagingTasks => $"{BaseDirectory}/{nameof(GetCountOfUnprocessedStagingTasks)}.sql";

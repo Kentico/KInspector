@@ -10,6 +10,8 @@ namespace KInspector.Tests.Common.Reports
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
+    [TestFixture(30)]
+    [TestFixture(31)]
     public class DatabaseTableSizeAnalysisTest : AbstractModuleTest<Report, Terms>
     {
         private readonly Report _mockReport;

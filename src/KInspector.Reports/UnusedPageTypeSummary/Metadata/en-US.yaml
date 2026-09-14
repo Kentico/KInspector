@@ -3,6 +3,7 @@
   shortDescription: Checks for unused pages types.
   longDescription: |
     This report checks for page types that are not in use by any page on any site.
+    For Xperience by Kentico, this report checks content types used on Website channels and the Content Hub.
 terms:
   countUnusedPageType: <count> unused page <count|type|types>.
   unusedPageTypes: Unused page types

@@ -11,7 +11,7 @@ namespace KInspector.Actions.DisableWebFarmServers
     {
         private readonly IDatabaseService databaseService;
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("12", "13");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("12", "13", "30", "31");
 
         public override IList<string> Tags => new List<string> {
             ModuleTags.Configuration,

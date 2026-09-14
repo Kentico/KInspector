@@ -23,7 +23,7 @@ namespace KInspector.Reports.ColumnFieldValidation
             this.databaseService = databaseService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13", "30", "31");
 
         public override IList<string> Tags => new List<string>
         {
@@ -190,6 +190,9 @@ namespace KInspector.Reports.ColumnFieldValidation
                     break;
 
                 case "System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089":
+                case "System.Guid, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e":
+                case "System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e":
+                case "System.Guid, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e":
                     type = "uniqueidentifier";
                     break;
             }

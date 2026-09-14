@@ -6,6 +6,8 @@
 
         public static string ClassesWithNoTable => $"{BaseDirectory}/{nameof(ClassesWithNoTable)}.sql";
 
+        public static string ClassesWithNoTableXbK => $"{BaseDirectory}/{nameof(ClassesWithNoTableXbK)}.sql";
+
         public static string TablesWithNoClass => $"{BaseDirectory}/{nameof(TablesWithNoClass)}.sql";
     }
 }

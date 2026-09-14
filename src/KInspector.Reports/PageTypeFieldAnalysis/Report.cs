@@ -9,15 +9,23 @@ namespace KInspector.Reports.PageTypeFieldAnalysis
 {
     public class Report : AbstractReport<Terms>
     {
+        private readonly IConfigService configService;
+        private readonly IInstanceService instanceService;
         private readonly IDatabaseService databaseService;
 
-        public Report(IDatabaseService databaseService, IModuleMetadataService moduleMetadataService) 
-            : base(moduleMetadataService)
+        public Report(
+            IDatabaseService databaseService,
+            IInstanceService instanceService,
+            IConfigService configService,
+            IModuleMetadataService moduleMetadataService
+            ) : base(moduleMetadataService)
         {
             this.databaseService = databaseService;
+            this.instanceService = instanceService;
+            this.configService = configService;
         }
 
-        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13");
+        public override IList<Version> CompatibleVersions => VersionHelper.GetVersionList("10", "11", "12", "13", "30", "31");
 
         public override IList<string> Tags => new List<string>
         {
@@ -27,7 +35,12 @@ namespace KInspector.Reports.PageTypeFieldAnalysis
 
         public async override Task<ModuleResults> GetResults()
         {
-            var pagetypeFields = await databaseService.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFields);
+            var instance = configService.GetCurrentInstance();
+            var instanceDetails = instanceService.GetInstanceDetails(instance);
+            bool isXbK = instanceDetails?.AdministrationDatabaseVersion?.Major > 13;
+            string script = isXbK ? Scripts.GetCmsPageTypeFieldsXbK : Scripts.GetCmsPageTypeFields;
+
+            var pagetypeFields = await databaseService.ExecuteSqlFromFile<CmsPageTypeField>(script);
             var fieldsWithMismatchedTypes = CheckForMismatchedTypes(pagetypeFields);
 
             return CompileResults(fieldsWithMismatchedTypes);

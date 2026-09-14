@@ -5,6 +5,7 @@
     This report shows fields with duplicated names, their SQL data types, and their associated page types.
     
     Two or more page types with fields with the same name, but different data types, cause several issues within kentico, not limited to the following:
+    - Content synchronization
     - Exporting/importing a site 
     - Working with web parts or widgets that list more than one page type
     

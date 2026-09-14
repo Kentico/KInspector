@@ -1,6 +1,7 @@
 ﻿using KInspector.Core.Constants;
-using KInspector.Reports.PageTypeFieldAnalysis.Models;
 using KInspector.Reports.PageTypeFieldAnalysis;
+using KInspector.Reports.PageTypeFieldAnalysis.Models;
+using KInspector.Tests.Common.Helpers;
 
 using NUnit.Framework;
 
@@ -10,6 +11,8 @@ namespace KInspector.Tests.Common.Reports
     [TestFixture(11)]
     [TestFixture(12)]
     [TestFixture(13)]
+    [TestFixture(30)]
+    [TestFixture(31)]
     public class PageTypeFieldAnalysisTests : AbstractModuleTest<Report, Terms>
     {
         private readonly Report mockReport;
@@ -34,7 +37,12 @@ namespace KInspector.Tests.Common.Reports
 
         public PageTypeFieldAnalysisTests(int majorVersion) : base(majorVersion)
         {
-            mockReport = new Report(_mockDatabaseService.Object, _mockModuleMetadataService.Object);
+            var mockInstance = MockInstances.Get(majorVersion) ?? throw new InvalidOperationException($"No instance found with major version {majorVersion}.");
+            var mockInstanceDetails = MockInstanceDetails.Get(majorVersion) ?? throw new InvalidOperationException($"No instance details found with major version {majorVersion}.");
+            var mockInstanceService = MockInstanceServiceHelper.SetupInstanceService(mockInstance, mockInstanceDetails);
+            var mockConfigService = MockConfigServiceHelper.SetupMockConfigService(mockInstance);
+
+            mockReport = new Report(_mockDatabaseService.Object, mockInstanceService.Object, mockConfigService.Object, _mockModuleMetadataService.Object);
         }
 
         [TestCase(Category = "Matching fields have save data types", TestName = "Page type fields with matching names and data types produce a good result")]
@@ -43,6 +51,9 @@ namespace KInspector.Tests.Common.Reports
             // Arrange
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFields))
+                .Returns(Task.FromResult(CmsPageTypeFieldsWithoutIssues));
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFieldsXbK))
                 .Returns(Task.FromResult(CmsPageTypeFieldsWithoutIssues));
 
             // Act
@@ -58,6 +69,9 @@ namespace KInspector.Tests.Common.Reports
             // Arrange
             _mockDatabaseService
                 .Setup(p => p.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFields))
+                .Returns(Task.FromResult(CmsPageTypeFieldsWithIdenticalNamesAndDifferentDataTypes));
+            _mockDatabaseService
+                .Setup(p => p.ExecuteSqlFromFile<CmsPageTypeField>(Scripts.GetCmsPageTypeFieldsXbK))
                 .Returns(Task.FromResult(CmsPageTypeFieldsWithIdenticalNamesAndDifferentDataTypes));
 
             // Act
